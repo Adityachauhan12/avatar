@@ -1,19 +1,30 @@
-============================================================
-🚀 STARTING FASTAPI SERVER
-============================================================
+import requests
+import time
 
-📡 Server will be available at:
-   🌐 http://localhost:8000
-   📖 API Docs: http://localhost:8000/docs
-   🔧 Alternative Docs: http://localhost:8000/redoc
+# Wait for server to start
+time.sleep(2)
 
-⏹️  To stop the server, run: stop_server()
-============================================================
+API_URL = "http://localhost:8000"
 
-✅ Server started in background thread!
-Wait a few seconds for it to fully initialize...
-INFO:     Started server process [4204]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-✅ Server is ready! You can now test the API.
+print("🧪 Testing API endpoints...")
+print("\n1️⃣  Testing /health endpoint:")
+
+try:
+    response = requests.get(f"{API_URL}/health")
+    print(f"   Status: {response.status_code}")
+    print(f"   Response: {response.json()}")
+except Exception as e:
+    print(f"   ❌ Error: {e}")
+    print(f"   Server might not be running yet. Make sure Cell 4 is executing!")
+
+print("\n2️⃣  To test /generate endpoint:")
+print("   curl -X POST http://localhost:8000/generate \\")
+print("     -F 'audio=@audio.wav' \\")
+print("     -F 'image=@image.png' \\")
+print("     -F 'num_frames=50'")
+
+print("\n3️⃣  Or use Python:")
+print("   files = {'audio': open('audio.wav', 'rb'), 'image': open('image.png', 'rb')}")
+print("   data = {'num_frames': 50, 'face_scale': 2.3}")
+print("   response = requests.post('http://localhost:8000/generate', files=files, data=data)")
+print("   print(response.json())")
