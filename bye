@@ -1,14 +1,13 @@
-import uvicorn
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
 
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server will be available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("   🔧 Alternative Docs: http://localhost:8000/redoc")
-print("\n⏹️  Press Ctrl+C to stop the server\n")
-print("="*60 + "\n")
+📡 Server will be available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+   🔧 Alternative Docs: http://localhost:8000/redoc
 
-# Run the server
-uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+⏹️  Press Ctrl+C to stop the server
+
+============================================================
+RuntimeError: asyncio.run() cannot be called from a running event loop
