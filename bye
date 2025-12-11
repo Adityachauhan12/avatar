@@ -1,26 +1,19 @@
-import uvicorn
-import threading
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
 
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server will be available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("   🔧 Alternative Docs: http://localhost:8000/redoc")
-print("\n⏹️  To stop the server, run: stop_server()")
-print("="*60 + "\n")
+📡 Server will be available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+   🔧 Alternative Docs: http://localhost:8000/redoc
 
-# Run server in a background thread for Databricks
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+⏹️  To stop the server, run: stop_server()
+============================================================
 
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
-
-print("✅ Server started in background thread!")
-print("Wait a few seconds for it to fully initialize...")
-
-import time
-time.sleep(3)
-print("✅ Server is ready! You can now test the API.")
+✅ Server started in background thread!
+Wait a few seconds for it to fully initialize...
+INFO:     Started server process [4204]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+✅ Server is ready! You can now test the API.
