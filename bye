@@ -1,5 +1,14 @@
- FastAPI app created with 4 endpoints:
-   1. GET  /health - Check API health
-   2. POST /generate - Generate video
-   3. GET  /status/{task_id} - Check task status
-   4. GET  /download/{task_id} - Download result
+import uvicorn
+
+print("\n" + "="*60)
+print("🚀 STARTING FASTAPI SERVER")
+print("="*60)
+print("\n📡 Server will be available at:")
+print("   🌐 http://localhost:8000")
+print("   📖 API Docs: http://localhost:8000/docs")
+print("   🔧 Alternative Docs: http://localhost:8000/redoc")
+print("\n⏹️  Press Ctrl+C to stop the server\n")
+print("="*60 + "\n")
+
+# Run the server
+uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
