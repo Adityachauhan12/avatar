@@ -23,6 +23,41 @@ class DittoInferenceWrapper:
         
     def generate_video(self, image_path: str, audio_path: str, 
                        num_frames: int = 50, 
+                       face_scale: float = 2.3) -> str:
+        """Run your inference.py with the provided inputs"""
+        
+        output_dir = tempfile.mkdtemp()
+        output_path = os.path.join(output_dir, "output.mp4")
+        
+        cmd = [
+            'python', 'inference.py',
+            '--dataroot', self.checkpoint_dir,
+            '--cfgpkl', self.config_pkl,
+            '--audiopath', audio_path,
+            '--sourcepath', image_path,
+            '--outputpath', output_path,
+            '--num_frames', str(num_frames),
+            '--face_scale', str(face_scale)
+        ]
+        
+        print(f"🔄 Running inference command...")
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        if result.returncode != 0:
+            print(f"❌ Error: {result.stderr}")
+            raise RuntimeError(f"Inference failed: {result.stderr}")
+        
+        print(f"✅ Video generated at: {output_path}")
+        return output_path
+
+# ✅ YOUR ACTUAL PATHS
+wrapper = DittoInferenceWrapper(
+    checkpoint_dir="/dbfs/FileStore/ditto/checkpoints/ditto_trt_t4",
+    config_pkl="./checkpoints/ditto/cfg/v0.4/hubert_cfg_trt.pkl"
+)
+
+print("\n✅ Inference wrapper ready!")
+
 
 -----------------------------------------------------------------
 
