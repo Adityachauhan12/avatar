@@ -1,22 +1,8 @@
-✅ Wrapper initialized
-   Checkpoint: /dbfs/FileStore/ditto_checkpoints/ditto_trt_t4
-   Config: ./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl
-✅ Complete FastAPI app with wrapper ready!
+# Kill existing server on port 8000
+import os
+os.system("lsof -ti:8000 | xargs kill -9 2>/dev/null || true")
 
-============================================================
-🚀 STARTING FASTAPI SERVER
-============================================================
+import time
+time.sleep(2)
 
-📡 Server available at:
-   🌐 http://localhost:8000
-   📖 API Docs: http://localhost:8000/docs
-============================================================
-
-✅ Server started in background!
-INFO:     Started server process [2235]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-✅ Server is ready! Test with /generate now.
+print("✅ Port 8000 cleared!")
