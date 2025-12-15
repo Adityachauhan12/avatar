@@ -1,16 +1,3 @@
-import subprocess
-import os
-
-# Check current directory
-print("Current dir:", os.getcwd())
-
-# Find inference.py
-result = subprocess.run(
-    ["find", "/dbfs/FileStore", "-name", "inference.py", "-type", "f"],
-    capture_output=True,
-    text=True,
-    timeout=10
-)
-
-print("Found inference.py at:")
-print(result.stdout)
+Current dir: /Workspace/Users/vellaturi.kowsik@goindigo.in
+Found inference.py at:
+/dbfs/FileStore/repos/musetalk/scripts/inference.py
