@@ -1,16 +1,16 @@
-📤 Sending request to /generate...
+import subprocess
+import os
 
-📁 Saved temporary files for task 3fceb4e7
-🔄 Running inference command...
-❌ Error stderr: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
+# Check current directory
+print("Current dir:", os.getcwd())
 
-❌ Error stdout: 
-❌ Task 3fceb4e7 failed: Inference failed: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
+# Find inference.py
+result = subprocess.run(
+    ["find", "/dbfs/FileStore", "-name", "inference.py", "-type", "f"],
+    capture_output=True,
+    text=True,
+    timeout=10
+)
 
-INFO:     127.0.0.1:38564 - "POST /generate HTTP/1.1" 500 Internal Server Error
-✅ Response received!
-
-📊 Task Details:
-   Task ID: 3fceb4e7
-   Status: failed
-   Error: Inference failed: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
+print("Found inference.py at:")
+print(result.stdout)
