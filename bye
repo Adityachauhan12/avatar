@@ -1,20 +1,6 @@
-🧪 Testing API endpoints...
-
-1️⃣  Testing /health endpoint:
-INFO:     127.0.0.1:57876 - "GET /health HTTP/1.1" 200 OK
-   Status: 200
-   Response: {'status': 'healthy', 'timestamp': '2025-12-11T10:58:06.915416', 'service': 'Ditto Avatar Generation API'}
-
-2️⃣  To test /generate endpoint:
-   curl -X POST http://localhost:8000/generate \
-     -F 'audio=@audio.wav' \
-     -F 'image=@image.png' \
-     -F 'num_frames=50'
-
-3️⃣  Or use Python:
-   files = {'audio': open('audio.wav', 'rb'), 'image': open('image.png', 'rb')}
-   data = {'num_frames': 50, 'face_scale': 2.3}
-   response = requests.post('http://localhost:8000/generate', files=files, data=data)
-   print(response.json()) 
-
-now how to actually open docs and test it by generating a video
+"python", "inference.py",
+    "--data_root", "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4",
+    "--cfg_pkl", "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl",
+    "--audio_path", "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav",
+    "--source_path", "/Volumes/lab37_catalog/ifstrolley/trolley/new.png",
+    "--output_path", "./tmp/result_trt.mp4"
