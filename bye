@@ -1,17 +1,42 @@
-INFO:     Started server process [2235]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-✅ FastAPI app created with 4 endpoints
+import requests
 
-============================================================
-🚀 STARTING FASTAPI SERVER
-============================================================
+print("🧪 Testing /generate endpoint...\n")
 
-📡 Server available at:
-   🌐 http://localhost:8000
-   📖 API Docs: http://localhost:8000/docs
-============================================================
+# Your actual file paths
+audio_file = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_file = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
 
-✅ Server started in background!
-✅ Server is ready! Test with Cell 5 now.
+print(f"📁 Audio: {audio_file}")
+print(f"📁 Image: {image_file}\n")
+
+files = {
+    'audio': open(audio_file, 'rb'),
+    'image': open(image_file, 'rb'),
+}
+data = {
+    'num_frames': 50,
+    'face_scale': 2.3
+}
+
+print("📤 Sending request to /generate...\n")
+
+try:
+    response = requests.post(
+        'http://localhost:8000/generate',
+        files=files,
+        data=data,
+        timeout=300  # 5 min timeout
+    )
+    
+    result = response.json()
+    
+    print("✅ Response received!")
+    print(f"\n📊 Task Details:")
+    print(f"   Task ID: {result['task_id']}")
+    print(f"   Status: {result['status']}")
+    print(f"   Inference time: {result['inference_time']}s")
+    print(f"   Video path: {result['video_path']}")
+    print(f"   Message: {result['message']}")
+    
+except Exception as e:
+    print(f"❌ Error: {str(e)}")
