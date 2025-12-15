@@ -1,1 +1,9 @@
-ImportError: cannot import name 'deprecated' from 'typing_extensions' (/databricks/python/lib/python3.10/site-packages/typing_extensions.py)
+Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
+
+RuntimeError: Form data requires "python-multipart" to be installed. 
+You can install "python-multipart" with: 
+
+pip install python-multipart
