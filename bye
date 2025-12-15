@@ -1,3 +1,54 @@
-Current dir: /Workspace/Users/vellaturi.kowsik@goindigo.in
-Found inference.py at:
-/dbfs/FileStore/repos/musetalk/scripts/inference.py
+✅ Wrapper initialized
+   Checkpoint: /dbfs/FileStore/ditto_checkpoints/ditto_trt_t4
+   Config: ./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl
+✅ Complete FastAPI app with wrapper ready!
+
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
+
+📡 Server available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+============================================================
+
+✅ Server started in background!
+INFO:     Started server process [3888]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+✅ Server is ready! Test with /generate now.
+
+
+🧪 Testing /generate endpoint...
+
+📁 Audio: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
+📁 Image: /Volumes/lab37_catalog/ifstrolley/trolley/new.png
+
+📤 Sending request to /generate...
+
+📁 Saved temporary files for task 1218cad5
+🔄 Running inference command...
+❌ Error stderr: Traceback (most recent call last):
+  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
+
+❌ Error stdout: 
+❌ Task 1218cad5 failed: Inference failed: Traceback (most recent call last):
+  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
+
+INFO:     127.0.0.1:46194 - "POST /generate HTTP/1.1" 500 Internal Server Error
+✅ Response received!
+
+📊 Task Details:
+   Task ID: 1218cad5
+   Status: failed
+   Error: Inference failed: Traceback (most recent call last):
+  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
