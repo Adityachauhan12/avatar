@@ -1,42 +1,19 @@
-import requests
 
-print("🧪 Testing /generate endpoint...\n")
-
-# Your actual file paths
-audio_file = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_file = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-print(f"📁 Audio: {audio_file}")
-print(f"📁 Image: {image_file}\n")
-
-files = {
-    'audio': open(audio_file, 'rb'),
-    'image': open(image_file, 'rb'),
-}
-data = {
-    'num_frames': 50,
-    'face_scale': 2.3
-}
-
-print("📤 Sending request to /generate...\n")
-
-try:
-    response = requests.post(
-        'http://localhost:8000/generate',
-        files=files,
-        data=data,
-        timeout=300  # 5 min timeout
-    )
-    
-    result = response.json()
-    
-    print("✅ Response received!")
-    print(f"\n📊 Task Details:")
-    print(f"   Task ID: {result['task_id']}")
-    print(f"   Status: {result['status']}")
-    print(f"   Inference time: {result['inference_time']}s")
-    print(f"   Video path: {result['video_path']}")
-    print(f"   Message: {result['message']}")
-    
 except Exception as e:
     print(f"❌ Error: {str(e)}")
+🧪 Testing /generate endpoint...
+
+📁 Audio: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
+📁 Image: /Volumes/lab37_catalog/ifstrolley/trolley/new.png
+
+📤 Sending request to /generate...
+
+📁 Saved temporary files for task 37613184
+❌ Task 37613184 failed: name 'wrapper' is not defined
+INFO:     127.0.0.1:35156 - "POST /generate HTTP/1.1" 500 Internal Server Error
+✅ Response received!
+
+📊 Task Details:
+   Task ID: 37613184
+   Status: failed
+❌ Error: 'inference_time
