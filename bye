@@ -1,43 +1,16 @@
-import requests
+📤 Sending request to /generate...
 
-print("🧪 Testing /generate endpoint...\n")
+📁 Saved temporary files for task 3fceb4e7
+🔄 Running inference command...
+❌ Error stderr: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
 
-audio_file = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_file = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+❌ Error stdout: 
+❌ Task 3fceb4e7 failed: Inference failed: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
 
-print(f"📁 Audio: {audio_file}")
-print(f"📁 Image: {image_file}\n")
+INFO:     127.0.0.1:38564 - "POST /generate HTTP/1.1" 500 Internal Server Error
+✅ Response received!
 
-files = {
-    'audio': open(audio_file, 'rb'),
-    'image': open(image_file, 'rb'),
-}
-data = {
-    'num_frames': 50,
-    'face_scale': 2.3
-}
-
-print("📤 Sending request to /generate...\n")
-
-try:
-    response = requests.post(
-        'http://localhost:8000/generate',
-        files=files,
-        data=data,
-        timeout=600  # 10 min timeout
-    )
-    
-    result = response.json()
-    
-    print("✅ Response received!")
-    print(f"\n📊 Task Details:")
-    print(f"   Task ID: {result['task_id']}")
-    print(f"   Status: {result['status']}")
-    if result['status'] == 'completed':
-        print(f"   Inference time: {result['inference_time']}s")
-        print(f"   Video path: {result['video_path']}")
-    else:
-        print(f"   Error: {result.get('error', 'Unknown error')}")
-    
-except Exception as e:
-    print(f"❌ Error: {str(e)}")
+📊 Task Details:
+   Task ID: 3fceb4e7
+   Status: failed
+   Error: Inference failed: python: can't open file '/Workspace/Users/vellaturi.kowsik@goindigo.in/inference.py': [Errno 2] No such file or directory
