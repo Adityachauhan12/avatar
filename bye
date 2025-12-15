@@ -1,144 +1,17 @@
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import FileResponse, JSONResponse
-import shutil
-import uuid
-import time
-import os
-import threading
-from datetime import datetime
+INFO:     Started server process [2235]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+✅ FastAPI app created with 4 endpoints
 
-# ===== CREATE FASTAPI APP =====
-app = FastAPI(
-    title="Ditto Avatar API",
-    version="1.0",
-    description="Generate talking head videos from audio and image"
-)
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
 
-# Storage for tasks
-tasks = {}
-os.makedirs("/dbfs/FileStore/ditto_uploads", exist_ok=True)
-os.makedirs("/dbfs/FileStore/ditto_results", exist_ok=True)
+📡 Server available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+============================================================
 
-# ===== ENDPOINT 1: Health Check =====
-@app.get("/health")
-def health_check():
-    """Check if API is healthy"""
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "service": "Ditto Avatar Generation API"
-    }
-
-# ===== ENDPOINT 2: Generate Video =====
-@app.post("/generate")
-async def generate_video(
-    audio: UploadFile = File(...),
-    image: UploadFile = File(...),
-    num_frames: int = Form(50),
-    face_scale: float = Form(2.3)
-):
-    """Generate avatar video from audio and image"""
-    task_id = str(uuid.uuid4())[:8]
-    
-    try:
-        audio_path = f"/dbfs/FileStore/ditto_uploads/{task_id}_audio.wav"
-        image_path = f"/dbfs/FileStore/ditto_uploads/{task_id}_image.png"
-        
-        with open(audio_path, "wb") as f:
-            f.write(await audio.read())
-        
-        with open(image_path, "wb") as f:
-            f.write(await image.read())
-        
-        print(f"📁 Saved temporary files for task {task_id}")
-        
-        start_time = time.time()
-        output_path = wrapper.generate_video(
-            image_path=image_path,
-            audio_path=audio_path,
-            num_frames=num_frames,
-            face_scale=face_scale
-        )
-        inference_time = time.time() - start_time
-        
-        result_path = f"/dbfs/FileStore/ditto_results/{task_id}_output.mp4"
-        shutil.copy(output_path, result_path)
-        
-        tasks[task_id] = {
-            "status": "completed",
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "created_at": datetime.now().isoformat()
-        }
-        
-        print(f"✅ Task {task_id} completed in {inference_time:.2f}s")
-        
-        return {
-            "status": "completed",
-            "task_id": task_id,
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "message": "Video generated successfully!"
-        }
-    
-    except Exception as e:
-        print(f"❌ Task {task_id} failed: {str(e)}")
-        tasks[task_id] = {"status": "failed", "error": str(e)}
-        return JSONResponse(
-            status_code=500,
-            content={"status": "failed", "task_id": task_id, "error": str(e)}
-        )
-
-# ===== ENDPOINT 3: Check Status =====
-@app.get("/status/{task_id}")
-def get_status(task_id: str):
-    """Check status of a task"""
-    if task_id not in tasks:
-        return {"status": "not_found", "task_id": task_id}
-    return {"task_id": task_id, **tasks[task_id]}
-
-# ===== ENDPOINT 4: Download Video =====
-@app.get("/download/{task_id}")
-def download_video(task_id: str):
-    """Download the generated video"""
-    if task_id not in tasks:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Task {task_id} not found"}
-        )
-    
-    task = tasks[task_id]
-    if task["status"] != "completed":
-        return JSONResponse(
-            status_code=400,
-            content={"error": f"Video not ready. Status: {task['status']}"}
-        )
-    
-    return FileResponse(
-        task["video_path"],
-        media_type="video/mp4",
-        filename=f"ditto_avatar_{task_id}.mp4"
-    )
-
-print("✅ FastAPI app created with 4 endpoints")
-
-# ===== START SERVER IN BACKGROUND THREAD =====
-import uvicorn
-
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("="*60 + "\n")
-
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
-
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
-
-print("✅ Server started in background!")
-time.sleep(3)
-print("✅ Server is ready! Test with Cell 5 now.")
+✅ Server started in background!
+✅ Server is ready! Test with Cell 5 now.
