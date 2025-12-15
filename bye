@@ -1,5 +1,149 @@
-✅ Wrapper initialized
-   Checkpoint: /dbfs/FileStore/ditto_checkpoints/ditto_trt_t4
-   Config: ./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl
+from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.responses import FileResponse, JSONResponse
+import shutil
+import uuid
+import time
+import os
+from datetime import datetime
 
-✅ Inference wrapper ready!
+# Create FastAPI app
+app = FastAPI(
+    title="Ditto Avatar API",
+    version="1.0",
+    description="Generate talking head videos from audio and image"
+)
+
+# Storage for tasks
+tasks = {}
+
+# Use DBFS paths for Databricks
+upload_dir = "/dbfs/FileStore/ditto_uploads"
+results_dir = "/dbfs/FileStore/ditto_results"
+os.makedirs(upload_dir, exist_ok=True)
+os.makedirs(results_dir, exist_ok=True)
+
+# ===== ENDPOINT 1: Health Check =====
+@app.get("/health")
+def health_check():
+    """Check if API is healthy"""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now().isoformat(),
+        "service": "Ditto Avatar Generation API"
+    }
+
+# ===== ENDPOINT 2: Generate Video =====
+@app.post("/generate")
+async def generate_video(
+    audio: UploadFile = File(...),
+    image: UploadFile = File(...),
+    num_frames: int = Form(50),
+    face_scale: float = Form(2.3)
+):
+    """
+    Generate avatar video from audio and image
+    
+    Parameters:
+    - audio: WAV audio file
+    - image: PNG/JPG image file
+    - num_frames: Number of frames (default 50)
+    - face_scale: Face movement scale (default 2.3)
+    
+    Returns: {task_id, status, video_path, inference_time}
+    """
+    task_id = str(uuid.uuid4())[:8]
+    
+    try:
+        # Save uploaded files temporarily
+        audio_path = f"{upload_dir}/{task_id}_audio.wav"
+        image_path = f"{upload_dir}/{task_id}_image.png"
+        
+        with open(audio_path, "wb") as f:
+            f.write(await audio.read())
+        
+        with open(image_path, "wb") as f:
+            f.write(await image.read())
+        
+        print(f"📁 Saved temporary files for task {task_id}")
+        
+        # Run inference
+        start_time = time.time()
+        output_path = wrapper.generate_video(
+            image_path=image_path,
+            audio_path=audio_path,
+            num_frames=num_frames,
+            face_scale=face_scale
+        )
+        inference_time = time.time() - start_time
+        
+        # Move to results folder
+        result_path = f"{results_dir}/{task_id}_output.mp4"
+        shutil.copy(output_path, result_path)
+        
+        # Store task info
+        tasks[task_id] = {
+            "status": "completed",
+            "video_path": result_path,
+            "inference_time": round(inference_time, 2),
+            "created_at": datetime.now().isoformat()
+        }
+        
+        print(f"✅ Task {task_id} completed in {inference_time:.2f}s")
+        
+        return {
+            "status": "completed",
+            "task_id": task_id,
+            "video_path": result_path,
+            "inference_time": round(inference_time, 2),
+            "message": "Video generated successfully! Use /download/{task_id} to download"
+        }
+    
+    except Exception as e:
+        print(f"❌ Task {task_id} failed: {str(e)}")
+        tasks[task_id] = {"status": "failed", "error": str(e)}
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "failed",
+                "task_id": task_id,
+                "error": str(e)
+            }
+        )
+
+# ===== ENDPOINT 3: Check Status =====
+@app.get("/status/{task_id}")
+def get_status(task_id: str):
+    """Check status of a completed task"""
+    if task_id not in tasks:
+        return {"status": "not_found", "task_id": task_id}
+    
+    return {"task_id": task_id, **tasks[task_id]}
+
+# ===== ENDPOINT 4: Download Video =====
+@app.get("/download/{task_id}")
+def download_video(task_id: str):
+    """Download the generated video"""
+    if task_id not in tasks:
+        return JSONResponse(
+            status_code=404,
+            content={"error": f"Task {task_id} not found"}
+        )
+    
+    task = tasks[task_id]
+    if task["status"] != "completed":
+        return JSONResponse(
+            status_code=400,
+            content={"error": f"Video not ready yet. Status: {task['status']}"}
+        )
+    
+    return FileResponse(
+        task["video_path"],
+        media_type="video/mp4",
+        filename=f"ditto_avatar_{task_id}.mp4"
+    )
+
+print("✅ FastAPI app created with 4 endpoints:")
+print("   1. GET  /health - Check API health")
+print("   2. POST /generate - Generate video")
+print("   3. GET  /status/{task_id} - Check task status")
+print("   4. GET  /download/{task_id} - Download result")
