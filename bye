@@ -1,54 +1,40 @@
-✅ Wrapper initialized
-   Checkpoint: /dbfs/FileStore/ditto_checkpoints/ditto_trt_t4
-   Config: ./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl
-✅ Complete FastAPI app with wrapper ready!
+import os
+import shutil
 
-============================================================
-🚀 STARTING FASTAPI SERVER
-============================================================
+# 1. Define your source and destination
+source_path = "./tmp/result_trt.mp4"
+# DBFS FileStore is the special folder that allows browser downloads
+target_dir = "/dbfs/FileStore/" 
+target_path = os.path.join(target_dir, "result.mp4")
 
-📡 Server available at:
-   🌐 http://localhost:8000
-   📖 API Docs: http://localhost:8000/docs
-============================================================
+# 2. Check if the file exists and move it
+if os.path.exists(source_path):
+    # Ensure the directory exists
+    os.makedirs(target_dir, exist_ok=True)
+    
+    # Copy from local driver -> DBFS
+    print(f"Copying {source_path} to {target_path}...")
+    shutil.copy(source_path, target_path)
+    
+    # 3. Generate the Download Button (Databricks specific)
+    try:
+        # This creates a clickable link in your notebook output
+        displayHTML(f'''
+            <div style="background-color: #e8f0fe; padding: 10px; border-radius: 5px; border: 1px solid #4285f4; text-align: center;">
+                <h3 style="margin:0;">Processing Complete!</h3>
+                <br>
+                <a href="/files/result.mp4" download 
+                   style="background-color: #4285f4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                   Click Here to Download Result.mp4
+                </a>
+                <br><br>
+                <small>File location: /dbfs/FileStore/result.mp4</small>
+            </div>
+        ''')
+    except NameError:
+        # Fallback if displayHTML is not available (rare in Databricks)
+        print(f"File copied to DBFS. You can download it from: {target_path}")
+        print("URL: <your-workspace-url>/files/NewAudioResult.mp4")
 
-✅ Server started in background!
-INFO:     Started server process [3888]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-✅ Server is ready! Test with /generate now.
-
-
-🧪 Testing /generate endpoint...
-
-📁 Audio: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
-📁 Image: /Volumes/lab37_catalog/ifstrolley/trolley/new.png
-
-📤 Sending request to /generate...
-
-📁 Saved temporary files for task 1218cad5
-🔄 Running inference command...
-❌ Error stderr: Traceback (most recent call last):
-  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
-    import cv2
-ModuleNotFoundError: No module named 'cv2'
-
-❌ Error stdout: 
-❌ Task 1218cad5 failed: Inference failed: Traceback (most recent call last):
-  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
-    import cv2
-ModuleNotFoundError: No module named 'cv2'
-
-INFO:     127.0.0.1:46194 - "POST /generate HTTP/1.1" 500 Internal Server Error
-✅ Response received!
-
-📊 Task Details:
-   Task ID: 1218cad5
-   Status: failed
-   Error: Inference failed: Traceback (most recent call last):
-  File "/dbfs/FileStore/repos/musetalk/scripts/inference.py", line 2, in <module>
-    import cv2
-ModuleNotFoundError: No module named 'cv2'
+else:
+    print(f"Error: Could not find '{source_path}'. Did the ffmpeg command finish successfully?")
