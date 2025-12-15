@@ -1,183 +1,22 @@
-import os
-import subprocess
-import tempfile
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import FileResponse, JSONResponse
-import shutil
-import uuid
-import time
-import threading
-from datetime import datetime
-import uvicorn
+✅ Wrapper initialized
+   Checkpoint: /dbfs/FileStore/ditto_checkpoints/ditto_trt_t4
+   Config: ./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl
+✅ Complete FastAPI app with wrapper ready!
 
-# ===== INFERENCE WRAPPER =====
-class DittoInferenceWrapper:
-    """Wrapper to call your existing inference.py"""
-    
-    def __init__(self, checkpoint_dir, config_pkl):
-        self.checkpoint_dir = checkpoint_dir
-        self.config_pkl = config_pkl
-        print(f"✅ Wrapper initialized")
-        print(f"   Checkpoint: {checkpoint_dir}")
-        print(f"   Config: {config_pkl}")
-        
-    def generate_video(self, image_path: str, audio_path: str, 
-                       num_frames: int = 50, 
-                       face_scale: float = 2.3) -> str:
-        """Run your inference.py"""
-        output_dir = tempfile.mkdtemp()
-        output_path = os.path.join(output_dir, "output.mp4")
-        
-        cmd = [
-            "python", "inference.py",
-            "--data_root", self.checkpoint_dir,
-            "--cfg_pkl", self.config_pkl,
-            "--audio_path", audio_path,
-            "--source_path", image_path,
-            "--output_path", output_path,
-            "--num_frames", str(num_frames),
-            "--face_scale", str(face_scale),
-        ]
-        
-        print(f"🔄 Running inference command...")
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        
-        if result.returncode != 0:
-            print(f"❌ Error stderr: {result.stderr}")
-            print(f"❌ Error stdout: {result.stdout}")
-            raise RuntimeError(f"Inference failed: {result.stderr}")
-        
-        print(f"✅ Video generated at: {output_path}")
-        return output_path
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
 
-# Initialize wrapper
-wrapper = DittoInferenceWrapper(
-    checkpoint_dir="/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4",
-    config_pkl="./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl",
-)
+📡 Server available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+============================================================
 
-# ===== CREATE FASTAPI APP =====
-app = FastAPI(
-    title="Ditto Avatar API",
-    version="1.0",
-    description="Generate talking head videos from audio and image"
-)
-
-tasks = {}
-os.makedirs("/dbfs/FileStore/ditto_uploads", exist_ok=True)
-os.makedirs("/dbfs/FileStore/ditto_results", exist_ok=True)
-
-@app.get("/health")
-def health_check():
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "service": "Ditto Avatar Generation API"
-    }
-
-@app.post("/generate")
-async def generate_video(
-    audio: UploadFile = File(...),
-    image: UploadFile = File(...),
-    num_frames: int = Form(50),
-    face_scale: float = Form(2.3)
-):
-    task_id = str(uuid.uuid4())[:8]
-    
-    try:
-        audio_path = f"/dbfs/FileStore/ditto_uploads/{task_id}_audio.wav"
-        image_path = f"/dbfs/FileStore/ditto_uploads/{task_id}_image.png"
-        
-        with open(audio_path, "wb") as f:
-            f.write(await audio.read())
-        
-        with open(image_path, "wb") as f:
-            f.write(await image.read())
-        
-        print(f"📁 Saved temporary files for task {task_id}")
-        
-        start_time = time.time()
-        output_path = wrapper.generate_video(
-            image_path=image_path,
-            audio_path=audio_path,
-            num_frames=num_frames,
-            face_scale=face_scale
-        )
-        inference_time = time.time() - start_time
-        
-        result_path = f"/dbfs/FileStore/ditto_results/{task_id}_output.mp4"
-        shutil.copy(output_path, result_path)
-        
-        tasks[task_id] = {
-            "status": "completed",
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "created_at": datetime.now().isoformat()
-        }
-        
-        print(f"✅ Task {task_id} completed in {inference_time:.2f}s")
-        
-        return {
-            "status": "completed",
-            "task_id": task_id,
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "message": "Video generated successfully!"
-        }
-    
-    except Exception as e:
-        print(f"❌ Task {task_id} failed: {str(e)}")
-        tasks[task_id] = {"status": "failed", "error": str(e)}
-        return JSONResponse(
-            status_code=500,
-            content={"status": "failed", "task_id": task_id, "error": str(e)}
-        )
-
-@app.get("/status/{task_id}")
-def get_status(task_id: str):
-    if task_id not in tasks:
-        return {"status": "not_found", "task_id": task_id}
-    return {"task_id": task_id, **tasks[task_id]}
-
-@app.get("/download/{task_id}")
-def download_video(task_id: str):
-    if task_id not in tasks:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Task {task_id} not found"}
-        )
-    
-    task = tasks[task_id]
-    if task["status"] != "completed":
-        return JSONResponse(
-            status_code=400,
-            content={"error": f"Video not ready. Status: {task['status']}"}
-        )
-    
-    return FileResponse(
-        task["video_path"],
-        media_type="video/mp4",
-        filename=f"ditto_avatar_{task_id}.mp4"
-    )
-
-print("✅ Complete FastAPI app with wrapper ready!")
-
-# ===== START SERVER =====
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("="*60 + "\n")
-
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
-
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
-
-print("✅ Server started in background!")
-time.sleep(3)
-print("✅ Server is ready! Test with /generate now.")
-
+✅ Server started in background!
+INFO:     Started server process [2235]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+✅ Server is ready! Test with /generate now.
