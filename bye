@@ -1,9 +1,5 @@
-Form data requires "python-multipart" to be installed. 
-You can install "python-multipart" with: 
-
-pip install python-multipart
-
-RuntimeError: Form data requires "python-multipart" to be installed. 
-You can install "python-multipart" with: 
-
-pip install python-multipart
+ FastAPI app created with 4 endpoints:
+   1. GET  /health - Check API health
+   2. POST /generate - Generate video
+   3. GET  /status/{task_id} - Check task status
+   4. GET  /download/{task_id} - Download result
