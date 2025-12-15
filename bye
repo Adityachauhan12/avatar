@@ -1,26 +1,20 @@
-import uvicorn
-import threading
+File "/usr/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/.ipykernel/5777/command-5011140253560757-3431679890", line 16, in run_server
+NameError: name 'app' is not defined
 
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server will be available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("   🔧 Alternative Docs: http://localhost:8000/redoc")
-print("\n⏹️  To stop the server, run: stop_server()")
-print("="*60 + "\n")
+============================================================
+🚀 STARTING FASTAPI SERVER
+============================================================
 
-# Run server in a background thread for Databricks
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+📡 Server will be available at:
+   🌐 http://localhost:8000
+   📖 API Docs: http://localhost:8000/docs
+   🔧 Alternative Docs: http://localhost:8000/redoc
 
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
+⏹️  To stop the server, run: stop_server()
+============================================================
 
-print("✅ Server started in background thread!")
-print("Wait a few seconds for it to fully initialize...")
-
-import time
-time.sleep(3)
-print("✅ Server is ready! You can now test the API.")
+✅ Server started in background thread!
+Wait a few seconds for it to fully initialize...
+✅ Server is ready! You can now test the API.
