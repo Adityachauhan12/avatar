@@ -1,3 +1,11 @@
-INFO:     127.0.0.1:42966 - "POST /generate-avatar HTTP/1.1" 400 Bad Request
-Status: 400
-Body: {"detail":"There was an error parsing the body"}
+@app.post("/debug-echo")
+async def debug_echo(
+    audio: UploadFile = File(...),
+    image: UploadFile = File(...),
+):
+    return {
+        "audio_field": audio.filename,
+        "image_field": image.filename,
+        "audio_content_type": audio.content_type,
+        "image_content_type": image.content_type,
+    }
