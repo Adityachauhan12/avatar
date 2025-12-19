@@ -1,34 +1,71 @@
-/tmp/ditto-talkinghead
-checkpoints:
-'=0.10.9'   README.md   ditto_onnx      ditto_trt_Ampere_Plus
- LICENSE    ditto_cfg   ditto_pytorch
+# ditto_inference_wrapper.py logic inside a Databricks cell
 
-checkpoints/ditto_cfg:
-v0.4_hubert_cfg_pytorch.pkl  v0.4_hubert_cfg_trt_online.pkl
-v0.4_hubert_cfg_trt.pkl
+import subprocess
+from pathlib import Path
+import uuid
+import tempfile
+import os
 
-checkpoints/ditto_onnx:
-appearance_extractor.onnx  insightface_det.onnx		motion_extractor.onnx
-blaze_face.onnx		   landmark106.onnx		stitch_network.onnx
-decoder.onnx		   landmark203.onnx		warp_network.onnx
-face_mesh.onnx		   libgrid_sample_3d_plugin.so	warp_network_ori.onnx
-hubert.onnx		   lmdm_v0.4_hubert.onnx
+# Base repo path (you already cd here in the notebook)
+/*
+%cd /tmp/ditto-talkinghead
+*/
+DITTO_ROOT = Path("/tmp/ditto-talkinghead")
+CHECKPOINT_ROOT = DITTO_ROOT / "checkpoints"
 
-checkpoints/ditto_pytorch:
-aux_models  models
+# Use PyTorch checkpoints (these exist in your ls)
+DATA_ROOT = CHECKPOINT_ROOT / "ditto_pytorch"  # has aux_models + models
+CFG_PKL = CHECKPOINT_ROOT / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
 
-checkpoints/ditto_pytorch/aux_models:
-2d106det.onnx  face_landmarker.task	     landmark203.onnx
-det_10g.onnx   hubert_streaming_fix_kv.onnx
+TMP_DIR = DITTO_ROOT / "tmp"
+TMP_DIR.mkdir(parents=True, exist_ok=True)
 
-checkpoints/ditto_pytorch/models:
-appearance_extractor.pth  lmdm_v0.4_hubert.pth	stitch_network.pth
-decoder.pth		  motion_extractor.pth	warp_network.pth
+def run_ditto_inference(audio_path: str, image_path: str) -> str:
+    """
+    Run Ditto inference.py using your existing checkpoints.
 
-checkpoints/ditto_trt_Ampere_Plus:
-appearance_extractor_fp16.engine  landmark106_fp16.engine
-blaze_face_fp16.engine		  landmark203_fp16.engine
-decoder_fp16.engine		  lmdm_v0.4_hubert_fp32.engine
-face_mesh_fp16.engine		  motion_extractor_fp32.engine
-hubert_fp32.engine		  stitch_network_fp16.engine
-insightface_det_fp16.engine	  warp_network_fp16.engine
+    audio_path, image_path: local filesystem paths
+    Returns: local path to generated mp4 inside /tmp/ditto-talkinghead/tmp.
+    """
+    audio = Path(audio_path)
+    image = Path(image_path)
+
+    if not audio.exists():
+        raise FileNotFoundError(f"Audio not found: {audio}")
+    if not image.exists():
+        raise FileNotFoundError(f"Image not found: {image}")
+    if not DATA_ROOT.exists():
+        raise FileNotFoundError(f"DATA_ROOT not found: {DATA_ROOT}")
+    if not CFG_PKL.exists():
+        raise FileNotFoundError(f"CFG_PKL not found: {CFG_PKL}")
+
+    out_path = TMP_DIR / f"result_{uuid.uuid4().hex}.mp4"
+
+    cmd = [
+        "python", str(DITTO_ROOT / "inference.py"),
+        "--dataroot", str(DATA_ROOT),
+        "--cfg_pkl", str(CFG_PKL),
+        "--audio_path", str(audio),
+        "--source_path", str(image),
+        "--output_path", str(out_path),
+    ]
+
+    env = os.environ.copy()
+
+    proc = subprocess.run(
+        cmd,
+        cwd=str(DITTO_ROOT),
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        timeout=900,
+    )
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"Inference failed:\n{proc.stdout}")
+
+    if not out_path.exists():
+        raise RuntimeError("Output video not created")
+
+    return str(out_path)
