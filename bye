@@ -1,25 +1,3 @@
-import requests
-
-files = {
-    "audio": (
-        "test.wav",
-        open("/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav", "rb"),
-        "audio/wav",
-    ),
-    "image": (
-        "test.png",
-        open("/Volumes/lab37_catalog/ifstrolley/trolley/new.png", "rb"),
-        "image/png",
-    ),
-}
-
-resp = requests.post("http://localhost:8000/generate-avatar", files=files)
-print("Status:", resp.status_code)
-
-if resp.status_code == 200:
-    out_path = "/tmp/avatar_from_api.mp4"
-    with open(out_path, "wb") as f:
-        f.write(resp.content)
-    print("Saved video to:", out_path)
-else:
-    print("Error body:", resp.text)
+INFO:     127.0.0.1:59968 - "POST /generate-avatar HTTP/1.1" 400 Bad Request
+Status: 400
+Error body: {"detail":"There was an error parsing the body"}
