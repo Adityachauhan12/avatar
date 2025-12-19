@@ -1,5 +1,82 @@
+# In a Databricks notebook cell
+
+import subprocess
+from pathlib import Path
+import uuid
+import tempfile
 import os
-os.system("lsof -ti:8000 | xargs kill -9 2>/dev/null || true")
-import time
-time.sleep(2)
-print("✅ Port 8000 cleared!")
+
+# 1) Base paths – taken from your notebook
+DITTO_ROOT = Path("/tmp/ditto-talkinghead")  # you already cd here in the notebook[file:2]
+CHECKPOINT_ROOT = DITTO_ROOT / "checkpoints"
+
+# Use TensorRT engine on T4, like in your notebook:
+DATA_ROOT = CHECKPOINT_ROOT / "ditto_trt_t4"  # or "ditto_pytorch" if you want PyTorch[file:2][web:12]
+CFG_PKL = CHECKPOINT_ROOT / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"  # from your cmd[file:2][web:12]
+
+TMP_DIR = DITTO_ROOT / "tmp"
+TMP_DIR.mkdir(parents=True, exist_ok=True)
+
+def run_ditto_inference(audio_path: str, image_path: str) -> str:
+    """
+    Uses your existing inference.py to generate an avatar video.
+
+    audio_path, image_path: local filesystem paths (e.g. /tmp/... or /dbfs/...)
+    Returns: local path to generated mp4 (inside /tmp/ditto-talkinghead/tmp).
+    """
+    audio = Path(audio_path)
+    image = Path(image_path)
+
+    if not audio.exists():
+        raise FileNotFoundError(f"Audio not found: {audio}")
+    if not image.exists():
+        raise FileNotFoundError(f"Image not found: {image}")
+    if not DATA_ROOT.exists():
+        raise FileNotFoundError(f"DATA_ROOT not found: {DATA_ROOT}")
+    if not CFG_PKL.exists():
+        raise FileNotFoundError(f"CFG_PKL not found: {CFG_PKL}")
+
+    # Output file name similar to your result_trt.mp4
+    out_path = TMP_DIR / f"result_{uuid.uuid4().hex}.mp4"
+
+    cmd = [
+        "python", str(DITTO_ROOT / "inference.py"),
+        "--dataroot", str(DATA_ROOT),
+        "--cfg_pkl", str(CFG_PKL),
+        "--audio_path", str(audio),
+        "--source_path", str(image),
+        "--output_path", str(out_path),
+    ]
+
+    # In your notebook you also set custom env like PYTHONPATH / LD_LIBRARY_PATH; replicate if needed[file:2]
+    env = os.environ.copy()
+
+    proc = subprocess.run(
+        cmd,
+        cwd=str(DITTO_ROOT),   # you used `%cd /tmp/ditto-talkinghead`[file:2]
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        timeout=900,
+    )
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"Inference failed:\n{proc.stdout}")
+
+    if not out_path.exists():
+        raise RuntimeError("Output video not created")
+
+    return str(out_path)
+
+
+
+
+
+
+# Test once with the same inputs you used in the notebook
+test_audio = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"  # from your cell[file:2]
+test_image = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"                      # from your cell[file:2]
+
+out = run_ditto_inference(test_audio, test_image)
+out  # should be something like '/tmp/ditto-talkinghead/tmp/result_<uuid>.mp4'
