@@ -1,8 +1,4 @@
-    cmd = [
-        "python", str(DITTO_ROOT / "inference.py"),
-        "--data_root", str(DATA_ROOT),   # <-- underscore here
-        "--cfg_pkl", str(CFG_PKL),
-        "--audio_path", str(audio),
-        "--source_path", str(image),
-        "--output_path", str(out_path),
-    ]
+INFO:     127.0.0.1:34016 - "POST /generate-avatar HTTP/1.1" 200 OK
+Status: 200
+Body:  ftypisomisomiso2avc1mp41free2N�mdat�����E���H��,� �#��x264 - core 164 r3191 4613ac3 - H.264/MPEG-4 AVC codec - Copyleft 2003-2024 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=6 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 
+Saved video to: /tmp/avatar_from_api.mp4
