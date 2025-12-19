@@ -1,11 +1,13 @@
-@app.post("/debug-echo")
-async def debug_echo(
-    audio: UploadFile = File(...),
-    image: UploadFile = File(...),
-):
-    return {
-        "audio_field": audio.filename,
-        "image_field": image.filename,
-        "audio_content_type": audio.content_type,
-        "image_content_type": image.content_type,
-    }
+import os, time
+
+os.system("lsof -ti:8000 | xargs kill -9 2>/dev/null || true")
+time.sleep(2)
+
+import uvicorn
+from threading import Thread
+
+def run_server():
+    uvicorn.run("__main__:app", host="0.0.0.0", port=8000, reload=False)
+
+t = Thread(target=run_server, daemon=True)
+t.start()
