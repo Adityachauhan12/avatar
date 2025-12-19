@@ -1,5 +1,3 @@
-displayHTML("""
-<a href="/files/avatar_from_api.mp4" target="_blank">
-  Download avatar_from_api.mp4
-</a>
-""")
+The avatar model is now connected to a Fast Api server and is to be deployed.
+Now we can either serve the model from Databricks and call it through Fast Api from there or use Azure Vm which has Gpu to deploy our model there and call it through Fast Api.
+Kindly Suggest which option is better for deployment.
