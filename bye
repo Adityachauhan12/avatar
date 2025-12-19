@@ -1,3 +1,22 @@
-INFO:     127.0.0.1:42650 - "POST /debug-echo HTTP/1.1" 200 OK
-Status: 200
-Body: {"audio_field":"audio.wav","image_field":"image.png","audio_content_type":"audio/wav","image_content_type":"image/png"}
+import requests
+
+url = "http://localhost:8000/generate-avatar"
+
+audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+
+with open(audio_path, "rb") as af, open(image_path, "rb") as imf:
+    files = {
+        "audio": ("audio.wav", af, "audio/wav"),
+        "image": ("image.png", imf, "image/png"),
+    }
+    resp = requests.post(url, files=files)
+
+print("Status:", resp.status_code)
+print("Body:", resp.text[:500])
+
+if resp.status_code == 200:
+    out_path = "/tmp/avatar_from_api.mp4"
+    with open(out_path, "wb") as f:
+        f.write(resp.content)
+    print("Saved video to:", out_path)
