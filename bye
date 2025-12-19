@@ -1,3 +1,21 @@
-The avatar model is now connected to a Fast Api server and is to be deployed.
-Now we can either serve the model from Databricks and call it through Fast Api from there or use Azure Vm which has Gpu to deploy our model there and call it through Fast Api.
-Kindly Suggest which option is better for deployment.
+Subject: Deployment approach for Avatar model (FastAPI + GPU)
+
+Hi [Name/Team],
+
+The avatar model is now integrated with a FastAPI server and working end‑to‑end. We are ready to move from the current Databricks setup to a proper production deployment.
+
+There are two main options:
+
+Serve the model on Databricks and call it from FastAPI
+
+Use Databricks (GPU cluster / Model Serving) as the inference backend.
+
+FastAPI (running on a lightweight service) calls the Databricks endpoint for each request and returns the generated video to clients.
+
+Deploy the model on an Azure GPU VM and call it directly via FastAPI
+
+Package Ditto + FastAPI into a Docker image and run it on an Azure GPU VM or a GPU‑enabled container service.
+
+Clients call the Azure FastAPI endpoint directly; all inference happens on that Azure GPU.​
+
+Could you please advise which option you prefer for deployment, considering cost, maintainability, and alignment with our existing infrastructure?
