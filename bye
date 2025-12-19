@@ -1,34 +1,5 @@
-import requests
-import os
-import shutil
-
-url = "http://localhost:8000/generate-avatar"
-
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-with open(audio_path, "rb") as af, open(image_path, "rb") as imf:
-    files = {
-        "audio": ("audio.wav", af, "audio/wav"),
-        "image": ("image.png", imf, "image/png"),
-    }
-    resp = requests.post(url, files=files)
-
-print("Status:", resp.status_code)
-
-if resp.status_code == 200:
-    # 1) Save video to local /tmp
-    local_path = "/tmp/avatar_from_api.mp4"
-    with open(local_path, "wb") as f:
-        f.write(resp.content)
-    print("Saved video to:", local_path)
-
-    # 2) (Optional) Copy to DBFS FileStore so you can download from UI
-    target_dir = "/dbfs/FileStore/"
-    target_path = os.path.join(target_dir, "avatar_from_api.mp4")
-    os.makedirs(target_dir, exist_ok=True)
-    shutil.copy(local_path, target_path)
-    print("Copied to DBFS:", target_path)
-    print("Download URL in Databricks: /files/avatar_from_api.mp4")
-else:
-    print("Error body:", resp.text)
+displayHTML("""
+<a href="/files/avatar_from_api.mp4" target="_blank">
+  Download avatar_from_api.mp4
+</a>
+""")
