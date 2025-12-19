@@ -1,13 +1,16 @@
-import os, time
+import requests
 
-os.system("lsof -ti:8000 | xargs kill -9 2>/dev/null || true")
-time.sleep(2)
+url = "http://localhost:8000/debug-echo"
 
-import uvicorn
-from threading import Thread
+audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
 
-def run_server():
-    uvicorn.run("__main__:app", host="0.0.0.0", port=8000, reload=False)
+with open(audio_path, "rb") as af, open(image_path, "rb") as imf:
+    files = {
+        "audio": ("audio.wav", af, "audio/wav"),
+        "image": ("image.png", imf, "image/png"),
+    }
+    resp = requests.post(url, files=files)
 
-t = Thread(target=run_server, daemon=True)
-t.start()
+print("Status:", resp.status_code)
+print("Body:", resp.text)
