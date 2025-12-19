@@ -3,25 +3,23 @@ from pathlib import Path
 import uuid
 import tempfile
 import os
+import shutil
 
-# Base repo path (you already cd here in the notebook)
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import FileResponse
+
+# ----------------- Ditto wrapper (from cell 1) -----------------
+
 DITTO_ROOT = Path("/tmp/ditto-talkinghead")
 CHECKPOINT_ROOT = DITTO_ROOT / "checkpoints"
 
-# Use PyTorch checkpoints (these exist in your ls)
-DATA_ROOT = CHECKPOINT_ROOT / "ditto_pytorch"  # has aux_models + models
+DATA_ROOT = CHECKPOINT_ROOT / "ditto_pytorch"
 CFG_PKL = CHECKPOINT_ROOT / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
 
 TMP_DIR = DITTO_ROOT / "tmp"
 TMP_DIR.mkdir(parents=True, exist_ok=True)
 
 def run_ditto_inference(audio_path: str, image_path: str) -> str:
-    """
-    Run Ditto inference.py using your existing checkpoints.
-
-    audio_path, image_path: local filesystem paths
-    Returns: local path to generated mp4 inside /tmp/ditto-talkinghead/tmp.
-    """
     audio = Path(audio_path)
     image = Path(image_path)
 
@@ -65,16 +63,7 @@ def run_ditto_inference(audio_path: str, image_path: str) -> str:
 
     return str(out_path)
 
-
-
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import FileResponse
-from pathlib import Path
-import shutil
-import uuid
-import tempfile
-
-from ditto_inference_wrapper import run_ditto_inference  # from cell 1
+# ----------------- FastAPI app -----------------
 
 app = FastAPI(title="Ditto Avatar API (Databricks)")
 
