@@ -65,6 +65,15 @@ def run_ditto_inference(audio_path: str, image_path: str) -> str:
     if proc.returncode != 0:
         raise RuntimeError(f"Inference failed:\n{proc.stdout}")
 
+
+
+test_audio = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+test_image = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+
+out = run_ditto_inference(test_audio, test_image)
+print("Output video:", out)
+
+
     if not out_path.exists():
         raise RuntimeError("Output video not created")
 
