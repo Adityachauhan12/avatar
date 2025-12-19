@@ -1,8 +1,7 @@
-import uvicorn
-import threading
-
-def run_server():
-    uvicorn.run("__main__:app", host="0.0.0.0", port=8000, reload=False)
-
-t = threading.Thread(target=run_server, daemon=True)
-t.start()
+just now (<1s)
+36
+36
+import requests
+requests.get("http://localhost:8000/health").json()
+INFO:     127.0.0.1:48580 - "GET /health HTTP/1.1" 200 OK
+{'status': 'ok', 'env': 'databricks-notebook'}
