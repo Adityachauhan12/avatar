@@ -1,8 +1,8 @@
-just now (3s)
-39
-39
-        f.write(resp.content)
-    print("Saved video to:", out_path)
-INFO:     127.0.0.1:45572 - "POST /generate-avatar HTTP/1.1" 500 Internal Server Error
-Status: 500
-Body: {"detail":"Inference error: Inference failed:\nusage: inference.py [-h] [--data_root DATA_ROOT] [--cfg_pkl CFG_PKL]\n                    [--audio_path AUDIO_PATH] [--source_path SOURCE_PATH]\n                    [--output_path OUTPUT_PATH]\ninference.py: error: unrecognized arguments: --dataroot /tmp/ditto-talkinghead/checkpoints/ditto_pytorch\n"}
+    cmd = [
+        "python", str(DITTO_ROOT / "inference.py"),
+        "--data_root", str(DATA_ROOT),   # <-- underscore here
+        "--cfg_pkl", str(CFG_PKL),
+        "--audio_path", str(audio),
+        "--source_path", str(image),
+        "--output_path", str(out_path),
+    ]
