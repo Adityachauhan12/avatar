@@ -80,3 +80,5 @@ test_image = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"                
 
 out = run_ditto_inference(test_audio, test_image)
 out  # should be something like '/tmp/ditto-talkinghead/tmp/result_<uuid>.mp4'
+
+FileNotFoundError: DATA_ROOT not found: /tmp/ditto-talkinghead/checkpoints/ditto_trt_t4
