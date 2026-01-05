@@ -190,3 +190,24 @@ else:
         <p>Fix inference.py call before Docker deployment</p>
     </div>
     """)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+⚠️  Upload audio.wav to DBFS first
+🧪 Testing inference...
+❌ FAILED: Audio not found: /tmp/test_audio.wav
