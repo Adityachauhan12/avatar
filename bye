@@ -39,10 +39,12 @@ git clone https://huggingface.co/digital-avatar/ditto-talkinghead checkpoints
 
 from pathlib import Path
 import os
+import tempfile  # <-- yeh add karo
 
-# EXACT PATHS from your notebook [file:31]
 DITTO_ROOT = Path("/tmp/ditto-talkinghead")
-DATA_ROOT = DITTO_ROOT / "checkpoints" / "ditto-pytorch"  
+
+# PyTorch model ke hisaab se (Ditto docs se) [attached_file:1]
+DATA_ROOT = DITTO_ROOT / "checkpoints" / "ditto_pytorch"
 CFG_PKL = DITTO_ROOT / "checkpoints" / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
 
 TMP_DIR = Path(tempfile.gettempdir()) / "ditto_tmp"
@@ -53,11 +55,11 @@ print(f"DITTO_ROOT: {DITTO_ROOT}")
 print(f"DATA_ROOT: {DATA_ROOT}")
 print(f"CFG_PKL: {CFG_PKL}")
 
-# Verify
 assert DITTO_ROOT.exists(), "Repo missing"
 assert DATA_ROOT.exists(), "Data root missing"
 assert CFG_PKL.exists(), "CFG PKL missing"
 print("🎉 All paths verified!")
+
 
 
 
