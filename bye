@@ -129,30 +129,28 @@ def run_ditto_inference(audio, image):
 
 
 
-# Upload your test files to DBFS first, or use sample
-# For now using temp files - REPLACE with your paths
+TEST_AUDIO = "/dbfs/FileStore/avatar_test/Thank_you_audio.wav"
+TEST_IMAGE = "/dbfs/FileStore/avatar_test/new.png"
 
-# Example with uploaded files (update these paths):
-TEST_AUDIO = "/dbfs/FileStore/your_audio.wav"  
-TEST_IMAGE = "/dbfs/FileStore/your_image.png"
+print("🧪 Testing with real files:")
+print(f"Audio: {TEST_AUDIO}")
+print(f"Image: {TEST_IMAGE}")
 
-# Or generate temp test files:
-with tempfile.TemporaryDirectory() as tempdir:
-    # Replace with actual upload paths
-    test_audio = Path(TEST_AUDIO)
-    test_image = Path(TEST_IMAGE)
-    
-    if not test_audio.exists():
-        print("⚠️  Upload audio.wav to DBFS first")
-        test_audio = Path("/tmp/test_audio.wav")  # placeholder
-    
-    print("🧪 Testing inference...")
-    try:
-        output_path = run_ditto_inference(test_audio, test_image)
-        print(f"✅ SUCCESS! Output: {output_path}")
-        print(f"Size: {Path(output_path).stat().st_size} bytes")
-    except Exception as e:
-        print(f"❌ FAILED: {e}")
+# Verify files exist
+assert Path(TEST_AUDIO).exists(), "Audio missing in DBFS"
+assert Path(TEST_IMAGE).exists(), "Image missing in DBFS"
+print("✅ Files ready!")
+
+# Run inference (Docker ke exact flow)
+try:
+    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
+    print(f"🎉 SUCCESS! Output: {output_path}")
+    print(f"Size: {Path(output_path).stat().st_size:,} bytes")
+except Exception as e:
+    print(f"❌ FAILED: {e}")
+    import traceback
+    traceback.print_exc()
+
 
 
 
