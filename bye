@@ -220,3 +220,42 @@ shutil.copy2(src_image, dbfs_image)
 print("✅ Copied to DBFS:")
 print(f"Audio: {dbfs_audio}")
 print(f"Image: {dbfs_image}")
+
+
+
+
+
+
+🧪 Testing with real files:
+Audio: /dbfs/FileStore/avatar_test/Thank_you_audio.wav
+Image: /dbfs/FileStore/avatar_test/new.png
+✅ Files ready!
+❌ FAILED: Inference failed:
+Traceback (most recent call last):
+  File "/tmp/ditto-talkinghead/inference.py", line 9, in <module>
+    from stream_pipeline_offline import StreamSDK
+  File "/tmp/ditto-talkinghead/stream_pipeline_offline.py", line 7, in <module>
+    from core.atomic_components.avatar_registrar import AvatarRegistrar, smooth_x_s_info_lst
+  File "/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py", line 3, in <module>
+    from .loader import load_source_frames
+  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 1, in <module>
+    import filetype
+ModuleNotFoundError: No module named 'filetype'
+
+Traceback (most recent call last):
+  File "/root/.ipykernel/1995/command-5991615120424275-2040642103", line 15, in <module>
+    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
+  File "/root/.ipykernel/1995/command-5991615120424274-2630900047", line 47, in run_ditto_inference
+    raise RuntimeError(f"Inference failed:\n{proc.stdout}")
+RuntimeError: Inference failed:
+Traceback (most recent call last):
+  File "/tmp/ditto-talkinghead/inference.py", line 9, in <module>
+    from stream_pipeline_offline import StreamSDK
+  File "/tmp/ditto-talkinghead/stream_pipeline_offline.py", line 7, in <module>
+    from core.atomic_components.avatar_registrar import AvatarRegistrar, smooth_x_s_info_lst
+  File "/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py", line 3, in <module>
+    from .loader import load_source_frames
+  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 1, in <module>
+    import filetype
+ModuleNotFoundError: No module named 'filetype'
+
