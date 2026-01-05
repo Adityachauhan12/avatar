@@ -93,6 +93,47 @@ try:
         </a>
     </div>
     """)
+
+
+
+
+
+
+
+
+
+
+
+
+🔍 Verifying setup...
+DITTO_ROOT: True
+DATA_ROOT: True
+CFG_PKL: True
+TEST_AUDIO: True
+TEST_IMAGE: True
+
+🚀 Starting backend test...
+🟢 Running: python /tmp/ditto-talkinghead/inference.py --data_root /tmp/ditto-talkinghead/checkpoints/ditto_pytorch --cfg_pkl /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl --audio_path /dbfs/FileStore/avatar_test/Thank_you_audio.wav --source_path /dbfs/FileStore/avatar_test/new.png --output_path /tmp/ditto_tmp/result_8e08bb8f1b3a4b22a5e8354b1bcfd005.mp4
+📊 Return code: 1
+❌ STDOUT/STDERR: Traceback (most recent call last):
+  File "/tmp/ditto-talkinghead/inference.py", line 9, in <module>
+    from stream_pipeline_offline import StreamSDK
+  File "/tmp/ditto-talkinghead/stream_pipeline_offline.py", line 7, in <module>
+    from core.atomic_components.avatar_registrar import AvatarRegistrar, smooth_x_s_info_lst
+  File "/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py", line 3, in <module>
+    from .loader import load_source_frames
+  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 2, in <module>
+    import imageio
+ModuleNotFoundError: No module named 'imageio'
+
+
+❌ Backend test failed: Inference failed
+Traceback (most recent call last):
+  File "/root/.ipykernel/6488/command-4607322112690964-964266108", line 74, in <module>
+    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
+  File "/root/.ipykernel/6488/command-4607322112690964-964266108", line 61, in run_ditto_inference
+    raise RuntimeError("Inference failed")
+RuntimeError: Inference failed
     
 except Exception as e:
     print(f"\n❌ Backend test failed: {e}")
