@@ -8,13 +8,12 @@ apt-get install -y git-lfs ffmpeg
 
 
 %pip install \
-  librosa tqdm filetype imageio opencv-python-headless scikit-image \
-  imageio-ffmpeg colored \
-  soundfile mediapipe onnxruntime-gpu \
-  omegaconf einops ml-dtypes \
-  tensorflow==2.14.1 \
-  torch==2.0.1 torchvision==0.15.2 \
-  tensorrt==8.6.1
+  filetype \
+  tensorrt==8.6.1 \
+  librosa tqdm imageio opencv-python-headless scikit-image \
+  imageio-ffmpeg colored polygraphy numpy==2.0.1 \
+  cython cuda-python omegaconf einops ml-dtypes \
+  tensorflow==2.14.1 torch==2.0.1 torchvision==0.15.2
 
 dbutils.library.restartPython()
 
