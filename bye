@@ -200,12 +200,25 @@ else:
 
 
 
+# Cell: Copy files to DBFS
+from pathlib import Path
+import shutil
 
+# Source paths (tere local)
+src_audio = Path("/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav")
+src_image = Path("/Volumes/lab37_catalog/ifstrolley/trolley/new.png")
 
+# DBFS target
+dbfs_audio = Path("/dbfs/FileStore/avatar_test/Thank_you_audio.wav")
+dbfs_image = Path("/dbfs/FileStore/avatar_test/new.png")
 
+# Create dir
+Path("/dbfs/FileStore/avatar_test").mkdir(parents=True, exist_ok=True)
 
+# Copy
+shutil.copy2(src_audio, dbfs_audio)
+shutil.copy2(src_image, dbfs_image)
 
-
-
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+print("✅ Copied to DBFS:")
+print(f"Audio: {dbfs_audio}")
+print(f"Image: {dbfs_image}")
