@@ -1,21 +1,164 @@
-Subject: Deployment approach for Avatar model (FastAPI + GPU)
+%sh
+apt-get update
+apt-get install -y git-lfs ffmpeg
 
-Hi [Name/Team],
 
-The avatar model is now integrated with a FastAPI server and working end‑to‑end. We are ready to move from the current Databricks setup to a proper production deployment.
 
-There are two main options:
 
-Serve the model on Databricks and call it from FastAPI
 
-Use Databricks (GPU cluster / Model Serving) as the inference backend.
 
-FastAPI (running on a lightweight service) calls the Databricks endpoint for each request and returns the generated video to clients.
+%pip install \
+  librosa tqdm filetype imageio opencv-python-headless scikit-image \
+  imageio-ffmpeg colored \
+  soundfile mediapipe onnxruntime-gpu \
+  omegaconf einops ml-dtypes \
+  tensorflow==2.14.1 \
+  torch==2.0.1 torchvision==0.15.2 \
+  tensorrt==8.6.1
 
-Deploy the model on an Azure GPU VM and call it directly via FastAPI
+dbutils.library.restartPython()  # Important: Restart kernel after pip
 
-Package Ditto + FastAPI into a Docker image and run it on an Azure GPU VM or a GPU‑enabled container service.
 
-Clients call the Azure FastAPI endpoint directly; all inference happens on that Azure GPU.​
 
-Could you please advise which option you prefer for deployment, considering cost, maintainability, and alignment with our existing infrastructure?
+
+
+
+%sh
+rm -rf /tmp/ditto-talkinghead
+git clone https://github.com/antgroup/ditto-talkinghead /tmp/ditto-talkinghead
+
+cd /tmp/ditto-talkinghead
+mkdir -p checkpoints
+git clone https://huggingface.co/digital-avatar/ditto-talkinghead checkpoints
+
+
+
+
+
+import os
+from pathlib import Path
+
+BASE_DIR = Path("/tmp/ditto-talkinghead")
+CHECKPOINTS_DIR = BASE_DIR / "checkpoints"
+CFG_PKL = CHECKPOINTS_DIR / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
+
+# Verify paths exist
+print("BASE_DIR:", BASE_DIR.exists())
+print("CHECKPOINTS:", CHECKPOINTS_DIR.exists())
+print("CFG:", CFG_PKL.exists())
+
+# List checkpoint structure
+print("\nCheckpoints contents:")
+!ls -la /tmp/ditto-talkinghead/checkpoints/
+
+
+
+
+
+
+
+
+import subprocess
+import tempfile
+import shutil
+from pathlib import Path
+
+def run_avatar_inference(
+    audio_path,
+    image_path,
+    output_path="/tmp/result.mp4",
+    dataroot="/tmp/ditto-talkinghead/checkpoints/ditto-pytorch",
+    cfgpkl="/tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
+):
+    """
+    Exact same function jo Docker main.py me subprocess se call hoga
+    """
+    cmd = [
+        "python", "/tmp/ditto-talkinghead/inference.py",
+        "--dataroot", dataroot,
+        "--cfgpkl", cfgpkl,
+        "--audiopath", audio_path,
+        "--sourcepath", image_path,
+        "--outputpath", output_path
+    ]
+    
+    print("🟢 Running command:", " ".join(cmd))
+    result = subprocess.run(
+        cmd, 
+        cwd="/tmp/ditto-talkinghead",
+        capture_output=True, 
+        text=True,
+        timeout=300
+    )
+    
+    print("✅ Return Code:", result.returncode)
+    print("📤 STDOUT (first 500 chars):", result.stdout[:500])
+    if result.stderr:
+        print("⚠️  STDERR:", result.stderr)
+    
+    return result.returncode, Path(output_path)
+
+
+
+
+
+
+
+import urllib.request
+import tempfile
+
+# Download sample files (replace with your own)
+with tempfile.TemporaryDirectory() as tempdir:
+    audio_path = f"{tempdir}/audio.wav"
+    image_path = f"{tempdir}/image.png"
+    
+    # Sample files (ya apne local files upload karo)
+    urllib.request.urlretrieve(
+        "https://example.com/sample_audio.wav", audio_path
+    )
+    urllib.request.urlretrieve(
+        "https://example.com/sample_image.png", image_path
+    )
+    
+    print("🧪 Testing with:")
+    print(f"Audio: {audio_path}")
+    print(f"Image: {image_path}")
+    
+    # Run inference (exact Docker flow)
+    rc, output_path = run_avatar_inference(audio_path, image_path)
+    
+    if rc == 0 and output_path.exists():
+        print("🎉 SUCCESS! Video generated:", output_path)
+        print("📊 Size:", output_path.stat().st_size, "bytes")
+    else:
+        print("❌ FAILED!")
+
+
+
+
+
+
+
+
+if output_path.exists():
+    dbfs_target = Path("/dbfs/FileStore/avatar_test_results")
+    dbfs_target.mkdir(parents=True, exist_ok=True)
+    final_path = dbfs_target / "result.mp4"
+    
+    shutil.copy2(output_path, final_path)
+    print("💾 Saved to DBFS:", final_path)
+    
+    # Download link
+    displayHTML(f'''
+    <div style="background-color: #e8f0fe; padding: 20px; border-radius: 10px;">
+        <h3>✅ Test Complete!</h3>
+        <a href="/files/avatar_test_results/result.mp4" 
+           download style="background: #4285f4; color: white; padding: 10px 20px; 
+                          text-decoration: none; border-radius: 5px; font-weight: bold;">
+            📥 Download result.mp4
+        </a>
+        <br><small>Return Code: {rc} | File Size: {output_path.stat().st_size} bytes</small>
+    </div>
+    ''')
+else:
+    print("No output file generated")
