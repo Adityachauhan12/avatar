@@ -23,6 +23,7 @@ dbutils.library.restartPython()
 
 
 
+
 %sh
 rm -rf /tmp/ditto-talkinghead
 git clone https://github.com/antgroup/ditto-talkinghead /tmp/ditto-talkinghead
@@ -258,3 +259,7 @@ Traceback (most recent call last):
     import filetype
 ModuleNotFoundError: No module named 'filetype'
 
+
+
+
+CalledProcessError: Command 'pip --disable-pip-version-check install    filetype    tensorrt==8.6.1    librosa tqdm imageio opencv-python-headless scikit-image    imageio-ffmpeg colored polygraphy numpy==2.0.1    cython cuda-python omegaconf einops ml-dtypes    tensorflow==2.14.1 torch==2.0.1 torchvision==0.15.2' returned non-zero exit status 1.
