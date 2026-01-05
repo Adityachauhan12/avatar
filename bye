@@ -207,7 +207,5 @@ else:
 
 
 
-
-⚠️  Upload audio.wav to DBFS first
-🧪 Testing inference...
-❌ FAILED: Audio not found: /tmp/test_audio.wav
+audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
