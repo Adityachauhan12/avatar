@@ -16,7 +16,8 @@ apt-get install -y git-lfs ffmpeg
   torch==2.0.1 torchvision==0.15.2 \
   tensorrt==8.6.1
 
-dbutils.library.restartPython()  # Important: Restart kernel after pip
+dbutils.library.restartPython()
+
 
 
 
@@ -35,21 +36,29 @@ git clone https://huggingface.co/digital-avatar/ditto-talkinghead checkpoints
 
 
 
-import os
+
 from pathlib import Path
+import os
 
-BASE_DIR = Path("/tmp/ditto-talkinghead")
-CHECKPOINTS_DIR = BASE_DIR / "checkpoints"
-CFG_PKL = CHECKPOINTS_DIR / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
+# EXACT PATHS from your notebook [file:31]
+DITTO_ROOT = Path("/tmp/ditto-talkinghead")
+DATA_ROOT = DITTO_ROOT / "checkpoints" / "ditto-pytorch"  
+CFG_PKL = DITTO_ROOT / "checkpoints" / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
 
-# Verify paths exist
-print("BASE_DIR:", BASE_DIR.exists())
-print("CHECKPOINTS:", CHECKPOINTS_DIR.exists())
-print("CFG:", CFG_PKL.exists())
+TMP_DIR = Path(tempfile.gettempdir()) / "ditto_tmp"
+TMP_DIR.mkdir(exist_ok=True)
 
-# List checkpoint structure
-print("\nCheckpoints contents:")
-!ls -la /tmp/ditto-talkinghead/checkpoints/
+print("✅ Paths ready:")
+print(f"DITTO_ROOT: {DITTO_ROOT}")
+print(f"DATA_ROOT: {DATA_ROOT}")
+print(f"CFG_PKL: {CFG_PKL}")
+
+# Verify
+assert DITTO_ROOT.exists(), "Repo missing"
+assert DATA_ROOT.exists(), "Data root missing"
+assert CFG_PKL.exists(), "CFG PKL missing"
+print("🎉 All paths verified!")
+
 
 
 
@@ -59,44 +68,57 @@ print("\nCheckpoints contents:")
 
 
 import subprocess
+import uuid
 import tempfile
 import shutil
-from pathlib import Path
 
-def run_avatar_inference(
-    audio_path,
-    image_path,
-    output_path="/tmp/result.mp4",
-    dataroot="/tmp/ditto-talkinghead/checkpoints/ditto-pytorch",
-    cfgpkl="/tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
-):
+def run_ditto_inference(audio, image):
     """
-    Exact same function jo Docker main.py me subprocess se call hoga
+    EXACT same function from your notebook [file:31]
     """
+    # File validation
+    audio = Path(audio)
+    image = Path(image)
+    
+    if not audio.exists():
+        raise FileNotFoundError(f"Audio not found: {audio}")
+    if not image.exists():
+        raise FileNotFoundError(f"Image not found: {image}")
+    if not DATA_ROOT.exists():
+        raise FileNotFoundError(f"DATA_ROOT not found: {DATA_ROOT}")
+    if not CFG_PKL.exists():
+        raise FileNotFoundError(f"CFG_PKL not found: {CFG_PKL}")
+
+    out_path = TMP_DIR / f"result_{uuid.uuid4().hex}.mp4"
+
     cmd = [
-        "python", "/tmp/ditto-talkinghead/inference.py",
-        "--dataroot", dataroot,
-        "--cfgpkl", cfgpkl,
-        "--audiopath", audio_path,
-        "--sourcepath", image_path,
-        "--outputpath", output_path
+        "python", str(DITTO_ROOT / "inference.py"),
+        "--data_root", str(DATA_ROOT),  # underscore here [file:31]
+        "--cfg_pkl", str(CFG_PKL),
+        "--audio_path", str(audio),
+        "--source_path", str(image),
+        "--output_path", str(out_path),
     ]
-    
-    print("🟢 Running command:", " ".join(cmd))
-    result = subprocess.run(
-        cmd, 
-        cwd="/tmp/ditto-talkinghead",
-        capture_output=True, 
+
+    env = os.environ.copy()
+
+    proc = subprocess.run(
+        cmd,
+        cwd=str(DITTO_ROOT),
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
         text=True,
-        timeout=300
+        timeout=900,
     )
-    
-    print("✅ Return Code:", result.returncode)
-    print("📤 STDOUT (first 500 chars):", result.stdout[:500])
-    if result.stderr:
-        print("⚠️  STDERR:", result.stderr)
-    
-    return result.returncode, Path(output_path)
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"Inference failed:\n{proc.stdout}")
+
+    if not out_path.exists():
+        raise RuntimeError("Output video not created")
+
+    return str(out_path)
 
 
 
@@ -104,34 +126,31 @@ def run_avatar_inference(
 
 
 
-import urllib.request
-import tempfile
 
-# Download sample files (replace with your own)
+# Upload your test files to DBFS first, or use sample
+# For now using temp files - REPLACE with your paths
+
+# Example with uploaded files (update these paths):
+TEST_AUDIO = "/dbfs/FileStore/your_audio.wav"  
+TEST_IMAGE = "/dbfs/FileStore/your_image.png"
+
+# Or generate temp test files:
 with tempfile.TemporaryDirectory() as tempdir:
-    audio_path = f"{tempdir}/audio.wav"
-    image_path = f"{tempdir}/image.png"
+    # Replace with actual upload paths
+    test_audio = Path(TEST_AUDIO)
+    test_image = Path(TEST_IMAGE)
     
-    # Sample files (ya apne local files upload karo)
-    urllib.request.urlretrieve(
-        "https://example.com/sample_audio.wav", audio_path
-    )
-    urllib.request.urlretrieve(
-        "https://example.com/sample_image.png", image_path
-    )
+    if not test_audio.exists():
+        print("⚠️  Upload audio.wav to DBFS first")
+        test_audio = Path("/tmp/test_audio.wav")  # placeholder
     
-    print("🧪 Testing with:")
-    print(f"Audio: {audio_path}")
-    print(f"Image: {image_path}")
-    
-    # Run inference (exact Docker flow)
-    rc, output_path = run_avatar_inference(audio_path, image_path)
-    
-    if rc == 0 and output_path.exists():
-        print("🎉 SUCCESS! Video generated:", output_path)
-        print("📊 Size:", output_path.stat().st_size, "bytes")
-    else:
-        print("❌ FAILED!")
+    print("🧪 Testing inference...")
+    try:
+        output_path = run_ditto_inference(test_audio, test_image)
+        print(f"✅ SUCCESS! Output: {output_path}")
+        print(f"Size: {Path(output_path).stat().st_size} bytes")
+    except Exception as e:
+        print(f"❌ FAILED: {e}")
 
 
 
@@ -140,25 +159,32 @@ with tempfile.TemporaryDirectory() as tempdir:
 
 
 
-if output_path.exists():
-    dbfs_target = Path("/dbfs/FileStore/avatar_test_results")
-    dbfs_target.mkdir(parents=True, exist_ok=True)
-    final_path = dbfs_target / "result.mp4"
+if 'output_path' in locals() and Path(output_path).exists():
+    dbfs_results = Path("/dbfs/FileStore/avatar_test_results")
+    dbfs_results.mkdir(parents=True, exist_ok=True)
+    final_path = dbfs_results / "backend_test_result.mp4"
     
     shutil.copy2(output_path, final_path)
-    print("💾 Saved to DBFS:", final_path)
     
-    # Download link
-    displayHTML(f'''
-    <div style="background-color: #e8f0fe; padding: 20px; border-radius: 10px;">
-        <h3>✅ Test Complete!</h3>
-        <a href="/files/avatar_test_results/result.mp4" 
-           download style="background: #4285f4; color: white; padding: 10px 20px; 
-                          text-decoration: none; border-radius: 5px; font-weight: bold;">
-            📥 Download result.mp4
+    displayHTML(f"""
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                color: white; padding: 25px; border-radius: 15px; text-align: center;">
+        <h2>🎉 Backend Test PASSED!</h2>
+        <p><strong>Video ready for Docker deployment</strong></p>
+        <a href="/files/avatar_test_results/backend_test_result.mp4" 
+           download style="background: white; color: #667eea; 
+                          padding: 12px 30px; text-decoration: none; 
+                          border-radius: 25px; font-weight: bold; font-size: 16px;">
+            📥 Download MP4
         </a>
-        <br><small>Return Code: {rc} | File Size: {output_path.stat().st_size} bytes</small>
+        <br><br>
+        <small>RC: 0 | Size: {Path(output_path).stat().st_size:,} bytes</small>
     </div>
-    ''')
+    """)
 else:
-    print("No output file generated")
+    displayHTML("""
+    <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 10px;">
+        <h3>❌ Backend test failed</h3>
+        <p>Fix inference.py call before Docker deployment</p>
+    </div>
+    """)
