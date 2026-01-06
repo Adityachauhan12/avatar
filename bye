@@ -7,31 +7,12 @@ apt-get install -y git-lfs ffmpeg
 
 
 
-%pip install \
-  filetype \
-  librosa \
-  tqdm \
-  imageio \
-  opencv-python-headless \
-  scikit-image \
-  imageio-ffmpeg \
-  colored \
-  polygraphy \
-  numpy==2.0.1 \
-  cython \
-  cuda-python \
-  omegaconf \
-  einops \
-  ml-dtypes \
-  tensorrt==8.6.1 \
-  tensorflow==2.14.1 \
-  torch==2.0.1 \
-  torchvision==0.15.2 \
-  fastapi \
-  uvicorn \
-  pydantic
+# Only install packages missing on Databricks cluster
+%pip install filetype polygraphy cython colored
 
+# RESTART KERNEL (CRITICAL!)
 dbutils.library.restartPython()
+
 
 
 
