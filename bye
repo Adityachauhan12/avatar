@@ -1,1 +1,309 @@
-%pip install imageio imageio-ffmpeg torch torchvision torchaudio opencv-python facexlib gfpgan basicsr
+%sh
+apt-get update
+apt-get install -y git-lfs ffmpeg
+
+
+
+
+
+
+%pip install \
+  filetype \
+  librosa \
+  tqdm \
+  imageio \
+  opencv-python-headless \
+  scikit-image \
+  imageio-ffmpeg \
+  colored \
+  polygraphy \
+  numpy==2.0.1 \
+  cython \
+  cuda-python \
+  omegaconf \
+  einops \
+  ml-dtypes \
+  tensorrt==8.6.1 \
+  tensorflow==2.14.1 \
+  torch==2.0.1 \
+  torchvision==0.15.2 \
+  fastapi \
+  uvicorn \
+  pydantic
+
+dbutils.library.restartPython()
+
+
+
+
+
+%sh
+rm -rf /tmp/ditto-talkinghead
+git clone https://github.com/antgroup/ditto-talkinghead /tmp/ditto-talkinghead
+
+cd /tmp/ditto-talkinghead
+mkdir -p checkpoints
+git clone https://huggingface.co/digital-avatar/ditto-talkinghead checkpoints
+
+# Verify structure
+echo "✅ Repo ready:"
+ls -la /tmp/ditto-talkinghead/inference.py
+ls -la /tmp/ditto-talkinghead/checkpoints/ditto_pytorch/
+ls -la /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl
+
+
+
+
+
+from pathlib import Path
+import os
+import tempfile
+
+# EXACT PATHS for PyTorch model
+DITTO_ROOT = Path("/tmp/ditto-talkinghead")
+DATA_ROOT = DITTO_ROOT / "checkpoints" / "ditto_pytorch"
+CFG_PKL = DITTO_ROOT / "checkpoints" / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
+TMP_DIR = Path(tempfile.gettempdir()) / "ditto_tmp"
+TMP_DIR.mkdir(parents=True, exist_ok=True)
+
+# Print paths
+print("=" * 60)
+print("DITTO PATHS CONFIGURATION")
+print("=" * 60)
+print(f"DITTO_ROOT: {DITTO_ROOT}")
+print(f"  Exists: {DITTO_ROOT.exists()}")
+print()
+print(f"DATA_ROOT: {DATA_ROOT}")
+print(f"  Exists: {DATA_ROOT.exists()}")
+print()
+print(f"CFG_PKL: {CFG_PKL}")
+print(f"  Exists: {CFG_PKL.exists()}")
+print()
+print(f"TMP_DIR: {TMP_DIR}")
+print(f"  Exists: {TMP_DIR.exists()}")
+print("=" * 60)
+
+# Verify all exist
+try:
+    assert DITTO_ROOT.exists(), "❌ DITTO_ROOT missing"
+    assert (DITTO_ROOT / "inference.py").exists(), "❌ inference.py missing"
+    assert DATA_ROOT.exists(), "❌ DATA_ROOT missing"
+    assert CFG_PKL.exists(), "❌ CFG_PKL missing"
+    print("✅ ALL PATHS VERIFIED!")
+except AssertionError as e:
+    print(str(e))
+
+
+
+
+
+from pathlib import Path
+import shutil
+
+# YOUR actual file paths (from Volumes)
+SRC_AUDIO = Path("/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav")
+SRC_IMAGE = Path("/Volumes/lab37_catalog/ifstrolley/trolley/new.png")
+
+# DBFS target (cleaned names)
+DBFS_DIR = Path("/dbfs/FileStore/avatar_test")
+DBFS_AUDIO = DBFS_DIR / "audio.wav"
+DBFS_IMAGE = DBFS_DIR / "image.png"
+
+# Create DBFS dir
+DBFS_DIR.mkdir(parents=True, exist_ok=True)
+
+# Copy files
+print("Copying files to DBFS...")
+shutil.copy2(SRC_AUDIO, DBFS_AUDIO)
+shutil.copy2(SRC_IMAGE, DBFS_IMAGE)
+
+print(f"✅ Audio: {DBFS_AUDIO}")
+print(f"   Size: {DBFS_AUDIO.stat().st_size:,} bytes")
+print(f"   Exists: {DBFS_AUDIO.exists()}")
+print()
+print(f"✅ Image: {DBFS_IMAGE}")
+print(f"   Size: {DBFS_IMAGE.stat().st_size:,} bytes")
+print(f"   Exists: {DBFS_IMAGE.exists()}")
+
+
+
+
+
+
+
+import subprocess
+import uuid
+from pathlib import Path
+import os
+
+def run_ditto_inference(audio_path, image_path):
+    """
+    Run Ditto inference (exact Docker flow)
+    """
+    audio = Path(audio_path)
+    image = Path(image_path)
+    
+    # Validate inputs
+    if not audio.exists():
+        raise FileNotFoundError(f"Audio file not found: {audio}")
+    if not image.exists():
+        raise FileNotFoundError(f"Image file not found: {image}")
+    if not DATA_ROOT.exists():
+        raise FileNotFoundError(f"DATA_ROOT not found: {DATA_ROOT}")
+    if not CFG_PKL.exists():
+        raise FileNotFoundError(f"CFG_PKL not found: {CFG_PKL}")
+    
+    # Output path
+    out_path = TMP_DIR / f"result_{uuid.uuid4().hex}.mp4"
+    
+    # Build command (EXACT as Docker main.py will call)
+    cmd = [
+        "python",
+        str(DITTO_ROOT / "inference.py"),
+        "--data_root", str(DATA_ROOT),
+        "--cfg_pkl", str(CFG_PKL),
+        "--audio_path", str(audio),
+        "--source_path", str(image),
+        "--output_path", str(out_path),
+    ]
+    
+    # Run inference
+    print("🔄 Running inference...")
+    print(f"   Command: python inference.py \\")
+    print(f"     --data_root {DATA_ROOT} \\")
+    print(f"     --cfg_pkl {CFG_PKL} \\")
+    print(f"     --audio_path {audio} \\")
+    print(f"     --source_path {image} \\")
+    print(f"     --output_path {out_path}")
+    print()
+    
+    proc = subprocess.run(
+        cmd,
+        cwd=str(DITTO_ROOT),
+        capture_output=True,
+        text=True,
+        timeout=900  # 15 minutes max
+    )
+    
+    # Check result
+    if proc.returncode != 0:
+        print("❌ INFERENCE FAILED")
+        print("STDOUT:", proc.stdout[-1000:])
+        print("STDERR:", proc.stderr[-1000:])
+        raise RuntimeError(f"Inference failed with code {proc.returncode}")
+    
+    if not out_path.exists():
+        print("❌ OUTPUT VIDEO NOT CREATED")
+        raise RuntimeError("Output video file not created")
+    
+    return str(out_path)
+
+print("✅ Inference function ready!")
+
+
+
+
+
+
+
+from pathlib import Path
+import shutil
+
+# Use files from CELL 5
+TEST_AUDIO = "/dbfs/FileStore/avatar_test/audio.wav"
+TEST_IMAGE = "/dbfs/FileStore/avatar_test/image.png"
+
+print("=" * 60)
+print("BACKEND TEST - DITTO INFERENCE")
+print("=" * 60)
+print(f"Audio: {TEST_AUDIO}")
+print(f"Image: {TEST_IMAGE}")
+print()
+
+# Run test
+try:
+    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
+    
+    # Copy to DBFS for download
+    dbfs_output = Path("/dbfs/FileStore/avatar_test/result.mp4")
+    shutil.copy2(output_path, dbfs_output)
+    
+    # Success output
+    size_mb = dbfs_output.stat().st_size / (1024 * 1024)
+    
+    print()
+    print("=" * 60)
+    print("✅ BACKEND TEST PASSED!")
+    print("=" * 60)
+    print(f"Output: {output_path}")
+    print(f"Size: {size_mb:.2f} MB")
+    print(f"DBFS: {dbfs_output}")
+    print()
+    print("🎯 Ready for Docker deployment!")
+    print("=" * 60)
+    
+    # HTML download link
+    displayHTML(f"""
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                padding: 30px; border-radius: 15px; color: white; text-align: center;">
+        <h2 style="margin: 0; font-size: 28px;">✅ Backend Test PASSED</h2>
+        <p style="margin: 15px 0; font-size: 16px;">Inference pipeline working correctly</p>
+        <a href="/files/avatar_test/result.mp4" download 
+           style="display: inline-block; background: white; color: #667eea; 
+                  padding: 12px 30px; border-radius: 25px; font-weight: bold; 
+                  text-decoration: none; font-size: 16px; margin-top: 15px;">
+            📥 Download Result.mp4 ({size_mb:.1f} MB)
+        </a>
+        <p style="margin-top: 20px; font-size: 12px; opacity: 0.9;">
+            Your backend is production-ready for Docker deployment
+        </p>
+    </div>
+    """)
+    
+except Exception as e:
+    print()
+    print("=" * 60)
+    print("❌ BACKEND TEST FAILED")
+    print("=" * 60)
+    print(f"Error: {e}")
+    print()
+    
+    import traceback
+    traceback.print_exc()
+    
+    displayHTML("""
+    <div style="background: #ffebee; padding: 20px; border-radius: 10px; color: #c62828;">
+        <h3>❌ Backend Test Failed</h3>
+        <p>Check the error output above. Common issues:</p>
+        <ul>
+            <li>Audio/image files not found - verify paths in CELL 5</li>
+            <li>Missing dependencies - rerun CELL 2</li>
+            <li>Model weights missing - rerun CELL 3</li>
+            <li>GPU out of memory - reduce image size or audio duration</li>
+        </ul>
+    </div>
+    """)
+
+
+
+
+# Save notebook state for Docker reference
+import json
+from datetime import datetime
+
+state = {
+    "timestamp": str(datetime.now()),
+    "ditto_root": str(DITTO_ROOT),
+    "data_root": str(DATA_ROOT),
+    "cfg_pkl": str(CFG_PKL),
+    "backend_status": "PASSED" if Path("/dbfs/FileStore/avatar_test/result.mp4").exists() else "FAILED",
+    "test_files": {
+        "audio": TEST_AUDIO,
+        "image": TEST_IMAGE
+    }
+}
+
+with open("/dbfs/FileStore/avatar_test/notebook_state.json", "w") as f:
+    json.dump(state, f, indent=2)
+
+print("✅ Notebook state saved to DBFS")
