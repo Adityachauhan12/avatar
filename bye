@@ -307,3 +307,7 @@ with open("/dbfs/FileStore/avatar_test/notebook_state.json", "w") as f:
     json.dump(state, f, indent=2)
 
 print("✅ Notebook state saved to DBFS")
+
+
+
+CalledProcessError: Command 'pip --disable-pip-version-check install    filetype    librosa    tqdm    imageio    opencv-python-headless    scikit-image    imageio-ffmpeg    colored    polygraphy    numpy==2.0.1    cython    cuda-python    omegaconf    einops    ml-dtypes    tensorrt==8.6.1    tensorflow==2.14.1    torch==2.0.1    torchvision==0.15.2    fastapi    uvicorn    pydantic' returned non-zero exit status 1.
