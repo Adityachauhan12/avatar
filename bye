@@ -8,10 +8,11 @@ apt-get install -y git-lfs ffmpeg
 
 
 # Only install packages missing on Databricks cluster
-%pip install filetype polygraphy cython colored
+%pip install filetype polygraphy cython colored imageio imageio-ffmpeg omegaconf einops
 
 # RESTART KERNEL (CRITICAL!)
 dbutils.library.restartPython()
+
 
 
 
