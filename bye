@@ -269,27 +269,36 @@ except Exception as e:
 
 
 
-# Save notebook state for Docker reference
-import json
-from datetime import datetime
+============================================================
+DITTO PATHS CONFIGURATION
+============================================================
+DITTO_ROOT: /tmp/ditto-talkinghead
+  Exists: True
 
-state = {
-    "timestamp": str(datetime.now()),
-    "ditto_root": str(DITTO_ROOT),
-    "data_root": str(DATA_ROOT),
-    "cfg_pkl": str(CFG_PKL),
-    "backend_status": "PASSED" if Path("/dbfs/FileStore/avatar_test/result.mp4").exists() else "FAILED",
-    "test_files": {
-        "audio": TEST_AUDIO,
-        "image": TEST_IMAGE
-    }
-}
+DATA_ROOT: /tmp/ditto-talkinghead/checkpoints/ditto_pytorch
+  Exists: True
 
-with open("/dbfs/FileStore/avatar_test/notebook_state.json", "w") as f:
-    json.dump(state, f, indent=2)
+CFG_PKL: /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl
+  Exists: True
 
-print("✅ Notebook state saved to DBFS")
+TMP_DIR: /tmp/ditto_tmp
+  Exists: True
+============================================================
+✅ ALL PATHS VERIFIED!
 
+
+
+Copying files to DBFS...
+✅ Audio: /dbfs/FileStore/avatar_test/audio.wav
+   Size: 1,126,998 bytes
+   Exists: True
+
+✅ Image: /dbfs/FileStore/avatar_test/image.png
+   Size: 1,216,912 bytes
+   Exists: True
+
+
+✅ Inference function ready!
 ============================================================
 BACKEND TEST - DITTO INFERENCE
 ============================================================
@@ -302,7 +311,7 @@ Image: /dbfs/FileStore/avatar_test/image.png
      --cfg_pkl /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl \
      --audio_path /dbfs/FileStore/avatar_test/audio.wav \
      --source_path /dbfs/FileStore/avatar_test/image.png \
-     --output_path /tmp/ditto_tmp/result_7043605a989644c8af461387dcf057af.mp4
+     --output_path /tmp/ditto_tmp/result_786b03fc88734918ba0e09542e1ee499.mp4
 
 ❌ INFERENCE FAILED
 STDOUT: 
@@ -313,9 +322,9 @@ STDERR: Traceback (most recent call last):
     from core.atomic_components.avatar_registrar import AvatarRegistrar, smooth_x_s_info_lst
   File "/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py", line 3, in <module>
     from .loader import load_source_frames
-  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 2, in <module>
-    import imageio
-ModuleNotFoundError: No module named 'imageio'
+  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 3, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
 
 
 ============================================================
@@ -324,16 +333,8 @@ ModuleNotFoundError: No module named 'imageio'
 Error: Inference failed with code 1
 
 Traceback (most recent call last):
-  File "/root/.ipykernel/4944/command-5980669999680099-1980739181", line 17, in <module>
+  File "/root/.ipykernel/6341/command-5980669999680099-1980739181", line 17, in <module>
     output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
-  File "/root/.ipykernel/4944/command-5980669999680098-1124972447", line 60, in run_ditto_inference
+  File "/root/.ipykernel/6341/command-5980669999680098-1124972447", line 60, in run_ditto_inference
     raise RuntimeError(f"Inference failed with code {proc.returncode}")
 RuntimeError: Inference failed with code 1
-
-❌ Backend Test Failed
-Check the error output above. Common issues:
-
-Audio/image files not found - verify paths in CELL 5
-Missing dependencies - rerun CELL 2
-Model weights missing - rerun CELL 3
-GPU out of memory - reduce image size or audio duration
