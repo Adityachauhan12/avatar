@@ -1,51 +1,354 @@
-import requests
+✅ Server status:
+{'status': 'ready', 'repo_exists': True, 'config_exists': True, 'gpu_available': True}
+✅ Audio saved: /tmp/ditto_videos/input_d44227a71a503b72.wav
+✅ Image saved: /tmp/ditto_videos/input_8b9ad6c2e49103c1.png
+🎬 Starting inference...
+==================== setup kwargs ====================
+max_size <class 'int'> 1920
+template_n_frames <class 'int'> -1
+crop_scale <class 'float'> 2.3
+crop_vx_ratio <class 'int'> 0
+crop_vy_ratio <class 'float'> -0.125
+crop_flag_do_rot <class 'bool'> True
+smo_k_s <class 'int'> 13
+emo <class 'numpy.ndarray'> (600, 8)
+eye_f0_mode <class 'bool'> False
+ch_info <class 'dict'>
+overlap_v2 <class 'int'> 10
+fix_kp_cond <class 'int'> 1
+fix_kp_cond_dim <class 'list'> [0, 202]
+sampling_timesteps <class 'int'> 50
+online_mode <class 'bool'> False
+v_min_max_for_clip <class 'numpy.ndarray'> (4, 265)
+smo_k_d <class 'int'> 3
+N_d <class 'int'> -1
+use_d_keys <class 'NoneType'> None
+relative_d <class 'bool'> True
+drive_eye <class 'NoneType'> None
+delta_eye_arr <class 'numpy.ndarray'> (15, 63)
+delta_eye_open_n <class 'int'> 0
+fade_type <class 'str'> d0
+fade_out_keys <class 'list'> ['exp']
+flag_stitching <class 'bool'> True
+overall_ctrl_info <class 'dict'> {'delta_pitch': 2}
+==================================================
 
-# Test health
-response = requests.get("http://localhost:8000/health")
-print("✅ Server status:")
-print(response.json())
+writer: 0it [00:00, ?it/s]
+
+dit: 0it [00:00, ?it/s]
+
+dit: 2it [00:00,  6.09it/s]
+
+dit: 3it [00:00,  4.30it/s]
+
+dit: 4it [00:00,  3.72it/s]
+
+dit: 5it [00:01,  3.45it/s]
+
+dit: 6it [00:01,  3.29it/s]
+
+dit: 7it [00:01,  3.21it/s]
+
+dit: 8it [00:02,  3.15it/s]
+
+dit: 9it [00:02,  3.11it/s]
+dit: 9it [00:02,  3.03it/s]
+
+writer: 1it [00:06,  6.39s/it]
+writer: 4it [00:06,  1.24s/it]
+writer: 6it [00:06,  1.38it/s]
+writer: 8it [00:06,  2.12it/s]
+writer: 10it [00:06,  2.99it/s]
+writer: 13it [00:07,  4.73it/s]
+writer: 15it [00:07,  5.80it/s]
+writer: 17it [00:07,  7.30it/s]
+writer: 19it [00:07,  8.32it/s]
+writer: 21it [00:07,  9.62it/s]
+writer: 23it [00:07, 10.77it/s]
+writer: 25it [00:07, 11.11it/s]
+writer: 27it [00:08, 12.03it/s]
+writer: 29it [00:08, 12.77it/s]
+writer: 31it [00:08, 12.65it/s]
+writer: 33it [00:08, 13.95it/s]
+writer: 35it [00:08, 13.53it/s]
+writer: 37it [00:08, 13.57it/s]
+writer: 40it [00:08, 14.54it/s]
+writer: 42it [00:09, 13.15it/s]
+writer: 44it [00:09, 12.99it/s]
+writer: 46it [00:09, 12.65it/s]
+writer: 48it [00:09, 12.95it/s]
+writer: 50it [00:09, 12.62it/s]
+writer: 53it [00:09, 14.13it/s]
+writer: 55it [00:10, 14.57it/s]
+writer: 57it [00:10, 14.69it/s]
+writer: 59it [00:10, 14.32it/s]
+writer: 61it [00:10, 13.42it/s]
+writer: 63it [00:10, 13.61it/s]
+writer: 65it [00:10, 13.37it/s]
+writer: 67it [00:10, 14.79it/s]
+writer: 69it [00:11, 13.86it/s]
+writer: 71it [00:11, 13.93it/s]
+writer: 73it [00:11, 12.22it/s]
+writer: 75it [00:11, 12.88it/s]
+writer: 77it [00:11, 12.64it/s]
+writer: 79it [00:11, 13.26it/s]
+writer: 81it [00:11, 14.40it/s]
+writer: 83it [00:12, 13.70it/s]
+writer: 85it [00:12, 14.36it/s]
+writer: 87it [00:12, 14.56it/s]
+writer: 89it [00:12, 12.90it/s]
+writer: 92it [00:12, 14.44it/s]
+writer: 94it [00:12, 14.58it/s]
+writer: 96it [00:13, 13.93it/s]
+writer: 98it [00:13, 13.43it/s]
+writer: 100it [00:13, 14.63it/s]
+writer: 102it [00:13, 14.51it/s]
+writer: 104it [00:13, 14.77it/s]
+writer: 106it [00:13, 14.82it/s]
+writer: 108it [00:13, 14.99it/s]
+writer: 110it [00:14, 14.11it/s]
+writer: 112it [00:14, 13.43it/s]
+writer: 114it [00:14, 13.91it/s]
+writer: 116it [00:14, 12.67it/s]
+writer: 118it [00:14, 12.44it/s]
+writer: 120it [00:14, 13.35it/s]
+writer: 122it [00:15, 12.31it/s]
+writer: 125it [00:15, 14.63it/s]
+writer: 127it [00:15, 15.39it/s]
+writer: 129it [00:15, 15.00it/s]
+writer: 131it [00:15, 13.45it/s]
+writer: 133it [00:15, 13.00it/s]
+writer: 135it [00:15, 14.24it/s]
+writer: 137it [00:15, 15.20it/s]
+writer: 140it [00:16, 16.44it/s]
+writer: 142it [00:16, 16.15it/s]
+writer: 144it [00:16, 14.81it/s]
+writer: 146it [00:16, 13.78it/s]
+writer: 148it [00:16, 14.82it/s]
+writer: 150it [00:16, 15.17it/s]
+writer: 152it [00:16, 15.18it/s]
+writer: 154it [00:17, 16.05it/s]
+writer: 156it [00:17, 15.76it/s]
+writer: 158it [00:17, 13.69it/s]
+writer: 160it [00:17, 14.09it/s]
+writer: 162it [00:17, 14.97it/s]
+writer: 164it [00:17, 15.07it/s]
+writer: 166it [00:17, 13.85it/s]
+writer: 168it [00:18, 12.64it/s]
+writer: 170it [00:18, 13.38it/s]
+writer: 172it [00:18, 13.01it/s]
+writer: 174it [00:18, 13.47it/s]
+writer: 176it [00:18, 14.14it/s]
+writer: 178it [00:18, 15.36it/s]
+writer: 180it [00:18, 15.13it/s]
+writer: 182it [00:19, 16.21it/s]
+writer: 184it [00:19, 13.83it/s]
+writer: 186it [00:19, 14.13it/s]
+writer: 188it [00:19, 15.30it/s]
+writer: 190it [00:19, 14.43it/s]
+writer: 192it [00:19, 12.95it/s]
+writer: 194it [00:19, 13.43it/s]
+writer: 196it [00:20, 14.06it/s]
+writer: 198it [00:20, 14.07it/s]
+writer: 200it [00:20, 15.11it/s]
+writer: 202it [00:20, 13.51it/s]
+writer: 204it [00:20, 14.75it/s]
+writer: 206it [00:20, 15.99it/s]
+writer: 208it [00:20, 14.84it/s]
+writer: 210it [00:21, 14.83it/s]
+writer: 212it [00:21, 15.83it/s]
+writer: 215it [00:21, 15.66it/s]
+writer: 218it [00:21, 16.45it/s]
+writer: 220it [00:21, 17.12it/s]
+writer: 222it [00:21, 15.45it/s]
+writer: 224it [00:21, 16.03it/s]
+writer: 226it [00:22, 14.89it/s]
+writer: 228it [00:22, 14.01it/s]
+writer: 230it [00:22, 14.33it/s]
+writer: 232it [00:22, 15.41it/s]
+writer: 234it [00:22, 15.57it/s]
+writer: 236it [00:22, 16.26it/s]
+writer: 238it [00:22, 14.83it/s]
+writer: 240it [00:22, 15.67it/s]
+writer: 242it [00:23, 13.83it/s]
+writer: 244it [00:23, 13.98it/s]
+writer: 246it [00:23, 13.43it/s]
+writer: 248it [00:23, 13.81it/s]
+writer: 250it [00:23, 14.26it/s]
+writer: 252it [00:23, 15.39it/s]
+writer: 254it [00:23, 15.26it/s]
+writer: 256it [00:24, 14.38it/s]
+writer: 259it [00:24, 15.60it/s]
+writer: 261it [00:24, 14.43it/s]
+writer: 263it [00:24, 14.69it/s]
+writer: 265it [00:24, 14.65it/s]
+writer: 267it [00:24, 14.49it/s]
+writer: 269it [00:24, 13.92it/s]
+writer: 271it [00:25, 14.00it/s]
+writer: 273it [00:25, 13.47it/s]
+writer: 275it [00:25, 13.48it/s]
+writer: 277it [00:25, 13.36it/s]
+writer: 279it [00:25, 13.09it/s]
+writer: 281it [00:25, 12.86it/s]
+writer: 283it [00:26, 12.52it/s]
+writer: 285it [00:26, 14.05it/s]
+writer: 287it [00:26, 13.34it/s]
+writer: 289it [00:26, 14.71it/s]
+writer: 291it [00:26, 13.97it/s]
+writer: 293it [00:26, 14.20it/s]
+writer: 295it [00:26, 12.87it/s]
+writer: 297it [00:27, 14.15it/s]
+writer: 300it [00:27, 14.60it/s]
+writer: 302it [00:27, 13.77it/s]
+writer: 304it [00:27, 14.92it/s]
+writer: 306it [00:27, 14.58it/s]
+writer: 308it [00:27, 14.01it/s]
+writer: 310it [00:27, 12.72it/s]
+writer: 312it [00:28, 13.29it/s]
+writer: 314it [00:28, 14.52it/s]
+writer: 316it [00:28, 13.85it/s]
+writer: 318it [00:28, 14.22it/s]
+writer: 320it [00:28, 14.53it/s]
+writer: 322it [00:28, 14.46it/s]
+writer: 324it [00:28, 13.56it/s]
+writer: 326it [00:29, 14.11it/s]
+writer: 328it [00:29, 14.17it/s]
+writer: 330it [00:29, 13.55it/s]
+writer: 332it [00:29, 14.75it/s]
+writer: 334it [00:29, 14.78it/s]
+writer: 336it [00:29, 14.83it/s]
+writer: 338it [00:29, 16.00it/s]
+writer: 340it [00:30, 15.36it/s]
+writer: 342it [00:30, 14.11it/s]
+writer: 344it [00:30, 12.85it/s]
+writer: 346it [00:30, 12.02it/s]
+writer: 348it [00:30, 12.74it/s]
+writer: 350it [00:30, 12.29it/s]
+writer: 352it [00:31, 12.78it/s]
+writer: 354it [00:31, 13.51it/s]
+writer: 356it [00:31, 13.87it/s]
+writer: 358it [00:31, 13.15it/s]
+writer: 360it [00:31, 12.78it/s]
+writer: 362it [00:31, 13.24it/s]
+writer: 364it [00:31, 14.71it/s]
+writer: 366it [00:32, 14.51it/s]
+writer: 368it [00:32, 13.89it/s]
+writer: 370it [00:32, 14.15it/s]
+writer: 372it [00:32, 13.44it/s]
+writer: 374it [00:32, 13.93it/s]
+writer: 376it [00:32, 13.29it/s]
+writer: 378it [00:32, 13.03it/s]
+writer: 380it [00:33, 12.66it/s]
+writer: 382it [00:33, 12.61it/s]
+writer: 384it [00:33, 12.34it/s]
+writer: 386it [00:33, 13.10it/s]
+writer: 388it [00:33, 12.69it/s]
+writer: 391it [00:33, 15.12it/s]
+writer: 393it [00:34, 14.11it/s]
+writer: 395it [00:34, 15.15it/s]
+writer: 397it [00:34, 14.31it/s]
+writer: 399it [00:34, 14.39it/s]
+writer: 402it [00:34, 15.42it/s]
+writer: 404it [00:34, 16.35it/s]
+writer: 406it [00:34, 14.00it/s]
+writer: 408it [00:35, 14.24it/s]
+writer: 410it [00:35, 12.69it/s]
+writer: 412it [00:35, 12.35it/s]
+writer: 414it [00:35, 13.81it/s]
+writer: 416it [00:35, 13.33it/s]
+writer: 418it [00:35, 14.67it/s]
+writer: 420it [00:35, 14.55it/s]
+writer: 423it [00:36, 14.96it/s]
+writer: 425it [00:36, 13.36it/s]
+writer: 427it [00:36, 14.59it/s]
+writer: 429it [00:36, 13.79it/s]
+writer: 431it [00:36, 12.66it/s]
+writer: 433it [00:36, 11.75it/s]
+writer: 435it [00:37, 11.91it/s]
+writer: 437it [00:37, 12.35it/s]
+writer: 439it [00:37, 13.34it/s]
+writer: 441it [00:37, 13.09it/s]
+writer: 443it [00:37, 14.18it/s]
+writer: 445it [00:37, 13.69it/s]
+writer: 447it [00:37, 14.18it/s]
+writer: 449it [00:38, 13.57it/s]
+writer: 452it [00:38, 15.63it/s]
+writer: 454it [00:38, 14.55it/s]
+writer: 456it [00:38, 14.73it/s]
+writer: 458it [00:38, 14.44it/s]
+writer: 460it [00:38, 14.60it/s]
+writer: 462it [00:39, 12.95it/s]
+writer: 464it [00:39, 12.01it/s]
+writer: 466it [00:39, 12.82it/s]
+writer: 468it [00:39, 13.41it/s]
+writer: 470it [00:39, 13.87it/s]
+writer: 472it [00:39, 14.11it/s]
+writer: 474it [00:39, 13.41it/s]
+writer: 476it [00:40, 13.18it/s]
+writer: 479it [00:40, 14.58it/s]
+writer: 481it [00:40, 15.56it/s]
+writer: 483it [00:40, 15.00it/s]
+writer: 486it [00:40, 15.30it/s]
+writer: 488it [00:40, 15.13it/s]
+writer: 490it [00:40, 15.68it/s]
+writer: 492it [00:41, 15.62it/s]
+writer: 494it [00:41, 15.27it/s]
+writer: 496it [00:41, 13.57it/s]
+writer: 498it [00:41, 14.87it/s]
+writer: 500it [00:41, 13.79it/s]
+writer: 502it [00:41, 15.15it/s]
+writer: 504it [00:41, 15.10it/s]
+writer: 506it [00:42, 15.92it/s]
+writer: 508it [00:42, 14.59it/s]
+writer: 510it [00:42, 13.83it/s]
+writer: 512it [00:42, 13.24it/s]
+writer: 514it [00:42, 14.67it/s]
+writer: 516it [00:42, 13.62it/s]
+writer: 518it [00:42, 14.98it/s]
+writer: 520it [00:43, 15.08it/s]
+writer: 522it [00:43, 16.01it/s]
+writer: 525it [00:43, 18.82it/s]
+writer: 528it [00:43, 21.20it/s]
+writer: 531it [00:43, 22.55it/s]
+writer: 534it [00:43, 23.17it/s]
+writer: 537it [00:43, 23.49it/s]
+writer: 540it [00:43, 23.86it/s]
+writer: 543it [00:43, 24.08it/s]
+writer: 546it [00:44, 24.33it/s]
+writer: 549it [00:44, 24.80it/s]
+writer: 552it [00:44, 25.17it/s]
+writer: 555it [00:44, 25.67it/s]
+writer: 558it [00:44, 25.85it/s]
+writer: 561it [00:44, 26.38it/s]
+writer: 564it [00:44, 26.05it/s]
+writer: 567it [00:44, 25.43it/s]
+writer: 570it [00:45, 25.47it/s]
+writer: 573it [00:45, 26.23it/s]
+writer: 576it [00:45, 25.88it/s]
+writer: 579it [00:45, 26.59it/s]
+writer: 582it [00:45, 26.47it/s]
+writer: 585it [00:45, 26.71it/s]
+writer: 587it [00:46, 12.73it/s]
+ffmpeg -loglevel error -y -i "/tmp/ditto_videos/result_92f2dd1771f5ee05_tmp.mp4.tmp.mp4" -i "/tmp/ditto_videos/input_d44227a71a503b72.wav" -map 0:v -map 1:a -c:v copy -c:a aac "/tmp/ditto_videos/result_92f2dd1771f5ee05_tmp.mp4"
+/tmp/ditto_videos/result_92f2dd1771f5ee05_tmp.mp4
+✅ Video generated: /tmp/ditto_videos/result_92f2dd1771f5ee05.mp4
+🗑️  Cleaned up: /tmp/ditto_videos/input_d44227a71a503b72.wav
+🗑️  Cleaned up: /tmp/ditto_videos/input_8b9ad6c2e49103c1.png
+✅ Response:
+{'status': 'success', 'message': 'Video generated successfully', 'video_path': '/tmp/ditto_videos/result_92f2dd1771f5ee05.mp4', 'error': None}
+
+🎉 Video generated!
+Path: /tmp/ditto_videos/result_92f2dd1771f5ee05.mp4
+File ID: 92f2dd1771f5ee05
 
 
-import requests
 
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-# Open and send files
-with open(audio_path, "rb") as af, open(image_path, "rb") as imf:
-    response = requests.post(
-        "http://localhost:8000/generate",
-        files={
-            "audio_file": ("audio.wav", af),
-            "image_file": ("image.png", imf)
-        }
-    )
-    
-    result = response.json()
-    print("✅ Response:")
-    print(result)
-    
-    if result["status"] == "success":
-        video_path = result["video_path"]
-        file_id = video_path.split("result_")[1].replace(".mp4", "")
-        print(f"\n🎉 Video generated!")
-        print(f"Path: {video_path}")
-        print(f"File ID: {file_id}")
-
-
-
-import requests
-
-# Use the file_id from Step 2
-file_id = "abc123"  # Replace with actual ID from Step 2
-
-response = requests.get(f"http://localhost:8000/download/{file_id}")
-
-if response.status_code == 200:
-    output_path = "/Volumes/lab37_catalog/ifstrolley/trolley/output.mp4"
-    with open(output_path, "wb") as f:
+just now (<1s)
+6
+6
         f.write(response.content)
     print(f"✅ Downloaded to: {output_path}")
     print(f"Size: {len(response.content) / 1024 / 1024:.1f} MB")
 else:
     print(f"❌ Error: {response.status_code}")
+❌ Error: 404
