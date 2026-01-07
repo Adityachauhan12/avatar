@@ -1,26 +1,30 @@
 # =============================================================================
-# COMPLETE FASTAPI WRAPPER FOR DITTO TALKINGHEAD - SINGLE CELL
-# Updated with YOUR actual Databricks paths
-# Paste this ENTIRE block into ONE Databricks notebook cell
+# FIXED VERSION - Databricks Compatible (nest_asyncio)
 # =============================================================================
 
 import subprocess
 import sys
 import os
 import tempfile
+import threading
+import time
 from pathlib import Path
 from typing import Optional
 
 # INSTALL DEPENDENCIES
 subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", 
-    "fastapi", "uvicorn[standard]", "python-multipart", "requests"])
+    "fastapi", "uvicorn[standard]", "python-multipart", "requests", "nest_asyncio"])
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
 import uvicorn
+import nest_asyncio
 
-print("✅ Dependencies installed")
+# FIX: Allow nested event loops in Databricks
+nest_asyncio.apply()
+
+print("✅ Dependencies installed & nest_asyncio applied")
 
 # ============= YOUR ACTUAL CONFIGURATION PATHS =============
 REPO_DIR = "/tmp/ditto-talkinghead"
@@ -30,16 +34,10 @@ MAX_FILE_SIZE = 100 * 1024 * 1024
 TEMP_DIR = Path(tempfile.gettempdir()) / "ditto_videos"
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
 
-# Your actual paths for testing
 SAMPLE_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
 SAMPLE_IMAGE = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-SAMPLE_OUTPUT = "./tmp/result_trt.mp4"
 
-print(f"📁 Config paths:")
-print(f"  REPO_DIR: {REPO_DIR}")
-print(f"  DATA_ROOT: {DATA_ROOT}")
-print(f"  CONFIG_PKL: {CONFIG_PKL}")
-print(f"  Temp dir: {TEMP_DIR}")
+print(f"📁 Config paths OK")
 
 # ============= FASTAPI APP =============
 app = FastAPI(title="Ditto API")
@@ -220,30 +218,25 @@ async def server_status():
         "repo_dir": REPO_DIR,
         "data_root": DATA_ROOT,
         "config": CONFIG_PKL,
-        "temp_dir": str(TEMP_DIR),
-        "sample_files": {
-            "audio": SAMPLE_AUDIO,
-            "image": SAMPLE_IMAGE
-        }
+        "temp_dir": str(TEMP_DIR)
     }
 
-# ============= START SERVER =============
+# ============= START SERVER IN THREAD =============
+def run_server():
+    """Run uvicorn in a separate thread"""
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
+
+# Start server in background thread
+server_thread = threading.Thread(target=run_server, daemon=True)
+server_thread.start()
+
 print("\n" + "="*60)
 print("🚀 Ditto TalkingHead FastAPI Server")
 print("="*60)
 print(f"Listening on: http://0.0.0.0:8000")
-print(f"Health check: curl http://localhost:8000/health")
-print(f"Generate: curl -X POST http://localhost:8000/generate")
+print(f"Status: http://localhost:8000/status")
 print("="*60 + "\n")
 
-uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)
-
-
-
-
-import requests
-
-# Test health
-response = requests.get("http://localhost:8000/health")
-print("✅ Server is running:")
-print(response.json())
+# Give server time to start
+time.sleep(2)
+print("✅ Server started! Ready to use.")
