@@ -1,242 +1,51 @@
-# =============================================================================
-# FIXED VERSION - Databricks Compatible (nest_asyncio)
-# =============================================================================
+import requests
 
-import subprocess
-import sys
-import os
-import tempfile
-import threading
-import time
-from pathlib import Path
-from typing import Optional
+# Test health
+response = requests.get("http://localhost:8000/health")
+print("✅ Server status:")
+print(response.json())
 
-# INSTALL DEPENDENCIES
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", 
-    "fastapi", "uvicorn[standard]", "python-multipart", "requests", "nest_asyncio"])
 
-from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
-import uvicorn
-import nest_asyncio
+import requests
 
-# FIX: Allow nested event loops in Databricks
-nest_asyncio.apply()
+audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
 
-print("✅ Dependencies installed & nest_asyncio applied")
-
-# ============= YOUR ACTUAL CONFIGURATION PATHS =============
-REPO_DIR = "/tmp/ditto-talkinghead"
-DATA_ROOT = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-CONFIG_PKL = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
-MAX_FILE_SIZE = 100 * 1024 * 1024
-TEMP_DIR = Path(tempfile.gettempdir()) / "ditto_videos"
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
-
-SAMPLE_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-SAMPLE_IMAGE = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-print(f"📁 Config paths OK")
-
-# ============= FASTAPI APP =============
-app = FastAPI(title="Ditto API")
-
-class GenerationResponse(BaseModel):
-    status: str
-    message: str
-    video_path: Optional[str] = None
-    error: Optional[str] = None
-
-@app.get("/health")
-async def health_check():
-    """Check server and environment status"""
-    repo_exists = os.path.exists(REPO_DIR)
-    config_exists = os.path.exists(os.path.join(REPO_DIR, CONFIG_PKL))
-    try:
-        result = subprocess.run(["nvidia-smi"], capture_output=True, timeout=5)
-        gpu_available = result.returncode == 0
-    except:
-        gpu_available = False
-    
-    status = "ready" if (repo_exists and config_exists and gpu_available) else "not_ready"
-    
-    return {
-        "status": status,
-        "repo_exists": repo_exists,
-        "config_exists": config_exists,
-        "gpu_available": gpu_available
-    }
-
-@app.post("/generate")
-async def generate_video(
-    audio_file: UploadFile = File(...),
-    image_file: UploadFile = File(...),
-    background_tasks: BackgroundTasks = None
-):
-    """Generate talking head video from audio and image"""
-    temp_audio = None
-    temp_image = None
-    output_video = None
-    
-    try:
-        # Validate file sizes
-        if audio_file.size > MAX_FILE_SIZE:
-            raise HTTPException(status_code=413, detail="Audio too large (max 100MB)")
-        if image_file.size > MAX_FILE_SIZE:
-            raise HTTPException(status_code=413, detail="Image too large (max 100MB)")
-        
-        # Validate audio format
-        audio_ext = Path(audio_file.filename).suffix.lower()
-        if audio_ext not in ['.wav', '.mp3']:
-            raise HTTPException(status_code=400, detail="Audio must be WAV or MP3")
-        
-        # Save audio file
-        temp_audio = TEMP_DIR / f"input_{os.urandom(8).hex()}{audio_ext}"
-        with open(temp_audio, "wb") as f:
-            f.write(await audio_file.read())
-        
-        # Validate image format
-        image_ext = Path(image_file.filename).suffix.lower()
-        if image_ext not in ['.png', '.jpg', '.jpeg']:
-            raise HTTPException(status_code=400, detail="Image must be PNG or JPG")
-        
-        # Save image file
-        temp_image = TEMP_DIR / f"input_{os.urandom(8).hex()}{image_ext}"
-        with open(temp_image, "wb") as f:
-            f.write(await image_file.read())
-        
-        print(f"✅ Audio saved: {temp_audio}")
-        print(f"✅ Image saved: {temp_image}")
-        
-        # Generate job ID and output paths
-        job_id = os.urandom(8).hex()
-        output_video = TEMP_DIR / f"result_{job_id}.mp4"
-        output_tmp = TEMP_DIR / f"result_{job_id}_tmp.mp4"
-        
-        # Set environment
-        my_env = os.environ.copy()
-        my_env["PYTHONPATH"] = f"{REPO_DIR}:{my_env.get('PYTHONPATH', '')}"
-        my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
-        
-        # Run inference
-        print(f"🎬 Starting inference...")
-        cmd = [
-            sys.executable, "inference.py",
-            "--data_root", DATA_ROOT,
-            "--cfg_pkl", CONFIG_PKL,
-            "--audio_path", str(temp_audio),
-            "--source_path", str(temp_image),
-            "--output_path", str(output_tmp)
-        ]
-        
-        process = subprocess.Popen(
-            cmd,
-            cwd=REPO_DIR,
-            env=my_env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        
-        # Stream output
-        for line in process.stdout:
-            print(line, end="")
-        
-        return_code = process.wait()
-        if return_code != 0:
-            raise Exception(f"Inference failed with return code {return_code}")
-        
-        # Post-process with FFmpeg
-        if output_tmp.exists():
-            ffmpeg_cmd = [
-                "ffmpeg", "-loglevel", "error", "-y",
-                "-i", str(output_tmp),
-                "-pix_fmt", "yuv420p",
-                str(output_video)
-            ]
-            result = subprocess.run(ffmpeg_cmd, capture_output=True, text=True)
-            if result.returncode != 0:
-                print(f"⚠️ FFmpeg warning: {result.stderr}")
-            
-            if output_tmp.exists():
-                output_tmp.unlink()
-        
-        if not output_video.exists():
-            raise Exception("Video generation failed - output file not created")
-        
-        print(f"✅ Video generated: {output_video}")
-        
-        return GenerationResponse(
-            status="success",
-            message="Video generated successfully",
-            video_path=str(output_video)
-        )
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        error_msg = str(e)
-        print(f"❌ Error: {error_msg}")
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "error",
-                "message": "Video generation failed",
-                "error": error_msg,
-                "video_path": None
-            }
-        )
-    
-    finally:
-        # Cleanup input files
-        for f in [temp_audio, temp_image]:
-            if f and f.exists():
-                try:
-                    f.unlink()
-                    print(f"🗑️  Cleaned up: {f}")
-                except:
-                    pass
-
-@app.get("/download/{file_id}")
-async def download_video(file_id: str):
-    """Download generated video file"""
-    video_path = TEMP_DIR / f"result_{file_id}.mp4"
-    if not video_path.exists():
-        raise HTTPException(status_code=404, detail="Video not found")
-    return FileResponse(
-        path=video_path,
-        media_type="video/mp4",
-        filename=f"video_{file_id}.mp4"
+# Open and send files
+with open(audio_path, "rb") as af, open(image_path, "rb") as imf:
+    response = requests.post(
+        "http://localhost:8000/generate",
+        files={
+            "audio_file": ("audio.wav", af),
+            "image_file": ("image.png", imf)
+        }
     )
+    
+    result = response.json()
+    print("✅ Response:")
+    print(result)
+    
+    if result["status"] == "success":
+        video_path = result["video_path"]
+        file_id = video_path.split("result_")[1].replace(".mp4", "")
+        print(f"\n🎉 Video generated!")
+        print(f"Path: {video_path}")
+        print(f"File ID: {file_id}")
 
-@app.get("/status")
-async def server_status():
-    """Get detailed server status"""
-    return {
-        "status": "running",
-        "repo_dir": REPO_DIR,
-        "data_root": DATA_ROOT,
-        "config": CONFIG_PKL,
-        "temp_dir": str(TEMP_DIR)
-    }
 
-# ============= START SERVER IN THREAD =============
-def run_server():
-    """Run uvicorn in a separate thread"""
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
 
-# Start server in background thread
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
+import requests
 
-print("\n" + "="*60)
-print("🚀 Ditto TalkingHead FastAPI Server")
-print("="*60)
-print(f"Listening on: http://0.0.0.0:8000")
-print(f"Status: http://localhost:8000/status")
-print("="*60 + "\n")
+# Use the file_id from Step 2
+file_id = "abc123"  # Replace with actual ID from Step 2
 
-# Give server time to start
-time.sleep(2)
-print("✅ Server started! Ready to use.")
+response = requests.get(f"http://localhost:8000/download/{file_id}")
+
+if response.status_code == 200:
+    output_path = "/Volumes/lab37_catalog/ifstrolley/trolley/output.mp4"
+    with open(output_path, "wb") as f:
+        f.write(response.content)
+    print(f"✅ Downloaded to: {output_path}")
+    print(f"Size: {len(response.content) / 1024 / 1024:.1f} MB")
+else:
+    print(f"❌ Error: {response.status_code}")
