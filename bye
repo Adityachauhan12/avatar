@@ -1,340 +1,145 @@
-%sh
-apt-get update
-apt-get install -y git-lfs ffmpeg
-
-
-
-
-
-
-# Only install packages missing on Databricks cluster
-%pip install filetype polygraphy cython colored imageio imageio-ffmpeg omegaconf einops
-
-# RESTART KERNEL (CRITICAL!)
-dbutils.library.restartPython()
-
-
-
-
-
-
-
-%sh
-rm -rf /tmp/ditto-talkinghead
-git clone https://github.com/antgroup/ditto-talkinghead /tmp/ditto-talkinghead
-
-cd /tmp/ditto-talkinghead
-mkdir -p checkpoints
-git clone https://huggingface.co/digital-avatar/ditto-talkinghead checkpoints
-
-# Verify structure
-echo "✅ Repo ready:"
-ls -la /tmp/ditto-talkinghead/inference.py
-ls -la /tmp/ditto-talkinghead/checkpoints/ditto_pytorch/
-ls -la /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl
-
-
-
-
-
-from pathlib import Path
-import os
-import tempfile
-
-# EXACT PATHS for PyTorch model
-DITTO_ROOT = Path("/tmp/ditto-talkinghead")
-DATA_ROOT = DITTO_ROOT / "checkpoints" / "ditto_pytorch"
-CFG_PKL = DITTO_ROOT / "checkpoints" / "ditto_cfg" / "v0.4_hubert_cfg_pytorch.pkl"
-TMP_DIR = Path(tempfile.gettempdir()) / "ditto_tmp"
-TMP_DIR.mkdir(parents=True, exist_ok=True)
-
-# Print paths
-print("=" * 60)
-print("DITTO PATHS CONFIGURATION")
-print("=" * 60)
-print(f"DITTO_ROOT: {DITTO_ROOT}")
-print(f"  Exists: {DITTO_ROOT.exists()}")
-print()
-print(f"DATA_ROOT: {DATA_ROOT}")
-print(f"  Exists: {DATA_ROOT.exists()}")
-print()
-print(f"CFG_PKL: {CFG_PKL}")
-print(f"  Exists: {CFG_PKL.exists()}")
-print()
-print(f"TMP_DIR: {TMP_DIR}")
-print(f"  Exists: {TMP_DIR.exists()}")
-print("=" * 60)
-
-# Verify all exist
-try:
-    assert DITTO_ROOT.exists(), "❌ DITTO_ROOT missing"
-    assert (DITTO_ROOT / "inference.py").exists(), "❌ inference.py missing"
-    assert DATA_ROOT.exists(), "❌ DATA_ROOT missing"
-    assert CFG_PKL.exists(), "❌ CFG_PKL missing"
-    print("✅ ALL PATHS VERIFIED!")
-except AssertionError as e:
-    print(str(e))
-
-
-
-
-
-from pathlib import Path
-import shutil
-
-# YOUR actual file paths (from Volumes)
-SRC_AUDIO = Path("/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav")
-SRC_IMAGE = Path("/Volumes/lab37_catalog/ifstrolley/trolley/new.png")
-
-# DBFS target (cleaned names)
-DBFS_DIR = Path("/dbfs/FileStore/avatar_test")
-DBFS_AUDIO = DBFS_DIR / "audio.wav"
-DBFS_IMAGE = DBFS_DIR / "image.png"
-
-# Create DBFS dir
-DBFS_DIR.mkdir(parents=True, exist_ok=True)
-
-# Copy files
-print("Copying files to DBFS...")
-shutil.copy2(SRC_AUDIO, DBFS_AUDIO)
-shutil.copy2(SRC_IMAGE, DBFS_IMAGE)
-
-print(f"✅ Audio: {DBFS_AUDIO}")
-print(f"   Size: {DBFS_AUDIO.stat().st_size:,} bytes")
-print(f"   Exists: {DBFS_AUDIO.exists()}")
-print()
-print(f"✅ Image: {DBFS_IMAGE}")
-print(f"   Size: {DBFS_IMAGE.stat().st_size:,} bytes")
-print(f"   Exists: {DBFS_IMAGE.exists()}")
-
-
-
-
-
-
+# =============================================================================
+# COMPLETE FASTAPI WRAPPER FOR DITTO TALKINGHEAD - SINGLE CELL
+# Paste this ENTIRE block into ONE Databricks notebook cell
+# =============================================================================
 
 import subprocess
-import uuid
-from pathlib import Path
+import sys
 import os
-
-def run_ditto_inference(audio_path, image_path):
-    """
-    Run Ditto inference (exact Docker flow)
-    """
-    audio = Path(audio_path)
-    image = Path(image_path)
-    
-    # Validate inputs
-    if not audio.exists():
-        raise FileNotFoundError(f"Audio file not found: {audio}")
-    if not image.exists():
-        raise FileNotFoundError(f"Image file not found: {image}")
-    if not DATA_ROOT.exists():
-        raise FileNotFoundError(f"DATA_ROOT not found: {DATA_ROOT}")
-    if not CFG_PKL.exists():
-        raise FileNotFoundError(f"CFG_PKL not found: {CFG_PKL}")
-    
-    # Output path
-    out_path = TMP_DIR / f"result_{uuid.uuid4().hex}.mp4"
-    
-    # Build command (EXACT as Docker main.py will call)
-    cmd = [
-        "python",
-        str(DITTO_ROOT / "inference.py"),
-        "--data_root", str(DATA_ROOT),
-        "--cfg_pkl", str(CFG_PKL),
-        "--audio_path", str(audio),
-        "--source_path", str(image),
-        "--output_path", str(out_path),
-    ]
-    
-    # Run inference
-    print("🔄 Running inference...")
-    print(f"   Command: python inference.py \\")
-    print(f"     --data_root {DATA_ROOT} \\")
-    print(f"     --cfg_pkl {CFG_PKL} \\")
-    print(f"     --audio_path {audio} \\")
-    print(f"     --source_path {image} \\")
-    print(f"     --output_path {out_path}")
-    print()
-    
-    proc = subprocess.run(
-        cmd,
-        cwd=str(DITTO_ROOT),
-        capture_output=True,
-        text=True,
-        timeout=900  # 15 minutes max
-    )
-    
-    # Check result
-    if proc.returncode != 0:
-        print("❌ INFERENCE FAILED")
-        print("STDOUT:", proc.stdout[-1000:])
-        print("STDERR:", proc.stderr[-1000:])
-        raise RuntimeError(f"Inference failed with code {proc.returncode}")
-    
-    if not out_path.exists():
-        print("❌ OUTPUT VIDEO NOT CREATED")
-        raise RuntimeError("Output video file not created")
-    
-    return str(out_path)
-
-print("✅ Inference function ready!")
-
-
-
-
-
-
-
+import tempfile
 from pathlib import Path
-import shutil
+from typing import Optional
 
-# Use files from CELL 5
-TEST_AUDIO = "/dbfs/FileStore/avatar_test/audio.wav"
-TEST_IMAGE = "/dbfs/FileStore/avatar_test/image.png"
+# INSTALL DEPENDENCIES
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", 
+    "fastapi", "uvicorn[standard]", "python-multipart", "requests"])
 
-print("=" * 60)
-print("BACKEND TEST - DITTO INFERENCE")
-print("=" * 60)
-print(f"Audio: {TEST_AUDIO}")
-print(f"Image: {TEST_IMAGE}")
-print()
+from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
+import uvicorn
 
-# Run test
-try:
-    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
+print("✅ Dependencies installed")
+
+# ============= CONFIGURATION - UPDATE THESE PATHS =============
+REPO_DIR = "/tmp/ditto-talkinghead"
+DATA_ROOT = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
+CONFIG_PKL = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
+MAX_FILE_SIZE = 100 * 1024 * 1024
+TEMP_DIR = Path(tempfile.gettempdir()) / "ditto_videos"
+TEMP_DIR.mkdir(parents=True, exist_ok=True)
+
+# ============= FASTAPI APP =============
+app = FastAPI(title="Ditto API")
+
+class GenerationResponse(BaseModel):
+    status: str
+    message: str
+    video_path: Optional[str] = None
+    error: Optional[str] = None
+
+@app.get("/health")
+async def health_check():
+    repo_exists = os.path.exists(REPO_DIR)
+    config_exists = os.path.exists(os.path.join(REPO_DIR, CONFIG_PKL))
+    try:
+        result = subprocess.run(["nvidia-smi"], capture_output=True, timeout=5)
+        gpu_available = result.returncode == 0
+    except:
+        gpu_available = False
+    return {"status": "ready" if (repo_exists and config_exists) else "not_ready",
+            "repo_exists": repo_exists, "config_exists": config_exists, "gpu_available": gpu_available}
+
+@app.post("/generate")
+async def generate_video(
+    audio_file: UploadFile = File(...),
+    image_file: UploadFile = File(...),
+    background_tasks: BackgroundTasks = None
+):
+    temp_audio = None
+    temp_image = None
+    output_video = None
     
-    # Copy to DBFS for download
-    dbfs_output = Path("/dbfs/FileStore/avatar_test/result.mp4")
-    shutil.copy2(output_path, dbfs_output)
+    try:
+        if audio_file.size > MAX_FILE_SIZE:
+            raise HTTPException(status_code=413, detail="Audio too large")
+        if image_file.size > MAX_FILE_SIZE:
+            raise HTTPException(status_code=413, detail="Image too large")
+        
+        audio_ext = Path(audio_file.filename).suffix.lower()
+        if audio_ext not in ['.wav', '.mp3']:
+            raise HTTPException(status_code=400, detail="Audio must be WAV or MP3")
+        
+        temp_audio = TEMP_DIR / f"input_{os.urandom(8).hex()}{audio_ext}"
+        with open(temp_audio, "wb") as f:
+            f.write(await audio_file.read())
+        
+        image_ext = Path(image_file.filename).suffix.lower()
+        if image_ext not in ['.png', '.jpg', '.jpeg']:
+            raise HTTPException(status_code=400, detail="Image must be PNG or JPG")
+        
+        temp_image = TEMP_DIR / f"input_{os.urandom(8).hex()}{image_ext}"
+        with open(temp_image, "wb") as f:
+            f.write(await image_file.read())
+        
+        print(f"✅ Files saved: {temp_audio}, {temp_image}")
+        
+        job_id = os.urandom(8).hex()
+        output_video = TEMP_DIR / f"result_{job_id}.mp4"
+        output_tmp = TEMP_DIR / f"result_{job_id}_tmp.mp4"
+        
+        my_env = os.environ.copy()
+        my_env["PYTHONPATH"] = f"{REPO_DIR}:{my_env.get('PYTHONPATH', '')}"
+        my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
+        
+        print(f"🎬 Running inference...")
+        cmd = [sys.executable, "inference.py",
+               "--data_root", DATA_ROOT,
+               "--cfg_pkl", CONFIG_PKL,
+               "--audio_path", str(temp_audio),
+               "--source_path", str(temp_image),
+               "--output_path", str(output_tmp)]
+        
+        process = subprocess.Popen(cmd, cwd=REPO_DIR, env=my_env,
+                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        
+        for line in process.stdout:
+            print(line, end="")
+        
+        return_code = process.wait()
+        if return_code != 0:
+            raise Exception(f"Inference failed: {return_code}")
+        
+        if output_tmp.exists():
+            ffmpeg_cmd = ["ffmpeg", "-loglevel", "error", "-y",
+                         "-i", str(output_tmp), "-pix_fmt", "yuv420p", str(output_video)]
+            subprocess.run(ffmpeg_cmd, capture_output=True)
+            output_tmp.unlink()
+        
+        if not output_video.exists():
+            raise Exception("Video not created")
+        
+        print(f"✅ Video: {output_video}")
+        return GenerationResponse(status="success", message="Video generated", video_path=str(output_video))
     
-    # Success output
-    size_mb = dbfs_output.stat().st_size / (1024 * 1024)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"status": "error", "message": str(e), "video_path": None, "error": str(e)})
     
-    print()
-    print("=" * 60)
-    print("✅ BACKEND TEST PASSED!")
-    print("=" * 60)
-    print(f"Output: {output_path}")
-    print(f"Size: {size_mb:.2f} MB")
-    print(f"DBFS: {dbfs_output}")
-    print()
-    print("🎯 Ready for Docker deployment!")
-    print("=" * 60)
-    
-    # HTML download link
-    displayHTML(f"""
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                padding: 30px; border-radius: 15px; color: white; text-align: center;">
-        <h2 style="margin: 0; font-size: 28px;">✅ Backend Test PASSED</h2>
-        <p style="margin: 15px 0; font-size: 16px;">Inference pipeline working correctly</p>
-        <a href="/files/avatar_test/result.mp4" download 
-           style="display: inline-block; background: white; color: #667eea; 
-                  padding: 12px 30px; border-radius: 25px; font-weight: bold; 
-                  text-decoration: none; font-size: 16px; margin-top: 15px;">
-            📥 Download Result.mp4 ({size_mb:.1f} MB)
-        </a>
-        <p style="margin-top: 20px; font-size: 12px; opacity: 0.9;">
-            Your backend is production-ready for Docker deployment
-        </p>
-    </div>
-    """)
-    
-except Exception as e:
-    print()
-    print("=" * 60)
-    print("❌ BACKEND TEST FAILED")
-    print("=" * 60)
-    print(f"Error: {e}")
-    print()
-    
-    import traceback
-    traceback.print_exc()
-    
-    displayHTML("""
-    <div style="background: #ffebee; padding: 20px; border-radius: 10px; color: #c62828;">
-        <h3>❌ Backend Test Failed</h3>
-        <p>Check the error output above. Common issues:</p>
-        <ul>
-            <li>Audio/image files not found - verify paths in CELL 5</li>
-            <li>Missing dependencies - rerun CELL 2</li>
-            <li>Model weights missing - rerun CELL 3</li>
-            <li>GPU out of memory - reduce image size or audio duration</li>
-        </ul>
-    </div>
-    """)
+    finally:
+        for f in [temp_audio, temp_image]:
+            if f and f.exists():
+                try:
+                    f.unlink()
+                except:
+                    pass
 
+@app.get("/download/{file_id}")
+async def download_video(file_id: str):
+    video_path = TEMP_DIR / f"result_{file_id}.mp4"
+    if not video_path.exists():
+        raise HTTPException(status_code=404, detail="Video not found")
+    return FileResponse(path=video_path, media_type="video/mp4", filename=f"video_{file_id}.mp4")
 
-
-
-============================================================
-DITTO PATHS CONFIGURATION
-============================================================
-DITTO_ROOT: /tmp/ditto-talkinghead
-  Exists: True
-
-DATA_ROOT: /tmp/ditto-talkinghead/checkpoints/ditto_pytorch
-  Exists: True
-
-CFG_PKL: /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl
-  Exists: True
-
-TMP_DIR: /tmp/ditto_tmp
-  Exists: True
-============================================================
-✅ ALL PATHS VERIFIED!
-
-
-
-Copying files to DBFS...
-✅ Audio: /dbfs/FileStore/avatar_test/audio.wav
-   Size: 1,126,998 bytes
-   Exists: True
-
-✅ Image: /dbfs/FileStore/avatar_test/image.png
-   Size: 1,216,912 bytes
-   Exists: True
-
-
-✅ Inference function ready!
-============================================================
-BACKEND TEST - DITTO INFERENCE
-============================================================
-Audio: /dbfs/FileStore/avatar_test/audio.wav
-Image: /dbfs/FileStore/avatar_test/image.png
-
-🔄 Running inference...
-   Command: python inference.py \
-     --data_root /tmp/ditto-talkinghead/checkpoints/ditto_pytorch \
-     --cfg_pkl /tmp/ditto-talkinghead/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl \
-     --audio_path /dbfs/FileStore/avatar_test/audio.wav \
-     --source_path /dbfs/FileStore/avatar_test/image.png \
-     --output_path /tmp/ditto_tmp/result_786b03fc88734918ba0e09542e1ee499.mp4
-
-❌ INFERENCE FAILED
-STDOUT: 
-STDERR: Traceback (most recent call last):
-  File "/tmp/ditto-talkinghead/inference.py", line 9, in <module>
-    from stream_pipeline_offline import StreamSDK
-  File "/tmp/ditto-talkinghead/stream_pipeline_offline.py", line 7, in <module>
-    from core.atomic_components.avatar_registrar import AvatarRegistrar, smooth_x_s_info_lst
-  File "/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py", line 3, in <module>
-    from .loader import load_source_frames
-  File "/tmp/ditto-talkinghead/core/atomic_components/loader.py", line 3, in <module>
-    import cv2
-ModuleNotFoundError: No module named 'cv2'
-
-
-============================================================
-❌ BACKEND TEST FAILED
-============================================================
-Error: Inference failed with code 1
-
-Traceback (most recent call last):
-  File "/root/.ipykernel/6341/command-5980669999680099-1980739181", line 17, in <module>
-    output_path = run_ditto_inference(TEST_AUDIO, TEST_IMAGE)
-  File "/root/.ipykernel/6341/command-5980669999680098-1124972447", line 60, in run_ditto_inference
-    raise RuntimeError(f"Inference failed with code {proc.returncode}")
-RuntimeError: Inference failed with code 1
+# ============= START SERVER =============
+print("🚀 Starting server on http://0.0.0.0:8000")
+uvicorn.run(app, host="0.0.0.0", port=8000, workers=1)
