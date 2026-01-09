@@ -1,266 +1,44 @@
-# Install FastAPI and required dependencies
-!pip install fastapi uvicorn python-multipart aiofiles pydantic
+# CELL 5: Log & Register Model (PACKAGES GIT)
+import mlflow
+from mlflow.models.signature import infer_signature
+import pandas as pd
+import git  # ← FORCE IMPORT HERE
 
-print("✅ FastAPI dependencies installed successfully!")
+mlflow.set_registry_uri("databricks-uc")
+mlflow.set_experiment("/Shared/ditto_experiment")
 
+# Test input/output
+test_input = pd.DataFrame({
+    "audio_path": ["/dbfs/test.wav"],
+    "image_path": ["/dbfs/test.png"]
+})
 
----------------------------------------------------------
+test_output = pd.DataFrame({
+    "status": ["success"],
+    "message": ["Video generated"],
+    "video_path": ["/tmp/output.mp4"]
+})
 
-import os
-import subprocess
-import tempfile
-from pathlib import Path
+signature = infer_signature(test_input, test_output)
 
-class DittoInferenceWrapper:
-    """Wrapper to call your existing inference.py"""
-    
-    def __init__(self, checkpoint_dir, config_pkl):
-        self.checkpoint_dir = checkpoint_dir
-        self.config_pkl = config_pkl
-        print(f"✅ Wrapper initialized")
-        print(f"   Checkpoint: {checkpoint_dir}")
-        print(f"   Config: {config_pkl}")
-        
-    def generate_video(self, image_path: str, audio_path: str, 
-                       num_frames: int = 50, 
-                       face_scale: float = 2.3) -> str:
-        """Run your inference.py with the provided inputs"""
-        
-        output_dir = tempfile.mkdtemp()
-        output_path = os.path.join(output_dir, "output.mp4")
-        
-        cmd = [
-            'python', 'inference.py',
-            '--dataroot', self.checkpoint_dir,
-            '--cfgpkl', self.config_pkl,
-            '--audiopath', audio_path,
-            '--sourcepath', image_path,
-            '--outputpath', output_path,
-            '--num_frames', str(num_frames),
-            '--face_scale', str(face_scale)
-        ]
-        
-        print(f"🔄 Running inference command...")
-        result = subprocess.run(cmd, capture_output=True, text=True)
-        
-        if result.returncode != 0:
-            print(f"❌ Error: {result.stderr}")
-            raise RuntimeError(f"Inference failed: {result.stderr}")
-        
-        print(f"✅ Video generated at: {output_path}")
-        return output_path
+print("📦 Packaging model with git...")
 
-# ✅ YOUR ACTUAL PATHS
-wrapper = DittoInferenceWrapper(
-    checkpoint_dir="/dbfs/FileStore/ditto/checkpoints/ditto_trt_t4",
-    config_pkl="./checkpoints/ditto/cfg/v0.4/hubert_cfg_trt.pkl"
-)
-
-print("\n✅ Inference wrapper ready!")
-
-
------------------------------------------------------------------
-
-
-
-from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import FileResponse, JSONResponse
-import shutil
-import uuid
-import time
-from datetime import datetime
-
-# Create FastAPI app
-app = FastAPI(
-    title="Ditto Avatar API",
-    version="1.0",
-    description="Generate talking head videos from audio and image"
-)
-
-# Storage for tasks
-tasks = {}
-os.makedirs("./uploads", exist_ok=True)
-os.makedirs("./results", exist_ok=True)
-
-# ===== ENDPOINT 1: Health Check =====
-@app.get("/health")
-def health_check():
-    """Check if API is healthy"""
-    return {
-        "status": "healthy",
-        "timestamp": datetime.now().isoformat(),
-        "service": "Ditto Avatar Generation API"
-    }
-
-# ===== ENDPOINT 2: Generate Video =====
-@app.post("/generate")
-async def generate_video(
-    audio: UploadFile = File(...),
-    image: UploadFile = File(...),
-    num_frames: int = Form(50),
-    face_scale: float = Form(2.3)
-):
-    """
-    Generate avatar video from audio and image
-    
-    Parameters:
-    - audio: WAV audio file
-    - image: PNG/JPG image file
-    - num_frames: Number of frames (default 50)
-    - face_scale: Face movement scale (default 2.3)
-    
-    Returns: {task_id, status, video_path, inference_time}
-    """
-    task_id = str(uuid.uuid4())[:8]
-    
-    try:
-        # Save uploaded files temporarily
-        audio_path = f"./uploads/{task_id}_audio.wav"
-        image_path = f"./uploads/{task_id}_image.png"
-        
-        with open(audio_path, "wb") as f:
-            f.write(await audio.read())
-        
-        with open(image_path, "wb") as f:
-            f.write(await image.read())
-        
-        print(f"📁 Saved temporary files for task {task_id}")
-        
-        # Run inference
-        start_time = time.time()
-        output_path = wrapper.generate_video(
-            image_path=image_path,
-            audio_path=audio_path,
-            num_frames=num_frames,
-            face_scale=face_scale
-        )
-        inference_time = time.time() - start_time
-        
-        # Move to results folder
-        result_path = f"./results/{task_id}_output.mp4"
-        shutil.copy(output_path, result_path)
-        
-        # Store task info
-        tasks[task_id] = {
-            "status": "completed",
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "created_at": datetime.now().isoformat()
-        }
-        
-        print(f"✅ Task {task_id} completed in {inference_time:.2f}s")
-        
-        return {
-            "status": "completed",
-            "task_id": task_id,
-            "video_path": result_path,
-            "inference_time": round(inference_time, 2),
-            "message": "Video generated successfully! Use /download/{task_id} to download"
-        }
-    
-    except Exception as e:
-        print(f"❌ Task {task_id} failed: {str(e)}")
-        tasks[task_id] = {"status": "failed", "error": str(e)}
-        return JSONResponse(
-            status_code=500,
-            content={
-                "status": "failed",
-                "task_id": task_id,
-                "error": str(e)
-            }
-        )
-
-# ===== ENDPOINT 3: Check Status =====
-@app.get("/status/{task_id}")
-def get_status(task_id: str):
-    """Check status of a completed task"""
-    if task_id not in tasks:
-        return {"status": "not_found", "task_id": task_id}
-    
-    return {"task_id": task_id, **tasks[task_id]}
-
-# ===== ENDPOINT 4: Download Video =====
-@app.get("/download/{task_id}")
-def download_video(task_id: str):
-    """Download the generated video"""
-    if task_id not in tasks:
-        return JSONResponse(
-            status_code=404,
-            content={"error": f"Task {task_id} not found"}
-        )
-    
-    task = tasks[task_id]
-    if task["status"] != "completed":
-        return JSONResponse(
-            status_code=400,
-            content={"error": f"Video not ready yet. Status: {task['status']}"}
-        )
-    
-    return FileResponse(
-        task["video_path"],
-        media_type="video/mp4",
-        filename=f"ditto_avatar_{task_id}.mp4"
+with mlflow.start_run():
+    mlflow.pyfunc.log_model(
+        artifact_path="ditto_talking_head",
+        python_model=DittoTalkingHeadModel(),
+        signature=signature,
+        pip_requirements=["gitpython==3.1.40"],  # ← PACKAGES GIT
+        conda_env=None
     )
+    run_id = mlflow.active_run().info.run_id
 
-print("✅ FastAPI app created with 4 endpoints:")
-print("   1. GET  /health - Check API health")
-print("   2. POST /generate - Generate video")
-print("   3. GET  /status/{task_id} - Check task status")
-print("   4. GET  /download/{task_id} - Download result")
+print(f"✅ New run ID: {run_id}")
 
-----------------------------------------------------------------
+# Register
+model_version = mlflow.register_model(
+    model_uri=f"runs:/{run_id}/ditto_talking_head",
+    name="lab37_catalog.ifstrolley.ditto_talkinghead"
+)
 
-
-
-
-
-
-import uvicorn
-
-print("\n" + "="*60)
-print("🚀 STARTING FASTAPI SERVER")
-print("="*60)
-print("\n📡 Server will be available at:")
-print("   🌐 http://localhost:8000")
-print("   📖 API Docs: http://localhost:8000/docs")
-print("   🔧 Alternative Docs: http://localhost:8000/redoc")
-print("\n⏹️  Press Ctrl+C to stop the server\n")
-print("="*60 + "\n")
-
-# Run the server
-uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
----------------------------------------------------------------
-
-
-
-import requests
-import time
-
-# Wait for server to start
-time.sleep(2)
-
-API_URL = "http://localhost:8000"
-
-print("🧪 Testing API endpoints...")
-print("\n1️⃣  Testing /health endpoint:")
-
-try:
-    response = requests.get(f"{API_URL}/health")
-    print(f"   Status: {response.status_code}")
-    print(f"   Response: {response.json()}")
-except Exception as e:
-    print(f"   ❌ Error: {e}")
-    print(f"   Server might not be running yet. Make sure Cell 4 is executing!")
-
-print("\n2️⃣  To test /generate endpoint:")
-print("   curl -X POST http://localhost:8000/generate \\")
-print("     -F 'audio=@audio.wav' \\")
-print("     -F 'image=@image.png' \\")
-print("     -F 'num_frames=50'")
-
-print("\n3️⃣  Or use Python:")
-print("   files = {'audio': open('audio.wav', 'rb'), 'image': open('image.png', 'rb')}")
-print("   data = {'num_frames': 50, 'face_scale': 2.3}")
-print("   response = requests.post('http://localhost:8000/generate', files=files, data=data)")
-print("   print(response.json())")
--------------------------------------------------------------------------------------------------
+print(f"✅ NEW VERSION: {model_version.version}")
