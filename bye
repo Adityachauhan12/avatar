@@ -1,17 +1,19 @@
-# CELL 5B: Find Your Catalog
-from databricks.sdk import WorkspaceClient
-
-w = WorkspaceClient()
-
-print("📋 Available Catalogs:")
-catalogs = list(w.catalogs.list())
-for cat in catalogs:
-    print(f"  - {cat.name}")
-    
-    # List schemas in each catalog
-    try:
-        schemas = list(w.schemas.list(catalog_name=cat.name))
-        for schema in schemas:
-            print(f"      └─ {schema.name}")
-    except:
-        pass
+📋 Available Catalogs:
+  - lab37_catalog
+      └─ ifstrolley
+  - prm_catalog
+      └─ default
+      └─ information_schema
+  - samples
+      └─ accuweather
+      └─ bakehouse
+      └─ healthverity
+      └─ information_schema
+      └─ nyctaxi
+      └─ tpcds_sf1
+      └─ tpcds_sf1000
+      └─ tpch
+      └─ wanderbricks
+  - system
+      └─ ai
+      └─ information_schema
