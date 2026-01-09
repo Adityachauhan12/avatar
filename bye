@@ -1,111 +1,49 @@
-# CELL 4: Define MLflow Model Class
+# CELL 5: Log & Register Model
 import mlflow
-import mlflow.pyfunc
-import os
-import subprocess
-import sys
-import tempfile
-from pathlib import Path
-import pandas as pd
+from mlflow.models.signature import infer_signature
 
-class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
-    
-    def load_context(self, context):
-        """Load once when model starts"""
-        self.repo_dir = "/tmp/ditto-talkinghead"
-        self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-        self.config_pkl = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
-        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_videos"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
-        
-        if not os.path.exists(self.repo_dir):
-            raise RuntimeError(f"❌ Repo not found: {self.repo_dir}")
-    
-    def predict(self, context, model_input):
-        """Generate video when called"""
-        try:
-            # Parse input
-            if isinstance(model_input, pd.DataFrame):
-                audio_path = str(model_input.iloc[0]["audio_path"])
-                image_path = str(model_input.iloc[0]["image_path"])
-            else:
-                audio_path = str(model_input.get("audio_path", ""))
-                image_path = str(model_input.get("image_path", ""))
-            
-            # Validate
-            if not os.path.exists(audio_path):
-                return {"status": "error", "message": f"Audio not found: {audio_path}"}
-            if not os.path.exists(image_path):
-                return {"status": "error", "message": f"Image not found: {image_path}"}
-            
-            # Generate unique output
-            job_id = os.urandom(8).hex()
-            output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
-            output_video = self.temp_dir / f"result_{job_id}.mp4"
-            
-            # Setup environment
-            my_env = os.environ.copy()
-            my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
-            my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
-            
-            print(f"🎬 Running inference...")
-            
-            # Run inference
-            cmd = [
-                sys.executable, "inference.py",
-                "--data_root", self.data_root,
-                "--cfg_pkl", self.config_pkl,
-                "--audio_path", str(audio_path),
-                "--source_path", str(image_path),
-                "--output_path", str(output_tmp)
-            ]
-            
-            process = subprocess.Popen(
-                cmd,
-                cwd=self.repo_dir,
-                env=my_env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True
-            )
-            
-            # Wait for completion
-            logs = []
-            for line in process.stdout:
-                logs.append(line)
-            
-            return_code = process.wait()
-            
-            if return_code != 0:
-                return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
-            
-            # Post-process
-            if output_tmp.exists():
-                subprocess.run([
-                    "ffmpeg", "-loglevel", "error", "-y",
-                    "-i", str(output_tmp),
-                    "-pix_fmt", "yuv420p",
-                    str(output_video)
-                ], capture_output=True)
-                try:
-                    output_tmp.unlink()
-                except:
-                    pass
-            
-            if not output_video.exists():
-                return {"status": "error", "message": "Video creation failed"}
-            
-            return {
-                "status": "success",
-                "message": "Video generated",
-                "video_path": str(output_video)
-            }
+mlflow.set_registry_uri("databricks-uc")
 
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/utils/data_validation.py:186: UserWarning: Add type hints to the `predict` method to enable data validation and automatic signature inference during model logging. Check https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel for more details.
-  color_warning(
-✅ Model class defined
-        
-        except Exception as e:
-            return {"status": "error", "message": str(e)}
+# Define input/output signature
+test_input = pd.DataFrame({
+    "audio_path": ["/path/to/audio.wav"],
+    "image_path": ["/path/to/image.png"]
+})
 
-print("✅ Model class defined")
+test_output = pd.DataFrame({
+    "status": ["success"],
+    "message": ["Video generated"],
+    "video_path": ["/tmp/output.mp4"]
+})
+
+signature = infer_signature(test_input, test_output)
+
+print("📝 Logging model...")
+
+with mlflow.start_run() as run:
+    mlflow.pyfunc.log_model(
+        artifact_path="ditto_talking_head",
+        python_model=DittoTalkingHeadModel(),
+        signature=signature,
+        conda_env={
+            "channels": ["conda-forge"],
+            "dependencies": ["python=3.10", "pip", {"pip": ["mlflow"]}],
+            "name": "ditto-env"
+        }
+    )
+    run_id = run.info.run_id
+
+print(f"✅ Model logged. Run ID: {run_id}")
+
+# Register in Unity Catalog
+uc_path = "harnayan.eng.ditto_talkinghead"
+
+try:
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_talking_head",
+        name=uc_path
+    )
+    print(f"✅ Registered: {uc_path}")
+    print(f"   Version: {model_version.version}")
+except Exception as e:
+    print(f"⚠️ Note: {e}")
