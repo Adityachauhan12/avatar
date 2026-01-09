@@ -1,10 +1,37 @@
-📝 Logging model...
-2026/01/09 06:02:07 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-c7061ae3ca91486bbfb88b4e1bacd795?o=7012066134936526
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
-  color_warning(
-✅ Model logged. Run ID: 9e643d5bf612462ebc11c9f5a5f25b62
-⚠️ Note: CATALOG_DOES_NOT_EXIST: Catalog 'harnayan' does not exist.
-📝 Registering model: lab37_catalog.ifstrolley.ditto_talkinghead
-Successfully registered model 'lab37_catalog.ifstrolley.ditto_talkinghead'.
-2026/01/09 06:02:10 WARNING mlflow.tracking._model_registry.fluent: Run with id 536fecc6272a4d388ae6f5b3752fbcd6 has no artifacts at artifact path 'ditto_talking_head', registering model based on models:/m-dbc5162e30494bffb0cd44977f15d546 instead
+# CELL 6: Create Serving Endpoint
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.serving import EndpointCoreConfigInput, ServedEntityInput
+
+w = WorkspaceClient()
+
+endpoint_name = "ditto-endpoint"
+model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
+model_version = "1"
+
+print(f"🚀 Creating endpoint: {endpoint_name}")
+print(f"   Model: {model_name}")
+print(f"   Version: {model_version}")
+print(f"   GPU: GPU_SMALL")
+
+try:
+    endpoint = w.serving_endpoints.create(
+        name=endpoint_name,
+        config=EndpointCoreConfigInput(
+            served_entities=[
+                ServedEntityInput(
+                    entity_name=model_name,
+                    entity_version=model_version,
+                    workload_type="GPU_SMALL",
+                    scale_to_zero_enabled=False
+                )
+            ]
+        )
+    )
+    print(f"\n✅ Endpoint created!")
+    print(f"   Name: {endpoint.name}")
+    print(f"   State: {endpoint.state}")
+    print(f"\n⏳ Wait 5-10 minutes for READY status...")
+    print(f"   Then run CELL 7 to check status")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
