@@ -1,8 +1,37 @@
-🚀 Creating endpoint: ditto-endpoint
-   Model: lab37_catalog.ifstrolley.ditto_talkinghead
-   Version: 1
-   GPU: GPU_SMALL
-❌ Error: EndpointCoreConfigInput.__init__() missing 1 required positional argument: 'name'
+# CELL 6: Create Serving Endpoint (FIXED)
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.serving import EndpointCoreConfigInput, ServedEntityInput
 
+w = WorkspaceClient()
 
-also will it work on GPU_SMALL it uses T4 16GB GPU
+endpoint_name = "ditto-endpoint"
+model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
+model_version = "1"
+
+print(f"🚀 Creating endpoint: {endpoint_name}")
+print(f"   Model: {model_name}")
+print(f"   Version: {model_version}")
+print(f"   GPU: GPU_SMALL (T4 16GB)")
+
+try:
+    endpoint = w.serving_endpoints.create(
+        name=endpoint_name,
+        config=EndpointCoreConfigInput(
+            name=endpoint_name,  # ADD THIS LINE!
+            served_entities=[
+                ServedEntityInput(
+                    entity_name=model_name,
+                    entity_version=model_version,
+                    workload_type="GPU_SMALL",
+                    scale_to_zero_enabled=False
+                )
+            ]
+        )
+    )
+    print(f"\n✅ Endpoint created!")
+    print(f"   Name: {endpoint.name}")
+    print(f"   State: {endpoint.state}")
+    print(f"\n⏳ Wait 5-10 minutes for READY status...")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
