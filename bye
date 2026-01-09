@@ -1,243 +1,115 @@
-[fg6nr] 2026-01-09 08:21:07.347 INFO : Initializing .........
-[fg6nr] WARNING:root:mlflow-server
-[fg6nr] [2026-01-09 08:21:07 +0000] [14] [INFO] Starting gunicorn 23.0.0
-[fg6nr] [2026-01-09 08:21:07 +0000] [14] [INFO] Listening at: http://0.0.0.0:8080 (14)
-[fg6nr] [2026-01-09 08:21:07 +0000] [14] [INFO] Using worker: sync
-[fg6nr] [2026-01-09 08:21:07 +0000] [17] [INFO] Booting worker with pid: 17
-[fg6nr] [2026-01-09 08:21:10 +0000] 2026/01/09 08:21:10 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[fg6nr] [2026-01-09 08:21:14 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:14 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:14 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:14 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:14 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:14 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:14 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:14 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:14 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:14 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:14 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:14 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:14 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:14 +0000] [17] [INFO] Worker exiting (pid: 17)
-[fg6nr] [2026-01-09 08:21:20 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:20 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:20 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:20 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:20 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:20 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:20 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:20 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:20 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:20 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:20 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:20 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:20 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:20 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:20 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:20 +0000] Exception ignored in:
-[fg6nr] [2026-01-09 08:21:20 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
-[fg6nr] [2026-01-09 08:21:20 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
-[fg6nr] [2026-01-09 08:21:20 +0000] atexit_call()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
-[fg6nr] [2026-01-09 08:21:20 +0000] t.join()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
-[fg6nr] [2026-01-09 08:21:20 +0000] self._wait_for_tstate_lock()
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
-[fg6nr] [2026-01-09 08:21:20 +0000] if lock.acquire(block, timeout):
-[fg6nr] [2026-01-09 08:21:20 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
-[fg6nr] [2026-01-09 08:21:20 +0000] sys.exit(1)
-[fg6nr] [2026-01-09 08:21:20 +0000] SystemExit
-[fg6nr] [2026-01-09 08:21:20 +0000] :
-[fg6nr] [2026-01-09 08:21:20 +0000] 1
-[fg6nr] [2026-01-09 08:21:20 +0000] [14] [ERROR] Worker (pid:17) exited with code 1
-[fg6nr] [2026-01-09 08:21:20 +0000] [14] [ERROR] Worker (pid:17) exited with code 1.
-[fg6nr] [2026-01-09 08:21:20 +0000] [73] [INFO] Booting worker with pid: 73
-[fg6nr] [2026-01-09 08:21:21 +0000] 2026/01/09 08:21:21 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[fg6nr] [2026-01-09 08:21:26 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:26 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:26 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:26 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:26 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:26 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:26 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:26 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:26 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:26 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:26 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:26 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:26 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:26 +0000] [73] [INFO] Worker exiting (pid: 73)
-[fg6nr] [2026-01-09 08:21:31 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:31 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:31 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:31 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:31 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:31 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:31 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:31 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:31 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:31 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:31 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:31 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:31 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:31 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:31 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:31 +0000] Exception ignored in:
-[fg6nr] [2026-01-09 08:21:31 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
-[fg6nr] [2026-01-09 08:21:31 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
-[fg6nr] [2026-01-09 08:21:31 +0000] atexit_call()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
-[fg6nr] [2026-01-09 08:21:31 +0000] t.join()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
-[fg6nr] [2026-01-09 08:21:31 +0000] self._wait_for_tstate_lock()
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
-[fg6nr] [2026-01-09 08:21:31 +0000] if lock.acquire(block, timeout):
-[fg6nr] [2026-01-09 08:21:31 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
-[fg6nr] [2026-01-09 08:21:31 +0000] sys.exit(1)
-[fg6nr] [2026-01-09 08:21:31 +0000] SystemExit
-[fg6nr] [2026-01-09 08:21:31 +0000] :
-[fg6nr] [2026-01-09 08:21:31 +0000] 1
-[fg6nr] [2026-01-09 08:21:31 +0000] [14] [ERROR] Worker (pid:73) exited with code 1
-[fg6nr] [2026-01-09 08:21:31 +0000] [14] [ERROR] Worker (pid:73) exited with code 1.
-[fg6nr] [2026-01-09 08:21:31 +0000] [107] [INFO] Booting worker with pid: 107
-[fg6nr] [2026-01-09 08:21:33 +0000] 2026/01/09 08:21:33 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[fg6nr] [2026-01-09 08:21:37 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:38 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:38 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:38 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:38 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:38 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:38 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:38 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:38 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:38 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:38 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:38 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:38 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:38 +0000] [107] [INFO] Worker exiting (pid: 107)
-[fg6nr] [2026-01-09 08:21:43 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:43 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:43 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:43 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:43 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:43 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:43 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:43 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:43 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:43 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:43 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:43 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:43 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:43 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:43 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:43 +0000] Exception ignored in:
-[fg6nr] [2026-01-09 08:21:43 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
-[fg6nr] [2026-01-09 08:21:43 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
-[fg6nr] [2026-01-09 08:21:43 +0000] atexit_call()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
-[fg6nr] [2026-01-09 08:21:43 +0000] t.join()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
-[fg6nr] [2026-01-09 08:21:43 +0000] self._wait_for_tstate_lock()
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
-[fg6nr] [2026-01-09 08:21:43 +0000] if lock.acquire(block, timeout):
-[fg6nr] [2026-01-09 08:21:43 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
-[fg6nr] [2026-01-09 08:21:43 +0000] sys.exit(1)
-[fg6nr] [2026-01-09 08:21:43 +0000] SystemExit
-[fg6nr] [2026-01-09 08:21:43 +0000] :
-[fg6nr] [2026-01-09 08:21:43 +0000] 1
-[fg6nr] [2026-01-09 08:21:43 +0000] [14] [ERROR] Worker (pid:107) exited with code 1
-[fg6nr] [2026-01-09 08:21:43 +0000] [14] [ERROR] Worker (pid:107) exited with code 1.
-[fg6nr] [2026-01-09 08:21:44 +0000] [151] [INFO] Booting worker with pid: 151
-[fg6nr] [2026-01-09 08:21:46 +0000] 2026/01/09 08:21:46 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[fg6nr] [2026-01-09 08:21:50 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:50 +0000] Traceback (most recent call last):
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
-[fg6nr] [2026-01-09 08:21:50 +0000]     self.model = self.model_future.result()
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
-[fg6nr] [2026-01-09 08:21:50 +0000]     return self.__get_result()
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
-[fg6nr] [2026-01-09 08:21:50 +0000]     raise self._exception
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
-[fg6nr] [2026-01-09 08:21:50 +0000]     result = self.fn(*self.args, **self.kwargs)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
-[fg6nr] [2026-01-09 08:21:50 +0000]     model = load_model_fn(path)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
-[fg6nr] [2026-01-09 08:21:50 +0000]     result = f(*args, **kwargs)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
-[fg6nr] [2026-01-09 08:21:50 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
-[fg6nr] [2026-01-09 08:21:50 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
-[fg6nr] [2026-01-09 08:21:50 +0000]     python_model.load_context(context=context)
-[fg6nr] [2026-01-09 08:21:50 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
-[fg6nr] [2026-01-09 08:21:50 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
-[fg6nr] [2026-01-09 08:21:50 +0000] [151] [INFO] Worker exiting (pid: 151)
+# CELL 4: Define MLflow Model Class
+import mlflow
+import mlflow.pyfunc
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+import pandas as pd
+import git 
+
+class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
+    
+    def load_context(self, context):
+        """Load once when model starts"""
+        self.repo_dir="/tmp/ditto-talkinghead"
+        if not os.path.exists(self.repo_dir):
+            import git 
+            git.Repo.clone_from(
+                "https://github.com/antgroup/ditto-talkinghead.git",
+                self.repo_dir,
+                depth=1
+            )
+        self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
+        self.config_pkl = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
+        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_videos"
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        if not os.path.exists(self.repo_dir):
+            raise RuntimeError(f"❌ Repo not found: {self.repo_dir}")
+    
+    def predict(self, context, model_input):
+        """Generate video when called"""
+        try:
+            # Parse input
+            if isinstance(model_input, pd.DataFrame):
+                audio_path = str(model_input.iloc[0]["audio_path"])
+                image_path = str(model_input.iloc[0]["image_path"])
+            else:
+                audio_path = str(model_input.get("audio_path", ""))
+                image_path = str(model_input.get("image_path", ""))
+            
+            # Validate
+            if not os.path.exists(audio_path):
+                return {"status": "error", "message": f"Audio not found: {audio_path}"}
+            if not os.path.exists(image_path):
+                return {"status": "error", "message": f"Image not found: {image_path}"}
+            
+            # Generate unique output
+            job_id = os.urandom(8).hex()
+            output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
+            output_video = self.temp_dir / f"result_{job_id}.mp4"
+            
+            # Setup environment
+            my_env = os.environ.copy()
+            my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
+            my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
+            
+            print(f"🎬 Running inference...")
+            
+            # Run inference
+            cmd = [
+                sys.executable, "inference.py",
+                "--data_root", self.data_root,
+                "--cfg_pkl", self.config_pkl,
+                "--audio_path", str(audio_path),
+                "--source_path", str(image_path),
+                "--output_path", str(output_tmp)
+            ]
+            
+            process = subprocess.Popen(
+                cmd,
+                cwd=self.repo_dir,
+                env=my_env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            
+            # Wait for completion
+            logs = []
+            for line in process.stdout:
+                logs.append(line)
+            
+            return_code = process.wait()
+            
+            if return_code != 0:
+                return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
+            
+            # Post-process
+            if output_tmp.exists():
+                subprocess.run([
+                    "ffmpeg", "-loglevel", "error", "-y",
+                    "-i", str(output_tmp),
+                    "-pix_fmt", "yuv420p",
+                    str(output_video)
+                ], capture_output=True)
+                try:
+                    output_tmp.unlink()
+                except:
+                    pass
+            
+            if not output_video.exists():
+                return {"status": "error", "message": "Video creation failed"}
+            
+            return {
+                "status": "success",
+                "message": "Video generated",
+                "video_path": str(output_video)
+            }
+        
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
+
+print("✅ Model class defined")
