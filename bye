@@ -1,41 +1,34 @@
-ditto_server_v2
-Ready
-https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_server_v2/invocations
-Gateway
-Usage monitoring:
-system.serving.endpoint_usage
-Dimension table:
-system.serving.served_entities
-Inference tables:
-Not enabled
-Rate limits:
-Not enabled
-Active configuration
-Entity
-Version
-Name
-State
-Compute
-Traffic (%)
-lab37_catalog.ifstrolley.ditto_talkinghead
-Version 6
-ditto_talkinghead-6
-Ready
-GPU Small (T4), Custom 0-4 concurrency (0-10.48 DBU)
-100
-Metrics
-Events
-Logs
+# CELL 8: Test Endpoint
+import requests
+import json
+import os
 
-Service logs
+# Your endpoint details
+endpoint_name = "ditto_server_v2"
+workspace_url = "adb-7012066134936526.6.azuredatabricks.net"  # From your URL
+token = dbutils.secrets.get(scope="your_scope", key="databricks_token")  # Or use %run /path/to/secrets
 
-Build logs
+endpoint_url = f"https://{workspace_url}/serving-endpoints/{endpoint_name}/invocations"
 
+headers = {
+    "Authorization": f"Bearer {token}",
+    "Content-Type": "application/json"
+}
 
-[rxz4w] 2026-01-09 08:59:43.115 INFO : Initializing .........
-[rxz4w] WARNING:root:mlflow-server
-[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Starting gunicorn 23.0.0
-[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Listening at: http://0.0.0.0:8080 (14)
-[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Using worker: sync
-[rxz4w] [2026-01-09 08:59:43 +0000] [17] [INFO] Booting worker with pid: 17
-[rxz4w] [2026-01-09 08:59:47 +0000] 2026/01/09 08:59:47 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+# Upload test files first (use your real files)
+audio_path = "/dbfs/FileStore/audio_test.wav"  # Upload your audio here
+image_path = "/dbfs/FileStore/image_test.png"  # Upload your image here
+
+payload = {
+    "dataframe_split": {
+        "columns": ["audio_path", "image_path"],
+        "data": [[audio_path, image_path]]
+    }
+}
+
+print(f"🧪 Testing {endpoint_url}")
+response = requests.post(endpoint_url, json=payload, headers=headers)
+
+print(f"Status: {response.status_code}")
+print("Response:")
+print(json.dumps(response.json(), indent=2))
