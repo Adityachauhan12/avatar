@@ -1,4 +1,48 @@
-IllegalArgumentException: Secret does not exist with scope: your_scope and key: databricks_token
+# CELL 8: Test Endpoint (using Notebook Context Token)
+import requests
+import json
 
-but when i go to access token it says 
-Tokens are disabled for your organization or you do not have permissions to use them. Please contact your administrator for more information.
+# 1. Get the AUTOMATIC token from the notebook context
+token = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
+
+# 2. Get the workspace URL automatically
+workspace_url = spark.conf.get("spark.databricks.workspaceUrl")
+
+# 3. Define endpoint URL
+endpoint_name = "ditto_server_v2"
+endpoint_url = f"https://{workspace_url}/serving-endpoints/{endpoint_name}/invocations"
+
+print(f"🔗 Testing Endpoint: {endpoint_url}")
+
+headers = {
+    "Authorization": f"Bearer {token}",
+    "Content-Type": "application/json"
+}
+
+# 4. Your Test Payload (Verify paths exist!)
+payload = {
+    "dataframe_split": {
+        "columns": ["audio_path", "image_path"],
+        "data": [
+            [
+                "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav", 
+                "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+            ]
+        ]
+    }
+}
+
+# 5. Send Request
+try:
+    response = requests.post(endpoint_url, json=payload, headers=headers)
+    
+    print(f"📊 Status Code: {response.status_code}")
+    if response.status_code == 200:
+        print("✅ Success! Response:")
+        print(json.dumps(response.json(), indent=2))
+    else:
+        print("❌ Error:")
+        print(response.text)
+
+except Exception as e:
+    print(f"💥 Request Failed: {e}")
