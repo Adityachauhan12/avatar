@@ -1,10 +1,2 @@
-self.repo_dir = "/tmp/ditto-talkinghead"
-if not os.path.exists(self.repo_dir):
-    import git
-    git.Repo.clone_from(
-        "https://github.com/yerfor/Ditto.git",
-        self.repo_dir,
-        depth=1
-    )
-
-self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
+BASE_DIR = "/tmp/ditto-talkinghead"
+GITHUB_URL = "https://github.com/antgroup/ditto-talkinghead.git"
