@@ -3,3 +3,6 @@
    Version: 1
    GPU: GPU_SMALL
 ❌ Error: EndpointCoreConfigInput.__init__() missing 1 required positional argument: 'name'
+
+
+also will it work on GPU_SMALL it uses T4 16GB GPU
