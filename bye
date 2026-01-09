@@ -1,53 +1,8 @@
-# CELL 5: Log & Register Model (FIXED)
-import mlflow
-from mlflow.models.signature import infer_signature
-
-# Set registry to Unity Catalog
-mlflow.set_registry_uri("databricks-uc")
-
-# FIX: Set experiment explicitly to avoid folder issues
-mlflow.set_experiment("/Shared/ditto_experiment")
-
-# Define input/output signature
-test_input = pd.DataFrame({
-    "audio_path": ["/path/to/audio.wav"],
-    "image_path": ["/path/to/image.png"]
-})
-
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_path": ["/tmp/output.mp4"]
-})
-
-signature = infer_signature(test_input, test_output)
-
-print("📝 Logging model...")
-
-with mlflow.start_run() as run:
-    mlflow.pyfunc.log_model(
-        artifact_path="ditto_talking_head",
-        python_model=DittoTalkingHeadModel(),
-        signature=signature,
-        conda_env={
-            "channels": ["conda-forge"],
-            "dependencies": ["python=3.10", "pip", {"pip": ["mlflow"]}],
-            "name": "ditto-env"
-        }
-    )
-    run_id = run.info.run_id
-
-print(f"✅ Model logged. Run ID: {run_id}")
-
-# Register in Unity Catalog
-uc_path = "harnayan.eng.ditto_talkinghead"
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_path
-    )
-    print(f"✅ Registered: {uc_path}")
-    print(f"   Version: {model_version.version}")
-except Exception as e:
-    print(f"⚠️ Note: {e}")
+2026/01/09 05:58:13 INFO mlflow.tracking.fluent: Experiment with name '/Shared/ditto_experiment' does not exist. Creating a new experiment.
+📝 Logging model...
+2026/01/09 05:58:14 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-dbc5162e30494bffb0cd44977f15d546?o=7012066134936526
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
+  color_warning(
+✅ Model logged. Run ID: 536fecc6272a4d388ae6f5b3752fbcd6
+⚠️ Note: CATALOG_DOES_NOT_EXIST: Catalog 'harnayan' does not exist.
