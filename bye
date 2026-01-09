@@ -1,19 +1,26 @@
-📋 Available Catalogs:
-  - lab37_catalog
-      └─ ifstrolley
-  - prm_catalog
-      └─ default
-      └─ information_schema
-  - samples
-      └─ accuweather
-      └─ bakehouse
-      └─ healthverity
-      └─ information_schema
-      └─ nyctaxi
-      └─ tpcds_sf1
-      └─ tpcds_sf1000
-      └─ tpch
-      └─ wanderbricks
-  - system
-      └─ ai
-      └─ information_schema
+# CELL 5D: Register Model with CORRECT Catalog
+import mlflow
+
+mlflow.set_registry_uri("databricks-uc")
+
+# Tera catalog: lab37_catalog
+# Tera schema: ifstrolley
+run_id = "536fecc6272a4d388ae6f5b3752fbcd6"  # From your previous output
+
+uc_path = "lab37_catalog.ifstrolley.ditto_talkinghead"
+
+print(f"📝 Registering model: {uc_path}")
+
+try:
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_talking_head",
+        name=uc_path
+    )
+    print(f"✅ SUCCESS! Registered: {uc_path}")
+    print(f"   Version: {model_version.version}")
+    print(f"\n💾 Save this for next steps:")
+    print(f"   Model Name: {uc_path}")
+    print(f"   Model Version: {model_version.version}")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
