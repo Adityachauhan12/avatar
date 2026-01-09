@@ -1,34 +1,4 @@
-# CELL 8: Test Endpoint
-import requests
-import json
-import os
+IllegalArgumentException: Secret does not exist with scope: your_scope and key: databricks_token
 
-# Your endpoint details
-endpoint_name = "ditto_server_v2"
-workspace_url = "adb-7012066134936526.6.azuredatabricks.net"  # From your URL
-token = dbutils.secrets.get(scope="your_scope", key="databricks_token")  # Or use %run /path/to/secrets
-
-endpoint_url = f"https://{workspace_url}/serving-endpoints/{endpoint_name}/invocations"
-
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json"
-}
-
-# Upload test files first (use your real files)
-audio_path = "/dbfs/FileStore/audio_test.wav"  # Upload your audio here
-image_path = "/dbfs/FileStore/image_test.png"  # Upload your image here
-
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_path", "image_path"],
-        "data": [[audio_path, image_path]]
-    }
-}
-
-print(f"🧪 Testing {endpoint_url}")
-response = requests.post(endpoint_url, json=payload, headers=headers)
-
-print(f"Status: {response.status_code}")
-print("Response:")
-print(json.dumps(response.json(), indent=2))
+but when i go to access token it says 
+Tokens are disabled for your organization or you do not have permissions to use them. Please contact your administrator for more information.
