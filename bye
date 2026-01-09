@@ -1,8 +1,17 @@
-2026/01/09 05:58:13 INFO mlflow.tracking.fluent: Experiment with name '/Shared/ditto_experiment' does not exist. Creating a new experiment.
-📝 Logging model...
-2026/01/09 05:58:14 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-dbc5162e30494bffb0cd44977f15d546?o=7012066134936526
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
-  color_warning(
-✅ Model logged. Run ID: 536fecc6272a4d388ae6f5b3752fbcd6
-⚠️ Note: CATALOG_DOES_NOT_EXIST: Catalog 'harnayan' does not exist.
+# CELL 5B: Find Your Catalog
+from databricks.sdk import WorkspaceClient
+
+w = WorkspaceClient()
+
+print("📋 Available Catalogs:")
+catalogs = list(w.catalogs.list())
+for cat in catalogs:
+    print(f"  - {cat.name}")
+    
+    # List schemas in each catalog
+    try:
+        schemas = list(w.schemas.list(catalog_name=cat.name))
+        for schema in schemas:
+            print(f"      └─ {schema.name}")
+    except:
+        pass
