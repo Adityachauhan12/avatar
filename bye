@@ -1,137 +1,16 @@
-# CELL 4: Define MLflow Model Class (FIXED)
-import mlflow
-import mlflow.pyfunc
-import os
-import subprocess
-import sys
-import tempfile
-from pathlib import Path
-import pandas as pd
-import git 
-
-class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
-    
-    def load_context(self, context):
-        """Load once when model starts"""
-        self.repo_dir = "/tmp/ditto-talkinghead"
-        
-        # Auto-clone repo if missing
-        if not os.path.exists(self.repo_dir):
-            print(f"🔄 Cloning Ditto repo to {self.repo_dir}...")
-            git.Repo.clone_from(
-                "https://github.com/antgroup/ditto-talkinghead.git",
-                self.repo_dir,
-                depth=1
-            )
-            print("✅ Repo cloned successfully")
-        
-        # Setup paths
-        self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-        self.config_pkl = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
-        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_videos"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
-        
-        print(f"✅ Model ready! Repo: {self.repo_dir}")
-    
-    def predict(self, context, model_input):
-        """Generate video when called"""
-        try:
-            if isinstance(model_input, pd.DataFrame):
-                audio_path = str(model_input.iloc[0]["audio_path"])
-                image_path = str(model_input.iloc[0]["image_path"])
-            else:
-                audio_path = str(model_input.get("audio_path", ""))
-                image_path = str(model_input.get("image_path", ""))
-            
-            if not os.path.exists(audio_path):
-                return {"status": "error", "message": f"Audio not found: {audio_path}"}
-            if not os.path.exists(image_path):
-                return {"status": "error", "message": f"Image not found: {image_path}"}
-            
-            job_id = os.urandom(8).hex()
-            output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
-            output_video = self.temp_dir / f"result_{job_id}.mp4"
-            
-            my_env = os.environ.copy()
-            my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
-            my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
-            
-            print(f"🎬 Running inference...")
-            
-            cmd = [
-                sys.executable, "inference.py",
-                "--data_root", self.data_root,
-                "--cfg_pkl", self.config_pkl,
-                "--audio_path", str(audio_path),
-                "--source_path", str(image_path),
-                "--output_path", str(output_tmp)
-            ]
-            
-            process = subprocess.Popen(
-                cmd,
-                cwd=self.repo_dir,
-                env=my_env,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True
-            )
-            
-            logs = []
-            for line in process.stdout:
-                logs.append(line)
-            
-            return_code = process.wait()
-            
-            if return_code != 0:
-                return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
-            
-            if output_tmp.exists():
-                subprocess.run([
-                    "ffmpeg", "-loglevel", "error", "-y",
-                    "-i", str(output_tmp),
-                    "-pix_fmt", "yuv420p",
-                    str(output_video)
-                ], capture_output=True)
-                try:
-                    output_tmp.unlink()
-                except:
-                    pass
-            
-            if not output_video.exists():
-                return {"status": "error", "message": "Video creation failed"}
-            
-            return {
-                "status": "success",
-                "message": "Video generated",
-                "video_path": str(output_video)
-            }
-        
-        except Exception as e:
-            return {"status": "error", "message": str(e)}
-
-print("✅ Model class defined")
-
-got this response 
-✅ Model class defined
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/utils/data_validation.py:186: UserWarning: Add type hints to the `predict` method to enable data validation and automatic signature inference during model logging. Check https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel for more details.
-  color_warning(
-
-then ran cell 5 
-
-# CELL 5: Log & Register Model (FIXED)
+# CELL 5: Log & Register Model (PACKAGES GIT)
 import mlflow
 from mlflow.models.signature import infer_signature
+import pandas as pd
+import git  # ← FORCE IMPORT HERE
 
-# Set registry to Unity Catalog
 mlflow.set_registry_uri("databricks-uc")
-
-# FIX: Set experiment explicitly to avoid folder issues
 mlflow.set_experiment("/Shared/ditto_experiment")
 
-# Define input/output signature
+# Test input/output
 test_input = pd.DataFrame({
-    "audio_path": ["/path/to/audio.wav"],
-    "image_path": ["/path/to/image.png"]
+    "audio_path": ["/dbfs/test.wav"],
+    "image_path": ["/dbfs/test.png"]
 })
 
 test_output = pd.DataFrame({
@@ -142,78 +21,24 @@ test_output = pd.DataFrame({
 
 signature = infer_signature(test_input, test_output)
 
-print("📝 Logging model...")
+print("📦 Packaging model with git...")
 
-with mlflow.start_run() as run:
+with mlflow.start_run():
     mlflow.pyfunc.log_model(
         artifact_path="ditto_talking_head",
         python_model=DittoTalkingHeadModel(),
         signature=signature,
-        conda_env={
-            "channels": ["conda-forge"],
-            "dependencies": ["python=3.10", "pip", {"pip": ["mlflow"]}],
-            "name": "ditto-env"
-        }
+        pip_requirements=["gitpython==3.1.40"],  # ← PACKAGES GIT
+        conda_env=None
     )
-    run_id = run.info.run_id
+    run_id = mlflow.active_run().info.run_id
 
-print(f"✅ Model logged. Run ID: {run_id}")
+print(f"✅ New run ID: {run_id}")
 
-# Register in Unity Catalog
-uc_path = "harnayan.eng.ditto_talkinghead"
+# Register
+model_version = mlflow.register_model(
+    model_uri=f"runs:/{run_id}/ditto_talking_head",
+    name="lab37_catalog.ifstrolley.ditto_talkinghead"
+)
 
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_path
-    )
-    print(f"✅ Registered: {uc_path}")
-    print(f"   Version: {model_version.version}")
-except Exception as e:
-    print(f"⚠️ Note: {e}")# CELL 5D: Register Model with CORRECT Catalog
-import mlflow
-
-mlflow.set_registry_uri("databricks-uc")
-
-# Tera catalog: lab37_catalog
-# Tera schema: ifstrolley
-run_id = "536fecc6272a4d388ae6f5b3752fbcd6"  # From your previous output
-
-uc_path = "lab37_catalog.ifstrolley.ditto_talkinghead"
-
-print(f"📝 Registering model: {uc_path}")
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_path
-    )
-    print(f"✅ SUCCESS! Registered: {uc_path}")
-    print(f"   Version: {model_version.version}")
-    print(f"\n💾 Save this for next steps:")
-    print(f"   Model Name: {uc_path}")
-    print(f"   Model Version: {model_version.version}")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
-
-got this response 
-📝 Logging model...
-2026/01/09 08:37:57 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-c0f787253d1c4b1cb1845a9482561ba3?o=7012066134936526
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
-  color_warning(
-✅ Model logged. Run ID: 1fc70bb24a0747f5bc673fa5ae8a034f
-⚠️ Note: CATALOG_DOES_NOT_EXIST: Catalog 'harnayan' does not exist.
-📝 Registering model: lab37_catalog.ifstrolley.ditto_talkinghead
-Registered model 'lab37_catalog.ifstrolley.ditto_talkinghead' already exists. Creating a new version of this model...
-2026/01/09 08:37:59 WARNING mlflow.tracking._model_registry.fluent: Run with id 536fecc6272a4d388ae6f5b3752fbcd6 has no artifacts at artifact path 'ditto_talking_head', registering model based on models:/m-dbc5162e30494bffb0cd44977f15d546 instead
-
-
-🔗 Created version '5' of model 'lab37_catalog.ifstrolley.ditto_talkinghead': https://adb-7012066134936526.6.azuredatabricks.net/explore/data/models/lab37_catalog/ifstrolley/ditto_talkinghead/version/5?o=7012066134936526
-✅ SUCCESS! Registered: lab37_catalog.ifstrolley.ditto_talkinghead
-   Version: 5
-
-💾 Save this for next steps:
-   Model Name: lab37_catalog.ifstrolley.ditto_talkinghead
-   Model Version: 5
+print(f"✅ NEW VERSION: {model_version.version}")
