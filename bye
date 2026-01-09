@@ -1,8 +1,500 @@
-🚀 Creating endpoint: ditto-endpoint
-❌ Error: 'dict' object has no attribute 'as_dict'
-Traceback (most recent call last):
-  File "/root/.ipykernel/3005/command-5136757161233167-100739040", line 10, in <module>
-    endpoint = w.serving_endpoints.create(
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/databricks/sdk/service/serving.py", line 4101, in create
-    body["config"] = config.as_dict()
-AttributeError: 'dict' object has no attribute 'as_dict'
+[h9cgh] [2026-01-09 06:43:39 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:39 +0000] [2589] [INFO] Worker exiting (pid: 2589)
+[h9cgh] [2026-01-09 06:43:44 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:44 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:43:44 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:43:44 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:43:44 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:43:44 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:43:44 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:43:44 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:43:44 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:43:44 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:43:44 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:43:44 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:43:44 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:43:44 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:43:44 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:44 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:43:44 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:43:44 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:43:44 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:43:44 +0000] t.join()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:43:44 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:43:44 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:43:44 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:43:44 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:43:44 +0000] SystemExit
+[h9cgh] [2026-01-09 06:43:44 +0000] :
+[h9cgh] [2026-01-09 06:43:44 +0000] 1
+[h9cgh] [2026-01-09 06:43:44 +0000] [14] [ERROR] Worker (pid:2589) exited with code 1
+[h9cgh] [2026-01-09 06:43:44 +0000] [14] [ERROR] Worker (pid:2589) exited with code 1.
+[h9cgh] [2026-01-09 06:43:44 +0000] [2672] [INFO] Booting worker with pid: 2672
+[h9cgh] [2026-01-09 06:43:45 +0000] 2026/01/09 06:43:45 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:43:50 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:50 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:43:50 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:43:50 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:43:50 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:43:50 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:43:50 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:43:50 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:43:50 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:43:50 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:43:50 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:43:50 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:43:50 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:50 +0000] [2672] [INFO] Worker exiting (pid: 2672)
+[h9cgh] [2026-01-09 06:43:55 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:55 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:43:55 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:43:55 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:43:55 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:43:55 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:43:55 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:43:55 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:43:55 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:43:55 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:43:55 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:43:55 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:43:55 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:43:55 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:43:55 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:43:55 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:43:55 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:43:55 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:43:55 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:43:55 +0000] t.join()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:43:55 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:43:55 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:43:55 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:43:55 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:43:55 +0000] SystemExit
+[h9cgh] [2026-01-09 06:43:55 +0000] :
+[h9cgh] [2026-01-09 06:43:55 +0000] 1
+[h9cgh] [2026-01-09 06:43:55 +0000] [14] [ERROR] Worker (pid:2672) exited with code 1
+[h9cgh] [2026-01-09 06:43:55 +0000] [14] [ERROR] Worker (pid:2672) exited with code 1.
+[h9cgh] [2026-01-09 06:43:55 +0000] [2725] [INFO] Booting worker with pid: 2725
+[h9cgh] [2026-01-09 06:43:57 +0000] 2026/01/09 06:43:57 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:01 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:01 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:01 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:01 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:01 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:01 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:01 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:01 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:01 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:01 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:01 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:01 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:01 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:01 +0000] [2725] [INFO] Worker exiting (pid: 2725)
+[h9cgh] [2026-01-09 06:44:06 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:06 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:06 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:06 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:06 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:06 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:06 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:06 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:06 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:06 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:06 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:06 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:06 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:06 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:06 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:06 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:44:06 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:44:06 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:44:06 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:44:06 +0000] t.join()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:44:06 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:44:06 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:44:06 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:44:06 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:44:06 +0000] SystemExit
+[h9cgh] [2026-01-09 06:44:06 +0000] :
+[h9cgh] [2026-01-09 06:44:06 +0000] 1
+[h9cgh] [2026-01-09 06:44:07 +0000] [14] [ERROR] Worker (pid:2725) exited with code 1
+[h9cgh] [2026-01-09 06:44:07 +0000] [14] [ERROR] Worker (pid:2725) exited with code 1.
+[h9cgh] [2026-01-09 06:44:07 +0000] [2776] [INFO] Booting worker with pid: 2776
+[h9cgh] [2026-01-09 06:44:08 +0000] 2026/01/09 06:44:08 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:13 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:13 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:13 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:13 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:13 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:13 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:13 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:13 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:13 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:13 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:13 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:13 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:13 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:13 +0000] [2776] [INFO] Worker exiting (pid: 2776)
+[h9cgh] [2026-01-09 06:44:18 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:18 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:18 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:18 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:18 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:18 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:18 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:18 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:18 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:18 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:18 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:18 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:18 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:18 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:18 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:18 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:44:18 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:44:18 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:44:18 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:44:18 +0000] t.join()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:44:18 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:44:18 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:44:18 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:44:18 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:44:18 +0000] SystemExit
+[h9cgh] [2026-01-09 06:44:18 +0000] :
+[h9cgh] [2026-01-09 06:44:18 +0000] 1
+[h9cgh] [2026-01-09 06:44:18 +0000] [14] [ERROR] Worker (pid:2776) exited with code 1
+[h9cgh] [2026-01-09 06:44:18 +0000] [14] [ERROR] Worker (pid:2776) exited with code 1.
+[h9cgh] [2026-01-09 06:44:18 +0000] [2847] [INFO] Booting worker with pid: 2847
+[h9cgh] [2026-01-09 06:44:20 +0000] 2026/01/09 06:44:20 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:24 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:24 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:24 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:24 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:24 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:24 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:24 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:24 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:24 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:24 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:24 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:24 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:24 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:24 +0000] [2847] [INFO] Worker exiting (pid: 2847)
+[h9cgh] [2026-01-09 06:44:29 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:29 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:29 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:29 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:29 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:29 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:29 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:29 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:29 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:29 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:29 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:29 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:29 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:29 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:29 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:29 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:44:29 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:44:29 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:44:29 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:44:29 +0000] t.join()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:44:29 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:44:29 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:44:29 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:44:29 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:44:29 +0000] SystemExit
+[h9cgh] [2026-01-09 06:44:29 +0000] :
+[h9cgh] [2026-01-09 06:44:29 +0000] 1
+[h9cgh] [2026-01-09 06:44:29 +0000] [14] [ERROR] Worker (pid:2847) exited with code 1
+[h9cgh] [2026-01-09 06:44:29 +0000] [14] [ERROR] Worker (pid:2847) exited with code 1.
+[h9cgh] [2026-01-09 06:44:29 +0000] [2899] [INFO] Booting worker with pid: 2899
+[h9cgh] [2026-01-09 06:44:31 +0000] 2026/01/09 06:44:31 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:36 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:36 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:36 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:36 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:36 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:36 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:36 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:36 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:36 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:36 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:36 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:36 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:36 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:36 +0000] [2899] [INFO] Worker exiting (pid: 2899)
+[h9cgh] [2026-01-09 06:44:41 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:41 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:41 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:41 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:41 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:41 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:41 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:41 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:41 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:41 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:41 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:41 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:41 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:41 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:41 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:41 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:44:41 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:44:41 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:44:41 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:44:41 +0000] t.join()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:44:41 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:44:41 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:44:41 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:44:41 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:44:41 +0000] SystemExit
+[h9cgh] [2026-01-09 06:44:41 +0000] :
+[h9cgh] [2026-01-09 06:44:41 +0000] 1
+[h9cgh] [2026-01-09 06:44:41 +0000] [14] [ERROR] Worker (pid:2899) exited with code 1
+[h9cgh] [2026-01-09 06:44:41 +0000] [14] [ERROR] Worker (pid:2899) exited with code 1.
+[h9cgh] [2026-01-09 06:44:41 +0000] [2961] [INFO] Booting worker with pid: 2961
+[h9cgh] [2026-01-09 06:44:42 +0000] 2026/01/09 06:44:42 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:47 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:47 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:47 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:47 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:47 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:47 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:47 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:47 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:47 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:47 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:47 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:47 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:47 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:47 +0000] [2961] [INFO] Worker exiting (pid: 2961)
+[h9cgh] [2026-01-09 06:44:52 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:52 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:52 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:52 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:52 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:52 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:52 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:52 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:52 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:52 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:52 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:52 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:52 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:52 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:52 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:52 +0000] Exception ignored in:
+[h9cgh] [2026-01-09 06:44:52 +0000] <module 'threading' from '/opt/conda/envs/mlflow-env/lib/python3.10/threading.py'>
+[h9cgh] [2026-01-09 06:44:52 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1537, in _shutdown
+[h9cgh] [2026-01-09 06:44:52 +0000] atexit_call()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 31, in _python_exit
+[h9cgh] [2026-01-09 06:44:52 +0000] t.join()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1096, in join
+[h9cgh] [2026-01-09 06:44:52 +0000] self._wait_for_tstate_lock()
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+[h9cgh] [2026-01-09 06:44:52 +0000] if lock.acquire(block, timeout):
+[h9cgh] [2026-01-09 06:44:52 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 275, in _terminate
+[h9cgh] [2026-01-09 06:44:52 +0000] sys.exit(1)
+[h9cgh] [2026-01-09 06:44:52 +0000] SystemExit
+[h9cgh] [2026-01-09 06:44:52 +0000] :
+[h9cgh] [2026-01-09 06:44:52 +0000] 1
+[h9cgh] [2026-01-09 06:44:52 +0000] [14] [ERROR] Worker (pid:2961) exited with code 1
+[h9cgh] [2026-01-09 06:44:52 +0000] [14] [ERROR] Worker (pid:2961) exited with code 1.
+[h9cgh] [2026-01-09 06:44:52 +0000] [3012] [INFO] Booting worker with pid: 3012
+[h9cgh] [2026-01-09 06:44:54 +0000] 2026/01/09 06:44:54 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[h9cgh] [2026-01-09 06:44:59 +0000] An error occurred while loading the model: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:59 +0000] Traceback (most recent call last):
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 233, in get_model_option_or_exit
+[h9cgh] [2026-01-09 06:44:59 +0000]     self.model = self.model_future.result()
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+[h9cgh] [2026-01-09 06:44:59 +0000]     return self.__get_result()
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+[h9cgh] [2026-01-09 06:44:59 +0000]     raise self._exception
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+[h9cgh] [2026-01-09 06:44:59 +0000]     result = self.fn(*self.args, **self.kwargs)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflowserving/scoring_server/__init__.py", line 143, in _load_model_closure
+[h9cgh] [2026-01-09 06:44:59 +0000]     model = load_model_fn(path)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/tracing/provider.py", line 633, in wrapper
+[h9cgh] [2026-01-09 06:44:59 +0000]     result = f(*args, **kwargs)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py", line 1170, in load_model
+[h9cgh] [2026-01-09 06:44:59 +0000]     model_impl = importlib.import_module(conf[MAIN])._load_pyfunc(data_path)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1297, in _load_pyfunc
+[h9cgh] [2026-01-09 06:44:59 +0000]     context, python_model, signature = _load_context_model_and_signature(model_path, model_config)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/mlflow/pyfunc/model.py", line 1291, in _load_context_model_and_signature
+[h9cgh] [2026-01-09 06:44:59 +0000]     python_model.load_context(context=context)
+[h9cgh] [2026-01-09 06:44:59 +0000]   File "/root/.ipykernel/3005/command-5136757161233164-2588461840", line 22, in load_context
+[h9cgh] [2026-01-09 06:44:59 +0000] RuntimeError: ❌ Repo not found: /tmp/ditto-talkinghead
+[h9cgh] [2026-01-09 06:44:59 +0000] [3012] [INFO] Worker exiting (pid: 3012)
+[h9cgh] mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
