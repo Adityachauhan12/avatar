@@ -1,223 +1,107 @@
-%pip install -q fastapi uvicorn[standard] python-multipart requests nest_asyncio
-print("✅ Dependencies installed")
-
-
-
-import subprocess
+# CELL 4: Define MLflow Model Class
+import mlflow
+import mlflow.pyfunc
 import os
-
-subprocess.run(["git", "clone", "https://github.com/antgroup/ditto-talkinghead.git", "/tmp/ditto-talkinghead"], check=False)
-
-if os.path.exists("/tmp/ditto-talkinghead"):
-    print("✅ Ditto repo ready")
-else:
-    print("⚠️ Repo already exists")
-
-
-from pathlib import Path
-import os
-
-REPO_DIR = "/tmp/ditto-talkinghead"
-DATA_ROOT = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-CONFIG_PKL = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
-TEMP_DIR = Path("/tmp/ditto_videos")
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
-
-print("📁 Paths configured:")
-print(f"  REPO_DIR: {REPO_DIR}")
-print(f"  DATA_ROOT: {DATA_ROOT}")
-print(f"  CONFIG_PKL: {CONFIG_PKL}")
-print(f"  TEMP_DIR: {TEMP_DIR}")
-
-
-
-
-
-
-
-
 import subprocess
 import sys
-import os
 import tempfile
-import threading
-import time
 from pathlib import Path
-from typing import Optional
+import pandas as pd
 
-# Install FastAPI
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", 
-    "fastapi", "uvicorn[standard]", "python-multipart", "requests", "nest_asyncio"])
-
-from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-from fastapi.responses import FileResponse, JSONResponse
-from pydantic import BaseModel
-import uvicorn
-import nest_asyncio
-
-nest_asyncio.apply()
-
-print("✅ FastAPI setup complete")
-
-# Configuration
-REPO_DIR = "/tmp/ditto-talkinghead"
-DATA_ROOT = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-CONFIG_PKL = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
-MAX_FILE_SIZE = 100 * 1024 * 1024
-TEMP_DIR = Path(tempfile.gettempdir()) / "ditto_videos"
-TEMP_DIR.mkdir(parents=True, exist_ok=True)
-
-# FastAPI App
-app = FastAPI(title="Ditto API")
-
-class GenerationResponse(BaseModel):
-    status: str
-    message: str
-    video_path: Optional[str] = None
-    error: Optional[str] = None
-
-@app.get("/health")
-async def health_check():
-    repo_exists = os.path.exists(REPO_DIR)
-    config_exists = os.path.exists(os.path.join(REPO_DIR, CONFIG_PKL))
-    try:
-        result = subprocess.run(["nvidia-smi"], capture_output=True, timeout=5)
-        gpu_available = result.returncode == 0
-    except:
-        gpu_available = False
+class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
     
-    status = "ready" if (repo_exists and config_exists and gpu_available) else "not_ready"
+    def load_context(self, context):
+        """Load once when model starts"""
+        self.repo_dir = "/tmp/ditto-talkinghead"
+        self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
+        self.config_pkl = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
+        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_videos"
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        if not os.path.exists(self.repo_dir):
+            raise RuntimeError(f"❌ Repo not found: {self.repo_dir}")
     
-    return {
-        "status": status,
-        "repo_exists": repo_exists,
-        "config_exists": config_exists,
-        "gpu_available": gpu_available
-    }
-
-@app.post("/generate")
-async def generate_video(
-    audio_file: UploadFile = File(...),
-    image_file: UploadFile = File(...),
-    background_tasks: BackgroundTasks = None
-):
-    temp_audio = None
-    temp_image = None
-    output_video = None
-    
-    try:
-        if audio_file.size > MAX_FILE_SIZE:
-            raise HTTPException(status_code=413, detail="Audio too large (max 100MB)")
-        if image_file.size > MAX_FILE_SIZE:
-            raise HTTPException(status_code=413, detail="Image too large (max 100MB)")
-        
-        audio_ext = Path(audio_file.filename).suffix.lower()
-        if audio_ext not in ['.wav', '.mp3']:
-            raise HTTPException(status_code=400, detail="Audio must be WAV or MP3")
-        
-        temp_audio = TEMP_DIR / f"input_{os.urandom(8).hex()}{audio_ext}"
-        with open(temp_audio, "wb") as f:
-            f.write(await audio_file.read())
-        
-        image_ext = Path(image_file.filename).suffix.lower()
-        if image_ext not in ['.png', '.jpg', '.jpeg']:
-            raise HTTPException(status_code=400, detail="Image must be PNG or JPG")
-        
-        temp_image = TEMP_DIR / f"input_{os.urandom(8).hex()}{image_ext}"
-        with open(temp_image, "wb") as f:
-            f.write(await image_file.read())
-        
-        print(f"✅ Files saved")
-        
-        job_id = os.urandom(8).hex()
-        output_video = TEMP_DIR / f"result_{job_id}.mp4"
-        output_tmp = TEMP_DIR / f"result_{job_id}_tmp.mp4"
-        
-        my_env = os.environ.copy()
-        my_env["PYTHONPATH"] = f"{REPO_DIR}:{my_env.get('PYTHONPATH', '')}"
-        my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
-        
-        print(f"🎬 Running inference...")
-        cmd = [
-            sys.executable, "inference.py",
-            "--data_root", DATA_ROOT,
-            "--cfg_pkl", CONFIG_PKL,
-            "--audio_path", str(temp_audio),
-            "--source_path", str(temp_image),
-            "--output_path", str(output_tmp)
-        ]
-        
-        process = subprocess.Popen(
-            cmd,
-            cwd=REPO_DIR,
-            env=my_env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        
-        for line in process.stdout:
-            print(line, end="")
-        
-        return_code = process.wait()
-        if return_code != 0:
-            raise Exception(f"Inference failed: {return_code}")
-        
-        if output_tmp.exists():
-            ffmpeg_cmd = ["ffmpeg", "-loglevel", "error", "-y",
-                         "-i", str(output_tmp), "-pix_fmt", "yuv420p", str(output_video)]
-            subprocess.run(ffmpeg_cmd, capture_output=True)
-            output_tmp.unlink()
-        
-        if not output_video.exists():
-            raise Exception("Video not created")
-        
-        print(f"✅ Video: {output_video}")
-        return GenerationResponse(status="success", message="Video generated", video_path=str(output_video))
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        return JSONResponse(status_code=500, content={"status": "error", "message": str(e), "video_path": None})
-    
-    finally:
-        for f in [temp_audio, temp_image]:
-            if f and f.exists():
+    def predict(self, context, model_input):
+        """Generate video when called"""
+        try:
+            # Parse input
+            if isinstance(model_input, pd.DataFrame):
+                audio_path = str(model_input.iloc[0]["audio_path"])
+                image_path = str(model_input.iloc[0]["image_path"])
+            else:
+                audio_path = str(model_input.get("audio_path", ""))
+                image_path = str(model_input.get("image_path", ""))
+            
+            # Validate
+            if not os.path.exists(audio_path):
+                return {"status": "error", "message": f"Audio not found: {audio_path}"}
+            if not os.path.exists(image_path):
+                return {"status": "error", "message": f"Image not found: {image_path}"}
+            
+            # Generate unique output
+            job_id = os.urandom(8).hex()
+            output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
+            output_video = self.temp_dir / f"result_{job_id}.mp4"
+            
+            # Setup environment
+            my_env = os.environ.copy()
+            my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
+            my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
+            
+            print(f"🎬 Running inference...")
+            
+            # Run inference
+            cmd = [
+                sys.executable, "inference.py",
+                "--data_root", self.data_root,
+                "--cfg_pkl", self.config_pkl,
+                "--audio_path", str(audio_path),
+                "--source_path", str(image_path),
+                "--output_path", str(output_tmp)
+            ]
+            
+            process = subprocess.Popen(
+                cmd,
+                cwd=self.repo_dir,
+                env=my_env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            
+            # Wait for completion
+            logs = []
+            for line in process.stdout:
+                logs.append(line)
+            
+            return_code = process.wait()
+            
+            if return_code != 0:
+                return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
+            
+            # Post-process
+            if output_tmp.exists():
+                subprocess.run([
+                    "ffmpeg", "-loglevel", "error", "-y",
+                    "-i", str(output_tmp),
+                    "-pix_fmt", "yuv420p",
+                    str(output_video)
+                ], capture_output=True)
                 try:
-                    f.unlink()
+                    output_tmp.unlink()
                 except:
                     pass
+            
+            if not output_video.exists():
+                return {"status": "error", "message": "Video creation failed"}
+            
+            return {
+                "status": "success",
+                "message": "Video generated",
+                "video_path": str(output_video)
+            }
+        
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
 
-@app.get("/download/{file_id}")
-async def download_video(file_id: str):
-    video_path = TEMP_DIR / f"result_{file_id}.mp4"
-    if not video_path.exists():
-        raise HTTPException(status_code=404, detail="Video not found")
-    return FileResponse(path=video_path, media_type="video/mp4", filename=f"video_{file_id}.mp4")
-
-# Start server in background
-def run_server():
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
-
-server_thread = threading.Thread(target=run_server, daemon=True)
-server_thread.start()
-
-print("\n" + "="*60)
-print("🚀 Ditto Server Running!")
-print("="*60)
-
-time.sleep(2)
-
-# Get driver IP
-driver_ip = spark.conf.get("spark.driver.host")
-base_url = f"http://{driver_ip}:8000"
-
-print(f"\n✅ Server Started!")
-print(f"📍 Internal URL: http://localhost:8000")
-print(f"🌐 External URL: {base_url}")
-print(f"\n📋 Endpoints:")
-print(f"  Health: {base_url}/health")
-print(f"  Generate: POST {base_url}/generate")
-print(f"  Download: {base_url}/download/{{file_id}}")
-print("="*60 + "\n")
+print("✅ Model class defined")
