@@ -1,26 +1,10 @@
-# CELL 5D: Register Model with CORRECT Catalog
-import mlflow
-
-mlflow.set_registry_uri("databricks-uc")
-
-# Tera catalog: lab37_catalog
-# Tera schema: ifstrolley
-run_id = "536fecc6272a4d388ae6f5b3752fbcd6"  # From your previous output
-
-uc_path = "lab37_catalog.ifstrolley.ditto_talkinghead"
-
-print(f"📝 Registering model: {uc_path}")
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_path
-    )
-    print(f"✅ SUCCESS! Registered: {uc_path}")
-    print(f"   Version: {model_version.version}")
-    print(f"\n💾 Save this for next steps:")
-    print(f"   Model Name: {uc_path}")
-    print(f"   Model Version: {model_version.version}")
-    
-except Exception as e:
-    print(f"❌ Error: {e}")
+📝 Logging model...
+2026/01/09 06:02:07 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-c7061ae3ca91486bbfb88b4e1bacd795?o=7012066134936526
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
+  color_warning(
+✅ Model logged. Run ID: 9e643d5bf612462ebc11c9f5a5f25b62
+⚠️ Note: CATALOG_DOES_NOT_EXIST: Catalog 'harnayan' does not exist.
+📝 Registering model: lab37_catalog.ifstrolley.ditto_talkinghead
+Successfully registered model 'lab37_catalog.ifstrolley.ditto_talkinghead'.
+2026/01/09 06:02:10 WARNING mlflow.tracking._model_registry.fluent: Run with id 536fecc6272a4d388ae6f5b3752fbcd6 has no artifacts at artifact path 'ditto_talking_head', registering model based on models:/m-dbc5162e30494bffb0cd44977f15d546 instead
