@@ -1,1 +1,32 @@
-ImportError: cannot import name 'ServedEntityInput_WorkloadType' from 'databricks.sdk.service.serving' (/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/databricks/sdk/service/serving.py)
+# CELL 6: Create Serving Endpoint (SIMPLEST - USE THIS)
+from databricks.sdk import WorkspaceClient
+
+w = WorkspaceClient()
+
+print(f"🚀 Creating endpoint: ditto-endpoint")
+
+try:
+    # Simple dict-based config (no enum issues)
+    endpoint = w.serving_endpoints.create(
+        name="ditto-endpoint",
+        config={
+            "served_entities": [
+                {
+                    "entity_name": "lab37_catalog.ifstrolley.ditto_talkinghead",
+                    "entity_version": "1",
+                    "workload_type": "GPU_SMALL",
+                    "scale_to_zero_enabled": False
+                }
+            ]
+        }
+    )
+    print(f"✅ Endpoint created successfully!")
+    print(f"   Name: {endpoint.name}")
+    print(f"   State: {endpoint.state}")
+    print(f"\n⏳ Wait 5-10 minutes for READY status")
+    print(f"   Then run CELL 7 to check status")
+    
+except Exception as e:
+    print(f"❌ Error: {e}")
+    import traceback
+    traceback.print_exc()
