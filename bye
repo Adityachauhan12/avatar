@@ -1,44 +1,41 @@
-# CELL 5: Log & Register Model (PACKAGES GIT)
-import mlflow
-from mlflow.models.signature import infer_signature
-import pandas as pd
-import git  # ← FORCE IMPORT HERE
+ditto_server_v2
+Ready
+https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_server_v2/invocations
+Gateway
+Usage monitoring:
+system.serving.endpoint_usage
+Dimension table:
+system.serving.served_entities
+Inference tables:
+Not enabled
+Rate limits:
+Not enabled
+Active configuration
+Entity
+Version
+Name
+State
+Compute
+Traffic (%)
+lab37_catalog.ifstrolley.ditto_talkinghead
+Version 6
+ditto_talkinghead-6
+Ready
+GPU Small (T4), Custom 0-4 concurrency (0-10.48 DBU)
+100
+Metrics
+Events
+Logs
 
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment("/Shared/ditto_experiment")
+Service logs
 
-# Test input/output
-test_input = pd.DataFrame({
-    "audio_path": ["/dbfs/test.wav"],
-    "image_path": ["/dbfs/test.png"]
-})
+Build logs
 
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_path": ["/tmp/output.mp4"]
-})
 
-signature = infer_signature(test_input, test_output)
-
-print("📦 Packaging model with git...")
-
-with mlflow.start_run():
-    mlflow.pyfunc.log_model(
-        artifact_path="ditto_talking_head",
-        python_model=DittoTalkingHeadModel(),
-        signature=signature,
-        pip_requirements=["gitpython==3.1.40"],  # ← PACKAGES GIT
-        conda_env=None
-    )
-    run_id = mlflow.active_run().info.run_id
-
-print(f"✅ New run ID: {run_id}")
-
-# Register
-model_version = mlflow.register_model(
-    model_uri=f"runs:/{run_id}/ditto_talking_head",
-    name="lab37_catalog.ifstrolley.ditto_talkinghead"
-)
-
-print(f"✅ NEW VERSION: {model_version.version}")
+[rxz4w] 2026-01-09 08:59:43.115 INFO : Initializing .........
+[rxz4w] WARNING:root:mlflow-server
+[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Starting gunicorn 23.0.0
+[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Listening at: http://0.0.0.0:8080 (14)
+[rxz4w] [2026-01-09 08:59:43 +0000] [14] [INFO] Using worker: sync
+[rxz4w] [2026-01-09 08:59:43 +0000] [17] [INFO] Booting worker with pid: 17
+[rxz4w] [2026-01-09 08:59:47 +0000] 2026/01/09 08:59:47 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
