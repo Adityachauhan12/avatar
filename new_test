@@ -1,0 +1,70 @@
+[A[A[A[A[A[A
+#10 3.581 
+#10 3.581 
+#10 3.581 
+#10 3.581 
+#10 3.581 
+#10 3.581 
+#10 3.581 
+[A[A[A[A[A[A[A done
+#10 3.581 Preparing transaction: | / done
+#10 3.792 Verifying transaction: \ | / - \ | / - \ done
+#10 4.742 Executing transaction: / - \ | / - \ | / - \ | / - \ | / - \ | / - \ done
+#10 7.054 Installing pip dependencies: / - \ | / - \ | / - \ | / - \ Pip subprocess error:
+#10 8.554 ERROR: Could not find a version that satisfies the requirement tensorrt-libs==8.6.1 (from versions: 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1)
+#10 8.554 ERROR: No matching distribution found for tensorrt-libs==8.6.1
+#10 8.554 
+#10 8.556 Ran pip subprocess with arguments:
+#10 8.556 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.1kcwt3h1.requirements.txt', '--exists-action=b']
+#10 8.556 Pip subprocess output:
+#10 8.556 Collecting mlflow==3.8.1
+#10 8.556   Downloading mlflow-3.8.1-py3-none-any.whl (9.1 MB)
+#10 8.556      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.1/9.1 MB 141.0 MB/s eta 0:00:00
+#10 8.556 Collecting gitpython==3.1.40
+#10 8.556   Downloading GitPython-3.1.40-py3-none-any.whl (190 kB)
+#10 8.556      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 190.6/190.6 kB 74.8 MB/s eta 0:00:00
+#10 8.556 Collecting tensorrt==8.6.1
+#10 8.556   Downloading tensorrt-8.6.1.tar.gz (16 kB)
+#10 8.556   Preparing metadata (setup.py): started
+#10 8.556   Preparing metadata (setup.py): finished with status 'done'
+#10 8.556 
+#10 8.556 failed
+#10 8.556 
+#10 8.556 CondaEnvException: Pip failed
+#10 8.556 
+#10 8.615 Retrying in 10 seconds... (Attempt 2/5)
+#10 18.84 Retrieving notices: - done
+#10 19.25 Channels:
+#10 19.25  - file:///package-repo/conda-channel
+#10 19.25 Platform: linux-64
+#10 19.25 Collecting package metadata (repodata.json): | done
+#10 19.35 Solving environment: - done
+#10 19.46 Installing pip dependencies: | / - \ | / - \ | / - \ | / Pip subprocess error:
+#10 20.83 ERROR: Could not find a version that satisfies the requirement tensorrt-libs==8.6.1 (from versions: 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1)
+#10 20.83 ERROR: No matching distribution found for tensorrt-libs==8.6.1
+#10 20.83 
+#10 20.87 Ran pip subprocess with arguments:
+#10 20.87 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.yxhazl2r.requirements.txt', '--exists-action=b']
+#10 20.87 Pip subprocess output:
+#10 20.87 Collecting mlflow==3.8.1
+#10 20.87   Using cached mlflow-3.8.1-py3-none-any.whl (9.1 MB)
+#10 20.87 Collecting gitpython==3.1.40
+#10 20.87   Using cached GitPython-3.1.40-py3-none-any.whl (190 kB)
+#10 20.87 Collecting tensorrt==8.6.1
+#10 20.87   Using cached tensorrt-8.6.1.tar.gz (16 kB)
+#10 20.87   Preparing metadata (setup.py): started
+#10 20.87   Preparing metadata (setup.py): finished with status 'done'
+#10 20.87 
+#10 20.87 failed
+#10 20.87 
+#10 20.87 CondaEnvException: Pip failed
+#10 20.87 
+#10 20.92 Retrying in 10 seconds... (Attempt 3/5)
+#10 31.14 Retrieving notices: - done
+#10 31.55 Channels:
+#10 31.55  - file:///package-repo/conda-channel
+#10 31.55 Platform: linux-64
+#10 31.55 Collecting package metadata (repodata.json): | done
+#10 31.65 Solving environment: - done
+#10 31.77 Installing pip dependencies: | / - \ | / - \ | / - \ | / Pip subprocess error:
+#10 33.11 ERROR: Could not find a version that satisfies the requirement tensorrt-libs==8.6.1 (from versions: 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.
