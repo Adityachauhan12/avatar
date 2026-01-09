@@ -100,6 +100,10 @@ class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
                 "message": "Video generated",
                 "video_path": str(output_video)
             }
+
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/utils/data_validation.py:186: UserWarning: Add type hints to the `predict` method to enable data validation and automatic signature inference during model logging. Check https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel for more details.
+  color_warning(
+✅ Model class defined
         
         except Exception as e:
             return {"status": "error", "message": str(e)}
