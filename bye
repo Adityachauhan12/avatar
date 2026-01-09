@@ -1,48 +1,112 @@
-# CELL 8: Test Endpoint (using Notebook Context Token)
-import requests
-import json
+# CELL 4: Define MLflow Model Class (FIXED)
+import mlflow
+import mlflow.pyfunc
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+import pandas as pd
+import git 
 
-# 1. Get the AUTOMATIC token from the notebook context
-token = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-
-# 2. Get the workspace URL automatically
-workspace_url = spark.conf.get("spark.databricks.workspaceUrl")
-
-# 3. Define endpoint URL
-endpoint_name = "ditto_server_v2"
-endpoint_url = f"https://{workspace_url}/serving-endpoints/{endpoint_name}/invocations"
-
-print(f"🔗 Testing Endpoint: {endpoint_url}")
-
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json"
-}
-
-# 4. Your Test Payload (Verify paths exist!)
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_path", "image_path"],
-        "data": [
-            [
-                "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav", 
-                "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-            ]
-        ]
-    }
-}
-
-# 5. Send Request
-try:
-    response = requests.post(endpoint_url, json=payload, headers=headers)
+class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
     
-    print(f"📊 Status Code: {response.status_code}")
-    if response.status_code == 200:
-        print("✅ Success! Response:")
-        print(json.dumps(response.json(), indent=2))
-    else:
-        print("❌ Error:")
-        print(response.text)
+    def load_context(self, context):
+        """Load once when model starts"""
+        self.repo_dir = "/tmp/ditto-talkinghead"
+        
+        # Auto-clone repo if missing
+        if not os.path.exists(self.repo_dir):
+            print(f"🔄 Cloning Ditto repo to {self.repo_dir}...")
+            git.Repo.clone_from(
+                "https://github.com/antgroup/ditto-talkinghead.git",
+                self.repo_dir,
+                depth=1
+            )
+            print("✅ Repo cloned successfully")
+        
+        # Setup paths
+        self.data_root = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
+        self.config_pkl = "./checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl"
+        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_videos"
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        print(f"✅ Model ready! Repo: {self.repo_dir}")
+    
+    def predict(self, context, model_input):
+        """Generate video when called"""
+        try:
+            if isinstance(model_input, pd.DataFrame):
+                audio_path = str(model_input.iloc[0]["audio_path"])
+                image_path = str(model_input.iloc[0]["image_path"])
+            else:
+                audio_path = str(model_input.get("audio_path", ""))
+                image_path = str(model_input.get("image_path", ""))
+            
+            if not os.path.exists(audio_path):
+                return {"status": "error", "message": f"Audio not found: {audio_path}"}
+            if not os.path.exists(image_path):
+                return {"status": "error", "message": f"Image not found: {image_path}"}
+            
+            job_id = os.urandom(8).hex()
+            output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
+            output_video = self.temp_dir / f"result_{job_id}.mp4"
+            
+            my_env = os.environ.copy()
+            my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
+            my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
+            
+            print(f"🎬 Running inference...")
+            
+            cmd = [
+                sys.executable, "inference.py",
+                "--data_root", self.data_root,
+                "--cfg_pkl", self.config_pkl,
+                "--audio_path", str(audio_path),
+                "--source_path", str(image_path),
+                "--output_path", str(output_tmp)
+            ]
+            
+            process = subprocess.Popen(
+                cmd,
+                cwd=self.repo_dir,
+                env=my_env,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            
+            logs = []
+            for line in process.stdout:
+                logs.append(line)
+            
+            return_code = process.wait()
+            
+            if return_code != 0:
+                return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
+            
+            if output_tmp.exists():
+                subprocess.run([
+                    "ffmpeg", "-loglevel", "error", "-y",
+                    "-i", str(output_tmp),
+                    "-pix_fmt", "yuv420p",
+                    str(output_video)
+                ], capture_output=True)
+                try:
+                    output_tmp.unlink()
+                except:
+                    pass
+            
+            if not output_video.exists():
+                return {"status": "error", "message": "Video creation failed"}
+            
+            return {
+                "status": "success",
+                "message": "Video generated",
+                "video_path": str(output_video)
+            }
+        
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
 
-except Exception as e:
-    print(f"💥 Request Failed: {e}")
+print("✅ Model class defined")
