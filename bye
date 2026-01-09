@@ -1,13 +1,14 @@
-# CELL 4: Define MLflow Model Class (FIXED)
+# CELL 4: Define MLflow Model Class (Base64 IN -> Base64 OUT)
 import mlflow
 import mlflow.pyfunc
 import os
 import subprocess
 import sys
 import tempfile
+import base64
 from pathlib import Path
 import pandas as pd
-import git 
+import git
 
 class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
     
@@ -34,29 +35,40 @@ class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
         print(f"✅ Model ready! Repo: {self.repo_dir}")
     
     def predict(self, context, model_input):
-        """Generate video when called"""
+        """Generate video from Base64 inputs and return Base64 output"""
         try:
+            # 1. Parse Input (Expect Base64 strings)
             if isinstance(model_input, pd.DataFrame):
-                audio_path = str(model_input.iloc[0]["audio_path"])
-                image_path = str(model_input.iloc[0]["image_path"])
+                audio_b64 = model_input.iloc[0].get("audio_b64")
+                image_b64 = model_input.iloc[0].get("image_b64")
             else:
-                audio_path = str(model_input.get("audio_path", ""))
-                image_path = str(model_input.get("image_path", ""))
+                return {"status": "error", "message": "Input must be a DataFrame with audio_b64 and image_b64"}
             
-            if not os.path.exists(audio_path):
-                return {"status": "error", "message": f"Audio not found: {audio_path}"}
-            if not os.path.exists(image_path):
-                return {"status": "error", "message": f"Image not found: {image_path}"}
-            
+            if not audio_b64 or not image_b64:
+                 return {"status": "error", "message": "Missing audio_b64 or image_b64 in input"}
+
+            # 2. Decode Base64 to Temp Files
             job_id = os.urandom(8).hex()
+            audio_path = self.temp_dir / f"input_{job_id}.wav"
+            image_path = self.temp_dir / f"input_{job_id}.png"
             output_tmp = self.temp_dir / f"result_{job_id}_tmp.mp4"
             output_video = self.temp_dir / f"result_{job_id}.mp4"
             
+            # Write input bytes to disk
+            try:
+                with open(audio_path, "wb") as f:
+                    f.write(base64.b64decode(audio_b64))
+                with open(image_path, "wb") as f:
+                    f.write(base64.b64decode(image_b64))
+            except Exception as e:
+                return {"status": "error", "message": f"Failed to decode base64 inputs: {str(e)}"}
+            
+            # 3. Run Inference
             my_env = os.environ.copy()
             my_env["PYTHONPATH"] = f"{self.repo_dir}:{my_env.get('PYTHONPATH', '')}"
             my_env["LD_LIBRARY_PATH"] = f"{my_env.get('LD_LIBRARY_PATH', '')}:/usr/local/cuda/lib64"
             
-            print(f"🎬 Running inference...")
+            print(f"🎬 Running inference for job {job_id}...")
             
             cmd = [
                 sys.executable, "inference.py",
@@ -83,8 +95,12 @@ class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
             return_code = process.wait()
             
             if return_code != 0:
+                # Cleanup inputs on failure
+                if audio_path.exists(): audio_path.unlink()
+                if image_path.exists(): image_path.unlink()
                 return {"status": "error", "message": f"Inference failed: {' '.join(logs[-3:])}"}
             
+            # 4. Post-process (ffmpeg)
             if output_tmp.exists():
                 subprocess.run([
                     "ffmpeg", "-loglevel", "error", "-y",
@@ -97,16 +113,32 @@ class DittoTalkingHeadModel(mlflow.pyfunc.PythonModel):
                 except:
                     pass
             
-            if not output_video.exists():
-                return {"status": "error", "message": "Video creation failed"}
+            # 5. Read Result & Encode to Base64
+            result = {}
+            if output_video.exists():
+                with open(output_video, "rb") as f:
+                    # Encode video bytes to Base64 string
+                    video_b64 = base64.b64encode(f.read()).decode("utf-8")
+                
+                result = {
+                    "status": "success",
+                    "message": "Video generated",
+                    "video_b64": video_b64  # <--- This is your result
+                }
+            else:
+                result = {"status": "error", "message": "Video creation failed"}
             
-            return {
-                "status": "success",
-                "message": "Video generated",
-                "video_path": str(output_video)
-            }
+            # 6. Cleanup ALL temp files
+            for p in [audio_path, image_path, output_tmp, output_video]:
+                if p.exists():
+                    try:
+                        p.unlink()
+                    except:
+                        pass
+            
+            return result
         
         except Exception as e:
             return {"status": "error", "message": str(e)}
 
-print("✅ Model class defined")
+print("✅ Base64 Model class defined")
