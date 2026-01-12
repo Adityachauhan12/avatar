@@ -1,7 +1,14 @@
-200
-{
-  "predictions": {
-    "status": "error",
-    "message": "Inference failed:     self.source2info = Source2Info(\n   File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n     self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n   File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n     self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n   File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n     model = TRTWrapper(model_path)\n   File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 103, in __init__\n     with open(trt_file, \"rb\") as f, trt.Runtime(logger) as runtime:\n FileNotFoundError: [Errno 2] No such file or directory: '/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4/insightface_det_fp16.engine'\n"
-  }
-}
+import os
+import subprocess
+
+# List what's in the checkpoint directory
+result = subprocess.run(
+    ["ls", "-lah", "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4/"],
+    capture_output=True,
+    text=True
+)
+print("STDOUT:")
+print(result.stdout)
+print("\nSTDERR:")
+print(result.stderr)
+print("\nReturn code:", result.returncode)
