@@ -1,29 +1,7 @@
-import requests, base64, json
-
-endpoint_url = "https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/diito_base64_v4/invocations"
-token = ""  # your token
-
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-with open(audio_path, "rb") as f:
-    audio_b64 = base64.b64encode(f.read()).decode("utf-8")
-
-with open(image_path, "rb") as f:
-    image_b64 = base64.b64encode(f.read()).decode("utf-8")
-
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_b64", "image_b64"],
-        "data": [[audio_b64, image_b64]],
-    }
+200
+{
+  "predictions": {
+    "status": "error",
+    "message": "Inference failed:     self.source2info = Source2Info(\n   File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n     self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n   File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n     self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n   File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n     model = TRTWrapper(model_path)\n   File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 103, in __init__\n     with open(trt_file, \"rb\") as f, trt.Runtime(logger) as runtime:\n FileNotFoundError: [Errno 2] No such file or directory: '/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4/insightface_det_fp16.engine'\n"
+  }
 }
-
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json",
-}
-
-resp = requests.post(endpoint_url, json=payload, headers=headers)
-print(f"Status: {resp.status_code}")
-print(json.dumps(resp.json(), indent=2)[:2000])
