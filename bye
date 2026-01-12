@@ -1,43 +1,1097 @@
-conda_env = {
-    "name": "ditto-env",
-    "channels": ["conda-forge", "defaults"],
-    "dependencies": [
-        "python=3.10",
-        "pip",
-        {
-            "pip": [
-                "--extra-index-url https://pypi.nvidia.com",
-                # PyTorch
-                "torch==2.1.2",
-                "torchvision==0.16.2",
-                "torchaudio==2.1.2",
-                # TensorRT (UPDATED)
-                "tensorrt==9.6.1",  # ✅ Changed
-                "tensorrt-libs==9.6.1",  # ✅ Added
-                "tensorrt-bindings==9.6.1",  # ✅ Added
-                "cuda-python==12.6.0",  # ✅ Updated
-                "onnxruntime-gpu==1.16.3",
-                "numpy==1.26.4",
-                "gitpython==3.1.40",
-                "librosa>=0.10.1",
-                "imageio-ffmpeg",
-                "opencv-python-headless",
-                "soundfile",
-                "soxr",
-                "imageio",
-                "moviepy",
-                "mediapipe>=0.10.9",
-                "ml_dtypes==0.4.0",
-                "einops",
-                "omegaconf",
-                "huggingface_hub",
-                "filetype",
-                "tqdm",
-                "scikit-image",
-                "colored",
-                "polygraphy",
-                "mlflow==3.8.1"
-            ]
-        }
-    ]
-}
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+libexpat-2.7.3       | 75 KB     |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+#10 11.15 
+libffi-3.5.2         | 56 KB     |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+libuuid-2.41.3       | 39 KB     |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+#10 11.16 
+libgcc-ng-15.2.0     | 27 KB     |            |   0% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+python-3.10.19       | 24.1 MB   |            |   0% 
+#10 11.25 
+icu-78.2             | 12.1 MB   | #7         |  18% [A
+#10 11.25 
+#10 11.25 
+libstdcxx-15.2.0     | 5.6 MB    | ####3      |  44% [A[A
+#10 11.25 
+#10 11.25 
+#10 11.25 
+tk-8.6.13            | 3.1 MB    | #######4   |  74% [A[A[A
+#10 11.25 
+#10 11.25 
+#10 11.25 
+#10 11.25 
+pip-25.3             | 1.1 MB    | ########## | 100% [A[A[A[A
+#10 11.25 
+#10 11.25 
+#10 11.25 
+#10 11.25 
+pip-25.3             | 1.1 MB    | ########## | 100% [A[A[A[A
+#10 11.29 
+#10 11.29 
+#10 11.29 
+#10 11.29 
+#10 11.29 
+libgcc-15.2.0        | 1018 KB   | 1          |   2% [A[A[A[A[A
+#10 11.33 
+#10 11.33 
+#10 11.33 
+tk-8.6.13            | 3.1 MB    | ########## | 100% [A[A[A
+#10 11.34 
+#10 11.34 
+#10 11.34 
+#10 11.34 
+#10 11.34 
+libgcc-15.2.0        | 1018 KB   | ########## | 100% [A[A[A[A[A
+python-3.10.19       | 24.1 MB   | #7         |  17% 
+#10 11.35 
+icu-78.2             | 12.1 MB   | #####4     |  55% [A
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+libsqlite-3.51.2     | 921 KB    | 1          |   2% [A[A[A[A[A[A
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+#10 11.40 
+ld_impl_linux-64-2.4 | 714 KB    | 2          |   2% [A[A[A[A[A[A[A
+#10 11.44 
+#10 11.44 
+#10 11.44 
+#10 11.44 
+#10 11.44 
+#10 11.44 
+#10 11.44 
+ld_impl_linux-64-2.4 | 714 KB    | ########## | 100% [A[A[A[A[A[A[A
+python-3.10.19       | 24.1 MB   | ###2       |  32% 
+#10 11.45 
+icu-78.2             | 12.1 MB   | ########8  |  88% [A
+#10 11.46 
+#10 11.46 
+#10 11.46 
+#10 11.46 
+#10 11.46 
+#10 11.46 
+libsqlite-3.51.2     | 921 KB    | ########## | 100% [A[A[A[A[A[A
+#10 11.48 
+#10 11.48 
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A
+#10 11.48 
+#10 11.48 
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A
+#10 11.49 
+#10 11.49 
+#10 11.49 
+#10 11.49 
+#10 11.49 
+#10 11.49 
+#10 11.49 
+#10 11.49 
+libgomp-15.2.0       | 589 KB    | 2          |   3% [A[A[A[A[A[A[A[A
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+#10 11.50 
+zstd-1.5.7           | 587 KB    | 2          |   3% [A[A[A[A[A[A[A[A[A
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+#10 11.52 
+readline-8.3         | 337 KB    | 4          |   5% [A[A[A[A[A[A[A[A[A[A
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+libgomp-15.2.0       | 589 KB    | ########## | 100% [A[A[A[A[A[A[A[A
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+#10 11.53 
+zstd-1.5.7           | 587 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+#10 11.54 
+readline-8.3         | 337 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+python-3.10.19       | 24.1 MB   | #####      |  50% 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+ca-certificates-2026 | 143 KB    | #1         |  11% [A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+#10 11.57 
+libgcc-15.2.0        | 1018 KB   | ########## | 100% [A[A[A[A[A
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+libgcc-15.2.0        | 1018 KB   | ########## | 100% [A[A[A[A[A
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+ca-certificates-2026 | 143 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+bzip2-1.0.8          | 254 KB    | 6          |   6% [A[A[A[A[A[A[A[A[A[A[A
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+#10 11.58 
+tzdata-2025c         | 116 KB    | #3         |  14% [A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+tzdata-2025c         | 116 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+#10 11.59 
+bzip2-1.0.8          | 254 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+libffi-3.5.2         | 56 KB     | ##8        |  28% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+libexpat-2.7.3       | 75 KB     | ##1        |  21% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+libffi-3.5.2         | 56 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+#10 11.63 
+libexpat-2.7.3       | 75 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+libuuid-2.41.3       | 39 KB     | ####       |  41% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+#10 11.64 
+libuuid-2.41.3       | 39 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+python-3.10.19       | 24.1 MB   | ######8    |  69% 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+libgcc-ng-15.2.0     | 27 KB     | ######     |  60% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+#10 11.67 
+libgcc-ng-15.2.0     | 27 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+ld_impl_linux-64-2.4 | 714 KB    | ########## | 100% [A[A[A[A[A[A[A
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+#10 11.70 
+ld_impl_linux-64-2.4 | 714 KB    | ########## | 100% [A[A[A[A[A[A[A
+#10 11.73 
+icu-78.2             | 12.1 MB   | ########## | 100% [A
+python-3.10.19       | 24.1 MB   | #########3 |  94% 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+libsqlite-3.51.2     | 921 KB    | ########## | 100% [A[A[A[A[A[A
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+#10 11.77 
+libsqlite-3.51.2     | 921 KB    | ########## | 100% [A[A[A[A[A[A
+python-3.10.19       | 24.1 MB   | ########## | 100% 
+#10 11.99 
+#10 11.99 
+#10 11.99 
+#10 11.99 
+pip-25.3             | 1.1 MB    | ########## | 100% [A[A[A[A
+#10 12.02 
+#10 12.02 
+libstdcxx-15.2.0     | 5.6 MB    | ########## | 100% [A[A
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+libgomp-15.2.0       | 589 KB    | ########## | 100% [A[A[A[A[A[A[A[A
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+#10 12.03 
+libgomp-15.2.0       | 589 KB    | ########## | 100% [A[A[A[A[A[A[A[A
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+zstd-1.5.7           | 587 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+#10 12.06 
+zstd-1.5.7           | 587 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A
+#10 12.06 
+#10 12.06 
+#10 12.06 
+tk-8.6.13            | 3.1 MB    | ########## | 100% [A[A[A
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+readline-8.3         | 337 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+readline-8.3         | 337 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+ca-certificates-2026 | 143 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+#10 12.08 
+ca-certificates-2026 | 143 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+libffi-3.5.2         | 56 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+#10 12.11 
+libffi-3.5.2         | 56 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+bzip2-1.0.8          | 254 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+#10 12.12 
+bzip2-1.0.8          | 254 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+libexpat-2.7.3       | 75 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+#10 12.14 
+libexpat-2.7.3       | 75 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+libuuid-2.41.3       | 39 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+#10 12.15 
+libuuid-2.41.3       | 39 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+libgcc-ng-15.2.0     | 27 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+#10 12.19 
+libgcc-ng-15.2.0     | 27 KB     | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+tzdata-2025c         | 116 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+#10 12.46 
+tzdata-2025c         | 116 KB    | ########## | 100% [A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 12.58 
+icu-78.2             | 12.1 MB   | ########## | 100% [A
+python-3.10.19       | 24.1 MB   | ########## | 100% 
+                                                     
+#10 13.00 
+                                                     [A
+#10 13.00 
+#10 13.00 
+                                                     [A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+#10 13.00 
+                                                     [A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A done
+#10 13.00 Preparing transaction: \ | done
+#10 13.21 Verifying transaction: - \ | / - \ | / - done
+#10 14.13 Executing transaction: | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - done
+#10 17.64 Installing pip dependencies: | / - \ | / - \ | / - \ | / - \ | / - \ Pip subprocess error:
+#10 19.62 ERROR: Ignored the following yanked versions: 0.0.1
+#10 19.62 ERROR: Could not find a version that satisfies the requirement tensorrt==9.6.1 (from versions: 0.0.1.dev5, 8.5.1.7, 8.5.2.2, 8.5.3.1, 8.6.0, 8.6.1, 8.6.1.post1, 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1, 10.0.0b6, 10.0.1, 10.1.0, 10.2.0, 10.2.0.post1, 10.3.0, 10.4.0, 10.5.0, 10.6.0, 10.6.0.post1, 10.6.0.post2, 10.7.0, 10.7.0.post1, 10.8.0.43, 10.9.0.34, 10.10.0.31, 10.11.0.33, 10.12.0.36, 10.13.0.35, 10.13.2.6, 10.13.3.9, 10.13.3.9.post1, 10.14.1.48, 10.14.1.48.post1)
+#10 19.62 ERROR: No matching distribution found for tensorrt==9.6.1
+#10 19.62 
+#10 19.65 Ran pip subprocess with arguments:
+#10 19.65 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.gxjcv5tp.requirements.txt', '--exists-action=b']
+#10 19.65 Pip subprocess output:
+#10 19.65 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 19.65 Collecting torch==2.1.2 (from -r /model/condaenv.gxjcv5tp.requirements.txt (line 2))
+#10 19.65   Downloading torch-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (25 kB)
+#10 19.65 Collecting torchvision==0.16.2 (from -r /model/condaenv.gxjcv5tp.requirements.txt (line 3))
+#10 19.65   Downloading torchvision-0.16.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.6 kB)
+#10 19.65 Collecting torchaudio==2.1.2 (from -r /model/condaenv.gxjcv5tp.requirements.txt (line 4))
+#10 19.65   Downloading torchaudio-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.4 kB)
+#10 19.65 
+#10 19.65 failed
+#10 19.65 
+#10 19.65 CondaEnvException: Pip failed
+#10 19.65 
+#10 19.71 Retrying in 10 seconds... (Attempt 2/5)
+#10 29.93 Retrieving notices: - done
+#10 30.34 Channels:
+#10 30.34  - conda-forge
+#10 30.34  - defaults
+#10 30.34 Platform: linux-64
+#10 30.34 Collecting package metadata (repodata.json): | / - \ | / done
+#10 38.81 Solving environment: \ | done
+#10 39.33 
+#10 39.33 
+#10 39.33 ==> WARNING: A newer version of conda exists. <==
+#10 39.33     current version: 25.11.0
+#10 39.33     latest version: 25.11.1
+#10 39.33 
+#10 39.33 Please update conda by running
+#10 39.33 
+#10 39.33     $ conda update -n base -c conda-forge conda
+#10 39.33 
+#10 39.33 
+#10 39.35 Installing pip dependencies: - \ | / - \ | / - \ | / - \ | / - Pip subprocess error:
+#10 41.03 ERROR: Ignored the following yanked versions: 0.0.1
+#10 41.03 ERROR: Could not find a version that satisfies the requirement tensorrt==9.6.1 (from versions: 0.0.1.dev5, 8.5.1.7, 8.5.2.2, 8.5.3.1, 8.6.0, 8.6.1, 8.6.1.post1, 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1, 10.0.0b6, 10.0.1, 10.1.0, 10.2.0, 10.2.0.post1, 10.3.0, 10.4.0, 10.5.0, 10.6.0, 10.6.0.post1, 10.6.0.post2, 10.7.0, 10.7.0.post1, 10.8.0.43, 10.9.0.34, 10.10.0.31, 10.11.0.33, 10.12.0.36, 10.13.0.35, 10.13.2.6, 10.13.3.9, 10.13.3.9.post1, 10.14.1.48, 10.14.1.48.post1)
+#10 41.03 ERROR: No matching distribution found for tensorrt==9.6.1
+#10 41.03 
+#10 41.05 Ran pip subprocess with arguments:
+#10 41.05 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.7j1ilcdr.requirements.txt', '--exists-action=b']
+#10 41.05 Pip subprocess output:
+#10 41.05 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 41.05 Collecting torch==2.1.2 (from -r /model/condaenv.7j1ilcdr.requirements.txt (line 2))
+#10 41.05   Using cached torch-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (25 kB)
+#10 41.05 Collecting torchvision==0.16.2 (from -r /model/condaenv.7j1ilcdr.requirements.txt (line 3))
+#10 41.05   Using cached torchvision-0.16.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.6 kB)
+#10 41.05 Collecting torchaudio==2.1.2 (from -r /model/condaenv.7j1ilcdr.requirements.txt (line 4))
+#10 41.05   Using cached torchaudio-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.4 kB)
+#10 41.05 
+#10 41.05 failed
+#10 41.05 
+#10 41.05 CondaEnvException: Pip failed
+#10 41.05 
+#10 41.11 Retrying in 10 seconds... (Attempt 3/5)
+#10 51.33 Retrieving notices: - done
+#10 51.74 Channels:
+#10 51.74  - conda-forge
+#10 51.74  - defaults
+#10 51.74 Platform: linux-64
+#10 51.74 Collecting package metadata (repodata.json): | / - \ | done
+#10 60.16 Solving environment: - \ done
+#10 60.67 
+#10 60.67 
+#10 60.67 ==> WARNING: A newer version of conda exists. <==
+#10 60.67     current version: 25.11.0
+#10 60.67     latest version: 25.11.1
+#10 60.67 
+#10 60.67 Please update conda by running
+#10 60.67 
+#10 60.67     $ conda update -n base -c conda-forge conda
+#10 60.67 
+#10 60.67 
+#10 60.68 Installing pip dependencies: / - \ | / - \ | / - \ | / - \ | / - Pip subprocess error:
+#10 62.41 ERROR: Ignored the following yanked versions: 0.0.1
+#10 62.41 ERROR: Could not find a version that satisfies the requirement tensorrt==9.6.1 (from versions: 0.0.1.dev5, 8.5.1.7, 8.5.2.2, 8.5.3.1, 8.6.0, 8.6.1, 8.6.1.post1, 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1, 10.0.0b6, 10.0.1, 10.1.0, 10.2.0, 10.2.0.post1, 10.3.0, 10.4.0, 10.5.0, 10.6.0, 10.6.0.post1, 10.6.0.post2, 10.7.0, 10.7.0.post1, 10.8.0.43, 10.9.0.34, 10.10.0.31, 10.11.0.33, 10.12.0.36, 10.13.0.35, 10.13.2.6, 10.13.3.9, 10.13.3.9.post1, 10.14.1.48, 10.14.1.48.post1)
+#10 62.41 ERROR: No matching distribution found for tensorrt==9.6.1
+#10 62.41 
+#10 62.49 Ran pip subprocess with arguments:
+#10 62.49 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.nr5gpt5s.requirements.txt', '--exists-action=b']
+#10 62.49 Pip subprocess output:
+#10 62.49 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 62.49 Collecting torch==2.1.2 (from -r /model/condaenv.nr5gpt5s.requirements.txt (line 2))
+#10 62.49   Using cached torch-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (25 kB)
+#10 62.49 Collecting torchvision==0.16.2 (from -r /model/condaenv.nr5gpt5s.requirements.txt (line 3))
+#10 62.49   Using cached torchvision-0.16.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.6 kB)
+#10 62.49 Collecting torchaudio==2.1.2 (from -r /model/condaenv.nr5gpt5s.requirements.txt (line 4))
+#10 62.49   Using cached torchaudio-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.4 kB)
+#10 62.49 
+#10 62.49 failed
+#10 62.49 
+#10 62.49 CondaEnvException: Pip failed
+#10 62.49 
+#10 62.54 Retrying in 10 seconds... (Attempt 4/5)
+#10 72.76 Retrieving notices: - done
+#10 73.18 Channels:
+#10 73.18  - conda-forge
+#10 73.18  - defaults
+#10 73.18 Platform: linux-64
+#10 73.18 Collecting package metadata (repodata.json): | / - \ | / done
+#10 81.44 Solving environment: \ | done
+#10 81.94 
+#10 81.94 
+#10 81.94 ==> WARNING: A newer version of conda exists. <==
+#10 81.94     current version: 25.11.0
+#10 81.94     latest version: 25.11.1
+#10 81.94 
+#10 81.94 Please update conda by running
+#10 81.94 
+#10 81.94     $ conda update -n base -c conda-forge conda
+#10 81.94 
+#10 81.94 
+#10 81.95 Installing pip dependencies: - \ | / - \ | / - \ | / - \ | / - Pip subprocess error:
+#10 83.61 ERROR: Ignored the following yanked versions: 0.0.1
+#10 83.61 ERROR: Could not find a version that satisfies the requirement tensorrt==9.6.1 (from versions: 0.0.1.dev5, 8.5.1.7, 8.5.2.2, 8.5.3.1, 8.6.0, 8.6.1, 8.6.1.post1, 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1, 10.0.0b6, 10.0.1, 10.1.0, 10.2.0, 10.2.0.post1, 10.3.0, 10.4.0, 10.5.0, 10.6.0, 10.6.0.post1, 10.6.0.post2, 10.7.0, 10.7.0.post1, 10.8.0.43, 10.9.0.34, 10.10.0.31, 10.11.0.33, 10.12.0.36, 10.13.0.35, 10.13.2.6, 10.13.3.9, 10.13.3.9.post1, 10.14.1.48, 10.14.1.48.post1)
+#10 83.61 ERROR: No matching distribution found for tensorrt==9.6.1
+#10 83.61 
+#10 83.65 Ran pip subprocess with arguments:
+#10 83.65 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.a3_0un37.requirements.txt', '--exists-action=b']
+#10 83.65 Pip subprocess output:
+#10 83.65 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 83.65 Collecting torch==2.1.2 (from -r /model/condaenv.a3_0un37.requirements.txt (line 2))
+#10 83.65   Using cached torch-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (25 kB)
+#10 83.65 Collecting torchvision==0.16.2 (from -r /model/condaenv.a3_0un37.requirements.txt (line 3))
+#10 83.65   Using cached torchvision-0.16.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.6 kB)
+#10 83.65 Collecting torchaudio==2.1.2 (from -r /model/condaenv.a3_0un37.requirements.txt (line 4))
+#10 83.65   Using cached torchaudio-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.4 kB)
+#10 83.65 
+#10 83.65 failed
+#10 83.65 
+#10 83.65 CondaEnvException: Pip failed
+#10 83.65 
+#10 83.70 Retrying in 10 seconds... (Attempt 5/5)
+#10 93.93 Retrieving notices: - done
+#10 94.35 Channels:
+#10 94.35  - conda-forge
+#10 94.35  - defaults
+#10 94.35 Platform: linux-64
+#10 94.35 Collecting package metadata (repodata.json): | / - \ | / done
+#10 102.6 Solving environment: \ | done
+#10 103.1 
+#10 103.1 
+#10 103.1 ==> WARNING: A newer version of conda exists. <==
+#10 103.1     current version: 25.11.0
+#10 103.1     latest version: 25.11.1
+#10 103.1 
+#10 103.1 Please update conda by running
+#10 103.1 
+#10 103.1     $ conda update -n base -c conda-forge conda
+#10 103.1 
+#10 103.1 
+#10 103.1 Installing pip dependencies: - \ | / - \ | / - \ | / - \ | / Pip subprocess error:
+#10 104.7 ERROR: Ignored the following yanked versions: 0.0.1
+#10 104.7 ERROR: Could not find a version that satisfies the requirement tensorrt==9.6.1 (from versions: 0.0.1.dev5, 8.5.1.7, 8.5.2.2, 8.5.3.1, 8.6.0, 8.6.1, 8.6.1.post1, 9.0.0.post11.dev1, 9.0.0.post12.dev1, 9.0.1.post11.dev4, 9.0.1.post12.dev4, 9.1.0.post11.dev4, 9.1.0.post12.dev4, 9.2.0.post11.dev5, 9.2.0.post12.dev5, 9.3.0.post11.dev1, 9.3.0.post12.dev1, 10.0.0b6, 10.0.1, 10.1.0, 10.2.0, 10.2.0.post1, 10.3.0, 10.4.0, 10.5.0, 10.6.0, 10.6.0.post1, 10.6.0.post2, 10.7.0, 10.7.0.post1, 10.8.0.43, 10.9.0.34, 10.10.0.31, 10.11.0.33, 10.12.0.36, 10.13.0.35, 10.13.2.6, 10.13.3.9, 10.13.3.9.post1, 10.14.1.48, 10.14.1.48.post1)
+#10 104.7 ERROR: No matching distribution found for tensorrt==9.6.1
+#10 104.7 
+#10 104.7 Ran pip subprocess with arguments:
+#10 104.7 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.6rqy1s8b.requirements.txt', '--exists-action=b']
+#10 104.7 Pip subprocess output:
+#10 104.7 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 104.7 Collecting torch==2.1.2 (from -r /model/condaenv.6rqy1s8b.requirements.txt (line 2))
+#10 104.7   Using cached torch-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (25 kB)
+#10 104.7 Collecting torchvision==0.16.2 (from -r /model/condaenv.6rqy1s8b.requirements.txt (line 3))
+#10 104.7   Using cached torchvision-0.16.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.6 kB)
+#10 104.7 Collecting torchaudio==2.1.2 (from -r /model/condaenv.6rqy1s8b.requirements.txt (line 4))
+#10 104.7   Using cached torchaudio-2.1.2-cp310-cp310-manylinux1_x86_64.whl.metadata (6.4 kB)
+#10 104.7 
+#10 104.7 failed
+#10 104.7 
+#10 104.7 CondaEnvException: Pip failed
+#10 104.7 
+#10 104.8 Failed to create conda environment after 5 attempts.
+#10 ERROR: process "/bin/sh -c echo $BUILD_LOG_START_DELIMITER &&     cat model/conda.yaml &&     echo $USE_DATABRICKS_REPO &&     if [ \"$USE_DATABRICKS_REPO\" = \"true\" ]; then         bash conda-env-create.sh --max-retries 5 --use-databricks-repo --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     else         bash conda-env-create.sh --max-retries 5 --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     fi &&     echo ${EXTRA_INSTALL_COMMANDS} &&     eval ${EXTRA_INSTALL_COMMANDS} &&     echo $BUILD_LOG_CONDA_END_DELIMITER &&     echo $BUILD_LOG_END_DELIMITER &&     conda clean -afy" did not complete successfully: exit code: 1
+------
