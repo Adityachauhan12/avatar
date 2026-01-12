@@ -1,14 +1,22 @@
-import os
-import subprocess
+STDOUT:
+total 2.0G
+drwxrwxrwx 2 nobody nogroup  4.0K Nov 23 05:44 .
+drwxrwxrwx 2 nobody nogroup  4.0K Nov 23 05:44 ..
+-rwxrwxrwx 1 nobody nogroup  1.9M Nov 23 05:44 appearance_extractor_fp16.engine
+-rwxrwxrwx 1 nobody nogroup 1015K Nov 23 05:44 blaze_face_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  107M Nov 23 05:44 decoder_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  6.9M Nov 23 05:44 face_mesh_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  1.4G Nov 23 05:44 hubert_fp32.engine
+-rwxrwxrwx 1 nobody nogroup  9.8M Nov 23 05:44 insightface_det_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  3.7M Nov 23 05:44 landmark106_fp16.engine
+-rwxrwxrwx 1 nobody nogroup   55M Nov 23 05:44 landmark203_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  187M Nov 23 05:44 lmdm_v0.4_hubert_fp32.engine
+-rwxrwxrwx 1 nobody nogroup  109M Nov 23 05:44 motion_extractor_fp32.engine
+-rwxrwxrwx 1 nobody nogroup  2.0M Nov 23 05:44 stitch_network_fp16.engine
+-rwxrwxrwx 1 nobody nogroup  101M Nov 23 05:44 warp_network_fp16.engine
 
-# List what's in the checkpoint directory
-result = subprocess.run(
-    ["ls", "-lah", "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4/"],
-    capture_output=True,
-    text=True
-)
-print("STDOUT:")
-print(result.stdout)
-print("\nSTDERR:")
-print(result.stderr)
-print("\nReturn code:", result.returncode)
+
+STDERR:
+
+
+Return code: 0
