@@ -1091,3 +1091,42 @@ python-3.10.12       | 24.4 MB   | ########## | 100%
 #10 58.35 Failed to create conda environment after 5 attempts.
 #10 ERROR: process "/bin/sh -c echo $BUILD_LOG_START_DELIMITER &&     cat model/conda.yaml &&     echo $USE_DATABRICKS_REPO &&     if [ \"$USE_DATABRICKS_REPO\" = \"true\" ]; then         bash conda-env-create.sh --max-retries 5 --use-databricks-repo --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     else         bash conda-env-create.sh --max-retries 5 --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     fi &&     echo ${EXTRA_INSTALL_COMMANDS} &&     eval ${EXTRA_INSTALL_COMMANDS} &&     echo $BUILD_LOG_CONDA_END_DELIMITER &&     echo $BUILD_LOG_END_DELIMITER &&     conda clean -afy" did not complete successfully: exit code: 1
 ------
+
+
+Jan 12, 2026, 10:45 AM
+ENDPOINT_UPDATE_EVENT
+Endpoint update failed for endpoint `ditto_with_base64`, config version 1.
+Jan 12, 2026, 10:45 AM
+SERVED_ENTITY_SERVICE_EVENT
+ditto_talkinghead-9
+Served entity creation failed for served entity `ditto_talkinghead-9`, config version 1. Error message: Container creation failed. Please see build logs for more information.
+Jan 12, 2026, 10:45 AM
+SERVED_ENTITY_SERVICE_EVENT
+Served entity `ditto_talkinghead-9` entered DEPLOYMENT_FAILED state: Container creation failed
+Jan 12, 2026, 10:45 AM
+SERVED_ENTITY_CONTAINER_EVENT
+ditto_talkinghead-9
+Container image creation failed, see Build Logs for details. If Azure storage firewall or Private Link is enabled on your UC storage account, please verify your network connectivity is configured correctly according to https://learn.microsoft.com/en-us/azure/databricks/security/network/serverless-network-security/serverless-private-link. For additional assistance, contact Databricks support.
+Jan 12, 2026, 10:42 AM
+SERVED_ENTITY_CONTAINER_EVENT
+ditto_talkinghead-9
+Container image creation initiated
+Jan 12, 2026, 10:39 AM
+SERVED_ENTITY_CONTAINER_EVENT
+ditto_talkinghead-9
+Container image creation initiated
+Jan 12, 2026, 10:35 AM
+SERVED_ENTITY_CONTAINER_EVENT
+ditto_talkinghead-9
+Container image creation initiated
+Jan 12, 2026, 10:32 AM
+SERVED_ENTITY_SERVICE_EVENT
+Served entity `ditto_talkinghead-9` entered DEPLOYMENT_CREATING state: Pending Container Creation
+Jan 12, 2026, 10:32 AM
+SERVED_ENTITY_CONTAINER_EVENT
+ditto_talkinghead-9
+Container image creation initiated
+Jan 12, 2026, 10:32 AM
+SERVED_ENTITY_CREATION_EVENT
+ditto_talkinghead-9
+Served entity created for served entity `ditto_talkinghead-9`, config version 1.
