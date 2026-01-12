@@ -1,140 +1,1000 @@
-# CELL 5: Log Model with Conda Environment (CORRECT VERSION)
-
-import subprocess
-import sys
-
-# First, install PyYAML
-print("📦 Installing PyYAML...")
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
-print("✅ PyYAML installed\n")
-
-import mlflow
-from mlflow.models.signature import infer_signature
-import pandas as pd
-import yaml
-import tempfile
-import os
-
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment("/Shared/ditto_experiment")
-
-print("📋 Defining model signature...")
-
-# Define Signature
-test_input = pd.DataFrame({
-    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],
-    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]
-})
-
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."]
-})
-
-signature = infer_signature(test_input, test_output)
-print("✅ Signature defined\n")
-
-print("📦 Creating conda.yaml with NVIDIA Index...")
-
-# Create conda environment file with NVIDIA index properly configured
-conda_env = {
-    "name": "ditto-env",
-    "channels": ["conda-forge", "defaults"],
-    "dependencies": [
-        "python=3.10",
-        "pip",
-        {
-            "pip": [
-                "--extra-index-url https://pypi.nvidia.com",
-                "tensorrt==8.6.1",
-                "tensorrt-libs==8.6.1",
-                "tensorrt-bindings==8.6.1",
-                "cuda-python==12.2.0",
-                "onnxruntime-gpu==1.16.3",
-                "numpy==1.26.4",
-                "gitpython==3.1.40",
-                "librosa>=0.10.1",
-                "imageio-ffmpeg",
-                "opencv-python-headless",
-                "soundfile",
-                "soxr",
-                "imageio",
-                "moviepy",
-                "mediapipe>=0.10.9",
-                "ml_dtypes==0.4.0",
-                "einops",
-                "omegaconf",
-                "huggingface_hub",
-                "filetype",
-                "tqdm",
-                "scikit-image",
-                "colored",
-                "polygraphy",
-                "mlflow==3.8.1"
-            ]
-        }
-    ]
-}
-
-# Write to temp file
-conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
-yaml.dump(conda_env, conda_file)
-conda_file.close()
-conda_file_path = conda_file.name
-
-print(f"✅ Conda environment file created: {conda_file_path}")
-print("\n📋 Conda.yaml Contents (First 30 lines):")
-with open(conda_file_path, 'r') as f:
-    lines = f.readlines()
-    for line in lines[:30]:
-        print(line.rstrip())
-
-print("\n" + "="*60)
-print("🚀 Logging model to MLflow...")
-print("="*60 + "\n")
-
-with mlflow.start_run() as run:
-    mlflow.pyfunc.log_model(
-        artifact_path="ditto_talking_head",
-        python_model=DittoTalkingHeadModel(),  # Uses the class from CELL 4
-        signature=signature,
-        conda_env=conda_file_path,  # ✅ USE CONDA ENV (NOT pip_requirements)
-        pip_requirements=None
-    )
-    run_id = run.info.run_id
-
-print(f"✅ Model Logged. Run ID: {run_id}\n")
-
-# Register to Unity Catalog
-uc_model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
-print(f"📝 Registering to {uc_model_name}...")
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_model_name
-    )
-    print(f"✅ SUCCESS! Registered Version: {model_version.version}")
-    print(f"\n" + "="*60)
-    print(f"👉 NEXT STEPS:")
-    print(f"="*60)
-    print(f"1. Go to: Serving → ditto_with_base64")
-    print(f"2. Click 'Update' or 'Create New'")
-    print(f"3. Select Version: {model_version.version}")
-    print(f"4. Set Workload: GPU_SMALL")
-    print(f"5. Click DEPLOY")
-    print(f"6. ⏳ Wait 15 minutes for READY status")
-    print(f"="*60 + "\n")
-    
-except Exception as e:
-    print(f"❌ Registration Error: {e}")
-    import traceback
-    traceback.print_exc()
-
-# Cleanup temp file
-try:
-    os.unlink(conda_file_path)
-    print("🧹 Cleaned up temporary files")
-except:
-    pass
+#10 250.7 Collecting nvidia-cublas-cu12 (from tensorrt-libs==8.6.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 3))
+#10 250.7   Downloading https://pypi.nvidia.com/nvidia-cublas-cu12/nvidia_cublas_cu12-12.9.1.4-py3-none-manylinux_2_27_x86_64.whl (581.2 MB)
+#10 250.7      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 581.2/581.2 MB 291.5 MB/s  0:00:02
+#10 250.7 Collecting cython (from cuda-python==12.2.0->-r /model/condaenv.9xhe60_9.requirements.txt (line 5))
+#10 250.7   Using cached cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
+#10 250.7 Collecting coloredlogs (from onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+#10 250.7 Collecting flatbuffers (from onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+#10 250.7 Collecting packaging (from onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#10 250.7 Collecting protobuf (from onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached protobuf-6.33.3-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+#10 250.7 Collecting sympy (from onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#10 250.7 Collecting gitdb<5,>=4.0.1 (from gitpython==3.1.40->-r /model/condaenv.9xhe60_9.requirements.txt (line 8))
+#10 250.7   Using cached gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB)
+#10 250.7 Collecting mlflow-skinny==3.8.1 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached mlflow_skinny-3.8.1-py3-none-any.whl.metadata (31 kB)
+#10 250.7 Collecting mlflow-tracing==3.8.1 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached mlflow_tracing-3.8.1-py3-none-any.whl.metadata (19 kB)
+#10 250.7 Collecting Flask-CORS<7 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached flask_cors-6.0.2-py3-none-any.whl.metadata (5.3 kB)
+#10 250.7 Collecting Flask<4 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#10 250.7 Collecting alembic!=1.10.0,<2 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached alembic-1.18.0-py3-none-any.whl.metadata (7.2 kB)
+#10 250.7 Collecting cryptography<47,>=43.0.0 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached cryptography-46.0.3-cp38-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+#10 250.7 Collecting docker<8,>=4.0.0 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached docker-7.1.0-py3-none-any.whl.metadata (3.8 kB)
+#10 250.7 Collecting graphene<4 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached graphene-3.4.3-py2.py3-none-any.whl.metadata (6.9 kB)
+#10 250.7 Collecting gunicorn<24 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#10 250.7 Collecting huey<3,>=2.5.0 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached huey-2.6.0-py3-none-any.whl.metadata (4.3 kB)
+#10 250.7 Collecting matplotlib<4 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+#10 250.7 Collecting pandas<3 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+#10 250.7 Collecting pyarrow<23,>=4.0.0 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pyarrow-22.0.0-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (3.2 kB)
+#10 250.7 Collecting scikit-learn<2 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (11 kB)
+#10 250.7 Collecting scipy<2 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+#10 250.7 Collecting sqlalchemy<3,>=1.4.0 (from mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached sqlalchemy-2.0.45-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.5 kB)
+#10 250.7 Collecting cachetools<7,>=5.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached cachetools-6.2.4-py3-none-any.whl.metadata (5.6 kB)
+#10 250.7 Collecting click<9,>=7.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
+#10 250.7 Collecting cloudpickle<4 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+#10 250.7 Collecting databricks-sdk<1,>=0.20.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached databricks_sdk-0.77.0-py3-none-any.whl.metadata (40 kB)
+#10 250.7 Collecting fastapi<1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached fastapi-0.128.0-py3-none-any.whl.metadata (30 kB)
+#10 250.7 Collecting importlib_metadata!=4.7.0,<9,>=3.7.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+#10 250.7 Collecting opentelemetry-api<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached opentelemetry_api-1.39.1-py3-none-any.whl.metadata (1.5 kB)
+#10 250.7 Collecting opentelemetry-proto<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached opentelemetry_proto-1.39.1-py3-none-any.whl.metadata (2.3 kB)
+#10 250.7 Collecting opentelemetry-sdk<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached opentelemetry_sdk-1.39.1-py3-none-any.whl.metadata (1.5 kB)
+#10 250.7 Collecting pydantic<3,>=2.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+#10 250.7 Collecting python-dotenv<2,>=0.19.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+#10 250.7 Collecting pyyaml<7,>=5.1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#10 250.7 Collecting requests<3,>=2.17.3 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#10 250.7 Collecting sqlparse<1,>=0.4.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+#10 250.7 Collecting typing-extensions<5,>=4.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#10 250.7 Collecting uvicorn<1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
+#10 250.7 Collecting Mako (from alembic!=1.10.0,<2->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached mako-1.3.10-py3-none-any.whl.metadata (2.9 kB)
+#10 250.7 Collecting tomli (from alembic!=1.10.0,<2->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
+#10 250.7 Collecting cffi>=2.0.0 (from cryptography<47,>=43.0.0->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+#10 250.7 Collecting google-auth~=2.0 (from databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached google_auth-2.47.0-py3-none-any.whl.metadata (6.4 kB)
+#10 250.7 Collecting urllib3>=1.26.0 (from docker<8,>=4.0.0->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached urllib3-2.6.3-py3-none-any.whl.metadata (6.9 kB)
+#10 250.7 Collecting starlette<0.51.0,>=0.40.0 (from fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached starlette-0.50.0-py3-none-any.whl.metadata (6.3 kB)
+#10 250.7 Collecting annotated-doc>=0.0.2 (from fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+#10 250.7 Collecting blinker>=1.9.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#10 250.7 Collecting itsdangerous>=2.2.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#10 250.7 Collecting jinja2>=3.1.2 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#10 250.7 Collecting markupsafe>=2.1.1 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#10 250.7 Collecting werkzeug>=3.1.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached werkzeug-3.1.5-py3-none-any.whl.metadata (4.0 kB)
+#10 250.7 Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython==3.1.40->-r /model/condaenv.9xhe60_9.requirements.txt (line 8))
+#10 250.7   Using cached smmap-5.0.2-py3-none-any.whl.metadata (4.3 kB)
+#10 250.7 Collecting pyasn1-modules>=0.2.1 (from google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+#10 250.7 Collecting rsa<5,>=3.1.4 (from google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+#10 250.7 Collecting graphql-core<3.3,>=3.1 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached graphql_core-3.2.7-py3-none-any.whl.metadata (11 kB)
+#10 250.7 Collecting graphql-relay<3.3,>=3.1 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached graphql_relay-3.2.0-py3-none-any.whl.metadata (12 kB)
+#10 250.7 Collecting python-dateutil<3,>=2.7.0 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#10 250.7 Collecting zipp>=3.20 (from importlib_metadata!=4.7.0,<9,>=3.7.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+#10 250.7 Collecting contourpy>=1.0.1 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
+#10 250.7 Collecting cycler>=0.10 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+#10 250.7 Collecting fonttools>=4.22.0 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
+#10 250.7 Collecting kiwisolver>=1.3.1 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
+#10 250.7 Collecting pillow>=8 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pillow-12.1.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+#10 250.7 Collecting pyparsing>=3 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pyparsing-3.3.1-py3-none-any.whl.metadata (5.6 kB)
+#10 250.7 Collecting opentelemetry-semantic-conventions==0.60b1 (from opentelemetry-sdk<3,>=1.9.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl.metadata (2.4 kB)
+#10 250.7 Collecting pytz>=2020.1 (from pandas<3->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+#10 250.7 Collecting tzdata>=2022.7 (from pandas<3->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached tzdata-2025.3-py2.py3-none-any.whl.metadata (1.4 kB)
+#10 250.7 Collecting annotated-types>=0.6.0 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+#10 250.7 Collecting pydantic-core==2.41.5 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pydantic_core-2.41.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+#10 250.7 Collecting typing-inspection>=0.4.2 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+#10 250.7 Collecting six>=1.5 (from python-dateutil<3,>=2.7.0->graphene<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#10 250.7 Collecting charset_normalizer<4,>=2 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+#10 250.7 Collecting idna<4,>=2.5 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+#10 250.7 Collecting certifi>=2017.4.17 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached certifi-2026.1.4-py3-none-any.whl.metadata (2.5 kB)
+#10 250.7 Collecting pyasn1>=0.1.3 (from rsa<5,>=3.1.4->google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+#10 250.7 Collecting joblib>=1.2.0 (from scikit-learn<2->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
+#10 250.7 Collecting threadpoolctl>=3.1.0 (from scikit-learn<2->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+#10 250.7 Collecting greenlet>=1 (from sqlalchemy<3,>=1.4.0->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached greenlet-3.3.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)
+#10 250.7 Collecting anyio<5,>=3.6.2 (from starlette<0.51.0,>=0.40.0->fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached anyio-4.12.1-py3-none-any.whl.metadata (4.3 kB)
+#10 250.7 Collecting exceptiongroup>=1.0.2 (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+#10 250.7 Collecting h11>=0.8 (from uvicorn<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#10 250.7 Collecting audioread>=2.1.9 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached audioread-3.1.0-py3-none-any.whl.metadata (9.0 kB)
+#10 250.7 Collecting numba>=0.51.0 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
+#10 250.7 Collecting decorator>=4.3.0 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+#10 250.7 Collecting pooch>=1.1 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached pooch-1.8.2-py3-none-any.whl.metadata (10 kB)
+#10 250.7 Collecting lazy_loader>=0.1 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
+#10 250.7 Collecting msgpack>=1.0 (from librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+#10 250.7 INFO: pip is looking at multiple versions of opencv-python-headless to determine which version is compatible with other requirements. This could take a while.
+#10 250.7 Collecting opencv-python-headless (from -r /model/condaenv.9xhe60_9.requirements.txt (line 11))
+#10 250.7   Using cached opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+#10 250.7 Collecting proglog<=1.0.0 (from moviepy->-r /model/condaenv.9xhe60_9.requirements.txt (line 15))
+#10 250.7   Using cached proglog-0.1.12-py3-none-any.whl.metadata (794 bytes)
+#10 250.7 Collecting pillow>=8 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+#10 250.7 Collecting absl-py~=2.3 (from mediapipe>=0.10.9->-r /model/condaenv.9xhe60_9.requirements.txt (line 16))
+#10 250.7   Using cached absl_py-2.3.1-py3-none-any.whl.metadata (3.3 kB)
+#10 250.7 Collecting sounddevice~=0.5 (from mediapipe>=0.10.9->-r /model/condaenv.9xhe60_9.requirements.txt (line 16))
+#10 250.7   Using cached sounddevice-0.5.3-py3-none-any.whl.metadata (1.6 kB)
+#10 250.7 Collecting antlr4-python3-runtime==4.9.* (from omegaconf->-r /model/condaenv.9xhe60_9.requirements.txt (line 19))
+#10 250.7   Using cached antlr4_python3_runtime-4.9.3-py3-none-any.whl
+#10 250.7 Collecting filelock (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached filelock-3.20.3-py3-none-any.whl.metadata (2.1 kB)
+#10 250.7 Collecting fsspec>=2023.5.0 (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached fsspec-2026.1.0-py3-none-any.whl.metadata (10 kB)
+#10 250.7 Collecting hf-xet<2.0.0,>=1.2.0 (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#10 250.7 Collecting httpx<1,>=0.23.0 (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#10 250.7 Collecting shellingham (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+#10 250.7 Collecting typer-slim (from huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached typer_slim-0.21.1-py3-none-any.whl.metadata (16 kB)
+#10 250.7 Collecting httpcore==1.* (from httpx<1,>=0.23.0->huggingface_hub->-r /model/condaenv.9xhe60_9.requirements.txt (line 20))
+#10 250.7   Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#10 250.7 Collecting networkx>=3.0 (from scikit-image->-r /model/condaenv.9xhe60_9.requirements.txt (line 23))
+#10 250.7   Using cached networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
+#10 250.7 Collecting tifffile>=2022.8.12 (from scikit-image->-r /model/condaenv.9xhe60_9.requirements.txt (line 23))
+#10 250.7   Using cached tifffile-2025.5.10-py3-none-any.whl.metadata (31 kB)
+#10 250.7 Collecting pycparser (from cffi>=2.0.0->cryptography<47,>=43.0.0->mlflow==3.8.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 26))
+#10 250.7   Using cached pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+#10 250.7 Collecting llvmlite<0.47,>=0.46.0dev0 (from numba>=0.51.0->librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.0 kB)
+#10 250.7 Collecting platformdirs>=2.5.0 (from pooch>=1.1->librosa>=0.10.1->-r /model/condaenv.9xhe60_9.requirements.txt (line 9))
+#10 250.7   Using cached platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+#10 250.7 Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+#10 250.7 Collecting mpmath<1.4,>=1.1.0 (from sympy->onnxruntime-gpu==1.16.3->-r /model/condaenv.9xhe60_9.requirements.txt (line 6))
+#10 250.7   Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#10 250.7 Using cached cuda_python-12.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20.1 MB)
+#10 250.7 Using cached onnxruntime_gpu-1.16.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (157.1 MB)
+#10 250.7 Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+#10 250.7 Using cached GitPython-3.1.40-py3-none-any.whl (190 kB)
+#10 250.7 Using cached ml_dtypes-0.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+#10 250.7 Using cached mlflow-3.8.1-py3-none-any.whl (9.1 MB)
+#10 250.7 Using cached mlflow_skinny-3.8.1-py3-none-any.whl (2.5 MB)
+#10 250.7 Using cached mlflow_tracing-3.8.1-py3-none-any.whl (1.4 MB)
+#10 250.7 Using cached alembic-1.18.0-py3-none-any.whl (260 kB)
+#10 250.7 Using cached cachetools-6.2.4-py3-none-any.whl (11 kB)
+#10 250.7 Using cached click-8.3.1-py3-none-any.whl (108 kB)
+#10 250.7 Using cached cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+#10 250.7 Using cached cryptography-46.0.3-cp38-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+#10 250.7 Using cached databricks_sdk-0.77.0-py3-none-any.whl (779 kB)
+#10 250.7 Using cached docker-7.1.0-py3-none-any.whl (147 kB)
+#10 250.7 Using cached fastapi-0.128.0-py3-none-any.whl (103 kB)
+#10 250.7 Using cached flask-3.1.2-py3-none-any.whl (103 kB)
+#10 250.7 Using cached flask_cors-6.0.2-py3-none-any.whl (13 kB)
+#10 250.7 Using cached gitdb-4.0.12-py3-none-any.whl (62 kB)
+#10 250.7 Using cached google_auth-2.47.0-py3-none-any.whl (234 kB)
+#10 250.7 Using cached graphene-3.4.3-py2.py3-none-any.whl (114 kB)
+#10 250.7 Using cached graphql_core-3.2.7-py3-none-any.whl (207 kB)
+#10 250.7 Using cached graphql_relay-3.2.0-py3-none-any.whl (16 kB)
+#10 250.7 Using cached gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#10 250.7 Using cached huey-2.6.0-py3-none-any.whl (76 kB)
+#10 250.7 Using cached importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+#10 250.7 Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+#10 250.7 Using cached opentelemetry_api-1.39.1-py3-none-any.whl (66 kB)
+#10 250.7 Using cached opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
+#10 250.7 Using cached opentelemetry_sdk-1.39.1-py3-none-any.whl (132 kB)
+#10 250.7 Using cached opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
+#10 250.7 Using cached packaging-25.0-py3-none-any.whl (66 kB)
+#10 250.7 Using cached pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.8 MB)
+#10 250.7 Using cached protobuf-6.33.3-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+#10 250.7 Using cached pyarrow-22.0.0-cp310-cp310-manylinux_2_28_x86_64.whl (47.6 MB)
+#10 250.7 Using cached pydantic-2.12.5-py3-none-any.whl (463 kB)
+#10 250.7 Using cached pydantic_core-2.41.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+#10 250.7 Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#10 250.7 Using cached python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+#10 250.7 Using cached pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (770 kB)
+#10 250.7 Using cached requests-2.32.5-py3-none-any.whl (64 kB)
+#10 250.7 Using cached charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+#10 250.7 Using cached idna-3.11-py3-none-any.whl (71 kB)
+#10 250.7 Using cached rsa-4.9.1-py3-none-any.whl (34 kB)
+#10 250.7 Using cached scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.7 MB)
+#10 250.7 Using cached scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+#10 250.7 Using cached smmap-5.0.2-py3-none-any.whl (24 kB)
+#10 250.7 Using cached sqlalchemy-2.0.45-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.2 MB)
+#10 250.7 Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+#10 250.7 Using cached starlette-0.50.0-py3-none-any.whl (74 kB)
+#10 250.7 Using cached anyio-4.12.1-py3-none-any.whl (113 kB)
+#10 250.7 Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#10 250.7 Using cached urllib3-2.6.3-py3-none-any.whl (131 kB)
+#10 250.7 Using cached uvicorn-0.40.0-py3-none-any.whl (68 kB)
+#10 250.7 Using cached librosa-0.11.0-py3-none-any.whl (260 kB)
+#10 250.7 Using cached imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+#10 250.7 Using cached opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (50.0 MB)
+#10 250.7 Using cached soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl (1.3 MB)
+#10 250.7 Using cached soxr-1.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (242 kB)
+#10 250.7 Using cached imageio-2.37.2-py3-none-any.whl (317 kB)
+#10 250.7 Using cached moviepy-2.2.1-py3-none-any.whl (129 kB)
+#10 250.7 Using cached decorator-5.2.1-py3-none-any.whl (9.2 kB)
+#10 250.7 Using cached pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#10 250.7 Using cached proglog-0.1.12-py3-none-any.whl (6.3 kB)
+#10 250.7 Using cached mediapipe-0.10.31-py3-none-manylinux_2_28_x86_64.whl (10.3 MB)
+#10 250.7 Using cached absl_py-2.3.1-py3-none-any.whl (135 kB)
+#10 250.7 Using cached flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+#10 250.7 Using cached sounddevice-0.5.3-py3-none-any.whl (32 kB)
+#10 250.7 Using cached einops-0.8.1-py3-none-any.whl (64 kB)
+#10 250.7 Using cached omegaconf-2.3.0-py3-none-any.whl (79 kB)
+#10 250.7 Using cached huggingface_hPip subprocess error:
+#10 250.7   error: subprocess-exited-with-error
+#10 250.7   
+#10 250.7   × Building wheel for tensorrt (pyproject.toml) did not run successfully.
+#10 250.7   │ exit code: 1
+#10 250.7   ╰─> [88 lines of output]
+#10 250.7       /tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+#10 250.7       !!
+#10 250.7       
+#10 250.7               ********************************************************************************
+#10 250.7               Please consider removing the following classifiers in favor of a SPDX license expression:
+#10 250.7       
+#10 250.7               License :: Other/Proprietary License
+#10 250.7       
+#10 250.7               See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+#10 250.7               ********************************************************************************
+#10 250.7       
+#10 250.7       !!
+#10 250.7         self._finalize_license_expression()
+#10 250.7       running bdist_wheel
+#10 250.7       /tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/cmd.py:135: SetuptoolsDeprecationWarning: bdist_wheel.universal is deprecated
+#10 250.7       !!
+#10 250.7       
+#10 250.7               ********************************************************************************
+#10 250.7               With Python 2.7 end-of-life, support for building universal wheels
+#10 250.7               (i.e., wheels that support both Python 2 and Python 3)
+#10 250.7               is being obviated.
+#10 250.7               Please discontinue using this option, or if you still need it,
+#10 250.7               file an issue with pypa/setuptools describing your use case.
+#10 250.7       
+#10 250.7               This deprecation is overdue, please update your project and remove deprecated
+#10 250.7               calls to avoid build errors in the future.
+#10 250.7               ********************************************************************************
+#10 250.7       
+#10 250.7       !!
+#10 250.7         self.finalize_options()
+#10 250.7       running build
+#10 250.7       running build_py
+#10 250.7       creating build/lib/tensorrt
+#10 250.7       copying tensorrt/__init__.py -> build/lib/tensorrt
+#10 250.7       running egg_info
+#10 250.7       writing tensorrt.egg-info/PKG-INFO
+#10 250.7       writing dependency_links to tensorrt.egg-info/dependency_links.txt
+#10 250.7       writing requirements to tensorrt.egg-info/requires.txt
+#10 250.7       writing top-level names to tensorrt.egg-info/top_level.txt
+#10 250.7       reading manifest file 'tensorrt.egg-info/SOURCES.txt'
+#10 250.7       adding license file 'LICENSE.txt'
+#10 250.7       writing manifest file 'tensorrt.egg-info/SOURCES.txt'
+#10 250.7       installing to build/bdist.linux-x86_64/wheel
+#10 250.7       running install
+#10 250.7       /opt/conda/envs/mlflow-env/bin/python: No module named pip
+#10 250.7       Traceback (most recent call last):
+#10 250.7         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+#10 250.7           main()
+#10 250.7         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+#10 250.7           json_out["return_val"] = hook(**hook_input["kwargs"])
+#10 250.7         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+#10 250.7           return _build_backend().build_wheel(
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 435, in build_wheel
+#10 250.7           return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 423, in _build
+#10 250.7           return self._build_with_temp_dir(
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 404, in _build_with_temp_dir
+#10 250.7           self.run_setup()
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 512, in run_setup
+#10 250.7           super().run_setup(setup_script=setup_script)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+#10 250.7           exec(code, locals())
+#10 250.7         File "<string>", line 49, in <module>
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/__init__.py", line 115, in setup
+#10 250.7           return distutils.core.setup(**attrs)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 186, in setup
+#10 250.7           return run_commands(dist)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 202, in run_commands
+#10 250.7           dist.run_commands()
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1002, in run_commands
+#10 250.7           self.run_command(cmd)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/dist.py", line 1102, in run_command
+#10 250.7           super().run_command(command)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+#10 250.7           cmd_obj.run()
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/command/bdist_wheel.py", line 405, in run
+#10 250.7           self.run_command("install")
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/cmd.py", line 357, in run_command
+#10 250.7           self.distribution.run_command(command)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/dist.py", line 1102, in run_command
+#10 250.7           super().run_command(command)
+#10 250.7         File "/tmp/pip-build-env-3g8caohi/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+#10 250.7           cmd_obj.run()
+#10 250.7         File "<string>", line 43, in run
+#10 250.7         File "<string>", line 41, in install_dep
+#10 250.7         File "/opt/conda/envs/mlflow-env/lib/python3.10/subprocess.py", line 457, in check_returncode
+#10 250.7           raise CalledProcessError(self.returncode, self.args, self.stdout,
+#10 250.7       subprocess.CalledProcessError: Command '['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', 'tensorrt_libs==8.6.1', '--index-url', 'https://pypi.nvidia.com']' returned non-zero exit status 1.
+#10 250.7       [end of output]
+#10 250.7   
+#10 250.7   note: This error originates from a subprocess, and is likely not a problem with pip.
+#10 250.7   ERROR: Failed building wheel for tensorrt
+#10 250.7 error: failed-wheel-build-for-install
+#10 250.7 
+#10 250.7 × Failed to build installable wheels for some pyproject.toml based projects
+#10 250.7 ╰─> tensorrt
+#10 250.7 
+#10 250.7 ub-1.3.1-py3-none-any.whl (533 kB)
+#10 250.7 Using cached hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+#10 250.7 Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+#10 250.7 Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+#10 250.7 Using cached filetype-1.2.0-py2.py3-none-any.whl (19 kB)
+#10 250.7 Using cached tqdm-4.67.1-py3-none-any.whl (78 kB)
+#10 250.7 Using cached scikit_image-0.25.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (14.8 MB)
+#10 250.7 Using cached colored-2.3.1-py3-none-any.whl (19 kB)
+#10 250.7 Using cached annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+#10 250.7 Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+#10 250.7 Using cached audioread-3.1.0-py3-none-any.whl (23 kB)
+#10 250.7 Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#10 250.7 Using cached certifi-2026.1.4-py3-none-any.whl (152 kB)
+#10 250.7 Using cached cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (216 kB)
+#10 250.7 Using cached contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
+#10 250.7 Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#10 250.7 Using cached exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+#10 250.7 Using cached fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
+#10 250.7 Using cached fsspec-2026.1.0-py3-none-any.whl (201 kB)
+#10 250.7 Using cached greenlet-3.3.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (586 kB)
+#10 250.7 Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+#10 250.7 Using cached itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#10 250.7 Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+#10 250.7 Using cached joblib-1.5.3-py3-none-any.whl (309 kB)
+#10 250.7 Using cached kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+#10 250.7 Using cached lazy_loader-0.4-py3-none-any.whl (12 kB)
+#10 250.7 Using cached markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+#10 250.7 Using cached msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (406 kB)
+#10 250.7 Using cached networkx-3.4.2-py3-none-any.whl (1.7 MB)
+#10 250.7 Using cached numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+#10 250.7 Using cached llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+#10 250.7 Using cached pooch-1.8.2-py3-none-any.whl (64 kB)
+#10 250.7 Using cached platformdirs-4.5.1-py3-none-any.whl (18 kB)
+#10 250.7 Using cached pyasn1-0.6.1-py3-none-any.whl (83 kB)
+#10 250.7 Using cached pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+#10 250.7 Using cached pyparsing-3.3.1-py3-none-any.whl (121 kB)
+#10 250.7 Using cached pytz-2025.2-py2.py3-none-any.whl (509 kB)
+#10 250.7 Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+#10 250.7 Using cached threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+#10 250.7 Using cached tifffile-2025.5.10-py3-none-any.whl (226 kB)
+#10 250.7 Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+#10 250.7 Using cached tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+#10 250.7 Using cached werkzeug-3.1.5-py3-none-any.whl (225 kB)
+#10 250.7 Using cached zipp-3.23.0-py3-none-any.whl (10 kB)
+#10 250.7 Using cached coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+#10 250.7 Using cached humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+#10 250.7 Using cached cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
+#10 250.7 Using cached filelock-3.20.3-py3-none-any.whl (16 kB)
+#10 250.7 Using cached mako-1.3.10-py3-none-any.whl (78 kB)
+#10 250.7 Using cached pycparser-2.23-py3-none-any.whl (118 kB)
+#10 250.7 Using cached shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+#10 250.7 Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#10 250.7 Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+#10 250.7 Using cached tomli-2.4.0-py3-none-any.whl (14 kB)
+#10 250.7 Using cached typer_slim-0.21.1-py3-none-any.whl (47 kB)
+#10 250.7 Building wheels for collected packages: tensorrt
+#10 250.7   Building wheel for tensorrt (pyproject.toml): started
+#10 250.7   Building wheel for tensorrt (pyproject.toml): finished with status 'error'
+#10 250.7 Failed to build tensorrt
+#10 250.8 
+#10 250.8 failed
+#10 250.8 
+#10 250.8 CondaEnvException: Pip failed
+#10 250.8 
+#10 250.9 Retrying in 10 seconds... (Attempt 5/5)
+#10 261.1 Retrieving notices: - done
+#10 261.6 Channels:
+#10 261.6  - conda-forge
+#10 261.6  - defaults
+#10 261.6 Platform: linux-64
+#10 261.6 Collecting package metadata (repodata.json): | / - \ | / done
+#10 270.7 Solving environment: \ | done
+#10 271.2 
+#10 271.2 
+#10 271.2 ==> WARNING: A newer version of conda exists. <==
+#10 271.2     current version: 25.11.0
+#10 271.2     latest version: 25.11.1
+#10 271.2 
+#10 271.2 Please update conda by running
+#10 271.2 
+#10 271.2     $ conda update -n base -c conda-forge conda
+#10 271.2 
+#10 271.2 
+#10 271.2 Installing pip dependencies: - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ | / - \ Pip subprocess error:
+#10 309.0   error: subprocess-exited-with-error
+#10 309.0   
+#10 309.0   × Building wheel for tensorrt (pyproject.toml) did not run successfully.
+#10 309.0   │ exit code: 1
+#10 309.0   ╰─> [88 lines of output]
+#10 309.0       /tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+#10 309.0       !!
+#10 309.0       
+#10 309.0               ********************************************************************************
+#10 309.0               Please consider removing the following classifiers in favor of a SPDX license expression:
+#10 309.0       
+#10 309.0               License :: Other/Proprietary License
+#10 309.0       
+#10 309.0               See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+#10 309.0               ********************************************************************************
+#10 309.0       
+#10 309.0       !!
+#10 309.0         self._finalize_license_expression()
+#10 309.0       running bdist_wheel
+#10 309.0       /tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/cmd.py:135: SetuptoolsDeprecationWarning: bdist_wheel.universal is deprecated
+#10 309.0       !!
+#10 309.0       
+#10 309.0               ********************************************************************************
+#10 309.0               With Python 2.7 end-of-life, support for building universal wheels
+#10 309.0               (i.e., wheels that support both Python 2 and Python 3)
+#10 309.0               is being obviated.
+#10 309.0               Please discontinue using this option, or if you still need it,
+#10 309.0               file an issue with pypa/setuptools describing your use case.
+#10 309.0       
+#10 309.0               This deprecation is overdue, please update your project and remove deprecated
+#10 309.0               calls to avoid build errors in the future.
+#10 309.0               ********************************************************************************
+#10 309.0       
+#10 309.0       !!
+#10 309.0         self.finalize_options()
+#10 309.0       running build
+#10 309.0       running build_py
+#10 309.0       creating build/lib/tensorrt
+#10 309.0       copying tensorrt/__init__.py -> build/lib/tensorrt
+#10 309.0       running egg_info
+#10 309.0       writing tensorrt.egg-info/PKG-INFO
+#10 309.0       writing dependency_links to tensorrt.egg-info/dependency_links.txt
+#10 309.0       writing requirements to tensorrt.egg-info/requires.txt
+#10 309.0       writing top-level names to tensorrt.egg-info/top_level.txt
+#10 309.0       reading manifest file 'tensorrt.egg-info/SOURCES.txt'
+#10 309.0       adding license file 'LICENSE.txt'
+#10 309.0       writing manifest file 'tensorrt.egg-info/SOURCES.txt'
+#10 309.0       installing to build/bdist.linux-x86_64/wheel
+#10 309.0       running install
+#10 309.0       /opt/conda/envs/mlflow-env/bin/python: No module named pip
+#10 309.0       Traceback (most recent call last):
+#10 309.0         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+#10 309.0           main()
+#10 309.0         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+#10 309.0           json_out["return_val"] = hook(**hook_input["kwargs"])
+#10 309.0         File "/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 280, in build_wheel
+#10 309.0           return _build_backend().build_wheel(
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 435, in build_wheel
+#10 309.0           return _build(['bdist_wheel', '--dist-info-dir', str(metadata_directory)])
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 423, in _build
+#10 309.0           return self._build_with_temp_dir(
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 404, in _build_with_temp_dir
+#10 309.0           self.run_setup()
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 512, in run_setup
+#10 309.0           super().run_setup(setup_script=setup_script)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+#10 309.0           exec(code, locals())
+#10 309.0         File "<string>", line 49, in <module>
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/__init__.py", line 115, in setup
+#10 309.0           return distutils.core.setup(**attrs)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 186, in setup
+#10 309.0           return run_commands(dist)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/core.py", line 202, in run_commands
+#10 309.0           dist.run_commands()
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1002, in run_commands
+#10 309.0           self.run_command(cmd)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/dist.py", line 1102, in run_command
+#10 309.0           super().run_command(command)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+#10 309.0           cmd_obj.run()
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/command/bdist_wheel.py", line 405, in run
+#10 309.0           self.run_command("install")
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/cmd.py", line 357, in run_command
+#10 309.0           self.distribution.run_command(command)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/dist.py", line 1102, in run_command
+#10 309.0           super().run_command(command)
+#10 309.0         File "/tmp/pip-build-env-b3hfky4c/overlay/lib/python3.10/site-packages/setuptools/_distutils/dist.py", line 1021, in run_command
+#10 309.0           cmd_obj.run()
+#10 309.0         File "<string>", line 43, in run
+#10 309.0         File "<string>", line 41, in install_dep
+#10 309.0         File "/opt/conda/envs/mlflow-env/lib/python3.10/subprocess.py", line 457, in check_returncode
+#10 309.0           raise CalledProcessError(self.returncode, self.args, self.stdout,
+#10 309.0       subprocess.CalledProcessError: Command '['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', 'tensorrt_libs==8.6.1', '--index-url', 'https://pypi.nvidia.com']' returned non-zero exit status 1.
+#10 309.0       [end of output]
+#10 309.0   
+#10 309.0   note: This error originates from a subprocess, and is likely not a problem with pip.
+#10 309.0   ERROR: Failed building wheel for tensorrt
+#10 309.0 error: failed-wheel-build-for-install
+#10 309.0 
+#10 309.0 × Failed to build installable wheels for some pyproject.toml based projects
+#10 309.0 ╰─> tensorrt
+#10 309.0 
+#10 309.0 Ran pip subprocess with arguments:
+#10 309.0 ['/opt/conda/envs/mlflow-env/bin/python', '-m', 'pip', 'install', '-U', '-r', '/model/condaenv.q38hp7ro.requirements.txt', '--exists-action=b']
+#10 309.0 Pip subprocess output:
+#10 309.0 Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+#10 309.0 Collecting tensorrt==8.6.1 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 2))
+#10 309.0   Downloading https://pypi.nvidia.com/tensorrt/tensorrt-8.6.1.tar.gz (16 kB)
+#10 309.0   Installing build dependencies: started
+#10 309.0   Installing build dependencies: finished with status 'done'
+#10 309.0   Getting requirements to build wheel: started
+#10 309.0   Getting requirements to build wheel: finished with status 'done'
+#10 309.0   Preparing metadata (pyproject.toml): started
+#10 309.0   Preparing metadata (pyproject.toml): finished with status 'done'
+#10 309.0 Collecting tensorrt-libs==8.6.1 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 3))
+#10 309.0   Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
+#10 309.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 211.5 MB/s  0:00:02
+#10 309.0 Collecting tensorrt-bindings==8.6.1 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 4))
+#10 309.0   Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
+#10 309.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 399.8 MB/s  0:00:00
+#10 309.0 Collecting cuda-python==12.2.0 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 5))
+#10 309.0   Using cached cuda_python-12.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (749 bytes)
+#10 309.0 Collecting onnxruntime-gpu==1.16.3 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached onnxruntime_gpu-1.16.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.3 kB)
+#10 309.0 Collecting numpy==1.26.4 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 7))
+#10 309.0   Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+#10 309.0 Collecting gitpython==3.1.40 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 8))
+#10 309.0   Using cached GitPython-3.1.40-py3-none-any.whl.metadata (12 kB)
+#10 309.0 Collecting librosa>=0.10.1 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached librosa-0.11.0-py3-none-any.whl.metadata (8.7 kB)
+#10 309.0 Collecting imageio-ffmpeg (from -r /model/condaenv.q38hp7ro.requirements.txt (line 10))
+#10 309.0   Using cached imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+#10 309.0 Collecting opencv-python-headless (from -r /model/condaenv.q38hp7ro.requirements.txt (line 11))
+#10 309.0   Using cached opencv_python_headless-4.12.0.88-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (19 kB)
+#10 309.0 Collecting soundfile (from -r /model/condaenv.q38hp7ro.requirements.txt (line 12))
+#10 309.0   Using cached soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl.metadata (16 kB)
+#10 309.0 Collecting soxr (from -r /model/condaenv.q38hp7ro.requirements.txt (line 13))
+#10 309.0   Using cached soxr-1.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.6 kB)
+#10 309.0 Collecting imageio (from -r /model/condaenv.q38hp7ro.requirements.txt (line 14))
+#10 309.0   Using cached imageio-2.37.2-py3-none-any.whl.metadata (9.7 kB)
+#10 309.0 Collecting moviepy (from -r /model/condaenv.q38hp7ro.requirements.txt (line 15))
+#10 309.0   Using cached moviepy-2.2.1-py3-none-any.whl.metadata (6.9 kB)
+#10 309.0 Collecting mediapipe>=0.10.9 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 16))
+#10 309.0   Using cached mediapipe-0.10.31-py3-none-manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+#10 309.0 Collecting ml_dtypes==0.4.0 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 17))
+#10 309.0   Using cached ml_dtypes-0.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+#10 309.0 Collecting einops (from -r /model/condaenv.q38hp7ro.requirements.txt (line 18))
+#10 309.0   Using cached einops-0.8.1-py3-none-any.whl.metadata (13 kB)
+#10 309.0 Collecting omegaconf (from -r /model/condaenv.q38hp7ro.requirements.txt (line 19))
+#10 309.0   Using cached omegaconf-2.3.0-py3-none-any.whl.metadata (3.9 kB)
+#10 309.0 Collecting huggingface_hub (from -r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached huggingface_hub-1.3.1-py3-none-any.whl.metadata (13 kB)
+#10 309.0 Collecting filetype (from -r /model/condaenv.q38hp7ro.requirements.txt (line 21))
+#10 309.0   Using cached filetype-1.2.0-py2.py3-none-any.whl.metadata (6.5 kB)
+#10 309.0 Collecting tqdm (from -r /model/condaenv.q38hp7ro.requirements.txt (line 22))
+#10 309.0   Using cached tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+#10 309.0 Collecting scikit-image (from -r /model/condaenv.q38hp7ro.requirements.txt (line 23))
+#10 309.0   Using cached scikit_image-0.25.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (14 kB)
+#10 309.0 Collecting colored (from -r /model/condaenv.q38hp7ro.requirements.txt (line 24))
+#10 309.0   Using cached colored-2.3.1-py3-none-any.whl.metadata (3.6 kB)
+#10 309.0 Collecting polygraphy (from -r /model/condaenv.q38hp7ro.requirements.txt (line 25))
+#10 309.0   Downloading https://pypi.nvidia.com/polygraphy/polygraphy-0.49.26-py2.py3-none-any.whl (372 kB)
+#10 309.0 Collecting mlflow==3.8.1 (from -r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached mlflow-3.8.1-py3-none-any.whl.metadata (31 kB)
+#10 309.0 Collecting nvidia-cuda-runtime-cu12 (from tensorrt-libs==8.6.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 3))
+#10 309.0   Downloading https://pypi.nvidia.com/nvidia-cuda-runtime-cu12/nvidia_cuda_runtime_cu12-12.9.79-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.5 MB)
+#10 309.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 506.4 MB/s  0:00:00
+#10 309.0 Collecting nvidia-cudnn-cu12 (from tensorrt-libs==8.6.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 3))
+#10 309.0   Downloading https://pypi.nvidia.com/nvidia-cudnn-cu12/nvidia_cudnn_cu12-9.17.1.4-py3-none-manylinux_2_27_x86_64.whl (647.8 MB)
+#10 309.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 647.8/647.8 MB 473.5 MB/s  0:00:01
+#10 309.0 Collecting nvidia-cublas-cu12 (from tensorrt-libs==8.6.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 3))
+#10 309.0   Downloading https://pypi.nvidia.com/nvidia-cublas-cu12/nvidia_cublas_cu12-12.9.1.4-py3-none-manylinux_2_27_x86_64.whl (581.2 MB)
+#10 309.0      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 581.2/581.2 MB 309.7 MB/s  0:00:01
+#10 309.0 Collecting cython (from cuda-python==12.2.0->-r /model/condaenv.q38hp7ro.requirements.txt (line 5))
+#10 309.0   Using cached cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
+#10 309.0 Collecting coloredlogs (from onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached coloredlogs-15.0.1-py2.py3-none-any.whl.metadata (12 kB)
+#10 309.0 Collecting flatbuffers (from onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
+#10 309.0 Collecting packaging (from onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#10 309.0 Collecting protobuf (from onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached protobuf-6.33.3-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
+#10 309.0 Collecting sympy (from onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#10 309.0 Collecting gitdb<5,>=4.0.1 (from gitpython==3.1.40->-r /model/condaenv.q38hp7ro.requirements.txt (line 8))
+#10 309.0   Using cached gitdb-4.0.12-py3-none-any.whl.metadata (1.2 kB)
+#10 309.0 Collecting mlflow-skinny==3.8.1 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached mlflow_skinny-3.8.1-py3-none-any.whl.metadata (31 kB)
+#10 309.0 Collecting mlflow-tracing==3.8.1 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached mlflow_tracing-3.8.1-py3-none-any.whl.metadata (19 kB)
+#10 309.0 Collecting Flask-CORS<7 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached flask_cors-6.0.2-py3-none-any.whl.metadata (5.3 kB)
+#10 309.0 Collecting Flask<4 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached flask-3.1.2-py3-none-any.whl.metadata (3.2 kB)
+#10 309.0 Collecting alembic!=1.10.0,<2 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached alembic-1.18.0-py3-none-any.whl.metadata (7.2 kB)
+#10 309.0 Collecting cryptography<47,>=43.0.0 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached cryptography-46.0.3-cp38-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+#10 309.0 Collecting docker<8,>=4.0.0 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached docker-7.1.0-py3-none-any.whl.metadata (3.8 kB)
+#10 309.0 Collecting graphene<4 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached graphene-3.4.3-py2.py3-none-any.whl.metadata (6.9 kB)
+#10 309.0 Collecting gunicorn<24 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached gunicorn-23.0.0-py3-none-any.whl.metadata (4.4 kB)
+#10 309.0 Collecting huey<3,>=2.5.0 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached huey-2.6.0-py3-none-any.whl.metadata (4.3 kB)
+#10 309.0 Collecting matplotlib<4 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+#10 309.0 Collecting pandas<3 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+#10 309.0 Collecting pyarrow<23,>=4.0.0 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pyarrow-22.0.0-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (3.2 kB)
+#10 309.0 Collecting scikit-learn<2 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (11 kB)
+#10 309.0 Collecting scipy<2 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+#10 309.0 Collecting sqlalchemy<3,>=1.4.0 (from mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached sqlalchemy-2.0.45-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.5 kB)
+#10 309.0 Collecting cachetools<7,>=5.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached cachetools-6.2.4-py3-none-any.whl.metadata (5.6 kB)
+#10 309.0 Collecting click<9,>=7.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
+#10 309.0 Collecting cloudpickle<4 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+#10 309.0 Collecting databricks-sdk<1,>=0.20.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached databricks_sdk-0.77.0-py3-none-any.whl.metadata (40 kB)
+#10 309.0 Collecting fastapi<1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached fastapi-0.128.0-py3-none-any.whl.metadata (30 kB)
+#10 309.0 Collecting importlib_metadata!=4.7.0,<9,>=3.7.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
+#10 309.0 Collecting opentelemetry-api<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached opentelemetry_api-1.39.1-py3-none-any.whl.metadata (1.5 kB)
+#10 309.0 Collecting opentelemetry-proto<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached opentelemetry_proto-1.39.1-py3-none-any.whl.metadata (2.3 kB)
+#10 309.0 Collecting opentelemetry-sdk<3,>=1.9.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached opentelemetry_sdk-1.39.1-py3-none-any.whl.metadata (1.5 kB)
+#10 309.0 Collecting pydantic<3,>=2.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+#10 309.0 Collecting python-dotenv<2,>=0.19.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+#10 309.0 Collecting pyyaml<7,>=5.1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+#10 309.0 Collecting requests<3,>=2.17.3 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+#10 309.0 Collecting sqlparse<1,>=0.4.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached sqlparse-0.5.5-py3-none-any.whl.metadata (4.7 kB)
+#10 309.0 Collecting typing-extensions<5,>=4.0.0 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#10 309.0 Collecting uvicorn<1 (from mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
+#10 309.0 Collecting Mako (from alembic!=1.10.0,<2->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached mako-1.3.10-py3-none-any.whl.metadata (2.9 kB)
+#10 309.0 Collecting tomli (from alembic!=1.10.0,<2->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
+#10 309.0 Collecting cffi>=2.0.0 (from cryptography<47,>=43.0.0->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+#10 309.0 Collecting google-auth~=2.0 (from databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached google_auth-2.47.0-py3-none-any.whl.metadata (6.4 kB)
+#10 309.0 Collecting urllib3>=1.26.0 (from docker<8,>=4.0.0->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached urllib3-2.6.3-py3-none-any.whl.metadata (6.9 kB)
+#10 309.0 Collecting starlette<0.51.0,>=0.40.0 (from fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached starlette-0.50.0-py3-none-any.whl.metadata (6.3 kB)
+#10 309.0 Collecting annotated-doc>=0.0.2 (from fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+#10 309.0 Collecting blinker>=1.9.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached blinker-1.9.0-py3-none-any.whl.metadata (1.6 kB)
+#10 309.0 Collecting itsdangerous>=2.2.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+#10 309.0 Collecting jinja2>=3.1.2 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+#10 309.0 Collecting markupsafe>=2.1.1 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#10 309.0 Collecting werkzeug>=3.1.0 (from Flask<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached werkzeug-3.1.5-py3-none-any.whl.metadata (4.0 kB)
+#10 309.0 Collecting smmap<6,>=3.0.1 (from gitdb<5,>=4.0.1->gitpython==3.1.40->-r /model/condaenv.q38hp7ro.requirements.txt (line 8))
+#10 309.0   Using cached smmap-5.0.2-py3-none-any.whl.metadata (4.3 kB)
+#10 309.0 Collecting pyasn1-modules>=0.2.1 (from google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+#10 309.0 Collecting rsa<5,>=3.1.4 (from google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+#10 309.0 Collecting graphql-core<3.3,>=3.1 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached graphql_core-3.2.7-py3-none-any.whl.metadata (11 kB)
+#10 309.0 Collecting graphql-relay<3.3,>=3.1 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached graphql_relay-3.2.0-py3-none-any.whl.metadata (12 kB)
+#10 309.0 Collecting python-dateutil<3,>=2.7.0 (from graphene<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+#10 309.0 Collecting zipp>=3.20 (from importlib_metadata!=4.7.0,<9,>=3.7.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
+#10 309.0 Collecting contourpy>=1.0.1 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
+#10 309.0 Collecting cycler>=0.10 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+#10 309.0 Collecting fonttools>=4.22.0 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
+#10 309.0 Collecting kiwisolver>=1.3.1 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
+#10 309.0 Collecting pillow>=8 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pillow-12.1.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+#10 309.0 Collecting pyparsing>=3 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pyparsing-3.3.1-py3-none-any.whl.metadata (5.6 kB)
+#10 309.0 Collecting opentelemetry-semantic-conventions==0.60b1 (from opentelemetry-sdk<3,>=1.9.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl.metadata (2.4 kB)
+#10 309.0 Collecting pytz>=2020.1 (from pandas<3->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+#10 309.0 Collecting tzdata>=2022.7 (from pandas<3->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached tzdata-2025.3-py2.py3-none-any.whl.metadata (1.4 kB)
+#10 309.0 Collecting annotated-types>=0.6.0 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+#10 309.0 Collecting pydantic-core==2.41.5 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pydantic_core-2.41.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+#10 309.0 Collecting typing-inspection>=0.4.2 (from pydantic<3,>=2.0.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+#10 309.0 Collecting six>=1.5 (from python-dateutil<3,>=2.7.0->graphene<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+#10 309.0 Collecting charset_normalizer<4,>=2 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+#10 309.0 Collecting idna<4,>=2.5 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+#10 309.0 Collecting certifi>=2017.4.17 (from requests<3,>=2.17.3->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached certifi-2026.1.4-py3-none-any.whl.metadata (2.5 kB)
+#10 309.0 Collecting pyasn1>=0.1.3 (from rsa<5,>=3.1.4->google-auth~=2.0->databricks-sdk<1,>=0.20.0->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+#10 309.0 Collecting joblib>=1.2.0 (from scikit-learn<2->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
+#10 309.0 Collecting threadpoolctl>=3.1.0 (from scikit-learn<2->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+#10 309.0 Collecting greenlet>=1 (from sqlalchemy<3,>=1.4.0->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached greenlet-3.3.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (4.1 kB)
+#10 309.0 Collecting anyio<5,>=3.6.2 (from starlette<0.51.0,>=0.40.0->fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached anyio-4.12.1-py3-none-any.whl.metadata (4.3 kB)
+#10 309.0 Collecting exceptiongroup>=1.0.2 (from anyio<5,>=3.6.2->starlette<0.51.0,>=0.40.0->fastapi<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
+#10 309.0 Collecting h11>=0.8 (from uvicorn<1->mlflow-skinny==3.8.1->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#10 309.0 Collecting audioread>=2.1.9 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached audioread-3.1.0-py3-none-any.whl.metadata (9.0 kB)
+#10 309.0 Collecting numba>=0.51.0 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
+#10 309.0 Collecting decorator>=4.3.0 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+#10 309.0 Collecting pooch>=1.1 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached pooch-1.8.2-py3-none-any.whl.metadata (10 kB)
+#10 309.0 Collecting lazy_loader>=0.1 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
+#10 309.0 Collecting msgpack>=1.0 (from librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+#10 309.0 INFO: pip is looking at multiple versions of opencv-python-headless to determine which version is compatible with other requirements. This could take a while.
+#10 309.0 Collecting opencv-python-headless (from -r /model/condaenv.q38hp7ro.requirements.txt (line 11))
+#10 309.0   Using cached opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+#10 309.0 Collecting proglog<=1.0.0 (from moviepy->-r /model/condaenv.q38hp7ro.requirements.txt (line 15))
+#10 309.0   Using cached proglog-0.1.12-py3-none-any.whl.metadata (794 bytes)
+#10 309.0 Collecting pillow>=8 (from matplotlib<4->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
+#10 309.0 Collecting absl-py~=2.3 (from mediapipe>=0.10.9->-r /model/condaenv.q38hp7ro.requirements.txt (line 16))
+#10 309.0   Using cached absl_py-2.3.1-py3-none-any.whl.metadata (3.3 kB)
+#10 309.0 Collecting sounddevice~=0.5 (from mediapipe>=0.10.9->-r /model/condaenv.q38hp7ro.requirements.txt (line 16))
+#10 309.0   Using cached sounddevice-0.5.3-py3-none-any.whl.metadata (1.6 kB)
+#10 309.0 Collecting antlr4-python3-runtime==4.9.* (from omegaconf->-r /model/condaenv.q38hp7ro.requirements.txt (line 19))
+#10 309.0   Using cached antlr4_python3_runtime-4.9.3-py3-none-any.whl
+#10 309.0 Collecting filelock (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached filelock-3.20.3-py3-none-any.whl.metadata (2.1 kB)
+#10 309.0 Collecting fsspec>=2023.5.0 (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached fsspec-2026.1.0-py3-none-any.whl.metadata (10 kB)
+#10 309.0 Collecting hf-xet<2.0.0,>=1.2.0 (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+#10 309.0 Collecting httpx<1,>=0.23.0 (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+#10 309.0 Collecting shellingham (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+#10 309.0 Collecting typer-slim (from huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached typer_slim-0.21.1-py3-none-any.whl.metadata (16 kB)
+#10 309.0 Collecting httpcore==1.* (from httpx<1,>=0.23.0->huggingface_hub->-r /model/condaenv.q38hp7ro.requirements.txt (line 20))
+#10 309.0   Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#10 309.0 Collecting networkx>=3.0 (from scikit-image->-r /model/condaenv.q38hp7ro.requirements.txt (line 23))
+#10 309.0   Using cached networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
+#10 309.0 Collecting tifffile>=2022.8.12 (from scikit-image->-r /model/condaenv.q38hp7ro.requirements.txt (line 23))
+#10 309.0   Using cached tifffile-2025.5.10-py3-none-any.whl.metadata (31 kB)
+#10 309.0 Collecting pycparser (from cffi>=2.0.0->cryptography<47,>=43.0.0->mlflow==3.8.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 26))
+#10 309.0   Using cached pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+#10 309.0 Collecting llvmlite<0.47,>=0.46.0dev0 (from numba>=0.51.0->librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.0 kB)
+#10 309.0 Collecting platformdirs>=2.5.0 (from pooch>=1.1->librosa>=0.10.1->-r /model/condaenv.q38hp7ro.requirements.txt (line 9))
+#10 309.0   Using cached platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+#10 309.0 Collecting humanfriendly>=9.1 (from coloredlogs->onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached humanfriendly-10.0-py2.py3-none-any.whl.metadata (9.2 kB)
+#10 309.0 Collecting mpmath<1.4,>=1.1.0 (from sympy->onnxruntime-gpu==1.16.3->-r /model/condaenv.q38hp7ro.requirements.txt (line 6))
+#10 309.0   Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#10 309.0 Using cached cuda_python-12.2.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20.1 MB)
+#10 309.0 Using cached onnxruntime_gpu-1.16.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (157.1 MB)
+#10 309.0 Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+#10 309.0 Using cached GitPython-3.1.40-py3-none-any.whl (190 kB)
+#10 309.0 Using cached ml_dtypes-0.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+#10 309.0 Using cached mlflow-3.8.1-py3-none-any.whl (9.1 MB)
+#10 309.0 Using cached mlflow_skinny-3.8.1-py3-none-any.whl (2.5 MB)
+#10 309.0 Using cached mlflow_tracing-3.8.1-py3-none-any.whl (1.4 MB)
+#10 309.0 Using cached alembic-1.18.0-py3-none-any.whl (260 kB)
+#10 309.0 Using cached cachetools-6.2.4-py3-none-any.whl (11 kB)
+#10 309.0 Using cached click-8.3.1-py3-none-any.whl (108 kB)
+#10 309.0 Using cached cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+#10 309.0 Using cached cryptography-46.0.3-cp38-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+#10 309.0 Using cached databricks_sdk-0.77.0-py3-none-any.whl (779 kB)
+#10 309.0 Using cached docker-7.1.0-py3-none-any.whl (147 kB)
+#10 309.0 Using cached fastapi-0.128.0-py3-none-any.whl (103 kB)
+#10 309.0 Using cached flask-3.1.2-py3-none-any.whl (103 kB)
+#10 309.0 Using cached flask_cors-6.0.2-py3-none-any.whl (13 kB)
+#10 309.0 Using cached gitdb-4.0.12-py3-none-any.whl (62 kB)
+#10 309.0 Using cached google_auth-2.47.0-py3-none-any.whl (234 kB)
+#10 309.0 Using cached graphene-3.4.3-py2.py3-none-any.whl (114 kB)
+#10 309.0 Using cached graphql_core-3.2.7-py3-none-any.whl (207 kB)
+#10 309.0 Using cached graphql_relay-3.2.0-py3-none-any.whl (16 kB)
+#10 309.0 Using cached gunicorn-23.0.0-py3-none-any.whl (85 kB)
+#10 309.0 Using cached huey-2.6.0-py3-none-any.whl (76 kB)
+#10 309.0 Using cached importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
+#10 309.0 Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+#10 309.0 Using cached opentelemetry_api-1.39.1-py3-none-any.whl (66 kB)
+#10 309.0 Using cached opentelemetry_proto-1.39.1-py3-none-any.whl (72 kB)
+#10 309.0 Using cached opentelemetry_sdk-1.39.1-py3-none-any.whl (132 kB)
+#10 309.0 Using cached opentelemetry_semantic_conventions-0.60b1-py3-none-any.whl (219 kB)
+#10 309.0 Using cached packaging-25.0-py3-none-any.whl (66 kB)
+#10 309.0 Using cached pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.8 MB)
+#10 309.0 Using cached protobuf-6.33.3-cp39-abi3-manylinux2014_x86_64.whl (323 kB)
+#10 309.0 Using cached pyarrow-22.0.0-cp310-cp310-manylinux_2_28_x86_64.whl (47.6 MB)
+#10 309.0 Using cached pydantic-2.12.5-py3-none-any.whl (463 kB)
+#10 309.0 Using cached pydantic_core-2.41.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+#10 309.0 Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+#10 309.0 Using cached python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+#10 309.0 Using cached pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (770 kB)
+#10 309.0 Using cached requests-2.32.5-py3-none-any.whl (64 kB)
+#10 309.0 Using cached charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (153 kB)
+#10 309.0 Using cached idna-3.11-py3-none-any.whl (71 kB)
+#10 309.0 Using cached rsa-4.9.1-py3-none-any.whl (34 kB)
+#10 309.0 Using cached scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.7 MB)
+#10 309.0 Using cached scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+#10 309.0 Using cached smmap-5.0.2-py3-none-any.whl (24 kB)
+#10 309.0 Using cached sqlalchemy-2.0.45-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.2 MB)
+#10 309.0 Using cached sqlparse-0.5.5-py3-none-any.whl (46 kB)
+#10 309.0 Using cached starlette-0.50.0-py3-none-any.whl (74 kB)
+#10 309.0 Using cached anyio-4.12.1-py3-none-any.whl (113 kB)
+#10 309.0 Using cached typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#10 309.0 Using cached urllib3-2.6.3-py3-none-any.whl (131 kB)
+#10 309.0 Using cached uvicorn-0.40.0-py3-none-any.whl (68 kB)
+#10 309.0 Using cached librosa-0.11.0-py3-none-any.whl (260 kB)
+#10 309.0 Using cached imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+#10 309.0 Using cached opencv_python_headless-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (50.0 MB)
+#10 309.0 Using cached soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl (1.3 MB)
+#10 309.0 Using cached soxr-1.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (242 kB)
+#10 309.0 Using cached imageio-2.37.2-py3-none-any.whl (317 kB)
+#10 309.0 Using cached moviepy-2.2.1-py3-none-any.whl (129 kB)
+#10 309.0 Using cached decorator-5.2.1-py3-none-any.whl (9.2 kB)
+#10 309.0 Using cached pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (6.6 MB)
+#10 309.0 Using cached proglog-0.1.12-py3-none-any.whl (6.3 kB)
+#10 309.0 Using cached mediapipe-0.10.31-py3-none-manylinux_2_28_x86_64.whl (10.3 MB)
+#10 309.0 Using cached absl_py-2.3.1-py3-none-any.whl (135 kB)
+#10 309.0 Using cached flatbuffers-25.12.19-py2.py3-none-any.whl (26 kB)
+#10 309.0 Using cached sounddevice-0.5.3-py3-none-any.whl (32 kB)
+#10 309.0 Using cached einops-0.8.1-py3-none-any.whl (64 kB)
+#10 309.0 Using cached omegaconf-2.3.0-py3-none-any.whl (79 kB)
+#10 309.0 Using cached huggingface_hub-1.3.1-py3-none-any.whl (533 kB)
+#10 309.0 Using cached hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+#10 309.0 Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+#10 309.0 Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+#10 309.0 Using cached filetype-1.2.0-py2.py3-none-any.whl (19 kB)
+#10 309.0 Using cached tqdm-4.67.1-py3-none-any.whl (78 kB)
+#10 309.0 Using cached scikit_image-0.25.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (14.8 MB)
+#10 309.0 Using cached colored-2.3.1-py3-none-any.whl (19 kB)
+#10 309.0 Using cached annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+#10 309.0 Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
+#10 309.0 Using cached audioread-3.1.0-py3-none-any.whl (23 kB)
+#10 309.0 Using cached blinker-1.9.0-py3-none-any.whl (8.5 kB)
+#10 309.0 Using cached certifi-2026.1.4-py3-none-any.whl (152 kB)
+#10 309.0 Using cached cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (216 kB)
+#10 309.0 Using cached contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
+#10 309.0 Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+#10 309.0 Using cached exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
+#10 309.0 Using cached fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
+#10 309.0 Using cached fsspec-2026.1.0-py3-none-any.whl (201 kB)
+#10 309.0 Using cached greenlet-3.3.0-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (586 kB)
+#10 309.0 Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+#10 309.0 Using cached itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+#10 309.0 Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+#10 309.0 Using cached joblib-1.5.3-py3-none-any.whl (309 kB)
+#10 309.0 Using cached kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+#10 309.0 Using cached lazy_loader-0.4-py3-none-any.whl (12 kB)
+#10 309.0 Using cached markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (20 kB)
+#10 309.0 Using cached msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (406 kB)
+#10 309.0 Using cached networkx-3.4.2-py3-none-any.whl (1.7 MB)
+#10 309.0 Using cached numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+#10 309.0 Using cached llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+#10 309.0 Using cached pooch-1.8.2-py3-none-any.whl (64 kB)
+#10 309.0 Using cached platformdirs-4.5.1-py3-none-any.whl (18 kB)
+#10 309.0 Using cached pyasn1-0.6.1-py3-none-any.whl (83 kB)
+#10 309.0 Using cached pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+#10 309.0 Using cached pyparsing-3.3.1-py3-none-any.whl (121 kB)
+#10 309.0 Using cached pytz-2025.2-py2.py3-none-any.whl (509 kB)
+#10 309.0 Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+#10 309.0 Using cached threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+#10 309.0 Using cached tifffile-2025.5.10-py3-none-any.whl (226 kB)
+#10 309.0 Using cached typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+#10 309.0 Using cached tzdata-2025.3-py2.py3-none-any.whl (348 kB)
+#10 309.0 Using cached werkzeug-3.1.5-py3-none-any.whl (225 kB)
+#10 309.0 Using cached zipp-3.23.0-py3-none-any.whl (10 kB)
+#10 309.0 Using cached coloredlogs-15.0.1-py2.py3-none-any.whl (46 kB)
+#10 309.0 Using cached humanfriendly-10.0-py2.py3-none-any.whl (86 kB)
+#10 309.0 Using cached cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
+#10 309.0 Using cached filelock-3.20.3-py3-none-any.whl (16 kB)
+#10 309.0 Using cached mako-1.3.10-py3-none-any.whl (78 kB)
+#10 309.0 Using cached pycparser-2.23-py3-none-any.whl (118 kB)
+#10 309.0 Using cached shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+#10 309.0 Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#10 309.0 Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+#10 309.0 Using cached tomli-2.4.0-py3-none-any.whl (14 kB)
+#10 309.0 Using cached typer_slim-0.21.1-py3-none-any.whl (47 kB)
+#10 309.0 Building wheels for collected packages: tensorrt
+#10 309.0   Building wheel for tensorrt (pyproject.toml): started
+#10 309.0   Building wheel for tensorrt (pyproject.toml): finished with status 'error'
+#10 309.0 Failed to build tensorrt
+#10 309.1 
+#10 309.1 failed
+#10 309.1 
+#10 309.1 CondaEnvException: Pip failed
+#10 309.1 
+#10 309.1 Failed to create conda environment after 5 attempts.
+#10 ERROR: process "/bin/sh -c echo $BUILD_LOG_START_DELIMITER &&     cat model/conda.yaml &&     echo $USE_DATABRICKS_REPO &&     if [ \"$USE_DATABRICKS_REPO\" = \"true\" ]; then         bash conda-env-create.sh --max-retries 5 --use-databricks-repo --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     else         bash conda-env-create.sh --max-retries 5 --use-private-python-repo $USE_PRIVATE_PYTHON_REPO;     fi &&     echo ${EXTRA_INSTALL_COMMANDS} &&     eval ${EXTRA_INSTALL_COMMANDS} &&     echo $BUILD_LOG_CONDA_END_DELIMITER &&     echo $BUILD_LOG_END_DELIMITER &&     conda clean -afy" did not complete successfully: exit code: 1
+------
