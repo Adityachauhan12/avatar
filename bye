@@ -1,168 +1,77 @@
-# CELL 5 - COPY CHECKPOINTS TO MODEL ARTIFACT BEFORE LOGGING
+from cell 4 
 
-import subprocess
-import sys
-import shutil
-import os
+            import traceback
+            return {"status": "error", "message": f"Error: {str(e)}\n{traceback.format_exc()}"}
 
-print("📦 Installing PyYAML...")
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
+print("✅ Model class defined")
+✅ Model class defined
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/utils/data_validation.py:186: UserWarning: Add type hints to the `predict` method to enable data validation and automatic signature inference during model logging. Check https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel for more details.
+  color_warning(
 
-import mlflow
-from mlflow.models.signature import infer_signature
-import pandas as pd
-import yaml
-import tempfile
-import git
+from cell 5
 
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment("/Shared/ditto_experiment")
+📦 Installing PyYAML...
 
-# Define Signature
-test_input = pd.DataFrame({
-    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],
-    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]
-})
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+📦 Creating conda.yaml with PyTorch...
+✅ Conda environment created
+🔄 Preparing repo with checkpoints...
+   Cloning repo...
+   Applying np.atan2 patch...
+   Downloading config from HuggingFace...
 
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."]
-})
 
-signature = infer_signature(test_input, test_output)
 
-print("📦 Creating conda.yaml with PyTorch...")
 
-# CREATE CONDA ENV - WITH PYTORCH
-conda_env = {
-    "name": "ditto-env",
-    "channels": ["conda-forge", "defaults"],
-    "dependencies": [
-        "python=3.10",
-        "pip",
-        {
-            "pip": [
-                "--extra-index-url https://pypi.nvidia.com",
-                # PyTorch (MUST come before TensorRT)
-                "torch==2.1.2",
-                "torchvision==0.16.2",
-                "torchaudio==2.1.2",
-                # TensorRT
-                "tensorrt==9.3.0.post12.dev1",
-                "cuda-python==12.2.0",
-                "onnxruntime-gpu==1.16.3",
-                "numpy==1.26.4",
-                "gitpython==3.1.40",
-                "librosa>=0.10.1",
-                "imageio-ffmpeg",
-                "opencv-python-headless",
-                "soundfile",
-                "soxr",
-                "imageio",
-                "moviepy",
-                "mediapipe>=0.10.9",
-                "ml_dtypes==0.4.0",
-                "einops",
-                "omegaconf",
-                "huggingface_hub",
-                "filetype",
-                "tqdm",
-                "scikit-image",
-                "colored",
-                "polygraphy",
-                "mlflow==3.8.1"
-            ]
-        }
-    ]
-}
+   Copying TensorRT engines...
+      Copying appearance_extractor_fp16.engine...
+      Copying blaze_face_fp16.engine...
+      Copying decoder_fp16.engine...
+      Copying face_mesh_fp16.engine...
+      Copying hubert_fp32.engine...
+      Copying insightface_det_fp16.engine...
+      Copying landmark106_fp16.engine...
+      Copying landmark203_fp16.engine...
+      Copying lmdm_v0.4_hubert_fp32.engine...
+      Copying motion_extractor_fp32.engine...
+      Copying stitch_network_fp16.engine...
+      Copying warp_network_fp16.engine...
+✅ Repo prepared with all checkpoints
+📝 Logging model with artifacts...
+2026/01/12 10:46:20 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-91bf1b36dd874a79819c1a336e9ac636?o=7012066134936526
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
+  color_warning(
 
-conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
-yaml.dump(conda_env, conda_file)
-conda_file.close()
-conda_file_path = conda_file.name
+2026/01/12 10:46:54 WARNING mlflow.utils.requirements_utils: Detected one or more mismatches between the model's dependencies and the current Python environment:
+ - torch (current: 2.9.1, required: torch==2.1.2)
+ - torchvision (current: 0.15.2+cu118, required: torchvision==0.16.2)
+ - torchaudio (current: 2.9.1, required: torchaudio==2.1.2)
+ - tensorrt (current: uninstalled, required: tensorrt==9.3.0.post12.dev1)
+ - cuda-python (current: uninstalled, required: cuda-python==12.2.0)
+ - onnxruntime-gpu (current: uninstalled, required: onnxruntime-gpu==1.16.3)
+ - numpy (current: 1.23.5, required: numpy==1.26.4)
+ - gitpython (current: 3.1.27, required: gitpython==3.1.40)
+ - imageio-ffmpeg (current: uninstalled, required: imageio-ffmpeg)
+ - opencv-python-headless (current: uninstalled, required: opencv-python-headless)
+ - imageio (current: uninstalled, required: imageio)
+ - moviepy (current: uninstalled, required: moviepy)
+ - mediapipe (current: uninstalled, required: mediapipe>=0.10.9)
+ - ml_dtypes (current: 0.2.0, required: ml_dtypes==0.4.0)
+ - omegaconf (current: uninstalled, required: omegaconf)
+ - filetype (current: uninstalled, required: filetype)
+ - scikit-image (current: uninstalled, required: scikit-image)
+ - colored (current: uninstalled, required: colored)
+ - polygraphy (current: uninstalled, required: polygraphy)
+To fix the mismatches, call `mlflow.pyfunc.get_model_dependencies(model_uri)` to fetch the model's environment and install dependencies using the resulting environment file.
+✅ Model Logged with artifacts. Run ID: 6782d8b2422b4e068d3ee1c332327fc8
+Registered model 'lab37_catalog.ifstrolley.ditto_talkinghead' already exists. Creating a new version of this model...
+2026/01/12 10:47:10 WARNING mlflow.tracking._model_registry.fluent: Run with id 6782d8b2422b4e068d3ee1c332327fc8 has no artifacts at artifact path 'ditto_talking_head', registering model based on models:/m-91bf1b36dd874a79819c1a336e9ac636 instead
 
-print(f"✅ Conda environment created")
 
-# ✅ SETUP REPO WITH CHECKPOINTS
-print("🔄 Preparing repo with checkpoints...")
-repo_dir = "/tmp/ditto-model-artifact"
-if os.path.exists(repo_dir):
-    shutil.rmtree(repo_dir)
-os.makedirs(repo_dir, exist_ok=True)
 
-# Clone repo
-print("   Cloning repo...")
-git.Repo.clone_from(
-    "https://github.com/antgroup/ditto-talkinghead.git",
-    repo_dir,
-    depth=1
-)
-
-# Apply patch
-print("   Applying np.atan2 patch...")
-patch_file = os.path.join(repo_dir, "core/aux_models/mediapipe_landmark478.py")
-with open(patch_file, "r") as f:
-    content = f.read()
-if "np.atan2" in content:
-    with open(patch_file, "w") as f:
-        f.write(content.replace("np.atan2", "np.arctan2"))
-
-# Download config from HF
-print("   Downloading config from HuggingFace...")
-from huggingface_hub import snapshot_download
-checkpoint_dir = os.path.join(repo_dir, "checkpoints")
-os.makedirs(checkpoint_dir, exist_ok=True)
-snapshot_download(
-    repo_id="digital-avatar/ditto-talkinghead",
-    local_dir=checkpoint_dir,
-    allow_patterns=["ditto_cfg/*"],
-    cache_dir=checkpoint_dir
-)
-
-# ✅ COPY TensorRT engines to repo
-print("   Copying TensorRT engines...")
-dbfs_checkpoint = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-local_checkpoint = os.path.join(repo_dir, "checkpoints", "ditto_trt_t4")
-os.makedirs(local_checkpoint, exist_ok=True)
-
-for file in os.listdir(dbfs_checkpoint):
-    src = os.path.join(dbfs_checkpoint, file)
-    dst = os.path.join(local_checkpoint, file)
-    if os.path.isfile(src):
-        print(f"      Copying {file}...")
-        shutil.copy2(src, dst)
-
-print("✅ Repo prepared with all checkpoints")
-
-# Log with artifacts
-print("📝 Logging model with artifacts...")
-with mlflow.start_run() as run:
-    mlflow.pyfunc.log_model(
-        artifact_path="ditto_talking_head",
-        python_model=DittoTalkingHeadModel(),
-        signature=signature,
-        conda_env=conda_file_path,
-        pip_requirements=None,
-        artifacts={"repo": repo_dir}  # ✅ INCLUDE REPO AS ARTIFACT
-    )
-    run_id = run.info.run_id
-
-print(f"✅ Model Logged with artifacts. Run ID: {run_id}")
-
-uc_model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head",
-        name=uc_model_name
-    )
-    print(f"✅ SUCCESS! Registered Version: {model_version.version}")
-    print(f"👉 Go to Serving → ditto_with_base64 → Update to Version {model_version.version}")
-except Exception as e:
-    print(f"❌ Error: {e}")
-
-try:
-    os.unlink(conda_file_path)
-except:
-    pass
+WARNING:urllib3.connectionpool:Connection pool is full, discarding connection: dbstoragekjgtjvcce5eio.dfs.core.windows.net. Connection pool size: 10
+🔗 Created version '16' of model 'lab37_catalog.ifstrolley.ditto_talkinghead': https://adb-7012066134936526.6.azuredatabricks.net/explore/data/models/lab37_catalog/ifstrolley/ditto_talkinghead/version/16?o=7012066134936526
+✅ SUCCESS! Registered Version: 16
+👉 Go to Serving → ditto_with_base64 → Update to Version 16
