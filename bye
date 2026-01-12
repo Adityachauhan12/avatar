@@ -1,4 +1,112 @@
-✅ Model class defined
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/utils/data_validation.py:186: UserWarning: Add type hints to the `predict` method to enable data validation and automatic signature inference during model logging. Check https://mlflow.org/docs/latest/model/python_model.html#type-hint-usage-in-pythonmodel for more details.
-  color_warning(
-took less than 1 sec
+# CELL 5 - FINAL UPDATE (Add PyTorch)
+
+import subprocess
+import sys
+
+print("📦 Installing PyYAML...")
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
+
+import mlflow
+from mlflow.models.signature import infer_signature
+import pandas as pd
+import yaml
+import tempfile
+import os
+
+mlflow.set_registry_uri("databricks-uc")
+mlflow.set_experiment("/Shared/ditto_experiment")
+
+# Define Signature
+test_input = pd.DataFrame({
+    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],
+    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]
+})
+
+test_output = pd.DataFrame({
+    "status": ["success"],
+    "message": ["Video generated"],
+    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."]
+})
+
+signature = infer_signature(test_input, test_output)
+
+print("📦 Creating conda.yaml with PyTorch...")
+
+# CREATE CONDA ENV - WITH PYTORCH
+conda_env = {
+    "name": "ditto-env",
+    "channels": ["conda-forge", "defaults"],
+    "dependencies": [
+        "python=3.10",
+        "pip",
+        {
+            "pip": [
+                "--extra-index-url https://pypi.nvidia.com",
+                # PyTorch (MUST come before TensorRT)
+                "torch==2.1.2",
+                "torchvision==0.16.2",
+                "torchaudio==2.1.2",
+                # TensorRT
+                "tensorrt==9.3.0.post12.dev1",
+                "cuda-python==12.2.0",
+                "onnxruntime-gpu==1.16.3",
+                "numpy==1.26.4",
+                "gitpython==3.1.40",
+                "librosa>=0.10.1",
+                "imageio-ffmpeg",
+                "opencv-python-headless",
+                "soundfile",
+                "soxr",
+                "imageio",
+                "moviepy",
+                "mediapipe>=0.10.9",
+                "ml_dtypes==0.4.0",
+                "einops",
+                "omegaconf",
+                "huggingface_hub",
+                "filetype",
+                "tqdm",
+                "scikit-image",
+                "colored",
+                "polygraphy",
+                "mlflow==3.8.1"
+            ]
+        }
+    ]
+}
+
+conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
+yaml.dump(conda_env, conda_file)
+conda_file.close()
+conda_file_path = conda_file.name
+
+print(f"✅ Conda environment created")
+
+with mlflow.start_run() as run:
+    mlflow.pyfunc.log_model(
+        artifact_path="ditto_talking_head",
+        python_model=DittoTalkingHeadModel(),
+        signature=signature,
+        conda_env=conda_file_path,
+        pip_requirements=None
+    )
+    run_id = run.info.run_id
+
+print(f"✅ Model Logged. Run ID: {run_id}")
+
+uc_model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
+
+try:
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_talking_head",
+        name=uc_model_name
+    )
+    print(f"✅ SUCCESS! Registered Version: {model_version.version}")
+    print(f"👉 Go to Serving → ditto_with_base64 → Update to Version {model_version.version}")
+except Exception as e:
+    print(f"❌ Error: {e}")
+
+try:
+    os.unlink(conda_file_path)
+except:
+    pass
