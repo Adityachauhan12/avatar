@@ -1,44 +1,33 @@
-# CELL 2: Install Ditto Dependencies (Simplified)
-# ============
+🔥 Installing Ditto requirements...
+============================================================
 
-import os
+📦 Installing core Ditto dependencies...
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 1.26.4 which is incompatible.
+ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
+tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.4 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.8.1 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.4 which is incompatible.
 
-# Change to repo directory
-os.chdir("/tmp/ditto-build-8.6")
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+✅ Core dependencies installed
 
-print("🔥 Installing Ditto requirements...")
-print("=" * 60)
+📂 Files in current directory (11 total):
+   .git
+   .gitignore
+   LICENSE
+   README.md
+   core
+   environment.yaml
+   example
+   inference.py
+   scripts
+   stream_pipeline_offline.py
+   ✅ scripts/ directory exists
+   ✅ core/ directory exists
 
-# Install Ditto deps directly (skip PyTorch re-install)
-print("\n📦 Installing core Ditto dependencies...")
-subprocess.check_call([
-    sys.executable, "-m", "pip", "install", "-q",
-    "numpy==1.26.4",
-    "opencv-python-headless",
-    "librosa",
-    "imageio-ffmpeg",
-    "einops",
-    "omegaconf",
-    "huggingface_hub",
-    "mediapipe>=0.10.9",
-    "onnxruntime-gpu==1.16.3",
-    "polygraphy",
-])
-
-print("✅ Core dependencies installed")
-
-# List files to confirm we're in right directory
-files = os.listdir(".")
-print(f"\n📂 Files in current directory ({len(files)} total):")
-for f in sorted(files)[:10]:
-    print(f"   {f}")
-
-if os.path.exists("checkpoints"):
-    print("   ✅ checkpoints/ directory exists")
-if os.path.exists("scripts"):
-    print("   ✅ scripts/ directory exists")
-if os.path.exists("core"):
-    print("   ✅ core/ directory exists")
-
-print("\n✅ CELL 2 COMPLETE!")
-print("Next: Download ONNX models from HuggingFace...")
+✅ CELL 2 COMPLETE!
+Next: Download ONNX models from HuggingFace...
