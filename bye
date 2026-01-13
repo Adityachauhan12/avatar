@@ -1,4 +1,15 @@
-exec(open("/path/to/trt_wrapper_fix.py").read())
+got this just now (<1s)
+8
+8
+    print("Could not find exact line. Manual edit needed.")
+
+# Write back
+with open(tensorrt_utils_path, "w") as f:
+    f.write(content)
+
+print("✅ Saved to:", tensorrt_utils_path)
+✅ Patched tensorrt_utils.py
+✅ Saved to: /tmp/ditto-rebuild/core/utils/tensorrt_utils.py on running
 
 import shutil
 
