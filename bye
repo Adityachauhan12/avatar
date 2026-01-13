@@ -1,22 +1,172 @@
-# CELL 5: Convert ONNX -> TensorRT engines (custom for this GPU)
-
-import os, sys, subprocess
-
-os.chdir("/tmp/ditto-build-8.6")
-print("📂 CWD:", os.getcwd())
-
-onnx_dir = "./checkpoints/ditto_onnx"
-trt_dir  = "./checkpoints/ditto_trt_custom"
-
-print("ONNX dir:", onnx_dir)
-print("TRT  dir:", trt_dir)
-
-cmd = [
-    sys.executable, "scripts/cvt_onnx_to_trt.py",
-    "--onnx_dir", onnx_dir,
-    "--trt_dir", trt_dir,
-]
-print("Running:", " ".join(cmd))
-
-subprocess.check_call(cmd)
-print("✅ ONNX -> TRT conversion finished")
+📂 CWD: /tmp/ditto-build-8.6
+ONNX dir: ./checkpoints/ditto_onnx
+TRT  dir: ./checkpoints/ditto_trt_custom
+Running: /local_disk0/.ephemeral_nfs/envs/pythonEnv-7aa03194-1402-4d48-958e-fe98b15bd138/bin/python scripts/cvt_onnx_to_trt.py --onnx_dir ./checkpoints/ditto_onnx --trt_dir ./checkpoints/ditto_trt_custom
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+[01/13/2026-07:59:37] [TRT] [I] [MemUsageChange] Init CUDA: CPU +13, GPU +0, now: CPU 126, GPU 105 (MiB)
+[01/13/2026-07:59:44] [TRT] [I] [MemUsageChange] Init builder kernel library: CPU +889, GPU +174, now: CPU 1091, GPU 279 (MiB)
+[01/13/2026-07:59:44] [TRT] [I] ----------------------------------------------------------------
+[01/13/2026-07:59:44] [TRT] [I] Input filename:   ./checkpoints/ditto_onnx/warp_network.onnx
+[01/13/2026-07:59:44] [TRT] [I] ONNX IR version:  0.0.10
+[01/13/2026-07:59:44] [TRT] [I] Opset version:    17
+[01/13/2026-07:59:44] [TRT] [I] Producer name:    pytorch
+[01/13/2026-07:59:44] [TRT] [I] Producer version: 2.4.0
+[01/13/2026-07:59:44] [TRT] [I] Domain:           
+[01/13/2026-07:59:44] [TRT] [I] Model version:    0
+[01/13/2026-07:59:44] [TRT] [I] Doc string:       
+[01/13/2026-07:59:44] [TRT] [I] ----------------------------------------------------------------
+[01/13/2026-07:59:44] [TRT] [W] onnx2trt_utils.cpp:374: Your ONNX model has been generated with INT64 weights, while TensorRT does not natively support INT64. Attempting to cast down to INT32.
+[01/13/2026-07:59:44] [TRT] [I] No importer registered for op: GridSample3D. Attempting to import as plugin.
+[01/13/2026-07:59:44] [TRT] [I] Searching for plugin: GridSample3D, plugin_version: 1, plugin_namespace: 
+paddingMode: 0
+interpolationMode: 0
+[01/13/2026-07:59:44] [TRT] [I] Successfully created plugin: GridSample3D
+output datatype: 0
+output datatype: 0
+[01/13/2026-07:59:44] [TRT] [I] No importer registered for op: GridSample3D. Attempting to import as plugin.
+[01/13/2026-07:59:44] [TRT] [I] Searching for plugin: GridSample3D, plugin_version: 1, plugin_namespace: 
+paddingMode: 0
+interpolationMode: 0
+[01/13/2026-07:59:44] [TRT] [I] Successfully created plugin: GridSample3D
+output datatype: 0
+output datatype: 0
+[01/13/2026-07:59:44] [TRT] [I] BuilderFlag::kTF32 is set but hardware does not support TF32. Disabling TF32.
+[01/13/2026-07:59:44] [TRT] [I] [MemUsageChange] Init cuBLAS/cuBLASLt: CPU +6, GPU +10, now: CPU 1288, GPU 289 (MiB)
+[01/13/2026-07:59:45] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +10, GPU +10, now: CPU 1298, GPU 299 (MiB)
+[01/13/2026-07:59:45] [TRT] [I] BuilderFlag::kTF32 is set but hardware does not support TF32. Disabling TF32.
+[01/13/2026-07:59:45] [TRT] [I] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[01/13/2026-07:59:45] [TRT] [I] Graph optimization time: 0.00869953 seconds.
+[01/13/2026-08:04:34] [TRT] [I] Detected 3 inputs and 1 output network tensors.
+[01/13/2026-08:04:35] [TRT] [I] Total Host Persistent Memory: 106016
+[01/13/2026-08:04:35] [TRT] [I] Total Device Persistent Memory: 1024
+[01/13/2026-08:04:35] [TRT] [I] Total Scratch Memory: 0
+[01/13/2026-08:04:35] [TRT] [I] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 92 MiB, GPU 146 MiB
+[01/13/2026-08:04:35] [TRT] [I] [BlockAssignment] Started assigning block shifts. This will take 87 steps to complete.
+[01/13/2026-08:04:35] [TRT] [I] [BlockAssignment] Algorithm ShiftNTopDown took 5.09473ms to assign 9 blocks to 87 nodes requiring 78774784 bytes.
+[01/13/2026-08:04:35] [TRT] [I] Total Activation Memory: 78774272
+[01/13/2026-08:04:35] [TRT] [I] [MemUsageChange] Init cuBLAS/cuBLASLt: CPU +0, GPU +8, now: CPU 1693, GPU 435 (MiB)
+[01/13/2026-08:04:35] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +0, GPU +10, now: CPU 1693, GPU 445 (MiB)
+[01/13/2026-08:04:35] [TRT] [W] TensorRT encountered issues when converting weights between types and that could affect accuracy.
+[01/13/2026-08:04:35] [TRT] [W] If this is not the desired behavior, please modify the weights or retrain with regularization to adjust the magnitude of the weights.
+[01/13/2026-08:04:35] [TRT] [W] Check verbose logs for the list of affected weights.
+[01/13/2026-08:04:35] [TRT] [W] - 18 weights are affected by this issue: Detected subnormal FP16 values.
+[01/13/2026-08:04:35] [TRT] [W] - 10 weights are affected by this issue: Detected values less than smallest positive FP16 subnormal value and converted them to the FP16 minimum subnormalized value.
+[01/13/2026-08:04:35] [TRT] [I] [MemUsageChange] Init cuBLAS/cuBLASLt: CPU +1, GPU +8, now: CPU 1693, GPU 421 (MiB)
+[01/13/2026-08:04:35] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +0, GPU +8, now: CPU 1693, GPU 429 (MiB)
+[01/13/2026-08:04:35] [TRT] [I] BuilderFlag::kTF32 is set but hardware does not support TF32. Disabling TF32.
+[01/13/2026-08:04:35] [TRT] [I] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[01/13/2026-08:04:35] [TRT] [I] Graph optimization time: 0.00579381 seconds.
+[01/13/2026-08:07:23] [TRT] [I] Detected 3 inputs and 1 output network tensors.
+[01/13/2026-08:07:23] [TRT] [I] Total Host Persistent Memory: 21264
+[01/13/2026-08:07:23] [TRT] [I] Total Device Persistent Memory: 0
+[01/13/2026-08:07:23] [TRT] [I] Total Scratch Memory: 39583744
+[01/13/2026-08:07:23] [TRT] [I] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 181 MiB, GPU 362 MiB
+[01/13/2026-08:07:23] [TRT] [I] [BlockAssignment] Started assigning block shifts. This will take 61 steps to complete.
+[01/13/2026-08:07:23] [TRT] [I] [BlockAssignment] Algorithm ShiftNTopDown took 4.75928ms to assign 10 blocks to 61 nodes requiring 122159616 bytes.
+[01/13/2026-08:07:23] [TRT] [I] Total Activation Memory: 122159104
+[01/13/2026-08:07:23] [TRT] [I] [MemUsageChange] Init cuBLAS/cuBLASLt: CPU +0, GPU +8, now: CPU 2019, GPU 445 (MiB)
+[01/13/2026-08:07:23] [TRT] [I] [MemUsageChange] Init cuDNN: CPU +0, GPU +8, now: CPU 2019, GPU 453 (MiB)
+[01/13/2026-08:07:23] [TRT] [I] BuilderFlag::kTF32 is set but hardware does not support TF32. Disabling TF32.
+[01/13/2026-08:07:23] [TRT] [I] Local timing cache in use. Profiling results in this builder pass will not be stored.
+[01/13/2026-08:07:23] [TRT] [I] Graph optimization time: 0.00867954 seconds.
+[01/13/2026-08:08:58] [TRT] [I] Detected 3 inputs and 1 output network tensors.
+[01/13/2026-08:08:59] [TRT] [I] Total Host Persistent Memory: 106272
+[01/13/2026-08:08:59] [TRT] [I] Total Device Persistent Memory: 26112
+[01/13/2026-08:08:59] [TRT] [I] Total Scratch Memory: 0
+[01/13/2026-08:08:59] [TRT] [I] [MemUsageStats] Peak memory usage of TRT CPU/GPU memory allocators: CPU 181 MiB, GPU 362 MiB
+[01/13/2026-08:08:59] [TRT] [I] [BlockAssignment] Started assigning block shifts. This will take 84 steps to complete.
+[01/13/2026-08:08:59] [TRT] [I] [BlockAssignment] Algorithm ShiftNTopDown took 5.07214ms to assign 10 blocks to 84 nodes requiring 77201920 bytes.
+[01/13/2026-08:08:59] [TRT] [I] Total Activation Memory: 77201408
+[01/13/2026-08:08:59] [TRT] [I] [MemUsageChange] TensorRT-managed allocation in building engine: CPU +86, GPU +100, now: CPU 86, GPU 100 (MiB)
+[!] Module: 'tensorrt' is required but could not be imported.
+    Note: Error was: libcublas.so.12: cannot open shared object file: No such file or directory
+    You can set POLYGRAPHY_AUTOINSTALL_DEPS=1 in your environment variables to allow Polygraphy to automatically install missing modules.
+[W] 'colored' module is not installed, will not use colors when logging. To enable colors, please install the 'colored' module: python3 -m pip install colored
+[I] TF32 is disabled by default. Turn on TF32 for better performance with minor accuracy differences.
+==================== blaze_face start ====================
+polygraphy convert ./checkpoints/ditto_onnx/blaze_face.onnx -o ./checkpoints/ditto_trt_custom/blaze_face_fp16.engine  --fp16 --builder-optimization-level=5
+==================== blaze_face done ====================
+==================== insightface_det start ====================
+polygraphy convert ./checkpoints/ditto_onnx/insightface_det.onnx -o ./checkpoints/ditto_trt_custom/insightface_det_fp16.engine  --fp16 --builder-optimization-level=5
+==================== insightface_det done ====================
+==================== face_mesh start ====================
+polygraphy convert ./checkpoints/ditto_onnx/face_mesh.onnx -o ./checkpoints/ditto_trt_custom/face_mesh_fp16.engine  --fp16 --builder-optimization-level=5
+==================== face_mesh done ====================
+==================== hubert start ====================
+polygraphy convert ./checkpoints/ditto_onnx/hubert.onnx -o ./checkpoints/ditto_trt_custom/hubert_fp32.engine   --builder-optimization-level=5 --trt-min-shapes input_values:[1,3240] --trt-max-shapes input_values:[1,12960] --trt-opt-shapes input_values:[1,6480]
+==================== hubert done ====================
+==================== landmark106 start ====================
+polygraphy convert ./checkpoints/ditto_onnx/landmark106.onnx -o ./checkpoints/ditto_trt_custom/landmark106_fp16.engine  --fp16 --builder-optimization-level=5
+==================== landmark106 done ====================
+==================== appearance_extractor start ====================
+polygraphy convert ./checkpoints/ditto_onnx/appearance_extractor.onnx -o ./checkpoints/ditto_trt_custom/appearance_extractor_fp16.engine  --fp16 --builder-optimization-level=5
+==================== appearance_extractor done ====================
+==================== stitch_network start ====================
+polygraphy convert ./checkpoints/ditto_onnx/stitch_network.onnx -o ./checkpoints/ditto_trt_custom/stitch_network_fp16.engine  --fp16 --builder-optimization-level=5
+==================== stitch_network done ====================
+==================== motion_extractor start ====================
+polygraphy convert ./checkpoints/ditto_onnx/motion_extractor.onnx -o ./checkpoints/ditto_trt_custom/motion_extractor_fp32.engine   --builder-optimization-level=5
+==================== motion_extractor done ====================
+==================== lmdm_v0.4_hubert start ====================
+polygraphy convert ./checkpoints/ditto_onnx/lmdm_v0.4_hubert.onnx -o ./checkpoints/ditto_trt_custom/lmdm_v0.4_hubert_fp32.engine   --builder-optimization-level=5
+==================== lmdm_v0.4_hubert done ====================
+==================== decoder start ====================
+polygraphy convert ./checkpoints/ditto_onnx/decoder.onnx -o ./checkpoints/ditto_trt_custom/decoder_fp16.engine  --fp16 --builder-optimization-level=5
+==================== decoder done ====================
+==================== warp_network start ====================
+set /dense_motion_network/GridSample to float32
+set /GridSample to float32
+==================== warp_network done ====================
+==================== landmark203 start ====================
+polygraphy convert ./checkpoints/ditto_onnx/landmark203.onnx -o ./checkpoints/ditto_trt_custom/landmark203_fp16.engine  --fp16 --builder-optimization-level=5
+==================== landmark203 done ====================
+✅ ONNX -> TRT conversion finished
