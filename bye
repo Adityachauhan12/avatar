@@ -1,49 +1,84 @@
-# CELL 2: Clone Repository & Apply Patches
+# CELL 3: Download PyTorch Checkpoints
 print("=" * 60)
-print("📂 Setting Up Ditto Repository")
+print("📥 Downloading PyTorch Checkpoints")
 print("=" * 60)
 
 import os
-import git
-import shutil
+from huggingface_hub import snapshot_download
 
-# Define paths
-REPO_DIR = "/tmp/ditto-talkinghead-pytorch"
-GITHUB_URL = "https://github.com/antgroup/ditto-talkinghead.git"
+# Create checkpoint directories
+CHECKPOINT_DIR = os.path.join(REPO_DIR, "checkpoints")
+PYTORCH_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, "ditto_pytorch")
 
-# Clean up if exists
-if os.path.exists(REPO_DIR):
-    print(f"🧹 Removing existing repo at {REPO_DIR}...")
-    shutil.rmtree(REPO_DIR)
+os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+os.makedirs(PYTORCH_CHECKPOINT_DIR, exist_ok=True)
 
-# Clone repository
-print(f"📥 Cloning repository from {GITHUB_URL}...")
+print(f"📁 Checkpoint directory: {CHECKPOINT_DIR}")
+print(f"📁 PyTorch directory: {PYTORCH_CHECKPOINT_DIR}")
+
+# Download configuration files
+print("\n⬇️  Downloading configuration files...")
 try:
-    repo = git.Repo.clone_from(GITHUB_URL, REPO_DIR, depth=1, branch="main")
-    print("✅ Repository cloned successfully")
+    snapshot_download(
+        repo_id="digital-avatar/ditto-talkinghead",
+        local_dir=CHECKPOINT_DIR,
+        allow_patterns=["ditto_cfg/*"],
+        cache_dir=CHECKPOINT_DIR,
+        local_dir_use_symlinks=False
+    )
+    print("✅ Config files downloaded")
 except Exception as e:
-    print(f"❌ Failed to clone: {e}")
-    raise
+    print(f"⚠️ Could not download config: {e}")
 
-# Apply np.atan2 fix
-print("\n🔧 Applying code patches...")
-patch_file = os.path.join(REPO_DIR, "core/aux_models/mediapipe_landmark478.py")
-if os.path.exists(patch_file):
-    print(f"   Patching {os.path.basename(patch_file)}...")
-    with open(patch_file, "r") as f:
-        content = f.read()
-    if "np.atan2" in content:
-        with open(patch_file, "w") as f:
-            f.write(content.replace("np.atan2", "np.arctan2"))
-        print("   ✅ np.atan2 → np.arctan2 patch applied")
+# Download PyTorch checkpoints
+print("\n⬇️  Downloading PyTorch checkpoints...")
+try:
+    # First try to get from HuggingFace
+    snapshot_download(
+        repo_id="digital-avatar/ditto-talkinghead",
+        local_dir=PYTORCH_CHECKPOINT_DIR,
+        allow_patterns=["ditto_pytorch/*"],
+        cache_dir=PYTORCH_CHECKPOINT_DIR,
+        local_dir_use_symlinks=False
+    )
+    print("✅ PyTorch checkpoints downloaded from HuggingFace")
+    
+    # List downloaded files
+    pytorch_files = os.listdir(PYTORCH_CHECKPOINT_DIR)
+    print(f"   Found {len(pytorch_files)} files")
+    if pytorch_files:
+        print("   Sample files:", pytorch_files[:5])
+        
+except Exception as e:
+    print(f"⚠️ Could not download PyTorch checkpoints: {e}")
+    print("   Will try to use alternative source...")
+    
+    # Alternative: Check if we have checkpoints in DBFS
+    DBFS_CHECKPOINT = "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch"
+    if os.path.exists(DBFS_CHECKPOINT):
+        print(f"✅ Found checkpoints in DBFS: {DBFS_CHECKPOINT}")
+        # Copy to local directory
+        for item in os.listdir(DBFS_CHECKPOINT):
+            src = os.path.join(DBFS_CHECKPOINT, item)
+            dst = os.path.join(PYTORCH_CHECKPOINT_DIR, item)
+            if os.path.isfile(src):
+                shutil.copy2(src, dst)
+                print(f"   Copied: {item}")
     else:
-        print("   ℹ️ Patch not needed (already fixed)")
+        print("❌ No PyTorch checkpoints found!")
+        print("   You may need to download them manually from:")
+        print("   https://huggingface.co/digital-avatar/ditto-talkinghead/tree/main/ditto_pytorch")
+
+# Verify we have the PyTorch config
+PYTORCH_CONFIG = os.path.join(CHECKPOINT_DIR, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl")
+if os.path.exists(PYTORCH_CONFIG):
+    print(f"\n✅ PyTorch config found: {PYTORCH_CONFIG}")
+    print(f"   Size: {os.path.getsize(PYTORCH_CONFIG) / 1024:.1f} KB")
 else:
-    print(f"   ⚠️ Patch file not found: {patch_file}")
+    print(f"\n❌ PyTorch config NOT found: {PYTORCH_CONFIG}")
+    print("   Will try to use TensorRT config as fallback (may fail)")
 
-# Add to Python path
-sys.path.insert(0, REPO_DIR)
-os.chdir(REPO_DIR)
-
-print(f"\n✅ Repository ready at: {REPO_DIR}")
-print(f"   Files: {len(os.listdir(REPO_DIR))} items")
+print(f"\n📊 Checkpoint summary:")
+print(f"   - Config directory: {os.path.join(CHECKPOINT_DIR, 'ditto_cfg')}")
+print(f"   - PyTorch checkpoints: {PYTORCH_CHECKPOINT_DIR}")
+print(f"   - Total files: {len(os.listdir(PYTORCH_CHECKPOINT_DIR))}")
