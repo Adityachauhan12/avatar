@@ -1,84 +1,234 @@
-# CELL 3: Download PyTorch Checkpoints
+# CELL 4: MLflow PyTorch Model Class
 print("=" * 60)
-print("📥 Downloading PyTorch Checkpoints")
+print("🤖 Defining MLflow PyTorch Model")
 print("=" * 60)
 
+import mlflow
+import mlflow.pyfunc
 import os
-from huggingface_hub import snapshot_download
+import subprocess
+import sys
+import tempfile
+import base64
+import shutil
+from pathlib import Path
+import pandas as pd
+import git
 
-# Create checkpoint directories
-CHECKPOINT_DIR = os.path.join(REPO_DIR, "checkpoints")
-PYTORCH_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, "ditto_pytorch")
-
-os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-os.makedirs(PYTORCH_CHECKPOINT_DIR, exist_ok=True)
-
-print(f"📁 Checkpoint directory: {CHECKPOINT_DIR}")
-print(f"📁 PyTorch directory: {PYTORCH_CHECKPOINT_DIR}")
-
-# Download configuration files
-print("\n⬇️  Downloading configuration files...")
-try:
-    snapshot_download(
-        repo_id="digital-avatar/ditto-talkinghead",
-        local_dir=CHECKPOINT_DIR,
-        allow_patterns=["ditto_cfg/*"],
-        cache_dir=CHECKPOINT_DIR,
-        local_dir_use_symlinks=False
-    )
-    print("✅ Config files downloaded")
-except Exception as e:
-    print(f"⚠️ Could not download config: {e}")
-
-# Download PyTorch checkpoints
-print("\n⬇️  Downloading PyTorch checkpoints...")
-try:
-    # First try to get from HuggingFace
-    snapshot_download(
-        repo_id="digital-avatar/ditto-talkinghead",
-        local_dir=PYTORCH_CHECKPOINT_DIR,
-        allow_patterns=["ditto_pytorch/*"],
-        cache_dir=PYTORCH_CHECKPOINT_DIR,
-        local_dir_use_symlinks=False
-    )
-    print("✅ PyTorch checkpoints downloaded from HuggingFace")
+class DittoPyTorchModel(mlflow.pyfunc.PythonModel):
     
-    # List downloaded files
-    pytorch_files = os.listdir(PYTORCH_CHECKPOINT_DIR)
-    print(f"   Found {len(pytorch_files)} files")
-    if pytorch_files:
-        print("   Sample files:", pytorch_files[:5])
+    def __init__(self):
+        self.repo_dir = None
+        self.data_root = None
+        self.config_pkl = None
+        self.temp_dir = None
+        self.env_vars = None
+    
+    def load_context(self, context):
+        """Setup environment and load model"""
+        print("\n🚀 Initializing Ditto PyTorch Model...")
         
-except Exception as e:
-    print(f"⚠️ Could not download PyTorch checkpoints: {e}")
-    print("   Will try to use alternative source...")
+        # 1. Define paths
+        self.repo_dir = "/tmp/ditto-talkinghead-pytorch"
+        if not os.path.exists(self.repo_dir):
+            print(f"📥 Cloning fresh repository...")
+            git.Repo.clone_from(
+                "https://github.com/antgroup/ditto-talkinghead.git",
+                self.repo_dir,
+                depth=1,
+                branch="main"
+            )
+        
+        # 2. Apply patch
+        patch_file = os.path.join(self.repo_dir, "core/aux_models/mediapipe_landmark478.py")
+        if os.path.exists(patch_file):
+            with open(patch_file, "r") as f:
+                content = f.read()
+            if "np.atan2" in content:
+                with open(patch_file, "w") as f:
+                    f.write(content.replace("np.atan2", "np.arctan2"))
+                print("✅ Applied np.atan2 patch")
+        
+        # 3. Setup paths
+        checkpoint_base = os.path.join(self.repo_dir, "checkpoints")
+        
+        # Try multiple config locations
+        config_paths = [
+            os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl"),
+            "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
+            "./checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
+        ]
+        
+        for config_path in config_paths:
+            if os.path.exists(config_path):
+                self.config_pkl = config_path
+                break
+        
+        if not self.config_pkl:
+            print("⚠️ PyTorch config not found, trying TensorRT config...")
+            self.config_pkl = os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_trt.pkl")
+        
+        # 4. Setup data root (PyTorch checkpoints)
+        pytorch_checkpoint_paths = [
+            os.path.join(checkpoint_base, "ditto_pytorch"),
+            "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch",
+            "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_pytorch"
+        ]
+        
+        for path in pytorch_checkpoint_paths:
+            if os.path.exists(path) and len(os.listdir(path)) > 0:
+                self.data_root = path
+                break
+        
+        if not self.data_root:
+            print("⚠️ No PyTorch checkpoints found, will try to download...")
+            try:
+                from huggingface_hub import snapshot_download
+                download_path = os.path.join(checkpoint_base, "ditto_pytorch_downloaded")
+                snapshot_download(
+                    repo_id="digital-avatar/ditto-talkinghead",
+                    local_dir=download_path,
+                    allow_patterns=["ditto_pytorch/*"],
+                    cache_dir=download_path
+                )
+                self.data_root = download_path
+            except Exception as e:
+                print(f"❌ Could not download checkpoints: {e}")
+                self.data_root = checkpoint_base  # Use as fallback
+        
+        # 5. Create temp directory
+        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_pytorch_output"
+        self.temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        # 6. Setup environment variables
+        self.env_vars = os.environ.copy()
+        self.env_vars["PYTHONPATH"] = f"{self.repo_dir}:{self.env_vars.get('PYTHONPATH', '')}"
+        
+        print(f"\n📋 Model Configuration:")
+        print(f"   Repo: {self.repo_dir}")
+        print(f"   Config: {self.config_pkl}")
+        print(f"   Data root: {self.data_root}")
+        print(f"   Temp dir: {self.temp_dir}")
+        print(f"   Config exists: {os.path.exists(self.config_pkl) if self.config_pkl else False}")
+        print(f"   Data exists: {os.path.exists(self.data_root) if self.data_root else False}")
+        print("\n✅ PyTorch model initialized (NO TensorRT dependency)")
     
-    # Alternative: Check if we have checkpoints in DBFS
-    DBFS_CHECKPOINT = "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch"
-    if os.path.exists(DBFS_CHECKPOINT):
-        print(f"✅ Found checkpoints in DBFS: {DBFS_CHECKPOINT}")
-        # Copy to local directory
-        for item in os.listdir(DBFS_CHECKPOINT):
-            src = os.path.join(DBFS_CHECKPOINT, item)
-            dst = os.path.join(PYTORCH_CHECKPOINT_DIR, item)
-            if os.path.isfile(src):
-                shutil.copy2(src, dst)
-                print(f"   Copied: {item}")
-    else:
-        print("❌ No PyTorch checkpoints found!")
-        print("   You may need to download them manually from:")
-        print("   https://huggingface.co/digital-avatar/ditto-talkinghead/tree/main/ditto_pytorch")
+    def predict(self, context, model_input):
+        """Generate video from Base64 inputs"""
+        import traceback
+        
+        try:
+            # 1. Parse input
+            if isinstance(model_input, pd.DataFrame):
+                audio_b64 = model_input.iloc[0].get("audio_b64")
+                image_b64 = model_input.iloc[0].get("image_b64")
+            else:
+                return {"status": "error", "message": "Input must be DataFrame"}
+            
+            if not audio_b64 or not image_b64:
+                return {"status": "error", "message": "Missing audio_b64 or image_b64"}
+            
+            # 2. Decode files
+            job_id = os.urandom(4).hex()
+            audio_path = self.temp_dir / f"audio_{job_id}.wav"
+            image_path = self.temp_dir / f"image_{job_id}.png"
+            output_path = self.temp_dir / f"output_{job_id}.mp4"
+            
+            with open(audio_path, "wb") as f:
+                f.write(base64.b64decode(audio_b64))
+            with open(image_path, "wb") as f:
+                f.write(base64.b64decode(image_b64))
+            
+            print(f"\n🎬 Starting PyTorch inference (Job: {job_id})...")
+            print(f"   Audio: {audio_path} ({os.path.getsize(audio_path)} bytes)")
+            print(f"   Image: {image_path} ({os.path.getsize(image_path)} bytes)")
+            
+            # 3. Run inference command
+            cmd = [
+                sys.executable, "inference.py",
+                "--data_root", str(self.data_root),
+                "--cfg_pkl", str(self.config_pkl),
+                "--audio_path", str(audio_path),
+                "--source_path", str(image_path),
+                "--output_path", str(output_path)
+            ]
+            
+            print(f"\n   Command: {' '.join(cmd)}")
+            print(f"   Working dir: {self.repo_dir}")
+            
+            process = subprocess.Popen(
+                cmd,
+                cwd=self.repo_dir,
+                env=self.env_vars,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1,
+                universal_newlines=True
+            )
+            
+            # Stream output
+            logs = []
+            for line in process.stdout:
+                logs.append(line)
+                # Print progress without flooding
+                if "frame" in line.lower() or "%" in line or "sec" in line:
+                    print(f"   {line.strip()}")
+            
+            return_code = process.wait()
+            
+            if return_code != 0:
+                error_msg = "\n".join(logs[-10:])
+                return {
+                    "status": "error", 
+                    "message": f"Inference failed (code: {return_code}):\n{error_msg}"
+                }
+            
+            # 4. Check output
+            if not os.path.exists(output_path):
+                return {"status": "error", "message": "Output file not created"}
+            
+            # 5. Convert to browser-compatible format
+            final_output = self.temp_dir / f"final_{job_id}.mp4"
+            ffmpeg_cmd = [
+                "ffmpeg", "-y", "-loglevel", "error",
+                "-i", str(output_path),
+                "-pix_fmt", "yuv420p",
+                "-c:v", "libx264",
+                "-preset", "fast",
+                str(final_output)
+            ]
+            
+            subprocess.run(ffmpeg_cmd, capture_output=True)
+            
+            if os.path.exists(final_output):
+                with open(final_output, "rb") as f:
+                    video_b64 = base64.b64encode(f.read()).decode("utf-8")
+                
+                result = {
+                    "status": "success",
+                    "message": f"Video generated with PyTorch (Job: {job_id})",
+                    "video_b64": video_b64,
+                    "job_id": job_id
+                }
+            else:
+                result = {"status": "error", "message": "Video conversion failed"}
+            
+            # 6. Cleanup
+            for f in [audio_path, image_path, output_path, final_output]:
+                if os.path.exists(f):
+                    try:
+                        os.remove(f)
+                    except:
+                        pass
+            
+            return result
+            
+        except Exception as e:
+            return {
+                "status": "error",
+                "message": f"Prediction error: {str(e)}\n{traceback.format_exc()[:500]}"
+            }
 
-# Verify we have the PyTorch config
-PYTORCH_CONFIG = os.path.join(CHECKPOINT_DIR, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl")
-if os.path.exists(PYTORCH_CONFIG):
-    print(f"\n✅ PyTorch config found: {PYTORCH_CONFIG}")
-    print(f"   Size: {os.path.getsize(PYTORCH_CONFIG) / 1024:.1f} KB")
-else:
-    print(f"\n❌ PyTorch config NOT found: {PYTORCH_CONFIG}")
-    print("   Will try to use TensorRT config as fallback (may fail)")
-
-print(f"\n📊 Checkpoint summary:")
-print(f"   - Config directory: {os.path.join(CHECKPOINT_DIR, 'ditto_cfg')}")
-print(f"   - PyTorch checkpoints: {PYTORCH_CHECKPOINT_DIR}")
-print(f"   - Total files: {len(os.listdir(PYTORCH_CHECKPOINT_DIR))}")
+print("✅ PyTorch model class defined successfully!")
+print("   This model uses ONLY PyTorch (no TensorRT dependency)")
