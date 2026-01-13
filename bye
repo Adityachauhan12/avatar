@@ -1,51 +1,42 @@
-# CELL 1: TensorRT 8.6.1 Build Environment
-# ============
+🔨 Setting up TensorRT 8.6.1 build environment...
+============================================================
+✅ Working directory: /tmp/ditto-build-8.6
 
-import os
-import subprocess
-import sys
+📥 Cloning Ditto repo...
+Cloning into '.'...
+✅ Repo cloned
 
-print("🔨 Setting up TensorRT 8.6.1 build environment...")
-print("=" * 60)
+🔧 Installing TensorRT 8.6.1...
+Looking in indexes: https://pypi.org/simple, https://pypi.nvidia.com
+Collecting tensorrt==8.6.1
+  Downloading https://pypi.nvidia.com/tensorrt/tensorrt-8.6.1.tar.gz (16 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting tensorrt-libs==8.6.1
+  Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 7.2 MB/s eta 0:00:00
+Collecting tensorrt-bindings==8.6.1
+  Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 151.7 MB/s eta 0:00:00
+Requirement already satisfied: nvidia-cublas-cu12 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.8.4.1)
+Requirement already satisfied: nvidia-cudnn-cu12 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (9.10.2.21)
+Requirement already satisfied: nvidia-cuda-runtime-cu12 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.8.90)
+Building wheels for collected packages: tensorrt
+  Building wheel for tensorrt (setup.py): started
+  Building wheel for tensorrt (setup.py): finished with status 'done'
+  Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=16971 sha256=629db98a5851aa7a558cebd502d13546f6102be75eb3a5872448bade6d33956a
+  Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
+Successfully built tensorrt
+Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
+Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
 
-# Clean slate
-os.chdir("/tmp")
-BASE_DIR = "/tmp/ditto-build-8.6"
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+✅ TensorRT 8.6.1 installed
 
-if os.path.exists(BASE_DIR):
-    import shutil
-    shutil.rmtree(BASE_DIR)
-os.makedirs(BASE_DIR)
-os.chdir(BASE_DIR)
+🔥 Installing PyTorch + Ditto requirements...
+ERROR: Invalid requirement: 'torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118'
+Hint: It looks like a path. File 'torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118' does not exist.
 
-print(f"✅ Working directory: {BASE_DIR}")
-
-# Clone Ditto repo
-print("\n📥 Cloning Ditto repo...")
-subprocess.check_call([
-    "git", "clone", "--depth", "1", 
-    "https://github.com/antgroup/ditto-talkinghead.git", "."
-])
-
-print("✅ Repo cloned")
-
-# Install TensorRT 8.6.1 (EXACT match for your runtime)
-print("\n🔧 Installing TensorRT 8.6.1...")
-subprocess.check_call([
-    sys.executable, "-m", "pip", "install", 
-    "tensorrt==8.6.1", "tensorrt-libs==8.6.1", "tensorrt-bindings==8.6.1",
-    "--extra-index-url", "https://pypi.nvidia.com"
-])
-
-print("✅ TensorRT 8.6.1 installed")
-
-# Install PyTorch + Ditto deps
-print("\n🔥 Installing PyTorch + Ditto requirements...")
-subprocess.check_call([
-    sys.executable, "-m", "pip", "install",
-    "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118",
-    "-r requirements.txt"
-])
-
-print("✅ Environment ready!")
-print("\nNext: Download ONNX models...")
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
