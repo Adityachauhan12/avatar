@@ -1,299 +1,55 @@
-# CELL 6: Test the Model - AFTER DEPLOYMENT
-print("=" * 60)
-print("🧪 TESTING THE DEPLOYED PYTORCH MODEL")
-print("=" * 60)
+============================================================
+🧪 TESTING THE DEPLOYED PYTORCH MODEL
+============================================================
+🔗 Endpoint URL: https://https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/serving-endpoints/ditto_pytorch_v1/invocations
+🕒 Timestamp: 2026-01-13 10:12:15
+📦 Using PyTorch-only model (no TensorRT)
 
-import requests
-import base64
-import json
-import os
-import time
+📁 Checking input files...
+✅ Audio file: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
+   Size: 1.07 MB
+✅ Image file: /Volumes/lab37_catalog/ifstrolley/trolley/new.png
+   Size: 1188.39 KB
 
-# ============================================================================
-# CONFIGURATION - UPDATE THESE 3 VALUES!
-# ============================================================================
-ENDPOINT_NAME = "ditto_pytorch_v1"  # ⚠️ CHANGE TO YOUR ENDPOINT NAME
-WORKSPACE_URL = "adb-7012066134936526.6.azuredatabricks.net"  # ✅ YOUR WORKSPACE
-TOKEN = ""  # ✅ YOUR TOKEN
-# ============================================================================
+🔤 Encoding files to Base64...
+✅ Audio encoded: 1467.4 KB (Base64)
+✅ Image encoded: 1584.5 KB (Base64)
 
-# Build endpoint URL
-endpoint_url = f"https://{WORKSPACE_URL}/serving-endpoints/{ENDPOINT_NAME}/invocations"
+📦 Preparing API request payload...
+✅ Payload ready
+   Total size: 2.98 MB
+   Headers: dict_keys(['Authorization', 'Content-Type'])
 
-print(f"🔗 Endpoint URL: {endpoint_url}")
-print(f"🕒 Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-print(f"📦 Using PyTorch-only model (no TensorRT)")
+============================================================
+🚀 SENDING REQUEST TO SERVING ENDPOINT
+============================================================
 
-# ============================================================================
-# STEP 1: VERIFY FILES EXIST
-# ============================================================================
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+📡 Making POST request to: https://https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/serving-endpoints/ditto_pytorch_v1/invocations
+⏱️  Starting at: 10:12:16
+⚠️  First request may take 2-3 minutes (cold start)...
 
-print("\n📁 Checking input files...")
+🔌 ERROR: Connection failed
+   Cannot connect to endpoint
+   Check if endpoint is in READY state
+   Check network connectivity
 
-if not os.path.exists(audio_path):
-    print(f"❌ ERROR: Audio file not found: {audio_path}")
-    print("   Please check the path and try again")
-    raise FileNotFoundError(f"Audio file not found: {audio_path}")
-else:
-    audio_size = os.path.getsize(audio_path) / (1024 * 1024)  # MB
-    print(f"✅ Audio file: {audio_path}")
-    print(f"   Size: {audio_size:.2f} MB")
+============================================================
+🔍 DIAGNOSTIC INFORMATION
+============================================================
 
-if not os.path.exists(image_path):
-    print(f"❌ ERROR: Image file not found: {image_path}")
-    print("   Please check the path and try again")
-    raise FileNotFoundError(f"Image file not found: {image_path}")
-else:
-    image_size = os.path.getsize(image_path) / 1024  # KB
-    print(f"✅ Image file: {image_path}")
-    print(f"   Size: {image_size:.2f} KB")
+🩺 Running diagnostic checks...
+⚠️  Diagnostic check failed: HTTPSConnectionPool(host='https', port=443): Max retries exceeded with url: //adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/api/2.0/serving-endpoints/ditto_pytorch_v1 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f4f40574100>: Failed to establish a new connection: [Errno -2] Name or service not known'))
 
-# ============================================================================
-# STEP 2: ENCODE FILES TO BASE64
-# ============================================================================
-print("\n🔤 Encoding files to Base64...")
+============================================================
+📋 TROUBLESHOOTING GUIDE
+============================================================
+If you get errors:
+1. ✅ Check endpoint is READY (green status)
+2. ✅ Verify endpoint name is correct
+3. ✅ Check token has 'serving-endpoints/invoke' permission
+4. ✅ Try shorter audio file (5-10 seconds)
+5. ✅ Check model logs in Serving → Logs tab
+6. ✅ Increase endpoint timeout to 600 seconds
+============================================================
 
-try:
-    with open(audio_path, "rb") as f:
-        audio_bytes = f.read()
-        audio_b64 = base64.b64encode(audio_bytes).decode("utf-8")
-    print(f"✅ Audio encoded: {len(audio_b64) / 1024:.1f} KB (Base64)")
-except Exception as e:
-    print(f"❌ Failed to encode audio: {e}")
-    raise
-
-try:
-    with open(image_path, "rb") as f:
-        image_bytes = f.read()
-        image_b64 = base64.b64encode(image_bytes).decode("utf-8")
-    print(f"✅ Image encoded: {len(image_b64) / 1024:.1f} KB (Base64)")
-except Exception as e:
-    print(f"❌ Failed to encode image: {e}")
-    raise
-
-# ============================================================================
-# STEP 3: PREPARE API PAYLOAD
-# ============================================================================
-print("\n📦 Preparing API request payload...")
-
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_b64", "image_b64"],
-        "data": [[audio_b64, image_b64]]
-    }
-}
-
-headers = {
-    "Authorization": f"Bearer {TOKEN}",
-    "Content-Type": "application/json"
-}
-
-print(f"✅ Payload ready")
-print(f"   Total size: {(len(audio_b64) + len(image_b64)) / (1024*1024):.2f} MB")
-print(f"   Headers: {headers.keys()}")
-
-# ============================================================================
-# STEP 4: SEND REQUEST TO ENDPOINT
-# ============================================================================
-print("\n" + "=" * 60)
-print("🚀 SENDING REQUEST TO SERVING ENDPOINT")
-print("=" * 60)
-
-print(f"\n📡 Making POST request to: {endpoint_url}")
-print(f"⏱️  Starting at: {time.strftime('%H:%M:%S')}")
-
-try:
-    # Note: First request takes longer (cold start)
-    print("⚠️  First request may take 2-3 minutes (cold start)...")
-    
-    response = requests.post(
-        endpoint_url,
-        json=payload,
-        headers=headers,
-        timeout=300,  # 5 minutes timeout for video generation
-        verify=True  # SSL verification
-    )
-    
-    end_time = time.strftime('%H:%M:%S')
-    print(f"⏱️  Request completed at: {end_time}")
-    print(f"📥 HTTP Status Code: {response.status_code}")
-    
-    # ============================================================================
-    # STEP 5: HANDLE RESPONSE
-    # ============================================================================
-    if response.status_code == 200:
-        print("\n✅ SUCCESS: Request returned 200 OK")
-        
-        try:
-            result = response.json()
-            
-            # Check if response has the expected structure
-            if "predictions" in result:
-                predictions = result["predictions"]
-                
-                if isinstance(predictions, dict):
-                    # Single prediction dict
-                    status = predictions.get("status", "unknown")
-                    message = predictions.get("message", "No message")
-                    
-                    if status == "success":
-                        print("\n🎉 VIDEO GENERATED SUCCESSFULLY!")
-                        print(f"   Status: {status}")
-                        print(f"   Message: {message}")
-                        
-                        # Check if video data is present
-                        video_b64 = predictions.get("video_b64")
-                        if video_b64:
-                            video_size_kb = len(video_b64) / 1024
-                            print(f"   Video size: {video_size_kb:.1f} KB (Base64)")
-                            
-                            # Save video to file
-                            output_path = "/tmp/generated_video_pytorch.mp4"
-                            with open(output_path, "wb") as f:
-                                f.write(base64.b64decode(video_b64))
-                            
-                            file_size_mb = os.path.getsize(output_path) / (1024 * 1024)
-                            print(f"   Saved to: {output_path}")
-                            print(f"   File size: {file_size_mb:.2f} MB")
-                            
-                            # Try to display video
-                            print("\n📽️  Attempting to display video in notebook...")
-                            try:
-                                from IPython.display import Video, display
-                                display(Video(output_path, embed=True, width=600))
-                                print("✅ Video displayed successfully!")
-                            except Exception as display_error:
-                                print(f"⚠️  Could not display video: {display_error}")
-                                print(f"   You can download from: {output_path}")
-                        else:
-                            print("⚠️  Warning: No video data in response")
-                            print(f"   Full response keys: {list(predictions.keys())}")
-                    
-                    elif status == "error":
-                        print(f"\n❌ ERROR FROM MODEL: {message}")
-                        print("   This is a model-level error, not an API error")
-                    
-                    else:
-                        print(f"\n⚠️  Unknown status: {status}")
-                        print(f"   Message: {message}")
-                        print(f"   Full response: {json.dumps(predictions, indent=2)[:1000]}...")
-                
-                elif isinstance(predictions, list):
-                    print(f"\n📋 Multiple predictions returned: {len(predictions)} items")
-                    print(f"   First item: {json.dumps(predictions[0], indent=2)[:500]}...")
-                
-                else:
-                    print(f"\n⚠️  Unexpected predictions type: {type(predictions)}")
-                    print(f"   Predictions: {predictions}")
-            
-            else:
-                print(f"\n⚠️  Response missing 'predictions' key")
-                print(f"   Response keys: {list(result.keys())}")
-                print(f"   Full response: {json.dumps(result, indent=2)[:1000]}...")
-        
-        except json.JSONDecodeError as e:
-            print(f"\n❌ Failed to parse JSON response: {e}")
-            print(f"   Response text (first 500 chars): {response.text[:500]}...")
-    
-    elif response.status_code == 404:
-        print("\n❌ ERROR 404: Endpoint not found")
-        print("   Possible issues:")
-        print("   1. Endpoint name is wrong")
-        print("   2. Endpoint is not in READY state")
-        print("   3. URL is incorrect")
-        print(f"   Please check: {endpoint_url}")
-    
-    elif response.status_code == 401:
-        print("\n❌ ERROR 401: Unauthorized")
-        print("   Check your token is valid and has proper permissions")
-    
-    elif response.status_code == 502:
-        print("\n❌ ERROR 502: Bad Gateway")
-        print("   Endpoint might be scaling or having issues")
-        print("   Wait a few minutes and try again")
-    
-    elif response.status_code == 504:
-        print("\n❌ ERROR 504: Gateway Timeout")
-        print("   Request took too long")
-        print("   Try with a shorter audio file")
-    
-    else:
-        print(f"\n❌ ERROR {response.status_code}: {response.reason}")
-        print(f"   Response: {response.text[:500]}...")
-
-except requests.exceptions.Timeout:
-    print("\n⏰ ERROR: Request timeout (300 seconds)")
-    print("   Video generation is taking too long")
-    print("   Possible solutions:")
-    print("   1. Use shorter audio (10-20 seconds)")
-    print("   2. Increase endpoint timeout in Serving config")
-    print("   3. Check if model is properly loaded")
-
-except requests.exceptions.ConnectionError:
-    print("\n🔌 ERROR: Connection failed")
-    print("   Cannot connect to endpoint")
-    print("   Check if endpoint is in READY state")
-    print("   Check network connectivity")
-
-except Exception as e:
-    print(f"\n❌ UNEXPECTED ERROR: {type(e).__name__}")
-    print(f"   Error: {str(e)}")
-    import traceback
-    print(f"   Traceback: {traceback.format_exc()[:500]}...")
-
-# ============================================================================
-# STEP 6: DIAGNOSTIC CHECK
-# ============================================================================
-print("\n" + "=" * 60)
-print("🔍 DIAGNOSTIC INFORMATION")
-print("=" * 60)
-
-# Check endpoint status (without making inference)
-print("\n🩺 Running diagnostic checks...")
-
-try:
-    # Try to get endpoint info
-    status_url = f"https://{WORKSPACE_URL}/api/2.0/serving-endpoints/{ENDPOINT_NAME}"
-    status_headers = {"Authorization": f"Bearer {TOKEN}"}
-    
-    status_response = requests.get(status_url, headers=status_headers, timeout=10)
-    
-    if status_response.status_code == 200:
-        endpoint_info = status_response.json()
-        state = endpoint_info.get("state", {}).get("config_update", "UNKNOWN")
-        print(f"✅ Endpoint state: {state}")
-        
-        if "pending_config" in endpoint_info:
-            pending = endpoint_info["pending_config"]
-            print(f"   Pending config: {pending.get('served_models', [{}])[0].get('name', 'N/A')}")
-        
-        if "config" in endpoint_info:
-            config = endpoint_info["config"]
-            served_models = config.get("served_entities", config.get("served_models", []))
-            if served_models:
-                model = served_models[0]
-                print(f"   Model: {model.get('model_name', 'N/A')}")
-                print(f"   Version: {model.get('model_version', 'N/A')}")
-                print(f"   Scale-to-zero: {model.get('scale_to_zero_enabled', 'N/A')}")
-    
-    else:
-        print(f"⚠️  Cannot get endpoint status: {status_response.status_code}")
-
-except Exception as e:
-    print(f"⚠️  Diagnostic check failed: {e}")
-
-print("\n" + "=" * 60)
-print("📋 TROUBLESHOOTING GUIDE")
-print("=" * 60)
-print("If you get errors:")
-print("1. ✅ Check endpoint is READY (green status)")
-print("2. ✅ Verify endpoint name is correct")
-print("3. ✅ Check token has 'serving-endpoints/invoke' permission")
-print("4. ✅ Try shorter audio file (5-10 seconds)")
-print("5. ✅ Check model logs in Serving → Logs tab")
-print("6. ✅ Increase endpoint timeout to 600 seconds")
-print("=" * 60)
-
-print("\n🎬 Test complete! Check results above.")
+🎬 Test complete! Check results above.
