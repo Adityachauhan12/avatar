@@ -1,18 +1,33 @@
-# Read the tensorrt_utils.py file
-tensorrt_utils_path = "/tmp/ditto-rebuild/core/utils/tensorrt_utils.py"
+Current TRTWrapper class:
+class TRTWrapper:
+    def __init__(
+        self,
+        trt_file: str,
+        plugin_file_list: list = [],
+    ) -> None:
+        # Load custom plugins
+        for plugin_file in plugin_file_list:
+            ctypes.cdll.LoadLibrary(plugin_file)
 
-with open(tensorrt_utils_path, "r") as f:
-    content = f.read()
+        # Load engine bytes from file
+        self.model = trt_file
+        with open(trt_file, "rb") as f, trt.Runtime(logger) as runtime:
+            assert runtime
+            self.engine = runtime.deserialize_cuda_engine(f.read())
+        assert self.engine
+        self.buffer = OrderedDict()
+        self.output_allocator_map = OrderedDict()
+        self.context = self.engine.create_execution_context()
+        return
 
-# Find and show the TRTWrapper class
-import re
-match = re.search(r'class TRTWrapper.*?(?=\nclass |\Z)', content, re.DOTALL)
-if match:
-    print("Current TRTWrapper class:")
-    print(match.group(0)[:1000])
-    print("\n...")
-else:
-    print("TRTWrapper class not found. Showing file around line 100:")
-    lines = content.split('\n')
-    for i, line in enumerate(lines[95:115], start=95):
-        print(f"{i}: {line}")
+    def setup(self, input_data: dict = {}) -> None:
+        for name, value in self.buffer.items():
+            _, device_buffer, _ = value
+            if (
+                device_buffer is not None
+                and device_buffer != 0
+                and name not in self.output_allocator_map
+            ):
+             
+
+...
