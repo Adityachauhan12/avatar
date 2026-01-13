@@ -1,42 +1,31 @@
-# CELL 3: Download ONNX Models + Config
-# ============
+Returning existing local_dir `checkpoints` as remote repo cannot be accessed in `snapshot_download` (401 Client Error. (Request ID: Root=1-6965f982-0e6bc94a3dddfc8709d15d62;a1aae00f-2c89-4f8e-a0c7-8bef0ca05ed2)
 
-from huggingface_hub import snapshot_download
-import os
+Repository Not Found for url: https://huggingface.co/api/models/digital-avatar/ditto-onnx-models/revision/main.
+Please make sure you specified the correct `repo_id` and `repo_type`.
+If you are trying to access a private or gated repo, make sure you are authenticated.
+Invalid username or password.).
+WARNING:huggingface_hub._snapshot_download:Returning existing local_dir `checkpoints` as remote repo cannot be accessed in `snapshot_download` (401 Client Error. (Request ID: Root=1-6965f982-0e6bc94a3dddfc8709d15d62;a1aae00f-2c89-4f8e-a0c7-8bef0ca05ed2)
 
-print("📥 Downloading ONNX models and config...")
-print("=" * 60)
+Repository Not Found for url: https://huggingface.co/api/models/digital-avatar/ditto-onnx-models/revision/main.
+Please make sure you specified the correct `repo_id` and `repo_type`.
+If you are trying to access a private or gated repo, make sure you are authenticated.
+Invalid username or password.).
+✅ Config downloaded
 
-# Create checkpoints directory
-checkpoints_dir = "./checkpoints"
-os.makedirs(checkpoints_dir, exist_ok=True)
+📦 Downloading ONNX models for conversion...
+✅ ONNX models downloaded
 
-# Download config files
-print("\n📦 Downloading Ditto config...")
-snapshot_download(
-    repo_id="digital-avatar/ditto-talkinghead",
-    local_dir=checkpoints_dir,
-    allow_patterns=["ditto_cfg/*"],
-)
+📂 checkpoints/ contents:
+   📄 v0.4_hubert_cfg_trt_online.pkl
+   📄 v0.4_hubert_cfg_trt.pkl
+   📄 v0.4_hubert_cfg_pytorch.pkl
+   📄 .gitignore
+   📄 v0.4_hubert_cfg_trt_online.pkl.metadata
+   📄 v0.4_hubert_cfg_pytorch.pkl.lock
+   📄 v0.4_hubert_cfg_trt.pkl.lock
+   📄 v0.4_hubert_cfg_trt.pkl.metadata
+   📄 v0.4_hubert_cfg_trt_online.pkl.lock
+   📄 v0.4_hubert_cfg_pytorch.pkl.metadata
 
-print("✅ Config downloaded")
-
-# Download ONNX models (these get converted to TRT engines)
-print("\n📦 Downloading ONNX models for conversion...")
-snapshot_download(
-    repo_id="digital-avatar/ditto-onnx-models",  # ONNX source
-    local_dir=checkpoints_dir,
-    allow_patterns=["*.onnx"],
-    ignore_patterns=["*.trt*"],  # Skip existing TRT engines
-)
-
-print("✅ ONNX models downloaded")
-
-# List what we got
-print("\n📂 checkpoints/ contents:")
-for root, dirs, files in os.walk(checkpoints_dir):
-    for file in files[:10]:  # First 10 files
-        print(f"   📄 {file}")
-
-print("\n✅ Ready for engine building!")
-print("Next: Convert ONNX → TensorRT engines...")
+✅ Ready for engine building!
+Next: Convert ONNX → TensorRT engines...
