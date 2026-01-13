@@ -1,55 +1,28 @@
-============================================================
-🧪 TESTING THE DEPLOYED PYTORCH MODEL
-============================================================
-🔗 Endpoint URL: https://https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/serving-endpoints/ditto_pytorch_v1/invocations
-🕒 Timestamp: 2026-01-13 10:12:15
-📦 Using PyTorch-only model (no TensorRT)
+import requests
+import json
 
-📁 Checking input files...
-✅ Audio file: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
-   Size: 1.07 MB
-✅ Image file: /Volumes/lab37_catalog/ifstrolley/trolley/new.png
-   Size: 1188.39 KB
+WORKSPACE_URL = "adb-7012066134936526.6.azuredatabricks.net"
+TOKEN = ""
 
-🔤 Encoding files to Base64...
-✅ Audio encoded: 1467.4 KB (Base64)
-✅ Image encoded: 1584.5 KB (Base64)
+# Get all serving endpoints
+url = f"https://{WORKSPACE_URL}/api/2.0/serving-endpoints"
+headers = {"Authorization": f"Bearer {TOKEN}"}
 
-📦 Preparing API request payload...
-✅ Payload ready
-   Total size: 2.98 MB
-   Headers: dict_keys(['Authorization', 'Content-Type'])
-
-============================================================
-🚀 SENDING REQUEST TO SERVING ENDPOINT
-============================================================
-
-📡 Making POST request to: https://https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/serving-endpoints/ditto_pytorch_v1/invocations
-⏱️  Starting at: 10:12:16
-⚠️  First request may take 2-3 minutes (cold start)...
-
-🔌 ERROR: Connection failed
-   Cannot connect to endpoint
-   Check if endpoint is in READY state
-   Check network connectivity
-
-============================================================
-🔍 DIAGNOSTIC INFORMATION
-============================================================
-
-🩺 Running diagnostic checks...
-⚠️  Diagnostic check failed: HTTPSConnectionPool(host='https', port=443): Max retries exceeded with url: //adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations/api/2.0/serving-endpoints/ditto_pytorch_v1 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f4f40574100>: Failed to establish a new connection: [Errno -2] Name or service not known'))
-
-============================================================
-📋 TROUBLESHOOTING GUIDE
-============================================================
-If you get errors:
-1. ✅ Check endpoint is READY (green status)
-2. ✅ Verify endpoint name is correct
-3. ✅ Check token has 'serving-endpoints/invoke' permission
-4. ✅ Try shorter audio file (5-10 seconds)
-5. ✅ Check model logs in Serving → Logs tab
-6. ✅ Increase endpoint timeout to 600 seconds
-============================================================
-
-🎬 Test complete! Check results above.
+response = requests.get(url, headers=headers)
+if response.status_code == 200:
+    endpoints = response.json()
+    print("📋 Your serving endpoints:")
+    for endpoint in endpoints.get("endpoints", []):
+        name = endpoint.get("name")
+        state = endpoint.get("state", {}).get("config_update", "UNKNOWN")
+        print(f"  • {name} (State: {state})")
+        
+        # Show model info
+        if "config" in endpoint:
+            served = endpoint["config"].get("served_entities", endpoint["config"].get("served_models", []))
+            if served:
+                model = served[0]
+                print(f"    Model: {model.get('model_name', 'N/A')} v{model.get('model_version', 'N/A')}")
+else:
+    print(f"❌ Failed to get endpoints: {response.status_code}")
+    print(response.text[:500])
