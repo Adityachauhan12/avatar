@@ -1,29 +1,7 @@
-import requests, base64, json
-
-endpoint_url = "https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_base64_v10/invocations"
-token = ""  # ← FILL IN YOUR TOKEN
-
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
-
-with open(audio_path, "rb") as f:
-    audio_b64 = base64.b64encode(f.read()).decode("utf-8")
-
-with open(image_path, "rb") as f:
-    image_b64 = base64.b64encode(f.read()).decode("utf-8")
-
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_b64", "image_b64"],
-        "data": [[audio_b64, image_b64]],
-    }
+Status: 200
+{
+  "predictions": {
+    "status": "error",
+    "message": "Inference failed:\n/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning \"Using deprecated NumPy API, disable it with \" \"#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION\" [-Wcpp]\n\n   17 | #warning \"Using deprecated NumPy API, disable it with \" \\\n\n      |  ^~~~~~~\n\n[01/13/2026-06:34:49] [TRT] [E] 1: [stdArchiveReader.cpp::stdArchiveReaderInitCommon::47] Error Code 1: Serialization (Serialization assertion stdVersionRead == kSERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 228, Serialized Engine Version: 236)\n\nTraceback (most recent call last):\n\n  File \"/tmp/ditto-talkinghead/inference.py\", line 80, in <module>\n\n    SDK = StreamSDK(cfg_pkl, data_root)\n\n  File \"/tmp/ditto-talkinghead/stream_pipeline_offline.py\", line 35, in __init__\n\n    self.avatar_registrar = AvatarRegistrar(**avatar_registrar_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py\", line 52, in __init__\n\n    self.source2info = Source2Info(\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n\n    self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n\n    self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n\n  File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n\n    model = TRTWrapper(model_path)\n\n  File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 106, in __init__\n\n    assert self.engine\n\nAssertionError\n"
+  }
 }
-
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json",
-}
-
-resp = requests.post(endpoint_url, json=payload, headers=headers)
-print(f"Status: {resp.status_code}")
-print(json.dumps(resp.json(), indent=2)[:3000])
