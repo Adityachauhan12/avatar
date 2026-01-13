@@ -1,107 +1,7 @@
-🔧 CELL 9: Re-register Model with TensorRT Patch
-============================================================
-
-📦 Installing PyYAML...
-
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
-🔗 Configuring MLflow...
-📋 Defining model signature...
-🐍 Creating conda environment...
-✅ Conda environment created: /tmp/tmplwahd71n.yaml
-
-🔧 Preparing repository with TensorRT patch...
-   ⏳ Cloning Ditto repo...
-   ✅ Repo cloned
-   ⏳ Applying np.atan2 → np.arctan2 patch...
-   ✅ np.atan2 patch applied
-   ⏳ Downloading config from HuggingFace Hub...
-
-
-
-
-   ✅ Config downloaded
-
-🔧 Applying TensorRT version mismatch patch...
-   📦 Backup created: /tmp/ditto-model-artifact-patched/core/utils/tensorrt_utils.py.backup_v2
-   ⚠️  WARNING: Could not find exact pattern to patch
-   Manual inspection may be needed, but proceeding anyway...
-
-📋 Copying TensorRT engines to model artifact...
-   ✅ appearance_extractor_fp16.engine
-   ✅ blaze_face_fp16.engine
-   ✅ decoder_fp16.engine
-   ✅ face_mesh_fp16.engine
-   ✅ hubert_fp32.engine
-   ✅ insightface_det_fp16.engine
-   ✅ landmark106_fp16.engine
-   ✅ landmark203_fp16.engine
-   ✅ lmdm_v0.4_hubert_fp32.engine
-   ✅ motion_extractor_fp32.engine
-   ✅ stitch_network_fp16.engine
-   ✅ warp_network_fp16.engine
-   Total engines copied: 12
-
-📝 Logging model with patched code...
-2026/01/13 06:01:31 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-c247f9d8348b42a3b6aaa3a4e0a9a54d?o=7012066134936526
-/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
-  color_warning(
-
-2026/01/13 06:01:48 WARNING mlflow.utils.requirements_utils: Detected one or more mismatches between the model's dependencies and the current Python environment:
- - torch (current: 2.9.1, required: torch==2.1.2)
- - torchvision (current: 0.24.1, required: torchvision==0.16.2)
- - torchaudio (current: 2.9.1, required: torchaudio==2.1.2)
- - cuda-python (current: uninstalled, required: cuda-python==12.2.0)
- - onnxruntime-gpu (current: 1.23.2, required: onnxruntime-gpu==1.16.3)
- - numpy (current: 2.2.6, required: numpy==1.26.4)
- - gitpython (current: 3.1.27, required: gitpython==3.1.40)
- - imageio-ffmpeg (current: uninstalled, required: imageio-ffmpeg)
- - opencv-python-headless (current: uninstalled, required: opencv-python-headless)
- - imageio (current: uninstalled, required: imageio)
- - moviepy (current: uninstalled, required: moviepy)
- - ml_dtypes (current: 0.2.0, required: ml_dtypes==0.4.0)
- - filetype (current: uninstalled, required: filetype)
- - scikit-image (current: uninstalled, required: scikit-image)
- - colored (current: uninstalled, required: colored)
- - polygraphy (current: uninstalled, required: polygraphy)
-To fix the mismatches, call `mlflow.pyfunc.get_model_dependencies(model_uri)` to fetch the model's environment and install dependencies using the resulting environment file.
-✅ Model logged with run ID: d7b7595566274695a486c9c7d507fdcd
-
-🚀 Registering as new model version...
-Registered model 'lab37_catalog.ifstrolley.ditto_talkinghead' already exists. Creating a new version of this model...
-2026/01/13 06:02:02 WARNING mlflow.tracking._model_registry.fluent: Run with id d7b7595566274695a486c9c7d507fdcd has no artifacts at artifact path 'ditto_talking_head_v2', registering model based on models:/m-c247f9d8348b42a3b6aaa3a4e0a9a54d instead
-
-
-
-🔗 Created version '20' of model 'lab37_catalog.ifstrolley.ditto_talkinghead': https://adb-7012066134936526.6.azuredatabricks.net/explore/data/models/lab37_catalog/ifstrolley/ditto_talkinghead/version/20?o=7012066134936526
-✅ SUCCESS! Registered Version: 20
-
-🎯 Next Steps:
-   1. Go to Serving → ditto_base64_v10 (or your endpoint name)
-   2. Click 'Update'
-   3. Select Version 20
-   4. Click 'Deploy'
-   5. Wait for READY status
-   6. Run the test cell again to see clear error message
-
-🧹 Cleaning up temporary files...
-✅ Cleanup complete
-
-============================================================
-✅ CELL 9 COMPLETE!
-============================================================
-
-📌 IMPORTANT: You need to manually update the serving endpoint!
-   Go to Databricks UI → Serving → ditto_base64_v10
-   Update to the new version and restart
-
-🎯 After updating endpoint, run this test cell to verify the patch:
-
 import requests, base64, json
 
 endpoint_url = "https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_base64_v10/invocations"
-token = ""  # your token
+token = ""  # ← FILL IN YOUR TOKEN
 
 audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
 image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
@@ -127,8 +27,3 @@ headers = {
 resp = requests.post(endpoint_url, json=payload, headers=headers)
 print(f"Status: {resp.status_code}")
 print(json.dumps(resp.json(), indent=2)[:3000])
-
-# Expected output:
-# ⚠️ TensorRT engine format mismatch detected!
-#    Expected: TensorRT 8.6.1 or compatible
-#    Engine built with: TensorRT 9.6+ (version mismatch)
