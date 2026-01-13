@@ -1,33 +1,8 @@
-# CELL 10: Apply Patch
-
-import os
-
-tensorrt_utils_path = "/tmp/ditto-model-artifact-patched/core/utils/tensorrt_utils.py"
-
-print("🔧 Patching tensorrt_utils.py...")
-
-with open(tensorrt_utils_path, "r") as f:
-    content = f.read()
-
-old_code = """            self.engine = runtime.deserialize_cuda_engine(f.read())
-            assert self.engine"""
-
-new_code = """            self.engine = runtime.deserialize_cuda_engine(f.read())
-            except Exception as e:
-                if "Version tag does not match" in str(e) or "Serialization" in str(e):
-                    print(f"⚠️ TensorRT engine format mismatch detected!")
-                    print(f"   Expected: TensorRT 8.6.1 or compatible")
-                    print(f"   Engine built with: TensorRT 9.6+ (version mismatch)")
-                    self.engine = None
-                else:
-                    raise
-            assert self.engine, f"Failed to load engine. Rebuild required with matching TensorRT version."""
-
-if old_code in content:
-    print("✅ Found pattern")
-    content = content.replace(old_code, new_code)
-    with open(tensorrt_utils_path, "w") as f:
-        f.write(content)
+just now (<1s)
+9
+9
     print("✅ Patch applied!")
 else:
     print("⚠️ Not found")
+🔧 Patching tensorrt_utils.py...
+⚠️ Not found
