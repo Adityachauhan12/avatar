@@ -1,179 +1,25 @@
-# CELL 5: Register Model with Unity Catalog
-print("=" * 60)
-print("📝 Registering Model with Unity Catalog")
-print("=" * 60)
+============================================================
+📝 Registering Model with Unity Catalog
+============================================================
+2026/01/13 09:45:37 INFO mlflow.tracking.fluent: Experiment with name '/Shared/ditto_pytorch_experiment' does not exist. Creating a new experiment.
+🔧 Configuring MLflow...
+   Registry URI: databricks-uc
+   Experiment: <Experiment: artifact_location='dbfs:/databricks/mlflow-tracking/1207728313040732', creation_time=1768297538065, experiment_id='1207728313040732', last_update_time=1768297538065, lifecycle_stage='active', name='/Shared/ditto_pytorch_experiment', tags={'mlflow.experiment.sourceName': '/Shared/ditto_pytorch_experiment',
+ 'mlflow.experimentType': 'MLFLOW_EXPERIMENT',
+ 'mlflow.ownerEmail': 'IGA-Lab37-NonProd-L1',
+ 'mlflow.ownerId': '154285112730085'}>
 
-import mlflow
-from mlflow.models.signature import infer_signature
-import pandas as pd
-import tempfile
-import yaml
+📋 Creating model signature...
+✅ Signature created
 
-# Setup MLflow
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment("/Shared/ditto_pytorch_experiment")
+🐍 Creating conda environment...
+✅ Conda environment saved to: /tmp/tmpgkgb4xgw.yaml
 
-print("🔧 Configuring MLflow...")
-print(f"   Registry URI: {mlflow.get_registry_uri()}")
-print(f"   Experiment: {mlflow.get_experiment_by_name('/Shared/ditto_pytorch_experiment')}")
+📦 Preparing model artifacts...
+✅ Artifacts prepared: /tmp/ditto-pytorch-artifacts (110 files)
 
-# Define model signature
-print("\n📋 Creating model signature...")
-test_input = pd.DataFrame({
-    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],  # Empty audio
-    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]  # 1x1 pixel
-})
-
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."],
-    "job_id": ["test123"]
-})
-
-signature = infer_signature(test_input, test_output)
-print("✅ Signature created")
-
-# Create conda environment YAML
-print("\n🐍 Creating conda environment...")
-conda_env = {
-    "name": "ditto-pytorch-env",
-    "channels": ["conda-forge", "defaults"],
-    "dependencies": [
-        "python=3.10",
-        "pip=23.3.1",
-        {
-            "pip": [
-                "torch==2.1.2",
-                "torchvision==0.16.2", 
-                "torchaudio==2.1.2",
-                "numpy==1.26.4",
-                "cuda-python==12.2.0",
-                "onnxruntime-gpu==1.16.3",
-                "gitpython==3.1.40",
-                "librosa>=0.10.1",
-                "imageio-ffmpeg",
-                "opencv-python-headless==4.9.0.80",
-                "soundfile",
-                "soxr",
-                "imageio",
-                "moviepy",
-                "mediapipe>=0.10.9",
-                "ml_dtypes==0.4.0",
-                "einops",
-                "omegaconf",
-                "huggingface_hub",
-                "filetype",
-                "tqdm",
-                "scikit-image",
-                "colored",
-                "polygraphy",
-                "mlflow==3.8.1",
-                "pyyaml",
-                "requests"
-            ]
-        }
-    ]
-}
-
-# Save conda environment to file
-conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
-yaml.dump(conda_env, conda_file)
-conda_file.close()
-conda_file_path = conda_file.name
-
-print(f"✅ Conda environment saved to: {conda_file_path}")
-
-# Prepare artifacts directory
-print("\n📦 Preparing model artifacts...")
-artifact_dir = "/tmp/ditto-pytorch-artifacts"
-if os.path.exists(artifact_dir):
-    shutil.rmtree(artifact_dir)
-
-# Copy the repository (without large checkpoint files)
-shutil.copytree(
-    "/tmp/ditto-talkinghead-pytorch",
-    artifact_dir,
-    ignore=shutil.ignore_patterns("*.engine", "*.trt", "__pycache__", "*.pyc", ".git")
-)
-
-print(f"✅ Artifacts prepared: {artifact_dir} ({sum(len(files) for _, _, files in os.walk(artifact_dir))} files)")
-
-# Log the model to MLflow
-print("\n📤 Logging model to MLflow...")
-with mlflow.start_run() as run:
-    # Log parameters
-    mlflow.log_param("model_type", "pytorch")
-    mlflow.log_param("ditto_version", "v0.4")
-    mlflow.log_param("backend", "pytorch_only")
-    mlflow.log_param("gpu_support", "cuda_12.1")
-    
-    # Log the model
-    model_info = mlflow.pyfunc.log_model(
-        artifact_path="ditto_pytorch_model",
-        python_model=DittoPyTorchModel(),
-        signature=signature,
-        conda_env=conda_file_path,
-        artifacts={"repo": artifact_dir}
-    )
-    
-    run_id = run.info.run_id
-    print(f"✅ Model logged successfully!")
-    print(f"   Run ID: {run_id}")
-    print(f"   Model URI: {model_info.model_uri}")
-
-# Register the model in Unity Catalog
-print("\n🏢 Registering model in Unity Catalog...")
-MODEL_NAME = "lab37_catalog.ifstrolley.ditto_talkinghead_pytorch"  # Change to your catalog
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_pytorch_model",
-        name=MODEL_NAME
-    )
-    
-    print(f"🎉 SUCCESS! Model registered!")
-    print(f"   Model: {MODEL_NAME}")
-    print(f"   Version: {model_version.version}")
-    print(f"   Status: {model_version.status}")
-    
-    # Transition to Production
-    print("\n🏭 Transitioning to Production...")
-    client = mlflow.MlflowClient()
-    client.transition_model_version_stage(
-        name=MODEL_NAME,
-        version=model_version.version,
-        stage="Production",
-        archive_existing_versions=True
-    )
-    
-    print("✅ Model marked as Production")
-    
-except Exception as e:
-    print(f"⚠️ Registration failed: {e}")
-    print("   Creating new model...")
-    
-    # Try with a new name
-    MODEL_NAME_NEW = f"{MODEL_NAME}_v1"
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_pytorch_model",
-        name=MODEL_NAME_NEW
-    )
-    print(f"✅ Model registered as: {MODEL_NAME_NEW} v{model_version.version}")
-
-# Cleanup
-try:
-    os.unlink(conda_file_path)
-    print(f"\n🧹 Cleaned up temporary file: {conda_file_path}")
-except:
-    pass
-
-print("\n" + "=" * 60)
-print("📋 DEPLOYMENT SUMMARY")
-print("=" * 60)
-print(f"✅ Model: {MODEL_NAME if 'model_version' in locals() else MODEL_NAME_NEW}")
-print(f"✅ Version: {model_version.version if 'model_version' in locals() else 'N/A'}")
-print(f"✅ Backend: PyTorch only (no TensorRT)")
-print(f"✅ GPU: CUDA 12.1 (T4 compatible)")
-print(f"✅ Dependencies: Clean conda environment")
-print("=" * 60)
+📤 Logging model to MLflow...
+2026/01/13 09:45:58 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/1207728313040732/models/m-5d84ab0cab2a4c97ba55770ac3cdafef?o=7012066134936526
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
+  color_warning(
