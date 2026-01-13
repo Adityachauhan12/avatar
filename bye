@@ -1,70 +1,21 @@
-# CELL 4: Download Ditto ONNX bundle (correct + complete)
-# =======================================================
+✅ Download done.
 
-import os
-import inspect
-from huggingface_hub import snapshot_download
+📂 Found 13 .onnx files under ./checkpoints/ditto_onnx:
+  - ./checkpoints/ditto_onnx/appearance_extractor.onnx
+  - ./checkpoints/ditto_onnx/blaze_face.onnx
+  - ./checkpoints/ditto_onnx/decoder.onnx
+  - ./checkpoints/ditto_onnx/face_mesh.onnx
+  - ./checkpoints/ditto_onnx/hubert.onnx
+  - ./checkpoints/ditto_onnx/insightface_det.onnx
+  - ./checkpoints/ditto_onnx/landmark106.onnx
+  - ./checkpoints/ditto_onnx/landmark203.onnx
+  - ./checkpoints/ditto_onnx/lmdm_v0.4_hubert.onnx
+  - ./checkpoints/ditto_onnx/motion_extractor.onnx
+  - ./checkpoints/ditto_onnx/stitch_network.onnx
+  - ./checkpoints/ditto_onnx/warp_network.onnx
+  - ./checkpoints/ditto_onnx/warp_network_ori.onnx
 
-print("📥 Downloading Ditto ONNX bundle into ./checkpoints/ditto_onnx ...")
-print("=" * 70)
+📂 Found 1 non-onnx files under ./checkpoints/ditto_onnx (plugins/etc). Showing up to 20:
+  - ./checkpoints/ditto_onnx/libgrid_sample_3d_plugin.so
 
-REPO_ID = "digital-avatar/ditto-talkinghead"
-LOCAL_DIR = "./checkpoints"
-
-os.makedirs(LOCAL_DIR, exist_ok=True)
-
-# Optional token (only if your environment needs it)
-# Put token in env var HF_TOKEN (recommended) OR paste as string.
-HF_TOKEN = os.environ.get("HF_TOKEN", "").strip() or None
-
-# snapshot_download arg name differs across huggingface_hub versions
-sig = inspect.signature(snapshot_download)
-auth_kwargs = {}
-if "token" in sig.parameters:
-    # Newer huggingface_hub uses `token=...`
-    auth_kwargs["token"] = HF_TOKEN if HF_TOKEN else None  # public repo works without token
-elif "use_auth_token" in sig.parameters:
-    # Older huggingface_hub uses `use_auth_token=...`
-    auth_kwargs["use_auth_token"] = HF_TOKEN if HF_TOKEN else False  # False = no auth
-# token support documented by HF hub. [web:30]
-
-# Download: configs + ONNX bundle (and related files inside ditto_onnx/)
-snapshot_download(
-    repo_id=REPO_ID,
-    local_dir=LOCAL_DIR,
-    allow_patterns=[
-        "ditto_cfg/*",
-        "ditto_onnx/*",
-    ],
-    **auth_kwargs,
-)
-
-print("✅ Download done.")
-
-# Verify we actually have ONNX files
-onnx_dir = os.path.join(LOCAL_DIR, "ditto_onnx")
-if not os.path.exists(onnx_dir):
-    raise RuntimeError(f"❌ Missing folder: {onnx_dir}. Download did not create ditto_onnx/")
-
-onnx_files = []
-other_files = []
-for root, _, files in os.walk(onnx_dir):
-    for f in files:
-        p = os.path.join(root, f)
-        if f.endswith(".onnx"):
-            onnx_files.append(p)
-        else:
-            other_files.append(p)
-
-print(f"\n📂 Found {len(onnx_files)} .onnx files under {onnx_dir}:")
-for p in sorted(onnx_files):
-    print("  -", p)
-
-print(f"\n📂 Found {len(other_files)} non-onnx files under {onnx_dir} (plugins/etc). Showing up to 20:")
-for p in sorted(other_files)[:20]:
-    print("  -", p)
-
-if len(onnx_files) == 0:
-    raise RuntimeError("❌ No ONNX files found. We can't build TensorRT engines without them.")
-
-print("\n✅ CELL 4 COMPLETE. Next step: run scripts/cvt_onnx_to_trt.py to build engines. (As per Ditto docs.)")
+✅ CELL 4 COMPLETE. Next step: run scripts/cvt_onnx_to_trt.py to build engines. (As per Ditto docs.)
