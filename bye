@@ -1,234 +1,179 @@
-# CELL 4: MLflow PyTorch Model Class
+# CELL 5: Register Model with Unity Catalog
 print("=" * 60)
-print("🤖 Defining MLflow PyTorch Model")
+print("📝 Registering Model with Unity Catalog")
 print("=" * 60)
 
 import mlflow
-import mlflow.pyfunc
-import os
-import subprocess
-import sys
-import tempfile
-import base64
-import shutil
-from pathlib import Path
+from mlflow.models.signature import infer_signature
 import pandas as pd
-import git
+import tempfile
+import yaml
 
-class DittoPyTorchModel(mlflow.pyfunc.PythonModel):
-    
-    def __init__(self):
-        self.repo_dir = None
-        self.data_root = None
-        self.config_pkl = None
-        self.temp_dir = None
-        self.env_vars = None
-    
-    def load_context(self, context):
-        """Setup environment and load model"""
-        print("\n🚀 Initializing Ditto PyTorch Model...")
-        
-        # 1. Define paths
-        self.repo_dir = "/tmp/ditto-talkinghead-pytorch"
-        if not os.path.exists(self.repo_dir):
-            print(f"📥 Cloning fresh repository...")
-            git.Repo.clone_from(
-                "https://github.com/antgroup/ditto-talkinghead.git",
-                self.repo_dir,
-                depth=1,
-                branch="main"
-            )
-        
-        # 2. Apply patch
-        patch_file = os.path.join(self.repo_dir, "core/aux_models/mediapipe_landmark478.py")
-        if os.path.exists(patch_file):
-            with open(patch_file, "r") as f:
-                content = f.read()
-            if "np.atan2" in content:
-                with open(patch_file, "w") as f:
-                    f.write(content.replace("np.atan2", "np.arctan2"))
-                print("✅ Applied np.atan2 patch")
-        
-        # 3. Setup paths
-        checkpoint_base = os.path.join(self.repo_dir, "checkpoints")
-        
-        # Try multiple config locations
-        config_paths = [
-            os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl"),
-            "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
-            "./checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
-        ]
-        
-        for config_path in config_paths:
-            if os.path.exists(config_path):
-                self.config_pkl = config_path
-                break
-        
-        if not self.config_pkl:
-            print("⚠️ PyTorch config not found, trying TensorRT config...")
-            self.config_pkl = os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_trt.pkl")
-        
-        # 4. Setup data root (PyTorch checkpoints)
-        pytorch_checkpoint_paths = [
-            os.path.join(checkpoint_base, "ditto_pytorch"),
-            "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch",
-            "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_pytorch"
-        ]
-        
-        for path in pytorch_checkpoint_paths:
-            if os.path.exists(path) and len(os.listdir(path)) > 0:
-                self.data_root = path
-                break
-        
-        if not self.data_root:
-            print("⚠️ No PyTorch checkpoints found, will try to download...")
-            try:
-                from huggingface_hub import snapshot_download
-                download_path = os.path.join(checkpoint_base, "ditto_pytorch_downloaded")
-                snapshot_download(
-                    repo_id="digital-avatar/ditto-talkinghead",
-                    local_dir=download_path,
-                    allow_patterns=["ditto_pytorch/*"],
-                    cache_dir=download_path
-                )
-                self.data_root = download_path
-            except Exception as e:
-                print(f"❌ Could not download checkpoints: {e}")
-                self.data_root = checkpoint_base  # Use as fallback
-        
-        # 5. Create temp directory
-        self.temp_dir = Path(tempfile.gettempdir()) / "ditto_pytorch_output"
-        self.temp_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 6. Setup environment variables
-        self.env_vars = os.environ.copy()
-        self.env_vars["PYTHONPATH"] = f"{self.repo_dir}:{self.env_vars.get('PYTHONPATH', '')}"
-        
-        print(f"\n📋 Model Configuration:")
-        print(f"   Repo: {self.repo_dir}")
-        print(f"   Config: {self.config_pkl}")
-        print(f"   Data root: {self.data_root}")
-        print(f"   Temp dir: {self.temp_dir}")
-        print(f"   Config exists: {os.path.exists(self.config_pkl) if self.config_pkl else False}")
-        print(f"   Data exists: {os.path.exists(self.data_root) if self.data_root else False}")
-        print("\n✅ PyTorch model initialized (NO TensorRT dependency)")
-    
-    def predict(self, context, model_input):
-        """Generate video from Base64 inputs"""
-        import traceback
-        
-        try:
-            # 1. Parse input
-            if isinstance(model_input, pd.DataFrame):
-                audio_b64 = model_input.iloc[0].get("audio_b64")
-                image_b64 = model_input.iloc[0].get("image_b64")
-            else:
-                return {"status": "error", "message": "Input must be DataFrame"}
-            
-            if not audio_b64 or not image_b64:
-                return {"status": "error", "message": "Missing audio_b64 or image_b64"}
-            
-            # 2. Decode files
-            job_id = os.urandom(4).hex()
-            audio_path = self.temp_dir / f"audio_{job_id}.wav"
-            image_path = self.temp_dir / f"image_{job_id}.png"
-            output_path = self.temp_dir / f"output_{job_id}.mp4"
-            
-            with open(audio_path, "wb") as f:
-                f.write(base64.b64decode(audio_b64))
-            with open(image_path, "wb") as f:
-                f.write(base64.b64decode(image_b64))
-            
-            print(f"\n🎬 Starting PyTorch inference (Job: {job_id})...")
-            print(f"   Audio: {audio_path} ({os.path.getsize(audio_path)} bytes)")
-            print(f"   Image: {image_path} ({os.path.getsize(image_path)} bytes)")
-            
-            # 3. Run inference command
-            cmd = [
-                sys.executable, "inference.py",
-                "--data_root", str(self.data_root),
-                "--cfg_pkl", str(self.config_pkl),
-                "--audio_path", str(audio_path),
-                "--source_path", str(image_path),
-                "--output_path", str(output_path)
-            ]
-            
-            print(f"\n   Command: {' '.join(cmd)}")
-            print(f"   Working dir: {self.repo_dir}")
-            
-            process = subprocess.Popen(
-                cmd,
-                cwd=self.repo_dir,
-                env=self.env_vars,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1,
-                universal_newlines=True
-            )
-            
-            # Stream output
-            logs = []
-            for line in process.stdout:
-                logs.append(line)
-                # Print progress without flooding
-                if "frame" in line.lower() or "%" in line or "sec" in line:
-                    print(f"   {line.strip()}")
-            
-            return_code = process.wait()
-            
-            if return_code != 0:
-                error_msg = "\n".join(logs[-10:])
-                return {
-                    "status": "error", 
-                    "message": f"Inference failed (code: {return_code}):\n{error_msg}"
-                }
-            
-            # 4. Check output
-            if not os.path.exists(output_path):
-                return {"status": "error", "message": "Output file not created"}
-            
-            # 5. Convert to browser-compatible format
-            final_output = self.temp_dir / f"final_{job_id}.mp4"
-            ffmpeg_cmd = [
-                "ffmpeg", "-y", "-loglevel", "error",
-                "-i", str(output_path),
-                "-pix_fmt", "yuv420p",
-                "-c:v", "libx264",
-                "-preset", "fast",
-                str(final_output)
-            ]
-            
-            subprocess.run(ffmpeg_cmd, capture_output=True)
-            
-            if os.path.exists(final_output):
-                with open(final_output, "rb") as f:
-                    video_b64 = base64.b64encode(f.read()).decode("utf-8")
-                
-                result = {
-                    "status": "success",
-                    "message": f"Video generated with PyTorch (Job: {job_id})",
-                    "video_b64": video_b64,
-                    "job_id": job_id
-                }
-            else:
-                result = {"status": "error", "message": "Video conversion failed"}
-            
-            # 6. Cleanup
-            for f in [audio_path, image_path, output_path, final_output]:
-                if os.path.exists(f):
-                    try:
-                        os.remove(f)
-                    except:
-                        pass
-            
-            return result
-            
-        except Exception as e:
-            return {
-                "status": "error",
-                "message": f"Prediction error: {str(e)}\n{traceback.format_exc()[:500]}"
-            }
+# Setup MLflow
+mlflow.set_registry_uri("databricks-uc")
+mlflow.set_experiment("/Shared/ditto_pytorch_experiment")
 
-print("✅ PyTorch model class defined successfully!")
-print("   This model uses ONLY PyTorch (no TensorRT dependency)")
+print("🔧 Configuring MLflow...")
+print(f"   Registry URI: {mlflow.get_registry_uri()}")
+print(f"   Experiment: {mlflow.get_experiment_by_name('/Shared/ditto_pytorch_experiment')}")
+
+# Define model signature
+print("\n📋 Creating model signature...")
+test_input = pd.DataFrame({
+    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],  # Empty audio
+    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]  # 1x1 pixel
+})
+
+test_output = pd.DataFrame({
+    "status": ["success"],
+    "message": ["Video generated"],
+    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."],
+    "job_id": ["test123"]
+})
+
+signature = infer_signature(test_input, test_output)
+print("✅ Signature created")
+
+# Create conda environment YAML
+print("\n🐍 Creating conda environment...")
+conda_env = {
+    "name": "ditto-pytorch-env",
+    "channels": ["conda-forge", "defaults"],
+    "dependencies": [
+        "python=3.10",
+        "pip=23.3.1",
+        {
+            "pip": [
+                "torch==2.1.2",
+                "torchvision==0.16.2", 
+                "torchaudio==2.1.2",
+                "numpy==1.26.4",
+                "cuda-python==12.2.0",
+                "onnxruntime-gpu==1.16.3",
+                "gitpython==3.1.40",
+                "librosa>=0.10.1",
+                "imageio-ffmpeg",
+                "opencv-python-headless==4.9.0.80",
+                "soundfile",
+                "soxr",
+                "imageio",
+                "moviepy",
+                "mediapipe>=0.10.9",
+                "ml_dtypes==0.4.0",
+                "einops",
+                "omegaconf",
+                "huggingface_hub",
+                "filetype",
+                "tqdm",
+                "scikit-image",
+                "colored",
+                "polygraphy",
+                "mlflow==3.8.1",
+                "pyyaml",
+                "requests"
+            ]
+        }
+    ]
+}
+
+# Save conda environment to file
+conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
+yaml.dump(conda_env, conda_file)
+conda_file.close()
+conda_file_path = conda_file.name
+
+print(f"✅ Conda environment saved to: {conda_file_path}")
+
+# Prepare artifacts directory
+print("\n📦 Preparing model artifacts...")
+artifact_dir = "/tmp/ditto-pytorch-artifacts"
+if os.path.exists(artifact_dir):
+    shutil.rmtree(artifact_dir)
+
+# Copy the repository (without large checkpoint files)
+shutil.copytree(
+    "/tmp/ditto-talkinghead-pytorch",
+    artifact_dir,
+    ignore=shutil.ignore_patterns("*.engine", "*.trt", "__pycache__", "*.pyc", ".git")
+)
+
+print(f"✅ Artifacts prepared: {artifact_dir} ({sum(len(files) for _, _, files in os.walk(artifact_dir))} files)")
+
+# Log the model to MLflow
+print("\n📤 Logging model to MLflow...")
+with mlflow.start_run() as run:
+    # Log parameters
+    mlflow.log_param("model_type", "pytorch")
+    mlflow.log_param("ditto_version", "v0.4")
+    mlflow.log_param("backend", "pytorch_only")
+    mlflow.log_param("gpu_support", "cuda_12.1")
+    
+    # Log the model
+    model_info = mlflow.pyfunc.log_model(
+        artifact_path="ditto_pytorch_model",
+        python_model=DittoPyTorchModel(),
+        signature=signature,
+        conda_env=conda_file_path,
+        artifacts={"repo": artifact_dir}
+    )
+    
+    run_id = run.info.run_id
+    print(f"✅ Model logged successfully!")
+    print(f"   Run ID: {run_id}")
+    print(f"   Model URI: {model_info.model_uri}")
+
+# Register the model in Unity Catalog
+print("\n🏢 Registering model in Unity Catalog...")
+MODEL_NAME = "lab37_catalog.ifstrolley.ditto_talkinghead_pytorch"  # Change to your catalog
+
+try:
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_pytorch_model",
+        name=MODEL_NAME
+    )
+    
+    print(f"🎉 SUCCESS! Model registered!")
+    print(f"   Model: {MODEL_NAME}")
+    print(f"   Version: {model_version.version}")
+    print(f"   Status: {model_version.status}")
+    
+    # Transition to Production
+    print("\n🏭 Transitioning to Production...")
+    client = mlflow.MlflowClient()
+    client.transition_model_version_stage(
+        name=MODEL_NAME,
+        version=model_version.version,
+        stage="Production",
+        archive_existing_versions=True
+    )
+    
+    print("✅ Model marked as Production")
+    
+except Exception as e:
+    print(f"⚠️ Registration failed: {e}")
+    print("   Creating new model...")
+    
+    # Try with a new name
+    MODEL_NAME_NEW = f"{MODEL_NAME}_v1"
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_pytorch_model",
+        name=MODEL_NAME_NEW
+    )
+    print(f"✅ Model registered as: {MODEL_NAME_NEW} v{model_version.version}")
+
+# Cleanup
+try:
+    os.unlink(conda_file_path)
+    print(f"\n🧹 Cleaned up temporary file: {conda_file_path}")
+except:
+    pass
+
+print("\n" + "=" * 60)
+print("📋 DEPLOYMENT SUMMARY")
+print("=" * 60)
+print(f"✅ Model: {MODEL_NAME if 'model_version' in locals() else MODEL_NAME_NEW}")
+print(f"✅ Version: {model_version.version if 'model_version' in locals() else 'N/A'}")
+print(f"✅ Backend: PyTorch only (no TensorRT)")
+print(f"✅ GPU: CUDA 12.1 (T4 compatible)")
+print(f"✅ Dependencies: Clean conda environment")
+print("=" * 60)
