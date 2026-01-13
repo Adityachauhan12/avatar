@@ -1,6 +1,26 @@
-Cloning into '/tmp/ditto-rebuild'...
-WARNING: There was an error checking the latest version of pip.
-ERROR: file:///tmp/ditto-rebuild does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
+import subprocess
+import os
 
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
+# Install TensorRT 9.3.0
+subprocess.run([
+    "pip", "install", "-q",
+    "--index-url", "https://pypi.nvidia.com",
+    "tensorrt==9.3.0.post12.dev1",
+    "tensorrt-libs==9.3.0.post12.dev1",
+    "tensorrt-bindings==9.3.0.post12.dev1"
+], check=True)
+
+# Install ditto dependencies manually
+subprocess.run([
+    "pip", "install", "-q",
+    "torch", "torchvision", "numpy", "librosa", "opencv-python",
+    "onnxruntime-gpu", "mediapipe", "omegaconf", "einops"
+], check=True)
+
+# Check if there's a build script
+result = subprocess.run(
+    ["find", "/tmp/ditto-rebuild", "-name", "*build*", "-o", "-name", "*engine*"],
+    capture_output=True, text=True
+)
+print("Build/engine scripts found:")
+print(result.stdout)
