@@ -1,31 +1,35 @@
-Returning existing local_dir `checkpoints` as remote repo cannot be accessed in `snapshot_download` (401 Client Error. (Request ID: Root=1-6965f982-0e6bc94a3dddfc8709d15d62;a1aae00f-2c89-4f8e-a0c7-8bef0ca05ed2)
+# CELL 4: Download ONNX Models from Correct Repo
+# ============
 
-Repository Not Found for url: https://huggingface.co/api/models/digital-avatar/ditto-onnx-models/revision/main.
-Please make sure you specified the correct `repo_id` and `repo_type`.
-If you are trying to access a private or gated repo, make sure you are authenticated.
-Invalid username or password.).
-WARNING:huggingface_hub._snapshot_download:Returning existing local_dir `checkpoints` as remote repo cannot be accessed in `snapshot_download` (401 Client Error. (Request ID: Root=1-6965f982-0e6bc94a3dddfc8709d15d62;a1aae00f-2c89-4f8e-a0c7-8bef0ca05ed2)
+from huggingface_hub import snapshot_download
+import os
 
-Repository Not Found for url: https://huggingface.co/api/models/digital-avatar/ditto-onnx-models/revision/main.
-Please make sure you specified the correct `repo_id` and `repo_type`.
-If you are trying to access a private or gated repo, make sure you are authenticated.
-Invalid username or password.).
-✅ Config downloaded
+print("📥 Getting correct ONNX source models...")
+print("=" * 60)
 
-📦 Downloading ONNX models for conversion...
-✅ ONNX models downloaded
+checkpoints_dir = "./checkpoints"
 
-📂 checkpoints/ contents:
-   📄 v0.4_hubert_cfg_trt_online.pkl
-   📄 v0.4_hubert_cfg_trt.pkl
-   📄 v0.4_hubert_cfg_pytorch.pkl
-   📄 .gitignore
-   📄 v0.4_hubert_cfg_trt_online.pkl.metadata
-   📄 v0.4_hubert_cfg_pytorch.pkl.lock
-   📄 v0.4_hubert_cfg_trt.pkl.lock
-   📄 v0.4_hubert_cfg_trt.pkl.metadata
-   📄 v0.4_hubert_cfg_trt_online.pkl.lock
-   📄 v0.4_hubert_cfg_pytorch.pkl.metadata
+# Correct repo for ONNX models (based on Ditto repo structure)
+print("\n📦 Downloading from digital-avatar/ditto-talkinghead (ONNX)...")
+snapshot_download(
+    repo_id="digital-avatar/ditto-talkinghead",
+    local_dir=checkpoints_dir,
+    allow_patterns=["*.onnx"],
+    ignore_patterns=["*.trt*", "*.pkl"],  # Skip TRT engines and configs
+)
 
-✅ Ready for engine building!
-Next: Convert ONNX → TensorRT engines...
+# List ONNX files specifically
+onnx_files = []
+for root, dirs, files in os.walk(checkpoints_dir):
+    for file in files:
+        if file.endswith('.onnx'):
+            onnx_files.append(os.path.join(root, file))
+
+print(f"\n✅ Found {len(onnx_files)} ONNX files:")
+for onnx_file in onnx_files:
+    print(f"   📄 {onnx_file}")
+
+if len(onnx_files) == 0:
+    print("\n⚠️  No .onnx files found!")
+    print("   Listing all files in checkpoints:")
+    for root, dirs
