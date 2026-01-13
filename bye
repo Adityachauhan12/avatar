@@ -1,39 +1,51 @@
-import requests, base64, json
+# CELL 1: TensorRT 8.6.1 Build Environment
+# ============
 
-endpoint_url = "https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_base64_v11/invocations"
-token = ""  # ← FILL IN YOUR TOKEN
+import os
+import subprocess
+import sys
 
-audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
-image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+print("🔨 Setting up TensorRT 8.6.1 build environment...")
+print("=" * 60)
 
-with open(audio_path, "rb") as f:
-    audio_b64 = base64.b64encode(f.read()).decode("utf-8")
+# Clean slate
+os.chdir("/tmp")
+BASE_DIR = "/tmp/ditto-build-8.6"
 
-with open(image_path, "rb") as f:
-    image_b64 = base64.b64encode(f.read()).decode("utf-8")
+if os.path.exists(BASE_DIR):
+    import shutil
+    shutil.rmtree(BASE_DIR)
+os.makedirs(BASE_DIR)
+os.chdir(BASE_DIR)
 
-payload = {
-    "dataframe_split": {
-        "columns": ["audio_b64", "image_b64"],
-        "data": [[audio_b64, image_b64]],
-    }
-}
+print(f"✅ Working directory: {BASE_DIR}")
 
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json",
-}
+# Clone Ditto repo
+print("\n📥 Cloning Ditto repo...")
+subprocess.check_call([
+    "git", "clone", "--depth", "1", 
+    "https://github.com/antgroup/ditto-talkinghead.git", "."
+])
 
-resp = requests.post(endpoint_url, json=payload, headers=headers)
-print(f"Status: {resp.status_code}")
-print(json.dumps(resp.json(), indent=2)[:3000])
+print("✅ Repo cloned")
 
+# Install TensorRT 8.6.1 (EXACT match for your runtime)
+print("\n🔧 Installing TensorRT 8.6.1...")
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install", 
+    "tensorrt==8.6.1", "tensorrt-libs==8.6.1", "tensorrt-bindings==8.6.1",
+    "--extra-index-url", "https://pypi.nvidia.com"
+])
 
+print("✅ TensorRT 8.6.1 installed")
 
-got Status: 200
-{
-  "predictions": {
-    "status": "error",
-    "message": "Inference failed:\n/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning \"Using deprecated NumPy API, disable it with \" \"#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION\" [-Wcpp]\n\n   17 | #warning \"Using deprecated NumPy API, disable it with \" \\\n\n      |  ^~~~~~~\n\n[01/13/2026-07:09:02] [TRT] [E] 1: [stdArchiveReader.cpp::stdArchiveReaderInitCommon::47] Error Code 1: Serialization (Serialization assertion stdVersionRead == kSERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 228, Serialized Engine Version: 236)\n\nTraceback (most recent call last):\n\n  File \"/tmp/ditto-talkinghead/inference.py\", line 80, in <module>\n\n    SDK = StreamSDK(cfg_pkl, data_root)\n\n  File \"/tmp/ditto-talkinghead/stream_pipeline_offline.py\", line 35, in __init__\n\n    self.avatar_registrar = AvatarRegistrar(**avatar_registrar_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py\", line 52, in __init__\n\n    self.source2info = Source2Info(\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n\n    self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n\n    self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n\n  File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n\n    model = TRTWrapper(model_path)\n\n  File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 106, in __init__\n\n    assert self.engine\n\nAssertionError\n"
-  }
-}
+# Install PyTorch + Ditto deps
+print("\n🔥 Installing PyTorch + Ditto requirements...")
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install",
+    "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118",
+    "-r requirements.txt"
+])
+
+print("✅ Environment ready!")
+print("\nNext: Download ONNX models...")
