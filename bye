@@ -1,7 +1,33 @@
-Status: 200
-{
-  "predictions": {
-    "status": "error",
-    "message": "Inference failed:\n/opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning \"Using deprecated NumPy API, disable it with \" \"#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION\" [-Wcpp]\n\n   17 | #warning \"Using deprecated NumPy API, disable it with \" \\\n\n      |  ^~~~~~~\n\n[01/13/2026-06:34:49] [TRT] [E] 1: [stdArchiveReader.cpp::stdArchiveReaderInitCommon::47] Error Code 1: Serialization (Serialization assertion stdVersionRead == kSERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 228, Serialized Engine Version: 236)\n\nTraceback (most recent call last):\n\n  File \"/tmp/ditto-talkinghead/inference.py\", line 80, in <module>\n\n    SDK = StreamSDK(cfg_pkl, data_root)\n\n  File \"/tmp/ditto-talkinghead/stream_pipeline_offline.py\", line 35, in __init__\n\n    self.avatar_registrar = AvatarRegistrar(**avatar_registrar_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py\", line 52, in __init__\n\n    self.source2info = Source2Info(\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n\n    self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n\n    self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n\n  File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n\n    model = TRTWrapper(model_path)\n\n  File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 106, in __init__\n\n    assert self.engine\n\nAssertionError\n"
-  }
-}
+# CELL 10: Apply Patch
+
+import os
+
+tensorrt_utils_path = "/tmp/ditto-model-artifact-patched/core/utils/tensorrt_utils.py"
+
+print("🔧 Patching tensorrt_utils.py...")
+
+with open(tensorrt_utils_path, "r") as f:
+    content = f.read()
+
+old_code = """            self.engine = runtime.deserialize_cuda_engine(f.read())
+            assert self.engine"""
+
+new_code = """            self.engine = runtime.deserialize_cuda_engine(f.read())
+            except Exception as e:
+                if "Version tag does not match" in str(e) or "Serialization" in str(e):
+                    print(f"⚠️ TensorRT engine format mismatch detected!")
+                    print(f"   Expected: TensorRT 8.6.1 or compatible")
+                    print(f"   Engine built with: TensorRT 9.6+ (version mismatch)")
+                    self.engine = None
+                else:
+                    raise
+            assert self.engine, f"Failed to load engine. Rebuild required with matching TensorRT version."""
+
+if old_code in content:
+    print("✅ Found pattern")
+    content = content.replace(old_code, new_code)
+    with open(tensorrt_utils_path, "w") as f:
+        f.write(content)
+    print("✅ Patch applied!")
+else:
+    print("⚠️ Not found")
