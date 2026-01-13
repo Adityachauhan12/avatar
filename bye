@@ -1,20 +1,5 @@
-# CELL 6: Verify generated engines
+TRT dir: /tmp/ditto-build-8.6/checkpoints/ditto_trt_custom
+Engine count: 1
+ - warp_network_fp16.engine
 
-import os, glob
-
-trt_dir = "/tmp/ditto-build-8.6/checkpoints/ditto_trt_custom"
-onnx_dir = "/tmp/ditto-build-8.6/checkpoints/ditto_onnx"
-
-engines = sorted(glob.glob(os.path.join(trt_dir, "*.engine")))
-print("TRT dir:", trt_dir)
-print("Engine count:", len(engines))
-for p in engines:
-    print(" -", os.path.basename(p))
-
-plugin = os.path.join(onnx_dir, "libgrid_sample_3d_plugin.so")
-print("\nPlugin exists:", os.path.exists(plugin), plugin)
-
-if len(engines) < 10:
-    raise RuntimeError("Too few engines generated - stop and share output.")
-if not os.path.exists(plugin):
-    raise RuntimeError("Missing libgrid_sample_3d_plugin.so - stop and share output.")
+Plugin exists: True /tmp/ditto-build-8.6/checkpoints/ditto_onnx/libgrid_sample_3d_plugin.so
