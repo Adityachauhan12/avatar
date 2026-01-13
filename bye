@@ -1,66 +1,158 @@
-============================================================
-🧪 TESTING THE DEPLOYED PYTORCH MODEL
-============================================================
-🔗 Endpoint URL: https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations
-🕒 Timestamp: 2026-01-13 10:24:51
+print("🔍 Checking available config files...")
 
-🔍 Checking endpoint status...
-✅ Endpoint found: ditto_pytorch_1
-   State: NOT_UPDATING
-   ⚠️  WARNING: Endpoint is not READY. It's in state: NOT_UPDATING
-   Please wait until it shows READY (green) in the UI
-   You can check here: https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints
-   Model: N/A
-   Version: N/A
+config_paths = [
+    "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg",
+    "/dbfs/FileStore/ditto_checkpoints/ditto_cfg",
+    "/tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg"
+]
 
-📁 Checking input files...
-✅ Audio: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav (1.07 MB)
-✅ Image: /Volumes/lab37_catalog/ifstrolley/trolley/new.png (1188.39 KB)
+for path in config_paths:
+    if os.path.exists(path):
+        print(f"\n📁 Found: {path}")
+        files = os.listdir(path)
+        for file in files:
+            file_path = os.path.join(path, file)
+            size = os.path.getsize(file_path) / 1024 if os.path.isfile(file_path) else 0
+            print(f"   • {file} ({size:.1f} KB)")
+    else:
+        print(f"\n❌ Not found: {path}")
 
-🔤 Encoding files to Base64...
-✅ Audio encoded: 1467.4 KB (Base64)
-✅ Image encoded: 1584.5 KB (Base64)
+# Also check in your model artifacts
+artifact_path = "/tmp/ditto-pytorch-artifacts/checkpoints/ditto_cfg"
+if os.path.exists(artifact_path):
+    print(f"\n📦 In model artifacts:")
+    for file in os.listdir(artifact_path):
+        print(f"   • {file}")
 
-📦 Preparing API request...
-✅ Payload ready
-   Total size: 2.98 MB
 
-============================================================
-🚀 SENDING REQUEST
-============================================================
 
-📡 Target: https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_pytorch_1/invocations
-⏱️  Starting: 10:24:52
-⚠️  First request may take 2-3 minutes (cold start)...
-⏱️  Completed: 10:24:56
-📥 Status: 200
 
-✅ SUCCESS: Received 200 OK
-📊 Response keys: ['predictions']
-
-❌ MODEL ERROR: Inference failed (code: 1):
-Traceback (most recent call last):
-
-  File "/tmp/ditto-talkinghead-pytorch/inference.py", line 80, in <module>
-
-    SDK = StreamSDK(cfg_pkl, data_root)
-
-  File "/tmp/ditto-talkinghead-pytorch/stream_pipeline_offline.py", line 31, in __init__
-
-    ] = parse_cfg(cfg_pkl, data_root, kwargs)
-
-  File "/tmp/ditto-talkinghead-pytorch/core/atomic_components/cfg.py", line 19, in parse_cfg
-
-    cfg = load_pkl(cfg_pkl)
-
-  File "/tmp/ditto-talkinghead-pytorch/core/atomic_components/cfg.py", line 7, in load_pkl
-
-    with open(pkl, "rb") as f:
-
-FileNotFoundError: [Errno 2] No such file or directory: '/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl'
-
-   Full error: {'status': 'error', 'message': 'Inference failed (code: 1):\nTraceback (most recent call last):\n\n  File "/tmp/ditto-talkinghead-pytorch/inference.py", line 80, in <module>\n\n    SDK = StreamSDK(cfg_pkl, data_root)\n\n  File "/tmp/ditto-talkinghead-pytorch/stream_pipeline_offline.py", line 31, in __init__\n\n    ] = parse_cfg(cfg_pkl, data_root, kwargs)\n\n  File "/tmp/ditto-talkinghead-pytorch/core/atomic_components/cfg.py", line 19, in parse_cfg\n\n    cfg = load_pkl(cfg_pkl)\n\n  File "/tmp/ditto-talkinghead-pytorch/core/atomic_components/cfg.py", line 7, in load_pkl\n\n    with open(pkl, "rb") as f:\n\nFileNotFoundError: [Errno 2] No such file or directory: \'/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl\'\n'}
-
-============================================================
-✅ TEST COMPLETE
-============================================================
+def load_context(self, context):
+    """Setup environment and load model"""
+    print("\n🚀 Initializing Ditto PyTorch Model...")
+    
+    # 1. Define paths
+    self.repo_dir = "/tmp/ditto-talkinghead-pytorch"
+    
+    # 2. Clone if missing
+    if not os.path.exists(self.repo_dir):
+        print(f"📥 Cloning fresh repository...")
+        git.Repo.clone_from(
+            "https://github.com/antgroup/ditto-talkinghead.git",
+            self.repo_dir,
+            depth=1,
+            branch="main"
+        )
+    
+    # 3. Apply patch
+    patch_file = os.path.join(self.repo_dir, "core/aux_models/mediapipe_landmark478.py")
+    if os.path.exists(patch_file):
+        with open(patch_file, "r") as f:
+            content = f.read()
+        if "np.atan2" in content:
+            with open(patch_file, "w") as f:
+                f.write(content.replace("np.atan2", "np.arctan2"))
+            print("✅ Applied np.atan2 patch")
+    
+    # 4. FORCE PyTorch config - CRITICAL FIX!
+    checkpoint_base = os.path.join(self.repo_dir, "checkpoints")
+    
+    # Look for PyTorch config in multiple locations
+    pytorch_configs = [
+        os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl"),
+        "/dbfs/FileStore/ditto_checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
+        "/tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
+        "./checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
+    ]
+    
+    self.config_pkl = None
+    for config in pytorch_configs:
+        if os.path.exists(config):
+            self.config_pkl = config
+            print(f"✅ Found PyTorch config: {config}")
+            break
+    
+    # If still not found, download it
+    if not self.config_pkl:
+        print("⚠️ PyTorch config not found, downloading from HuggingFace...")
+        try:
+            from huggingface_hub import snapshot_download
+            snapshot_download(
+                repo_id="digital-avatar/ditto-talkinghead",
+                local_dir=checkpoint_base,
+                allow_patterns=["ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"],
+                cache_dir=checkpoint_base
+            )
+            self.config_pkl = os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl")
+            print("✅ Downloaded PyTorch config")
+        except Exception as e:
+            print(f"❌ Failed to download config: {e}")
+            # Last resort: use any .pkl file
+            for root, dirs, files in os.walk(checkpoint_base):
+                for file in files:
+                    if file.endswith(".pkl"):
+                        self.config_pkl = os.path.join(root, file)
+                        print(f"⚠️ Using alternative config: {file}")
+                        break
+                if self.config_pkl:
+                    break
+    
+    if not self.config_pkl:
+        raise FileNotFoundError("Could not find any config file!")
+    
+    print(f"📁 Using config: {self.config_pkl}")
+    
+    # 5. Setup data root (PyTorch checkpoints)
+    pytorch_checkpoint_paths = [
+        os.path.join(checkpoint_base, "ditto_pytorch"),
+        "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch",
+        "/tmp/ditto-model-artifact-patched/checkpoints/ditto_pytorch"
+    ]
+    
+    self.data_root = None
+    for path in pytorch_checkpoint_paths:
+        if os.path.exists(path) and len(os.listdir(path)) > 0:
+            self.data_root = path
+            print(f"✅ Found PyTorch checkpoints: {path}")
+            break
+    
+    if not self.data_root:
+        print("⚠️ No PyTorch checkpoints found, trying to download...")
+        try:
+            from huggingface_hub import snapshot_download
+            download_path = os.path.join(checkpoint_base, "ditto_pytorch_downloaded")
+            os.makedirs(download_path, exist_ok=True)
+            snapshot_download(
+                repo_id="digital-avatar/ditto-talkinghead",
+                local_dir=download_path,
+                allow_patterns=["ditto_pytorch/*"],
+                cache_dir=download_path
+            )
+            self.data_root = download_path
+            print("✅ Downloaded PyTorch checkpoints")
+        except Exception as e:
+            print(f"❌ Could not download checkpoints: {e}")
+            self.data_root = checkpoint_base  # Fallback
+    
+    # 6. Create temp directory
+    self.temp_dir = Path(tempfile.gettempdir()) / "ditto_pytorch_output"
+    self.temp_dir.mkdir(parents=True, exist_ok=True)
+    
+    # 7. Setup environment variables
+    self.env_vars = os.environ.copy()
+    self.env_vars["PYTHONPATH"] = f"{self.repo_dir}:{self.env_vars.get('PYTHONPATH', '')}"
+    
+    # 8. DEBUG: Print final paths
+    print(f"\n📋 FINAL CONFIGURATION:")
+    print(f"   Config file: {self.config_pkl}")
+    print(f"   Config exists: {os.path.exists(self.config_pkl)}")
+    print(f"   Data root: {self.data_root}")
+    print(f"   Data exists: {os.path.exists(self.data_root)}")
+    
+    if self.data_root and os.path.exists(self.data_root):
+        files = os.listdir(self.data_root)
+        print(f"   Files in data root: {len(files)}")
+        if files:
+            print(f"   Sample: {files[:3]}")
+    
+    print("\n✅ PyTorch model initialized - FORCING PYTORCH CONFIG")
