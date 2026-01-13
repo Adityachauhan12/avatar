@@ -1,33 +1,42 @@
-🔥 Installing Ditto requirements...
-============================================================
+# CELL 3: Download ONNX Models + Config
+# ============
 
-📦 Installing core Ditto dependencies...
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
-databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
-ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 1.26.4 which is incompatible.
-ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
-tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.4 which is incompatible.
-databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.8.1 which is incompatible.
-databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.4 which is incompatible.
+from huggingface_hub import snapshot_download
+import os
 
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
-✅ Core dependencies installed
+print("📥 Downloading ONNX models and config...")
+print("=" * 60)
 
-📂 Files in current directory (11 total):
-   .git
-   .gitignore
-   LICENSE
-   README.md
-   core
-   environment.yaml
-   example
-   inference.py
-   scripts
-   stream_pipeline_offline.py
-   ✅ scripts/ directory exists
-   ✅ core/ directory exists
+# Create checkpoints directory
+checkpoints_dir = "./checkpoints"
+os.makedirs(checkpoints_dir, exist_ok=True)
 
-✅ CELL 2 COMPLETE!
-Next: Download ONNX models from HuggingFace...
+# Download config files
+print("\n📦 Downloading Ditto config...")
+snapshot_download(
+    repo_id="digital-avatar/ditto-talkinghead",
+    local_dir=checkpoints_dir,
+    allow_patterns=["ditto_cfg/*"],
+)
+
+print("✅ Config downloaded")
+
+# Download ONNX models (these get converted to TRT engines)
+print("\n📦 Downloading ONNX models for conversion...")
+snapshot_download(
+    repo_id="digital-avatar/ditto-onnx-models",  # ONNX source
+    local_dir=checkpoints_dir,
+    allow_patterns=["*.onnx"],
+    ignore_patterns=["*.trt*"],  # Skip existing TRT engines
+)
+
+print("✅ ONNX models downloaded")
+
+# List what we got
+print("\n📂 checkpoints/ contents:")
+for root, dirs, files in os.walk(checkpoints_dir):
+    for file in files[:10]:  # First 10 files
+        print(f"   📄 {file}")
+
+print("\n✅ Ready for engine building!")
+print("Next: Convert ONNX → TensorRT engines...")
