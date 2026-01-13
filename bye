@@ -1,29 +1,21 @@
-print("🔍 Checking available config files...")
+🔍 Checking available config files...
 
-config_paths = [
-    "/tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg",
-    "/dbfs/FileStore/ditto_checkpoints/ditto_cfg",
-    "/tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg"
-]
+📁 Found: /tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg
+   • v0.4_hubert_cfg_trt_online.pkl (30.2 KB)
+   • v0.4_hubert_cfg_trt.pkl (30.2 KB)
+   • v0.4_hubert_cfg_pytorch.pkl (30.3 KB)
 
-for path in config_paths:
-    if os.path.exists(path):
-        print(f"\n📁 Found: {path}")
-        files = os.listdir(path)
-        for file in files:
-            file_path = os.path.join(path, file)
-            size = os.path.getsize(file_path) / 1024 if os.path.isfile(file_path) else 0
-            print(f"   • {file} ({size:.1f} KB)")
-    else:
-        print(f"\n❌ Not found: {path}")
+❌ Not found: /dbfs/FileStore/ditto_checkpoints/ditto_cfg
 
-# Also check in your model artifacts
-artifact_path = "/tmp/ditto-pytorch-artifacts/checkpoints/ditto_cfg"
-if os.path.exists(artifact_path):
-    print(f"\n📦 In model artifacts:")
-    for file in os.listdir(artifact_path):
-        print(f"   • {file}")
+📁 Found: /tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg
+   • v0.4_hubert_cfg_trt_online.pkl (30.2 KB)
+   • v0.4_hubert_cfg_trt.pkl (30.2 KB)
+   • v0.4_hubert_cfg_pytorch.pkl (30.3 KB)
 
+📦 In model artifacts:
+   • v0.4_hubert_cfg_trt_online.pkl
+   • v0.4_hubert_cfg_trt.pkl
+   • v0.4_hubert_cfg_pytorch.pkl
 
 
 
