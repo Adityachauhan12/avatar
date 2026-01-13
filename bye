@@ -1,3 +1,34 @@
- Error Code 1: Serialization (Serialization assertion stdVersionRead == kSERIALIZATION_VERSION failed.Version tag does not match. Note: Current Version: 228, Serialized Engine Version: 236)\n\nTraceback (most recent call last):\n\n  File \"/tmp/ditto-talkinghead/inference.py\", line 80, in <module>\n\n    SDK = StreamSDK(cfg_pkl, data_root)\n\n  File \"/tmp/ditto-talkinghead/stream_pipeline_offline.py\", line 35, in __init__\n\n    self.avatar_registrar = AvatarRegistrar(**avatar_registrar_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/avatar_registrar.py\", line 52, in __init__\n\n    self.source2info = Source2Info(\n\n  File \"/tmp/ditto-talkinghead/core/atomic_components/source2info.py\", line 59, in __init__\n\n    self.insightface_det = InsightFaceDet(**insightface_det_cfg)\n\n  File \"/tmp/ditto-talkinghead/core/aux_models/insightface_det.py\", line 62, in __init__\n\n    self.model, self.model_type = load_model(model_path, device=device, **kwargs)\n\n  File \"/tmp/ditto-talkinghead/core/utils/load_model.py\", line 22, in load_model\n\n    model = TRTWrapper(model_path)\n\n  File \"/tmp/ditto-talkinghead/core/utils/tensorrt_utils.py\", line 106, in __init__\n\n    assert self.engine\n\nAssertionError\n"
-  }
-}
+import subprocess
+import os
+import shutil
+
+# 1. Clone Ditto repo
+repo_dir = "/tmp/ditto-rebuild"
+if os.path.exists(repo_dir):
+    shutil.rmtree(repo_dir)
+
+subprocess.run([
+    "git", "clone", "--depth", "1",
+    "https://github.com/antgroup/ditto-talkinghead.git",
+    repo_dir
+], check=True)
+
+# 2. Install TensorRT 9.3.0
+subprocess.run([
+    "pip", "install", "-q",
+    "--index-url", "https://pypi.nvidia.com",
+    "tensorrt==9.3.0.post12.dev1",
+    "tensorrt-libs==9.3.0.post12.dev1",
+    "tensorrt-bindings==9.3.0.post12.dev1"
+], check=True)
+
+# 3. Install Ditto dependencies
+os.chdir(repo_dir)
+subprocess.run(["pip", "install", "-q", "-e", "."], check=True)
+
+# 4. **RUN THIS IN THE DITTO REPO** to rebuild engines
+# (This depends on Ditto's specific build scripts)
+# You'll need to check ditto-talkinghead/scripts for the build process
+print("✅ Ready to rebuild engines")
+print(f"📂 Repo: {repo_dir}")
+print("👉 Check ditto-talkinghead docs for engine rebuild script")
