@@ -1,3 +1,147 @@
-🔧 Attempting patch with flexible patterns...
-✅ Found Pattern 1!
-✅✅✅ PATCH APPLIED!
+# CELL 11: Re-register Model with Patched Code
+
+import subprocess
+import sys
+import os
+import tempfile
+import yaml
+
+print("📝 CELL 11: Re-register Model with Patched Code")
+print("=" * 60)
+
+# 1) Verify patch is actually in the file
+tensorrt_utils_path = "/tmp/ditto-model-artifact-patched/core/utils/tensorrt_utils.py"
+with open(tensorrt_utils_path, "r") as f:
+    content = f.read()
+
+if "deserialize_cuda_engine" in content and "except Exception as e:" in content:
+    print("✅ Patch verified in tensorrt_utils.py (try/except present)")
+else:
+    print("⚠️ WARNING: Patch may not be present as expected, continuing anyway")
+
+# 2) Install PyYAML (for conda.yaml handling)
+print("\n📦 Installing PyYAML...")
+subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
+
+# 3) MLflow + signature setup
+import mlflow
+from mlflow.models.signature import infer_signature
+import pandas as pd
+
+mlflow.set_registry_uri("databricks-uc")
+mlflow.set_experiment("/Shared/ditto_experiment")
+
+print("📋 Building model signature...")
+test_input = pd.DataFrame({
+    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],
+    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="],
+})
+test_output = pd.DataFrame({
+    "status": ["success"],
+    "message": ["Video generated"],
+    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."],
+})
+signature = infer_signature(test_input, test_output)
+print("✅ Signature created")
+
+# 4) Create conda env matching what we used before
+print("\n🐍 Creating conda environment file...")
+
+conda_env = {
+    "name": "ditto-env",
+    "channels": ["conda-forge", "defaults"],
+    "dependencies": [
+        "python=3.10",
+        "pip",
+        {
+            "pip": [
+                "--extra-index-url https://pypi.nvidia.com",
+                "torch==2.1.2",
+                "torchvision==0.16.2",
+                "torchaudio==2.1.2",
+                "tensorrt==9.3.0.post12.dev1",
+                "tensorrt-libs==9.3.0.post12.dev1",
+                "tensorrt-bindings==9.3.0.post12.dev1",
+                "cuda-python==12.2.0",
+                "onnxruntime-gpu==1.16.3",
+                "numpy==1.26.4",
+                "gitpython==3.1.40",
+                "librosa>=0.10.1",
+                "imageio-ffmpeg",
+                "opencv-python-headless",
+                "soundfile",
+                "soxr",
+                "imageio",
+                "moviepy",
+                "mediapipe>=0.10.9",
+                "ml_dtypes==0.4.0",
+                "einops",
+                "omegaconf",
+                "huggingface_hub",
+                "filetype",
+                "tqdm",
+                "scikit-image",
+                "colored",
+                "polygraphy",
+                "mlflow==3.8.1",
+            ]
+        },
+    ],
+}
+
+conda_file = tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False)
+yaml.dump(conda_env, conda_file)
+conda_file.close()
+conda_file_path = conda_file.name
+print(f"✅ Conda env written to: {conda_file_path}")
+
+# 5) Log model using patched repo
+print("\n📝 Logging model with patched repo...")
+
+repo_dir = "/tmp/ditto-model-artifact-patched"
+print(f"   Using repo_dir = {repo_dir}")
+print(f"   Patched file = {tensorrt_utils_path}")
+
+with mlflow.start_run() as run:
+    mlflow.pyfunc.log_model(
+        artifact_path="ditto_talking_head_patched",
+        python_model=DittoTalkingHeadModel(),   # from CELL 4
+        signature=signature,
+        conda_env=conda_file_path,
+        artifacts={"repo": repo_dir},
+    )
+    run_id = run.info.run_id
+
+print(f"✅ Model logged. Run ID: {run_id}")
+
+# 6) Register as a new UC model version
+print("\n🚀 Registering new model version in UC...")
+
+uc_model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
+
+try:
+    model_version = mlflow.register_model(
+        model_uri=f"runs:/{run_id}/ditto_talking_head_patched",
+        name=uc_model_name,
+    )
+    version_number = model_version.version
+    print(f"✅ SUCCESS! Registered Version: {version_number}")
+    print("\n🎯 NEXT STEPS:")
+    print("   1. Go to Databricks UI → Serving → ditto_base64_v10")
+    print(f"   2. Click 'Update' and select Version {version_number}")
+    print("   3. Click 'Deploy' and wait for READY")
+    print("   4. Run your test cell again (audio + image)")
+except Exception as e:
+    print(f"❌ Error while registering model: {e}")
+    import traceback
+    traceback.print_exc()
+
+# 7) Cleanup temp conda file
+print("\n🧹 Cleaning up...")
+try:
+    os.unlink(conda_file_path)
+    print("✅ Removed temporary conda.yaml")
+except Exception:
+    pass
+
+print("\n✅ CELL 11 COMPLETE!")
