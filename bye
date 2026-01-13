@@ -1,16 +1,71 @@
-import os, sys, subprocess, textwrap
+# CELL 1: Environment Setup & Dependencies
+print("=" * 60)
+print("🚀 DITTO TALKING HEAD - PYTORCH VERSION")
+print("=" * 60)
 
-print("Python:", sys.executable)
+import os
+import sys
+import shutil
+import subprocess
+import tempfile
 
-print("\n1) Where is nvidia-cublas-cu12 installed?")
-subprocess.run("python -m pip show nvidia-cublas-cu12 | sed -n 's/^Location: //p'", shell=True, check=False)
+# Clean up previous runs
+print("\n🧹 Cleaning up previous runs...")
+os.system("pkill -f inference.py 2>/dev/null || true")
+os.system("rm -rf /tmp/ditto-pytorch* 2>/dev/null || true")
 
-print("\n2) Where is tensorrt-libs installed?")
-subprocess.run("python -m pip show tensorrt-libs | sed -n 's/^Location: //p'", shell=True, check=False)
+# Install system dependencies
+print("📦 Installing system dependencies...")
+subprocess.run(["apt-get", "update", "-qq"], check=False)
+subprocess.run(["apt-get", "install", "-y", "-qq", "ffmpeg", "git"], check=False)
 
-print("\n3) Find libcublas.so.12 on disk (fast search in common roots)")
-subprocess.run("bash -lc 'ls -R /usr/local/cuda 2>/dev/null | head -n 50 || true'", shell=True, check=False)
-subprocess.run("bash -lc 'find /usr/local/cuda /usr/lib /databricks /local_disk0 -name \"libcublas.so.12*\" 2>/dev/null | head -n 50'", shell=True, check=False)
+# Install Python dependencies (PyTorch only, no TensorRT!)
+print("🐍 Installing Python dependencies (PyTorch only)...")
 
-print("\n4) Find libnvinfer.so (TensorRT core library) on disk")
-subprocess.run("bash -lc 'find / -name \"libnvinfer.so*\" 2>/dev/null | head -n 50'", shell=True, check=False)
+# Function to run pip safely
+def pip_install(packages):
+    """Install packages with pip"""
+    cmd = [sys.executable, "-m", "pip", "install", "-q"] + packages
+    subprocess.run(cmd, check=False)
+
+# First, uninstall any existing TensorRT to avoid conflicts
+pip_install(["uninstall", "-y", "tensorrt", "tensorrt-libs", "tensorrt-bindings"])
+
+# Install PyTorch with CUDA 12.1 (compatible with T4)
+pip_install([
+    "torch==2.1.2", 
+    "torchvision==0.16.2", 
+    "torchaudio==2.1.2",
+    "--index-url", "https://download.pytorch.org/whl/cu121"
+])
+
+# Install other dependencies
+pip_install([
+    "numpy==1.26.4",
+    "cuda-python==12.2.0",
+    "onnxruntime-gpu==1.16.3",
+    "gitpython==3.1.40",
+    "librosa>=0.10.1",
+    "imageio-ffmpeg",
+    "opencv-python-headless==4.9.0.80",
+    "soundfile",
+    "soxr",
+    "imageio",
+    "moviepy",
+    "mediapipe>=0.10.9",
+    "ml_dtypes==0.4.0",
+    "einops",
+    "omegaconf",
+    "huggingface_hub",
+    "filetype",
+    "tqdm",
+    "scikit-image",
+    "colored",
+    "polygraphy",
+    "mlflow==3.8.1",
+    "pyyaml",
+    "requests"
+])
+
+print("✅ Environment setup complete!")
+print(f"Python: {sys.executable}")
