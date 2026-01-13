@@ -1,28 +1,81 @@
-import requests
-import json
-
-WORKSPACE_URL = "adb-7012066134936526.6.azuredatabricks.net"
-TOKEN = ""
-
-# Get all serving endpoints
-url = f"https://{WORKSPACE_URL}/api/2.0/serving-endpoints"
-headers = {"Authorization": f"Bearer {TOKEN}"}
-
-response = requests.get(url, headers=headers)
-if response.status_code == 200:
-    endpoints = response.json()
-    print("📋 Your serving endpoints:")
-    for endpoint in endpoints.get("endpoints", []):
-        name = endpoint.get("name")
-        state = endpoint.get("state", {}).get("config_update", "UNKNOWN")
-        print(f"  • {name} (State: {state})")
-        
-        # Show model info
-        if "config" in endpoint:
-            served = endpoint["config"].get("served_entities", endpoint["config"].get("served_models", []))
-            if served:
-                model = served[0]
-                print(f"    Model: {model.get('model_name', 'N/A')} v{model.get('model_version', 'N/A')}")
-else:
-    print(f"❌ Failed to get endpoints: {response.status_code}")
-    print(response.text[:500])
+📋 Your serving endpoints:
+  • custom_rag_models (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • custom_rag_reranking (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • diito_base64_v4 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v1 (State: UPDATE_FAILED)
+  • ditto_base64_v10 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v11 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v2 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v3 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v5 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v6 (State: UPDATE_CANCELED)
+    Model: N/A vN/A
+  • ditto_base64_v7 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_base64_v8 (State: UPDATE_FAILED)
+  • ditto_base64_v9 (State: UPDATE_FAILED)
+  • ditto_pytorch_1 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_server (State: UPDATE_FAILED)
+  • ditto_server_base64 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_server_v2 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • ditto_server-v1 (State: UPDATE_FAILED)
+  • ditto_talkinghead_server (State: UPDATE_FAILED)
+  • ditto_with_base64 (State: UPDATE_FAILED)
+  • ditto-base-64-with-libs (State: UPDATE_FAILED)
+  • ditto-endpoint (State: UPDATE_FAILED)
+  • dynamic_tensorrt (State: IN_PROGRESS)
+  • embedding_generator (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • gemma2 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • iris_endpoint (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • llama3_2_intent (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • pyindex_urls (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • rag_models (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • tensorrt_version (State: UPDATE_CANCELED)
+  • wheel_url (State: UPDATE_FAILED)
+  • databricks-claude-haiku-4-5 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-claude-sonnet-4-5 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-gpt-oss-120b (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-claude-opus-4-5 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-gpt-oss-20b (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-llama-4-maverick (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-gemma-3-12b (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-meta-llama-3-1-8b-instruct (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-meta-llama-3-3-70b-instruct (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-claude-opus-4-1 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-claude-sonnet-4 (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-claude-3-7-sonnet (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-gte-large-en (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-bge-large-en (State: NOT_UPDATING)
+    Model: N/A vN/A
+  • databricks-meta-llama-3-1-405b-instruct (State: NOT_UPDATING)
+    Model: N/A vN/A
