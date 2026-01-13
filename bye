@@ -1,280 +1,103 @@
-# ============================================================================
-# CELL 9: RE-REGISTER MODEL WITH TENSORRT PATCH APPLIED
-# ============================================================================
-# This cell will:
-# 1. Apply the TensorRT version mismatch patch to tensorrt_utils.py
-# 2. Re-register the model as Version 20
-# 3. Update your serving endpoint
-# ============================================================================
+🔧 CELL 9: Re-register Model with TensorRT Patch
+============================================================
 
-import subprocess
-import sys
-import shutil
-import os
-import tempfile
-import yaml
-import git
-from pathlib import Path
+📦 Installing PyYAML...
 
-print("🔧 CELL 9: Re-register Model with TensorRT Patch")
-print("=" * 60)
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
+🔗 Configuring MLflow...
+📋 Defining model signature...
+🐍 Creating conda environment...
+✅ Conda environment created: /tmp/tmplwahd71n.yaml
 
-# ============================================================================
-# STEP 1: Install PyYAML
-# ============================================================================
-print("\n📦 Installing PyYAML...")
-subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "pyyaml"])
+🔧 Preparing repository with TensorRT patch...
+   ⏳ Cloning Ditto repo...
+   ✅ Repo cloned
+   ⏳ Applying np.atan2 → np.arctan2 patch...
+   ✅ np.atan2 patch applied
+   ⏳ Downloading config from HuggingFace Hub...
 
-import mlflow
-from mlflow.models.signature import infer_signature
-import pandas as pd
 
-# ============================================================================
-# STEP 2: Setup MLflow
-# ============================================================================
-print("🔗 Configuring MLflow...")
-mlflow.set_registry_uri("databricks-uc")
-mlflow.set_experiment("/Shared/ditto_experiment")
 
-# ============================================================================
-# STEP 3: DEFINE MODEL SIGNATURE (same as CELL 5)
-# ============================================================================
-print("📋 Defining model signature...")
-test_input = pd.DataFrame({
-    "audio_b64": ["UklGRigAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="],
-    "image_b64": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="]
-})
 
-test_output = pd.DataFrame({
-    "status": ["success"],
-    "message": ["Video generated"],
-    "video_b64": ["AAAAIGZ0eXBpc29tAAACAgAAAABpc29tcGF2YzFtcDQyAAAAAAA..."]
-})
+   ✅ Config downloaded
 
-signature = infer_signature(test_input, test_output)
+🔧 Applying TensorRT version mismatch patch...
+   📦 Backup created: /tmp/ditto-model-artifact-patched/core/utils/tensorrt_utils.py.backup_v2
+   ⚠️  WARNING: Could not find exact pattern to patch
+   Manual inspection may be needed, but proceeding anyway...
 
-# ============================================================================
-# STEP 4: CREATE CONDA ENVIRONMENT YAML
-# ============================================================================
-print("🐍 Creating conda environment...")
+📋 Copying TensorRT engines to model artifact...
+   ✅ appearance_extractor_fp16.engine
+   ✅ blaze_face_fp16.engine
+   ✅ decoder_fp16.engine
+   ✅ face_mesh_fp16.engine
+   ✅ hubert_fp32.engine
+   ✅ insightface_det_fp16.engine
+   ✅ landmark106_fp16.engine
+   ✅ landmark203_fp16.engine
+   ✅ lmdm_v0.4_hubert_fp32.engine
+   ✅ motion_extractor_fp32.engine
+   ✅ stitch_network_fp16.engine
+   ✅ warp_network_fp16.engine
+   Total engines copied: 12
 
-conda_env = {
-    "name": "ditto-env",
-    "channels": ["conda-forge", "defaults"],
-    "dependencies": [
-        "python=3.10",
-        "pip",
-        {
-            "pip": [
-                "--extra-index-url https://pypi.nvidia.com",
-                "torch==2.1.2",
-                "torchvision==0.16.2",
-                "torchaudio==2.1.2",
-                "tensorrt==9.3.0.post12.dev1",
-                "tensorrt-libs==9.3.0.post12.dev1",
-                "tensorrt-bindings==9.3.0.post12.dev1",
-                "cuda-python==12.2.0",
-                "onnxruntime-gpu==1.16.3",
-                "numpy==1.26.4",
-                "gitpython==3.1.40",
-                "librosa>=0.10.1",
-                "imageio-ffmpeg",
-                "opencv-python-headless",
-                "soundfile",
-                "soxr",
-                "imageio",
-                "moviepy",
-                "mediapipe>=0.10.9",
-                "ml_dtypes==0.4.0",
-                "einops",
-                "omegaconf",
-                "huggingface_hub",
-                "filetype",
-                "tqdm",
-                "scikit-image",
-                "colored",
-                "polygraphy",
-                "mlflow==3.8.1"
-            ]
-        }
-    ]
-}
+📝 Logging model with patched code...
+2026/01/13 06:01:31 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+🔗 View Logged Model at: https://adb-7012066134936526.6.azuredatabricks.net/ml/experiments/2986770717919245/models/m-c247f9d8348b42a3b6aaa3a4e0a9a54d?o=7012066134936526
+/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/mlflow/pyfunc/__init__.py:3285: UserWarning: An input example was not provided when logging the model. To ensure the model signature functions correctly, specify the `input_example` parameter. See https://mlflow.org/docs/latest/model/signatures.html#model-input-example for more details about the benefits of using input_example.
+  color_warning(
 
-conda_file = tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False)
-yaml.dump(conda_env, conda_file)
-conda_file.close()
-conda_file_path = conda_file.name
+2026/01/13 06:01:48 WARNING mlflow.utils.requirements_utils: Detected one or more mismatches between the model's dependencies and the current Python environment:
+ - torch (current: 2.9.1, required: torch==2.1.2)
+ - torchvision (current: 0.24.1, required: torchvision==0.16.2)
+ - torchaudio (current: 2.9.1, required: torchaudio==2.1.2)
+ - cuda-python (current: uninstalled, required: cuda-python==12.2.0)
+ - onnxruntime-gpu (current: 1.23.2, required: onnxruntime-gpu==1.16.3)
+ - numpy (current: 2.2.6, required: numpy==1.26.4)
+ - gitpython (current: 3.1.27, required: gitpython==3.1.40)
+ - imageio-ffmpeg (current: uninstalled, required: imageio-ffmpeg)
+ - opencv-python-headless (current: uninstalled, required: opencv-python-headless)
+ - imageio (current: uninstalled, required: imageio)
+ - moviepy (current: uninstalled, required: moviepy)
+ - ml_dtypes (current: 0.2.0, required: ml_dtypes==0.4.0)
+ - filetype (current: uninstalled, required: filetype)
+ - scikit-image (current: uninstalled, required: scikit-image)
+ - colored (current: uninstalled, required: colored)
+ - polygraphy (current: uninstalled, required: polygraphy)
+To fix the mismatches, call `mlflow.pyfunc.get_model_dependencies(model_uri)` to fetch the model's environment and install dependencies using the resulting environment file.
+✅ Model logged with run ID: d7b7595566274695a486c9c7d507fdcd
 
-print(f"✅ Conda environment created: {conda_file_path}")
+🚀 Registering as new model version...
+Registered model 'lab37_catalog.ifstrolley.ditto_talkinghead' already exists. Creating a new version of this model...
+2026/01/13 06:02:02 WARNING mlflow.tracking._model_registry.fluent: Run with id d7b7595566274695a486c9c7d507fdcd has no artifacts at artifact path 'ditto_talking_head_v2', registering model based on models:/m-c247f9d8348b42a3b6aaa3a4e0a9a54d instead
 
-# ============================================================================
-# STEP 5: PREPARE REPO WITH PATCH APPLIED
-# ============================================================================
-print("\n🔧 Preparing repository with TensorRT patch...")
 
-repo_dir = "/tmp/ditto-model-artifact-patched"
 
-# Clean if exists
-if os.path.exists(repo_dir):
-    shutil.rmtree(repo_dir)
-os.makedirs(repo_dir, exist_ok=True)
+🔗 Created version '20' of model 'lab37_catalog.ifstrolley.ditto_talkinghead': https://adb-7012066134936526.6.azuredatabricks.net/explore/data/models/lab37_catalog/ifstrolley/ditto_talkinghead/version/20?o=7012066134936526
+✅ SUCCESS! Registered Version: 20
 
-# Clone repo
-print("   ⏳ Cloning Ditto repo...")
-git.Repo.clone_from(
-    "https://github.com/antgroup/ditto-talkinghead.git",
-    repo_dir,
-    depth=1
-)
-print("   ✅ Repo cloned")
+🎯 Next Steps:
+   1. Go to Serving → ditto_base64_v10 (or your endpoint name)
+   2. Click 'Update'
+   3. Select Version 20
+   4. Click 'Deploy'
+   5. Wait for READY status
+   6. Run the test cell again to see clear error message
 
-# Apply np.atan2 patch
-print("   ⏳ Applying np.atan2 → np.arctan2 patch...")
-patch_file = os.path.join(repo_dir, "core/aux_models/mediapipe_landmark478.py")
-with open(patch_file, "r") as f:
-    content = f.read()
-if "np.atan2" in content:
-    with open(patch_file, "w") as f:
-        f.write(content.replace("np.atan2", "np.arctan2"))
-    print("   ✅ np.atan2 patch applied")
+🧹 Cleaning up temporary files...
+✅ Cleanup complete
 
-# Download config from HuggingFace
-print("   ⏳ Downloading config from HuggingFace Hub...")
-from huggingface_hub import snapshot_download
+============================================================
+✅ CELL 9 COMPLETE!
+============================================================
 
-checkpoint_dir = os.path.join(repo_dir, "checkpoints")
-os.makedirs(checkpoint_dir, exist_ok=True)
-snapshot_download(
-    repo_id="digital-avatar/ditto-talkinghead",
-    local_dir=checkpoint_dir,
-    allow_patterns=["ditto_cfg/*"],
-    cache_dir=checkpoint_dir
-)
-print("   ✅ Config downloaded")
+📌 IMPORTANT: You need to manually update the serving endpoint!
+   Go to Databricks UI → Serving → ditto_base64_v10
+   Update to the new version and restart
 
-# ============================================================================
-# STEP 6: APPLY TENSORRT VERSION MISMATCH PATCH
-# ============================================================================
-print("\n🔧 Applying TensorRT version mismatch patch...")
+🎯 After updating endpoint, run this test cell to verify the patch:
 
-tensorrt_utils_path = os.path.join(repo_dir, "core/utils/tensorrt_utils.py")
-
-# Backup original
-shutil.copy(tensorrt_utils_path, tensorrt_utils_path + ".backup_v2")
-print(f"   📦 Backup created: {tensorrt_utils_path}.backup_v2")
-
-# Read current file
-with open(tensorrt_utils_path, "r") as f:
-    content = f.read()
-
-# THE PATCH: Replace simple assert with try-except handling
-old_pattern = """ self.engine = runtime.deserialize_cuda_engine(f.read())
-            assert self.engine"""
-
-new_pattern = """ self.engine = runtime.deserialize_cuda_engine(f.read())
-            except Exception as e:
-                if "Version tag does not match" in str(e) or "Serialization" in str(e):
-                    print(f"⚠️ TensorRT engine format mismatch detected!")
-                    print(f"   Expected: TensorRT 8.6.1 or compatible")
-                    print(f"   Engine built with: TensorRT 9.6+ (version mismatch)")
-                    self.engine = None
-                else:
-                    raise
-            
-            assert self.engine, f"Failed to load engine. Rebuild required with matching TensorRT version."""
-
-if old_pattern in content:
-    content = content.replace(old_pattern, new_pattern)
-    with open(tensorrt_utils_path, "w") as f:
-        f.write(content)
-    print("   ✅ TensorRT patch applied successfully")
-else:
-    print("   ⚠️  WARNING: Could not find exact pattern to patch")
-    print("   Manual inspection may be needed, but proceeding anyway...")
-
-# ============================================================================
-# STEP 7: COPY TENSORRT ENGINES
-# ============================================================================
-print("\n📋 Copying TensorRT engines to model artifact...")
-
-dbfs_checkpoint = "/dbfs/FileStore/ditto_checkpoints/ditto_trt_t4"
-local_checkpoint = os.path.join(repo_dir, "checkpoints", "ditto_trt_t4")
-os.makedirs(local_checkpoint, exist_ok=True)
-
-if os.path.exists(dbfs_checkpoint):
-    engine_count = 0
-    for file in os.listdir(dbfs_checkpoint):
-        src = os.path.join(dbfs_checkpoint, file)
-        dst = os.path.join(local_checkpoint, file)
-        if os.path.isfile(src):
-            shutil.copy2(src, dst)
-            engine_count += 1
-            print(f"   ✅ {file}")
-    print(f"   Total engines copied: {engine_count}")
-else:
-    print(f"   ⚠️  WARNING: DBFS checkpoint path not found: {dbfs_checkpoint}")
-    print("   Continuing without engine files (will fail at runtime with clear error)")
-
-# ============================================================================
-# STEP 8: LOG MODEL WITH PATCHED CODE
-# ============================================================================
-print("\n📝 Logging model with patched code...")
-
-with mlflow.start_run() as run:
-    mlflow.pyfunc.log_model(
-        artifact_path="ditto_talking_head_v2",
-        python_model=DittoTalkingHeadModel(),
-        signature=signature,
-        conda_env=conda_file_path,
-        artifacts={"repo": repo_dir}
-    )
-    run_id = run.info.run_id
-
-print(f"✅ Model logged with run ID: {run_id}")
-
-# ============================================================================
-# STEP 9: REGISTER MODEL AS VERSION 20
-# ============================================================================
-print("\n🚀 Registering as new model version...")
-
-uc_model_name = "lab37_catalog.ifstrolley.ditto_talkinghead"
-
-try:
-    model_version = mlflow.register_model(
-        model_uri=f"runs:/{run_id}/ditto_talking_head_v2",
-        name=uc_model_name
-    )
-    version_number = model_version.version
-    print(f"✅ SUCCESS! Registered Version: {version_number}")
-    print(f"\n🎯 Next Steps:")
-    print(f"   1. Go to Serving → ditto_base64_v10 (or your endpoint name)")
-    print(f"   2. Click 'Update'")
-    print(f"   3. Select Version {version_number}")
-    print(f"   4. Click 'Deploy'")
-    print(f"   5. Wait for READY status")
-    print(f"   6. Run the test cell again to see clear error message")
-except Exception as e:
-    print(f"❌ Error registering model: {e}")
-    print(f"   This might be expected if running for first time")
-
-# ============================================================================
-# STEP 10: CLEANUP
-# ============================================================================
-print("\n🧹 Cleaning up temporary files...")
-try:
-    os.unlink(conda_file_path)
-    print("✅ Cleanup complete")
-except:
-    pass
-
-print("\n" + "=" * 60)
-print("✅ CELL 9 COMPLETE!")
-print("=" * 60)
-print("\n📌 IMPORTANT: You need to manually update the serving endpoint!")
-print("   Go to Databricks UI → Serving → ditto_base64_v10")
-print("   Update to the new version and restart")
-print("\n🎯 After updating endpoint, run this test cell to verify the patch:")
-print("""
 import requests, base64, json
 
 endpoint_url = "https://adb-7012066134936526.6.azuredatabricks.net/serving-endpoints/ditto_base64_v10/invocations"
@@ -309,4 +132,3 @@ print(json.dumps(resp.json(), indent=2)[:3000])
 # ⚠️ TensorRT engine format mismatch detected!
 #    Expected: TensorRT 8.6.1 or compatible
 #    Engine built with: TensorRT 9.6+ (version mismatch)
-""")
