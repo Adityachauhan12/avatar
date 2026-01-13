@@ -1,21 +1,22 @@
-✅ Download done.
+# CELL 5: Convert ONNX -> TensorRT engines (custom for this GPU)
 
-📂 Found 13 .onnx files under ./checkpoints/ditto_onnx:
-  - ./checkpoints/ditto_onnx/appearance_extractor.onnx
-  - ./checkpoints/ditto_onnx/blaze_face.onnx
-  - ./checkpoints/ditto_onnx/decoder.onnx
-  - ./checkpoints/ditto_onnx/face_mesh.onnx
-  - ./checkpoints/ditto_onnx/hubert.onnx
-  - ./checkpoints/ditto_onnx/insightface_det.onnx
-  - ./checkpoints/ditto_onnx/landmark106.onnx
-  - ./checkpoints/ditto_onnx/landmark203.onnx
-  - ./checkpoints/ditto_onnx/lmdm_v0.4_hubert.onnx
-  - ./checkpoints/ditto_onnx/motion_extractor.onnx
-  - ./checkpoints/ditto_onnx/stitch_network.onnx
-  - ./checkpoints/ditto_onnx/warp_network.onnx
-  - ./checkpoints/ditto_onnx/warp_network_ori.onnx
+import os, sys, subprocess
 
-📂 Found 1 non-onnx files under ./checkpoints/ditto_onnx (plugins/etc). Showing up to 20:
-  - ./checkpoints/ditto_onnx/libgrid_sample_3d_plugin.so
+os.chdir("/tmp/ditto-build-8.6")
+print("📂 CWD:", os.getcwd())
 
-✅ CELL 4 COMPLETE. Next step: run scripts/cvt_onnx_to_trt.py to build engines. (As per Ditto docs.)
+onnx_dir = "./checkpoints/ditto_onnx"
+trt_dir  = "./checkpoints/ditto_trt_custom"
+
+print("ONNX dir:", onnx_dir)
+print("TRT  dir:", trt_dir)
+
+cmd = [
+    sys.executable, "scripts/cvt_onnx_to_trt.py",
+    "--onnx_dir", onnx_dir,
+    "--trt_dir", trt_dir,
+]
+print("Running:", " ".join(cmd))
+
+subprocess.check_call(cmd)
+print("✅ ONNX -> TRT conversion finished")
