@@ -1,81 +1,244 @@
-📋 Your serving endpoints:
-  • custom_rag_models (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • custom_rag_reranking (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • diito_base64_v4 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v1 (State: UPDATE_FAILED)
-  • ditto_base64_v10 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v11 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v2 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v3 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v5 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v6 (State: UPDATE_CANCELED)
-    Model: N/A vN/A
-  • ditto_base64_v7 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_base64_v8 (State: UPDATE_FAILED)
-  • ditto_base64_v9 (State: UPDATE_FAILED)
-  • ditto_pytorch_1 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_server (State: UPDATE_FAILED)
-  • ditto_server_base64 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_server_v2 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • ditto_server-v1 (State: UPDATE_FAILED)
-  • ditto_talkinghead_server (State: UPDATE_FAILED)
-  • ditto_with_base64 (State: UPDATE_FAILED)
-  • ditto-base-64-with-libs (State: UPDATE_FAILED)
-  • ditto-endpoint (State: UPDATE_FAILED)
-  • dynamic_tensorrt (State: IN_PROGRESS)
-  • embedding_generator (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • gemma2 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • iris_endpoint (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • llama3_2_intent (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • pyindex_urls (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • rag_models (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • tensorrt_version (State: UPDATE_CANCELED)
-  • wheel_url (State: UPDATE_FAILED)
-  • databricks-claude-haiku-4-5 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-claude-sonnet-4-5 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-gpt-oss-120b (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-claude-opus-4-5 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-gpt-oss-20b (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-llama-4-maverick (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-gemma-3-12b (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-meta-llama-3-1-8b-instruct (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-meta-llama-3-3-70b-instruct (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-claude-opus-4-1 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-claude-sonnet-4 (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-claude-3-7-sonnet (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-gte-large-en (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-bge-large-en (State: NOT_UPDATING)
-    Model: N/A vN/A
-  • databricks-meta-llama-3-1-405b-instruct (State: NOT_UPDATING)
-    Model: N/A vN/A
+# CELL 6: Test the Model - AFTER DEPLOYMENT (CORRECTED)
+print("=" * 60)
+print("🧪 TESTING THE DEPLOYED PYTORCH MODEL")
+print("=" * 60)
+
+import requests
+import base64
+import json
+import os
+import time
+
+# ============================================================================
+# CONFIGURATION - CORRECT THESE!
+# ============================================================================
+# ⚠️ USE THE EXACT ENDPOINT NAME FROM THE LIST ABOVE!
+ENDPOINT_NAME = "ditto_pytorch_v1"  # ⚠️ CHANGE THIS!
+WORKSPACE_URL = "adb-7012066134936526.6.azuredatabricks.net"  # ✅ NO https:// prefix!
+TOKEN = ""  # ✅ YOUR TOKEN
+# ============================================================================
+
+# Build endpoint URL - CORRECT WAY!
+endpoint_url = f"https://{WORKSPACE_URL}/serving-endpoints/{ENDPOINT_NAME}/invocations"
+
+print(f"🔗 Endpoint URL: {endpoint_url}")
+print(f"🕒 Timestamp: {time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+# ============================================================================
+# STEP 1: VERIFY ENDPOINT EXISTS
+# ============================================================================
+print("\n🔍 Checking endpoint status...")
+
+try:
+    # Get endpoint info
+    status_url = f"https://{WORKSPACE_URL}/api/2.0/serving-endpoints/{ENDPOINT_NAME}"
+    headers = {"Authorization": f"Bearer {TOKEN}"}
+    
+    status_response = requests.get(status_url, headers=headers, timeout=10)
+    
+    if status_response.status_code == 200:
+        endpoint_info = status_response.json()
+        state = endpoint_info.get("state", {}).get("config_update", "UNKNOWN")
+        print(f"✅ Endpoint found: {ENDPOINT_NAME}")
+        print(f"   State: {state}")
+        
+        if state != "READY":
+            print(f"   ⚠️  WARNING: Endpoint is not READY. It's in state: {state}")
+            print(f"   Please wait until it shows READY (green) in the UI")
+            print(f"   You can check here: https://{WORKSPACE_URL}/serving-endpoints")
+        
+        # Show model info
+        if "config" in endpoint_info:
+            config = endpoint_info["config"]
+            served = config.get("served_entities", config.get("served_models", []))
+            if served:
+                model = served[0]
+                print(f"   Model: {model.get('model_name', 'N/A')}")
+                print(f"   Version: {model.get('model_version', 'N/A')}")
+    else:
+        print(f"❌ Endpoint not found or error: {status_response.status_code}")
+        print(f"   Response: {status_response.text[:200]}")
+        print(f"   Check if endpoint name '{ENDPOINT_NAME}' is correct")
+        
+except Exception as e:
+    print(f"⚠️  Cannot check endpoint: {e}")
+
+# ============================================================================
+# STEP 2: CHECK FILES
+# ============================================================================
+print("\n📁 Checking input files...")
+
+audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+image_path = "/Volumes/lab37_catalog/ifstrolley/trolley/new.png"
+
+if not os.path.exists(audio_path):
+    print(f"❌ ERROR: Audio file not found: {audio_path}")
+    # Try to find alternative
+    import glob
+    wav_files = glob.glob("/Volumes/lab37_catalog/ifstrolley/trolley/*.wav")
+    if wav_files:
+        audio_path = wav_files[0]
+        print(f"   Using alternative: {audio_path}")
+    else:
+        raise FileNotFoundError(f"Audio file not found: {audio_path}")
+
+if not os.path.exists(image_path):
+    print(f"❌ ERROR: Image file not found: {image_path}")
+    import glob
+    image_files = glob.glob("/Volumes/lab37_catalog/ifstrolley/trolley/*.png") + \
+                  glob.glob("/Volumes/lab37_catalog/ifstrolley/trolley/*.jpg")
+    if image_files:
+        image_path = image_files[0]
+        print(f"   Using alternative: {image_path}")
+    else:
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+
+print(f"✅ Audio: {audio_path} ({os.path.getsize(audio_path) / (1024*1024):.2f} MB)")
+print(f"✅ Image: {image_path} ({os.path.getsize(image_path) / 1024:.2f} KB)")
+
+# ============================================================================
+# STEP 3: ENCODE FILES
+# ============================================================================
+print("\n🔤 Encoding files to Base64...")
+
+try:
+    with open(audio_path, "rb") as f:
+        audio_b64 = base64.b64encode(f.read()).decode("utf-8")
+    print(f"✅ Audio encoded: {len(audio_b64) / 1024:.1f} KB (Base64)")
+except Exception as e:
+    print(f"❌ Failed to encode audio: {e}")
+    raise
+
+try:
+    with open(image_path, "rb") as f:
+        image_b64 = base64.b64encode(f.read()).decode("utf-8")
+    print(f"✅ Image encoded: {len(image_b64) / 1024:.1f} KB (Base64)")
+except Exception as e:
+    print(f"❌ Failed to encode image: {e}")
+    raise
+
+# ============================================================================
+# STEP 4: PREPARE REQUEST
+# ============================================================================
+print("\n📦 Preparing API request...")
+
+payload = {
+    "dataframe_split": {
+        "columns": ["audio_b64", "image_b64"],
+        "data": [[audio_b64, image_b64]]
+    }
+}
+
+headers = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Content-Type": "application/json"
+}
+
+print(f"✅ Payload ready")
+print(f"   Total size: {(len(audio_b64) + len(image_b64)) / (1024*1024):.2f} MB")
+
+# ============================================================================
+# STEP 5: SEND REQUEST
+# ============================================================================
+print("\n" + "=" * 60)
+print("🚀 SENDING REQUEST")
+print("=" * 60)
+
+print(f"\n📡 Target: {endpoint_url}")
+print(f"⏱️  Starting: {time.strftime('%H:%M:%S')}")
+print("⚠️  First request may take 2-3 minutes (cold start)...")
+
+try:
+    response = requests.post(
+        endpoint_url,
+        json=payload,
+        headers=headers,
+        timeout=300,  # 5 minutes
+        verify=True
+    )
+    
+    print(f"⏱️  Completed: {time.strftime('%H:%M:%S')}")
+    print(f"📥 Status: {response.status_code}")
+    
+    if response.status_code == 200:
+        print("\n✅ SUCCESS: Received 200 OK")
+        
+        try:
+            result = response.json()
+            print(f"📊 Response keys: {list(result.keys())}")
+            
+            if "predictions" in result:
+                pred = result["predictions"]
+                if isinstance(pred, dict):
+                    status = pred.get("status", "unknown")
+                    message = pred.get("message", "")
+                    
+                    if status == "success":
+                        print(f"\n🎉 VIDEO GENERATED!")
+                        print(f"   Status: {status}")
+                        print(f"   Message: {message}")
+                        
+                        if "video_b64" in pred:
+                            video_size = len(pred["video_b64"]) / 1024
+                            print(f"   Video size: {video_size:.1f} KB (Base64)")
+                            
+                            # Save video
+                            output_path = "/tmp/generated_video_pytorch.mp4"
+                            with open(output_path, "wb") as f:
+                                f.write(base64.b64decode(pred["video_b64"]))
+                            
+                            file_size = os.path.getsize(output_path) / (1024*1024)
+                            print(f"   Saved to: {output_path}")
+                            print(f"   File size: {file_size:.2f} MB")
+                            
+                            # Try to display
+                            print("\n📽️  Attempting to display...")
+                            try:
+                                from IPython.display import Video, display
+                                display(Video(output_path, embed=True, width=600))
+                                print("✅ Video displayed!")
+                            except:
+                                print(f"⚠️  Could not display. Download from: {output_path}")
+                        else:
+                            print("⚠️  No video data in response")
+                    
+                    elif status == "error":
+                        print(f"\n❌ MODEL ERROR: {message}")
+                        print(f"   Full error: {pred}")
+                    
+                    else:
+                        print(f"\n⚠️  Unknown status: {status}")
+                        print(f"   Full response: {json.dumps(pred, indent=2)[:1000]}")
+                
+                else:
+                    print(f"\n⚠️  Predictions is not dict: {type(pred)}")
+                    print(f"   Value: {pred}")
+            
+            else:
+                print(f"\n⚠️  No 'predictions' in response")
+                print(f"   Response: {json.dumps(result, indent=2)[:1000]}")
+        
+        except json.JSONDecodeError:
+            print(f"\n❌ Invalid JSON response")
+            print(f"   Response text: {response.text[:500]}")
+    
+    else:
+        print(f"\n❌ HTTP Error: {response.status_code}")
+        print(f"   Response: {response.text[:500]}")
+
+except requests.exceptions.Timeout:
+    print("\n⏰ TIMEOUT: Request took >5 minutes")
+    print("   Try shorter audio or increase timeout")
+
+except requests.exceptions.ConnectionError:
+    print("\n🔌 CONNECTION ERROR")
+    print(f"   Cannot connect to: {endpoint_url}")
+    print("   Check endpoint name and network")
+
+except Exception as e:
+    print(f"\n❌ UNEXPECTED ERROR: {type(e).__name__}")
+    print(f"   Error: {str(e)}")
+
+print("\n" + "=" * 60)
+print("✅ TEST COMPLETE")
+print("=" * 60)
