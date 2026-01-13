@@ -1,34 +1,6 @@
-import subprocess
-import os
-import shutil
+Cloning into '/tmp/ditto-rebuild'...
+WARNING: There was an error checking the latest version of pip.
+ERROR: file:///tmp/ditto-rebuild does not appear to be a Python project: neither 'setup.py' nor 'pyproject.toml' found.
 
-# 1. Clone Ditto repo
-repo_dir = "/tmp/ditto-rebuild"
-if os.path.exists(repo_dir):
-    shutil.rmtree(repo_dir)
-
-subprocess.run([
-    "git", "clone", "--depth", "1",
-    "https://github.com/antgroup/ditto-talkinghead.git",
-    repo_dir
-], check=True)
-
-# 2. Install TensorRT 9.3.0
-subprocess.run([
-    "pip", "install", "-q",
-    "--index-url", "https://pypi.nvidia.com",
-    "tensorrt==9.3.0.post12.dev1",
-    "tensorrt-libs==9.3.0.post12.dev1",
-    "tensorrt-bindings==9.3.0.post12.dev1"
-], check=True)
-
-# 3. Install Ditto dependencies
-os.chdir(repo_dir)
-subprocess.run(["pip", "install", "-q", "-e", "."], check=True)
-
-# 4. **RUN THIS IN THE DITTO REPO** to rebuild engines
-# (This depends on Ditto's specific build scripts)
-# You'll need to check ditto-talkinghead/scripts for the build process
-print("✅ Ready to rebuild engines")
-print(f"📂 Repo: {repo_dir}")
-print("👉 Check ditto-talkinghead docs for engine rebuild script")
+[notice] A new release of pip available: 22.3.1 -> 25.3
+[notice] To update, run: pip install --upgrade pip
