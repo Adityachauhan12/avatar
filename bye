@@ -1,193 +1,44 @@
-🔥 Installing PyTorch + Ditto requirements...
-============================================================
+# CELL 2: Install Ditto Dependencies (Simplified)
+# ============
 
-📦 Installing PyTorch...
-Looking in indexes: https://download.pytorch.org/whl/cu118
-Requirement already satisfied: torch in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (2.9.1)
-Requirement already satisfied: torchvision in /databricks/python3/lib/python3.10/site-packages (0.15.2+cu118)
-Requirement already satisfied: torchaudio in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (2.9.1)
-Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (11.7.3.90)
-Requirement already satisfied: networkx>=2.5.1 in /databricks/python3/lib/python3.10/site-packages (from torch) (2.8.4)
-Requirement already satisfied: fsspec>=0.8.5 in /databricks/python3/lib/python3.10/site-packages (from torch) (2023.6.0)
-Requirement already satisfied: jinja2 in /databricks/python3/lib/python3.10/site-packages (from torch) (3.1.2)
-Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.90)
-Requirement already satisfied: typing-extensions>=4.10.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (4.15.0)
-Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (0.7.1)
-Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (10.3.9.90)
-Requirement already satisfied: nvidia-nvshmem-cu12==3.3.20 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (3.3.20)
-Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.5.8.93)
-Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.90)
-Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.93)
-Requirement already satisfied: triton==3.5.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (3.5.1)
-Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.4.1)
-Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (9.10.2.21)
-Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (11.3.3.83)
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from torch) (3.9.0)
-Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (2.27.5)
-Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.90)
-Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (1.13.1.3)
-Requirement already satisfied: sympy>=1.13.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (1.14.0)
-Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch) (12.8.93)
-Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from torchvision) (2.28.1)
-Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /databricks/python3/lib/python3.10/site-packages (from torchvision) (9.4.0)
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-Requirement already satisfied: numpy in /databricks/python3/lib/python3.10/site-packages (from torchvision) (1.23.5)
-INFO: pip is looking at multiple versions of torchvision to determine which version is compatible with other requirements. This could take a while.
-Collecting torchvision
-  Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cu118/torchvision-0.22.1%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.22.1%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
-Collecting torch
-  Obtaining dependency information for torch from https://download.pytorch.org/whl/cu118/torch-2.7.1%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.7.1%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (28 kB)
-Collecting nvidia-cuda-nvrtc-cu11==11.8.89
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_nvrtc_cu11-11.8.89-py3-none-manylinux1_x86_64.whl (23.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.2/23.2 MB 24.3 MB/s eta 0:00:00
-Collecting nvidia-cuda-runtime-cu11==11.8.89
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_runtime_cu11-11.8.89-py3-none-manylinux1_x86_64.whl (875 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 875.6/875.6 kB 43.5 MB/s eta 0:00:00
-Collecting nvidia-cusolver-cu11==11.4.1.48
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cusolver_cu11-11.4.1.48-py3-none-manylinux1_x86_64.whl (128.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 128.2/128.2 MB 4.6 MB/s eta 0:00:00
-Collecting nvidia-nvtx-cu11==11.8.86
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_nvtx_cu11-11.8.86-py3-none-manylinux1_x86_64.whl (99 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 99.1/99.1 kB 10.5 MB/s eta 0:00:00
-Collecting nvidia-curand-cu11==10.3.0.86
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_curand_cu11-10.3.0.86-py3-none-manylinux1_x86_64.whl (58.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.1/58.1 MB 10.3 MB/s eta 0:00:00
-Collecting nvidia-cuda-cupti-cu11==11.8.87
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cuda_cupti_cu11-11.8.87-py3-none-manylinux1_x86_64.whl (13.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.1/13.1 MB 42.9 MB/s eta 0:00:00
-Collecting nvidia-nccl-cu11==2.21.5
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_nccl_cu11-2.21.5-py3-none-manylinux2014_x86_64.whl (147.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 147.8/147.8 MB 4.0 MB/s eta 0:00:00
-INFO: pip is looking at multiple versions of <Python from Requires-Python> to determine which version is compatible with other requirements. This could take a while.
-Collecting torchvision
-  Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cu118/torchvision-0.22.0%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.22.0%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (6.1 kB)
-Collecting torch
-  Obtaining dependency information for torch from https://download.pytorch.org/whl/cu118/torch-2.7.0%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.7.0%2Bcu118-cp310-cp310-manylinux_2_28_x86_64.whl.metadata (28 kB)
-Collecting nvidia-cusparse-cu11==11.7.5.86
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cusparse_cu11-11.7.5.86-py3-none-manylinux1_x86_64.whl (204.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 204.1/204.1 MB 2.9 MB/s eta 0:00:00
-Collecting torchvision
-  Obtaining dependency information for torchvision from https://download.pytorch.org/whl/cu118/torchvision-0.21.0%2Bcu118-cp310-cp310-linux_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.21.0%2Bcu118-cp310-cp310-linux_x86_64.whl.metadata (6.1 kB)
-Collecting torch
-  Obtaining dependency information for torch from https://download.pytorch.org/whl/cu118/torch-2.6.0%2Bcu118-cp310-cp310-linux_x86_64.whl.metadata
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.6.0%2Bcu118-cp310-cp310-linux_x86_64.whl.metadata (27 kB)
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.20.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.5 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.5/6.5 MB 64.9 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.5.1%2Bcu118-cp310-cp310-linux_x86_64.whl (838.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 838.3/838.3 MB 384.7 kB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.20.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.5 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.5/6.5 MB 61.3 MB/s eta 0:00:00
-Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from sympy>=1.13.3->torch) (1.2.1)
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.5.0%2Bcu118-cp310-cp310-linux_x86_64.whl (838.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 838.3/838.3 MB 425.0 kB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.19.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 19.3 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.4.1%2Bcu118-cp310-cp310-linux_x86_64.whl (857.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 857.6/857.6 MB 406.5 kB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.19.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 56.7 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.4.0%2Bcu118-cp310-cp310-linux_x86_64.whl (857.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 857.7/857.7 MB 417.0 kB/s eta 0:00:00
-INFO: pip is looking at multiple versions of torchvision to determine which version is compatible with other requirements. This could take a while.
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.18.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 60.2 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.3.1%2Bcu118-cp310-cp310-linux_x86_64.whl (839.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 839.7/839.7 MB 405.2 kB/s eta 0:00:00
-INFO: pip is looking at multiple versions of <Python from Requires-Python> to determine which version is compatible with other requirements. This could take a while.
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.18.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 1.9 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.3.0%2Bcu118-cp310-cp310-linux_x86_64.whl (839.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 839.6/839.6 MB 407.2 kB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.17.2%2Bcu118-cp310-cp310-linux_x86_64.whl (6.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 8.1 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.2.2%2Bcu118-cp310-cp310-linux_x86_64.whl (819.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 819.2/819.2 MB 438.3 kB/s eta 0:00:00
-Collecting nvidia-cudnn-cu11==8.7.0.84
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cudnn_cu11-8.7.0.84-py3-none-manylinux1_x86_64.whl (728.5 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 728.5/728.5 MB 473.2 kB/s eta 0:00:00
-Collecting nvidia-cublas-cu11==11.11.3.6
-  Downloading https://download.pytorch.org/whl/cu118/nvidia_cublas_cu11-11.11.3.6-py3-none-manylinux1_x86_64.whl (417.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 417.9/417.9 MB 1.4 MB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.17.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 20.1 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.2.1%2Bcu118-cp310-cp310-linux_x86_64.whl (819.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 819.2/819.2 MB 425.7 kB/s eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.17.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 62.0 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.2.0%2Bcu118-cp310-cp310-linux_x86_64.whl (811.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 811.7/811.7 MB 380.7 kB/s eta 0:00:00
-INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.16.2%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 23.4 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.1.2%2Bcu118-cp310-cp310-linux_x86_64.whl (2325.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.16.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 19.7 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.1.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2325.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.16.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 73.1 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.1.0%2Bcu118-cp310-cp310-linux_x86_64.whl (2325.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.15.2%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 19.4 MB/s eta 0:00:00
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.15.1%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 61.0 MB/s eta 0:00:00
-Collecting torch
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.0.0%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-Collecting torchvision
-  Downloading https://download.pytorch.org/whl/cu118/torchvision-0.15.0%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.1/6.1 MB 20.2 MB/s eta 0:00:00
-  Downloading https://download.pytorch.org/whl/torchvision-0.2.0-py2.py3-none-any.whl (48 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.8/48.8 kB 5.7 MB/s eta 0:00:00
-Requirement already satisfied: six in /usr/lib/python3/dist-packages (from torchvision) (1.16.0)
-Requirement already satisfied: MarkupSafe>=2.0 in /databricks/python3/lib/python3.10/site-packages (from jinja2->torch) (2.1.1)
-Installing collected packages: torchvision
-  Attempting uninstall: torchvision
-    Found existing installation: torchvision 0.15.2+cu118
-    Not uninstalling torchvision at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-7aa03194-1402-4d48-958e-fe98b15bd138
-    Can't uninstall 'torchvision'. No files were found to uninstall.
-Successfully installed torchvision-0.2.0
+import os
 
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
+# Change to repo directory
+os.chdir("/tmp/ditto-build-8.6")
 
-📦 Installing Ditto requirements...
-ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'requirements.txt'
+print("🔥 Installing Ditto requirements...")
+print("=" * 60)
 
-[notice] A new release of pip available: 22.3.1 -> 25.3
-[notice] To update, run: pip install --upgrade pip
+# Install Ditto deps directly (skip PyTorch re-install)
+print("\n📦 Installing core Ditto dependencies...")
+subprocess.check_call([
+    sys.executable, "-m", "pip", "install", "-q",
+    "numpy==1.26.4",
+    "opencv-python-headless",
+    "librosa",
+    "imageio-ffmpeg",
+    "einops",
+    "omegaconf",
+    "huggingface_hub",
+    "mediapipe>=0.10.9",
+    "onnxruntime-gpu==1.16.3",
+    "polygraphy",
+])
+
+print("✅ Core dependencies installed")
+
+# List files to confirm we're in right directory
+files = os.listdir(".")
+print(f"\n📂 Files in current directory ({len(files)} total):")
+for f in sorted(files)[:10]:
+    print(f"   {f}")
+
+if os.path.exists("checkpoints"):
+    print("   ✅ checkpoints/ directory exists")
+if os.path.exists("scripts"):
+    print("   ✅ scripts/ directory exists")
+if os.path.exists("core"):
+    print("   ✅ core/ directory exists")
+
+print("\n✅ CELL 2 COMPLETE!")
+print("Next: Download ONNX models from HuggingFace...")
