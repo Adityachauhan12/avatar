@@ -1,24 +1,33 @@
-FROM node:18-alpine AS frontend-build
+# Environment variables
+.env
+backend/.env
 
-WORKDIR /app/frontend
-COPY frontend/avatar-frontend/package*.json ./
-RUN npm ci
-COPY frontend/avatar-frontend/ ./
-RUN npm run build
+# Python
+backend/avatar_venv/
+backend/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
-FROM python:3.11-slim
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/static/
 
-WORKDIR /app
+# Node
+frontend/avatar-frontend/node_modules/
+frontend/avatar-frontend/build/
 
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-COPY backend/app.py .
-COPY backend/.env .
-COPY --from=frontend-build /app/frontend/build ./static
+# OS
+.DS_Store
+Thumbs.db
 
-RUN mkdir -p uploads
-
-EXPOSE 8000
-
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Logs
+*.log
