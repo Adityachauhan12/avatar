@@ -1,33 +1,9 @@
-# Environment variables
-.env
-backend/.env
-
-# Python
 backend/avatar_venv/
 backend/__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-
-# Uploads
 backend/uploads/*
 !backend/uploads/.gitkeep
-backend/static/
-
-# Node
 frontend/avatar-frontend/node_modules/
 frontend/avatar-frontend/build/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
+.git/
+*.pyc
 *.log
