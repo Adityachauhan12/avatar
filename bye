@@ -8,7 +8,506 @@ RUN npm run build
 
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /app[rdt4b] Preparing metadata (setup.py): started
+[rdt4b] Preparing metadata (setup.py): finished with status 'done'
+[rdt4b] Preparing metadata (setup.py): finished with status 'done'
+[rdt4b] Preparing metadata (setup.py): finished with status 'done'
+[rdt4b] Collecting tensorrt-libs==8.6.1
+[rdt4b] Collecting tensorrt-libs==8.6.1
+[rdt4b] Collecting tensorrt-libs==8.6.1
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 973.9 kB/s eta 0:00:00
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 1.1 MB/s eta 0:00:00
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 867.4 kB/s eta 0:00:00
+[rdt4b] Collecting tensorrt-bindings==8.6.1
+[rdt4b] Collecting tensorrt-bindings==8.6.1
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 165.4 MB/s eta 0:00:00
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 176.2 MB/s eta 0:00:00
+[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
+[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
+[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
+[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
+[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
+[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
+[rdt4b] Building wheels for collected packages: tensorrt
+[rdt4b] Building wheel for tensorrt (setup.py): started
+[rdt4b] Building wheels for collected packages: tensorrt
+[rdt4b] Building wheel for tensorrt (setup.py): started
+[rdt4b] Collecting tensorrt-bindings==8.6.1
+[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
+[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 208.5 MB/s eta 0:00:00
+[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
+[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
+[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
+[rdt4b] Building wheels for collected packages: tensorrt
+[rdt4b] Building wheel for tensorrt (setup.py): started
+[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
+[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
+[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
+[rdt4b] Successfully built tensorrt
+[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
+[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
+[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
+[rdt4b] Successfully built tensorrt
+[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
+[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
+[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
+[rdt4b] Successfully built tensorrt
+[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
+[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
+[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
+[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
+[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
+[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
+[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+[rdt4b] In file included from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarraytypes.h:1929,
+[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarrayobject.h:12,
+[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/arrayobject.h:5,
+[rdt4b] from /root/.pyxbld/temp.linux-x86_64-cpython-310/model/artifacts/ditto-model-artifact/core/utils/blend/blend.c:1157:
+[rdt4b] /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning "Using deprecated NumPy API, disable it with " "#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION" [-Wcpp]
+[rdt4b] 17 | #warning "Using deprecated NumPy API, disable it with " \
+[rdt4b] |  ^~~~~~~
+[rdt4b] In file included from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarraytypes.h:1929,
+[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarrayobject.h:12,
+[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/arrayobject.h:5,
+[rdt4b] from /root/.pyxbld/temp.linux-x86_64-cpython-310/model/artifacts/ditto-model-artifact/core/utils/blend/blend.c:1157:
+[rdt4b] /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning "Using deprecated NumPy API, disable it with " "#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION" [-Wcpp]
+[rdt4b] 17 | #warning "Using deprecated NumPy API, disable it with " \
+[rdt4b] |  ^~~~~~~
+[rdt4b] ==================== setup kwargs ====================
+[rdt4b] max_size <class 'int'> 1920
+[rdt4b] template_n_frames <class 'int'> -1
+[rdt4b] crop_scale <class 'float'> 2.3
+[rdt4b] crop_vx_ratio <class 'int'> 0
+[rdt4b] crop_vy_ratio <class 'float'> -0.125
+[rdt4b] crop_flag_do_rot <class 'bool'> True
+[rdt4b] smo_k_s <class 'int'> 13
+[rdt4b] emo <class 'numpy.ndarray'> (600, 8)
+[rdt4b] eye_f0_mode <class 'bool'> False
+[rdt4b] ch_info <class 'dict'>
+[rdt4b] overlap_v2 <class 'int'> 10
+[rdt4b] fix_kp_cond <class 'int'> 1
+[rdt4b] fix_kp_cond_dim <class 'list'> [0, 202]
+[rdt4b] sampling_timesteps <class 'int'> 50
+[rdt4b] online_mode <class 'bool'> False
+[rdt4b] v_min_max_for_clip <class 'numpy.ndarray'> (4, 265)
+[rdt4b] smo_k_d <class 'int'> 3
+[rdt4b] N_d <class 'int'> -1
+[rdt4b] use_d_keys <class 'NoneType'> None
+[rdt4b] relative_d <class 'bool'> True
+[rdt4b] drive_eye <class 'NoneType'> None
+[rdt4b] delta_eye_arr <class 'numpy.ndarray'> (15, 63)
+[rdt4b] delta_eye_open_n <class 'int'> 0
+[rdt4b] fade_type <class 'str'> d0
+[rdt4b] fade_out_keys <class 'list'> ['exp']
+[rdt4b] flag_stitching <class 'bool'> True
+[rdt4b] overall_ctrl_info <class 'dict'> {'delta_pitch': 2}
+[rdt4b] ==================================================
+[rdt4b] 
+[rdt4b] [2026-01-15 09:11:40 +0000] [443] [INFO] Booting worker with pid: 443
+[rdt4b] 
+[rdt4b] 
+[rdt4b] [2026-01-15 09:11:40 +0000] [447] [INFO] Booting worker with pid: 447
+[rdt4b] 
+[rdt4b] 
+[rdt4b] [2026-01-15 09:11:42 +0000] 2026/01/15 09:11:42 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[rdt4b] 
+[rdt4b] ffmpeg -loglevel error -y -i "/tmp/output_video.mp4.tmp.mp4" -i "/tmp/tmponz_z33f.wav" -map 0:v -map 1:a -c:v copy -c:a aac "/tmp/output_video.mp4"
+[rdt4b] /tmp/output_video.mp4
+[rdt4b] [01/15/2026-09:17:58] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:17:58] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:21:28] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:21:28] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:24:30] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:24:30] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:25:13] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:25:13] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:26:32] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:26:32] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:36:21] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:36:21] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:41:39] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:41:39] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:42:04] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:42:04] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:46:58] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:46:58] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-09:55:45] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-09:55:45] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:07:25] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:07:25] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:09:59] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:09:59] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:10:20] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:10:20] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:10:57] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:10:57] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:14:11] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:14:11] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:14:42] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:14:42] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:21:35] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:21:35] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:21:56] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:21:56] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:26:44] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:26:44] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:27:23] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:27:23] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:36:06] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:36:06] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:36:46] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:36:46] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] [01/15/2026-10:38:29] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
+[rdt4b] [01/15/2026-10:38:29] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
+[rdt4b] Traceback (most recent call last):
+[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
+[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
+[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
+[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
+[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
+[rdt4b] model = TRTWrapper(model_path)
+[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
+[rdt4b] assert self.engine
+[rdt4b] AssertionError
+[rdt4b] 0it [00:00, ?it/s][A[2026-01-15 09:11:40 +0000] [14] [INFO] Handling signal: ttin
+[rdt4b] 1it [00:00,  2.69it/s]
+[rdt4b] 0it [00:00, ?it/s][2026-01-15 09:11:40 +0000] [14] [INFO] Handling signal: ttin
+[rdt4b] 11it [00:15,  1.25it/s]
+[rdt4b] 13it [00:15,  1.69it/s]
+[rdt4b] 15it [00:15,  2.31it/s]
+[rdt4b] 17it [00:15,  3.03it/s]
+[rdt4b] 1it [00:14, 14.64s/it]
+[rdt4b] 20it [00:15,  4.58it/s]
+[rdt4b] 22it [00:16,  5.47it/s][2026-01-15 09:11:42 +0000] 2026/01/15 09:11:42 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
+[rdt4b] 24it [00:16,  6.64it/s]
+[rdt4b] 26it [00:16,  8.12it/s]
+[rdt4b] 28it [00:16,  8.88it/s]
+[rdt4b] 30it [00:16, 10.14it/s]
+[rdt4b] 32it [00:16, 10.39it/s]
+[rdt4b] 34it [00:16, 11.31it/s]
+[rdt4b] 36it [00:17, 12.91it/s]
+[rdt4b] 38it [00:18,  2.11it/s]
+[rdt4b] 6it [00:14,  1.84s/it]
+[rdt4b] 9it [00:15,  1.09s/it]
 
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
