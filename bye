@@ -1,150 +1,334 @@
-🔍 Checking available config files...
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import requests
+import base64
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+import uuid
 
-📁 Found: /tmp/ditto-talkinghead-pytorch/checkpoints/ditto_cfg
-   • v0.4_hubert_cfg_trt_online.pkl (30.2 KB)
-   • v0.4_hubert_cfg_trt.pkl (30.2 KB)
-   • v0.4_hubert_cfg_pytorch.pkl (30.3 KB)
+load_dotenv()
 
-❌ Not found: /dbfs/FileStore/ditto_checkpoints/ditto_cfg
+app = FastAPI()
 
-📁 Found: /tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg
-   • v0.4_hubert_cfg_trt_online.pkl (30.2 KB)
-   • v0.4_hubert_cfg_trt.pkl (30.2 KB)
-   • v0.4_hubert_cfg_pytorch.pkl (30.3 KB)
+# Configuration
+DATABRICKS_HOST = os.getenv("DATABRICKS_HOST")
+DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+SARVAM_API_KEY = os.getenv("SARVAM_API_KEY")
+ENDPOINT_NAME = os.getenv("ENDPOINT_NAME")
+UPLOADS_DIR = Path("uploads")
+UPLOADS_DIR.mkdir(exist_ok=True)
 
-📦 In model artifacts:
-   • v0.4_hubert_cfg_trt_online.pkl
-   • v0.4_hubert_cfg_trt.pkl
-   • v0.4_hubert_cfg_pytorch.pkl
+# Language & Voice Configuration
+LANGUAGES = {
+    "en-IN": {"name": "English", "native_name": "English"},
+    "hi-IN": {"name": "Hindi", "native_name": "हिंदी"},
+    "ta-IN": {"name": "Tamil", "native_name": "தமிழ்"},
+    "te-IN": {"name": "Telugu", "native_name": "తెలుగు"},
+    "ml-IN": {"name": "Malayalam", "native_name": "മലയാളം"},
+    "kn-IN": {"name": "Kannada", "native_name": "ಕನ್ನಡ"},
+    "mr-IN": {"name": "Marathi", "native_name": "मराठी"},
+    "gu-IN": {"name": "Gujarati", "native_name": "ગુજરાતી"},
+    "bn-IN": {"name": "Bengali", "native_name": "বাংলা"},
+    "pa-IN": {"name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
+    "od-IN": {"name": "Odia", "native_name": "ଓଡ଼ିଆ"},
+}
 
+VOICES = {
+    "hi-IN": ["shubh", "ritu", "rahul", "pooja", "simran", "kavya", "ratan", "rohan"],
+    "en-IN": ["shubh", "ritu", "rahul", "pooja", "amelia", "sophia"],
+    "ta-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "te-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "ml-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "kn-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "mr-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "gu-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "bn-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "pa-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "od-IN": ["shubh", "ritu", "rahul", "pooja"],
+}
 
+# ============ STEP 1: TRANSLATE TEXT (SARVAM TRANSLATION API) ============
+def translate_text(text: str, source_lang: str, target_lang: str) -> str:
+    """
+    Translate text from source language to target language using Sarvam API
+    Source language is always English (en-IN)
+    Returns: Translated text
+    """
+    if source_lang == target_lang:
+        return text
+    
+    url = "https://api.sarvam.ai/translate"
+    
+    headers = {
+        "api-subscription-key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "input": text,
+        "source_language_code": source_lang,
+        "target_language_code": target_lang,
+        "speaker_gender": "Male",
+        "mode": "formal",
+        "model": "mayura:v1",
+        "enable_preprocessing": True,
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+        
+        result = response.json()
+        if 'translated_text' in result:
+            return result['translated_text']
+        else:
+            raise HTTPException(status_code=500, detail="Translation API returned unexpected format")
+    
+    except requests.exceptions.HTTPError as e:
+        error_detail = f"Translation API error: {e.response.status_code} - {e.response.text}"
+        raise HTTPException(status_code=500, detail=error_detail)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Translation error: {str(e)}")
 
-def load_context(self, context):
-    """Setup environment and load model"""
-    print("\n🚀 Initializing Ditto PyTorch Model...")
+# ============ STEP 2: TEXT TO AUDIO (SARVAM API) ============
+def text_to_audio(text: str, language: str, speaker: str) -> bytes:
+    """
+    Convert text to audio using Sarvam API v3
+    Returns: Audio bytes (MP3 format)
+    """
+    url = "https://api.sarvam.ai/text-to-speech"
     
-    # 1. Define paths
-    self.repo_dir = "/tmp/ditto-talkinghead-pytorch"
+    headers = {
+        "api-subscription-key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+    }
     
-    # 2. Clone if missing
-    if not os.path.exists(self.repo_dir):
-        print(f"📥 Cloning fresh repository...")
-        git.Repo.clone_from(
-            "https://github.com/antgroup/ditto-talkinghead.git",
-            self.repo_dir,
-            depth=1,
-            branch="main"
-        )
+    # Split text into chunks of 2500 chars
+    max_chars = 2500
+    chunks = [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
     
-    # 3. Apply patch
-    patch_file = os.path.join(self.repo_dir, "core/aux_models/mediapipe_landmark478.py")
-    if os.path.exists(patch_file):
-        with open(patch_file, "r") as f:
-            content = f.read()
-        if "np.atan2" in content:
-            with open(patch_file, "w") as f:
-                f.write(content.replace("np.atan2", "np.arctan2"))
-            print("✅ Applied np.atan2 patch")
+    all_audio_bytes = b''
     
-    # 4. FORCE PyTorch config - CRITICAL FIX!
-    checkpoint_base = os.path.join(self.repo_dir, "checkpoints")
-    
-    # Look for PyTorch config in multiple locations
-    pytorch_configs = [
-        os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl"),
-        "/dbfs/FileStore/ditto_checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
-        "/tmp/ditto-model-artifact-patched/checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl",
-        "./checkpoints/ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"
-    ]
-    
-    self.config_pkl = None
-    for config in pytorch_configs:
-        if os.path.exists(config):
-            self.config_pkl = config
-            print(f"✅ Found PyTorch config: {config}")
-            break
-    
-    # If still not found, download it
-    if not self.config_pkl:
-        print("⚠️ PyTorch config not found, downloading from HuggingFace...")
+    for chunk in chunks:
+        payload = {
+            "text": chunk,
+            "target_language_code": language,
+            "speaker": speaker,
+            "pace": 1.0,
+            "speech_sample_rate": 8000,
+            "enable_preprocessing": True,
+            "model": "bulbul:v3-beta",
+            "output_audio_codec": "mp3"
+        }
+        
         try:
-            from huggingface_hub import snapshot_download
-            snapshot_download(
-                repo_id="digital-avatar/ditto-talkinghead",
-                local_dir=checkpoint_base,
-                allow_patterns=["ditto_cfg/v0.4_hubert_cfg_pytorch.pkl"],
-                cache_dir=checkpoint_base
-            )
-            self.config_pkl = os.path.join(checkpoint_base, "ditto_cfg", "v0.4_hubert_cfg_pytorch.pkl")
-            print("✅ Downloaded PyTorch config")
+            response = requests.post(url, json=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            
+            audio_data = response.json()
+            if 'audios' in audio_data and len(audio_data['audios']) > 0:
+                audio_bytes = base64.b64decode(audio_data['audios'][0])
+                all_audio_bytes += audio_bytes
+            else:
+                raise HTTPException(status_code=500, detail="Text-to-Speech API returned no audio")
+        
+        except requests.exceptions.HTTPError as e:
+            error_detail = f"Text-to-Speech API error: {e.response.status_code} - {e.response.text}"
+            raise HTTPException(status_code=500, detail=error_detail)
         except Exception as e:
-            print(f"❌ Failed to download config: {e}")
-            # Last resort: use any .pkl file
-            for root, dirs, files in os.walk(checkpoint_base):
-                for file in files:
-                    if file.endswith(".pkl"):
-                        self.config_pkl = os.path.join(root, file)
-                        print(f"⚠️ Using alternative config: {file}")
-                        break
-                if self.config_pkl:
-                    break
+            raise HTTPException(status_code=500, detail=f"Text-to-Speech error: {str(e)}")
     
-    if not self.config_pkl:
-        raise FileNotFoundError("Could not find any config file!")
+    return all_audio_bytes
+
+# ============ STEP 3: FILE TO BASE64 ============
+def file_to_base64(file_bytes: bytes) -> str:
+    """Convert file bytes to base64 string"""
+    return base64.b64encode(file_bytes).decode('utf-8')
+
+# ============ STEP 4: SEND TO DATABRICKS ENDPOINT ============
+def call_databricks_endpoint(image_b64: str, audio_b64: str) -> str:
+    """
+    Send image and audio base64 to Databricks endpoint
+    Returns: Video base64 response
+    """
+    url = f"{DATABRICKS_HOST}/serving-endpoints/{ENDPOINT_NAME}/invocations"
     
-    print(f"📁 Using config: {self.config_pkl}")
+    headers = {
+        "Authorization": f"Bearer {DATABRICKS_TOKEN}",
+        "Content-Type": "application/json"
+    }
     
-    # 5. Setup data root (PyTorch checkpoints)
-    pytorch_checkpoint_paths = [
-        os.path.join(checkpoint_base, "ditto_pytorch"),
-        "/dbfs/FileStore/ditto_checkpoints/ditto_pytorch",
-        "/tmp/ditto-model-artifact-patched/checkpoints/ditto_pytorch"
-    ]
+    # Format matches your curl command
+    payload = {
+        "dataframe_split": {
+            "columns": ["audio_b64", "image_b64"],
+            "data": [[audio_b64, image_b64]]
+        }
+    }
     
-    self.data_root = None
-    for path in pytorch_checkpoint_paths:
-        if os.path.exists(path) and len(os.listdir(path)) > 0:
-            self.data_root = path
-            print(f"✅ Found PyTorch checkpoints: {path}")
-            break
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=300)
+        response.raise_for_status()
+        
+        result = response.json()
+        
+        # Extract video base64 from response
+        if 'predictions' in result:
+            predictions = result['predictions']
+            # Check for error status
+            if isinstance(predictions, dict):
+                if predictions.get('status') == 'error':
+                    error_msg = predictions.get('message', 'Unknown error from endpoint')
+                    raise HTTPException(status_code=500, detail=f"Endpoint error: {error_msg}")
+                elif 'video_b64' in predictions:
+                    return predictions['video_b64']
+            # Handle list format (fallback)
+            elif isinstance(predictions, list) and len(predictions) > 0:
+                return predictions[0]
+        
+        raise HTTPException(status_code=500, detail=f"Unexpected response format from endpoint: {result}")
     
-    if not self.data_root:
-        print("⚠️ No PyTorch checkpoints found, trying to download...")
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Databricks endpoint error: {str(e)}")
+
+# ============ STEP 5: BASE64 TO VIDEO FILE ============
+def base64_to_video_file(video_b64: str, filename: str) -> Path:
+    """
+    Convert base64 to video file and save
+    Returns: Path to saved video file
+    """
+    try:
+        video_bytes = base64.b64decode(video_b64)
+        file_path = UPLOADS_DIR / filename
+        
+        with open(file_path, 'wb') as f:
+            f.write(video_bytes)
+        
+        return file_path
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error saving video: {str(e)}")
+
+# ============ API ENDPOINTS ============
+
+@app.get("/api/languages")
+async def get_languages():
+    """Get all supported languages and voices"""
+    return {
+        "languages": LANGUAGES,
+        "voices": VOICES
+    }
+
+@app.get("/api/voices/{language}")
+async def get_voices_for_language(language: str):
+    """Get available voices for a specific language"""
+    if language not in VOICES:
+        raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+    
+    return {
+        "language": language,
+        "voices": VOICES[language]
+    }
+
+@app.post("/api/generate-avatar")
+async def generate_avatar(
+    text: str,
+    language: str,
+    speaker: str,
+    image: UploadFile = File(...)
+):
+    """
+    Main endpoint: Accepts text + image + language + speaker, returns video
+    
+    Flow:
+    1. Translate English text to target language
+    2. Convert translated text to audio in target language
+    3. Send image + audio to Databricks endpoint
+    4. Get video back and save it
+    """
+    try:
+        # Validate language and speaker
+        if language not in LANGUAGES:
+            raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+        
+        if language not in VOICES or speaker not in VOICES[language]:
+            raise HTTPException(status_code=400, detail=f"Speaker {speaker} not supported for {language}")
+        
+        # Read image file
+        image_bytes = await image.read()
+        image_b64 = file_to_base64(image_bytes)
+        
+        print(f"🔄 Step 1: Translating text from en-IN to {language}...")
+        # Step 1: Translate text to target language
+        translated_text = translate_text(text, "en-IN", language)
+        print(f"✅ Translated text: {translated_text}")
+        
+        print(f"🔄 Step 2: Converting translated text to audio ({speaker} voice)...")
+        # Step 2: Convert translated text to audio
+        audio_bytes = text_to_audio(translated_text, language, speaker)
+        audio_b64 = file_to_base64(audio_bytes)
+        print(f"✅ Audio generated successfully")
+        
+        print(f"🔄 Step 3: Sending to Databricks endpoint...")
+        # Step 3: Call Databricks endpoint
+        video_b64 = call_databricks_endpoint(image_b64, audio_b64)
+        print(f"✅ Video received from endpoint (length: {len(video_b64)} chars)")
+        
+        # Debug: Check if video has audio by examining first bytes after decode
         try:
-            from huggingface_hub import snapshot_download
-            download_path = os.path.join(checkpoint_base, "ditto_pytorch_downloaded")
-            os.makedirs(download_path, exist_ok=True)
-            snapshot_download(
-                repo_id="digital-avatar/ditto-talkinghead",
-                local_dir=download_path,
-                allow_patterns=["ditto_pytorch/*"],
-                cache_dir=download_path
-            )
-            self.data_root = download_path
-            print("✅ Downloaded PyTorch checkpoints")
-        except Exception as e:
-            print(f"❌ Could not download checkpoints: {e}")
-            self.data_root = checkpoint_base  # Fallback
+            video_test = base64.b64decode(video_b64[:100])
+            print(f"🔍 Video header (first 50 bytes): {video_test[:50]}")
+        except:
+            pass
+        
+        print(f"🔄 Step 4: Saving video...")
+        # Step 4: Save video to file
+        unique_id = str(uuid.uuid4())[:8]
+        video_filename = f"avatar_{unique_id}.mp4"
+        video_path = base64_to_video_file(video_b64, video_filename)
+        print(f"✅ Video saved: {video_filename}")
+        
+        return {
+            "status": "success",
+            "message": "Avatar generated successfully",
+            "video_url": f"/api/download-video/{video_filename}",
+            "filename": video_filename,
+            "language": language,
+            "speaker": speaker,
+            "original_text": text,
+            "translated_text": translated_text
+        }
     
-    # 6. Create temp directory
-    self.temp_dir = Path(tempfile.gettempdir()) / "ditto_pytorch_output"
-    self.temp_dir.mkdir(parents=True, exist_ok=True)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+@app.get("/api/download-video/{filename}")
+async def download_video(filename: str):
+    """Download generated video"""
+    file_path = UPLOADS_DIR / filename
     
-    # 7. Setup environment variables
-    self.env_vars = os.environ.copy()
-    self.env_vars["PYTHONPATH"] = f"{self.repo_dir}:{self.env_vars.get('PYTHONPATH', '')}"
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Video not found")
     
-    # 8. DEBUG: Print final paths
-    print(f"\n📋 FINAL CONFIGURATION:")
-    print(f"   Config file: {self.config_pkl}")
-    print(f"   Config exists: {os.path.exists(self.config_pkl)}")
-    print(f"   Data root: {self.data_root}")
-    print(f"   Data exists: {os.path.exists(self.data_root)}")
-    
-    if self.data_root and os.path.exists(self.data_root):
-        files = os.listdir(self.data_root)
-        print(f"   Files in data root: {len(files)}")
-        if files:
-            print(f"   Sample: {files[:3]}")
-    
-    print("\n✅ PyTorch model initialized - FORCING PYTORCH CONFIG")
+    return FileResponse(
+        file_path,
+        media_type="video/mp4",
+        filename=filename
+    )
+
+@app.get("/api/health")
+async def health_check():
+    return {"status": "healthy"}
+
+# Serve static frontend files (must be last)
+STATIC_DIR = Path("static")
+if STATIC_DIR.exists():
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
