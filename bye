@@ -1,523 +1,348 @@
-FROM node:18-alpine AS frontend-build
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+import requests
+import base64
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+import uuid
+import torch
+import gc
+from asyncio import Lock
 
-WORKDIR /app/frontend
-COPY frontend/avatar-frontend/package*.json ./
-RUN npm ci
-COPY frontend/avatar-frontend/ ./
-RUN npm run build
+load_dotenv()
 
-FROM python:3.11-slim
+app = FastAPI()
 
-WORKDIR /app[rdt4b] Preparing metadata (setup.py): started
-[rdt4b] Preparing metadata (setup.py): finished with status 'done'
-[rdt4b] Preparing metadata (setup.py): finished with status 'done'
-[rdt4b] Preparing metadata (setup.py): finished with status 'done'
-[rdt4b] Collecting tensorrt-libs==8.6.1
-[rdt4b] Collecting tensorrt-libs==8.6.1
-[rdt4b] Collecting tensorrt-libs==8.6.1
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-libs/tensorrt_libs-8.6.1-py2.py3-none-manylinux_2_17_x86_64.whl (824.8 MB)
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 973.9 kB/s eta 0:00:00
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 1.1 MB/s eta 0:00:00
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 824.8/824.8 MB 867.4 kB/s eta 0:00:00
-[rdt4b] Collecting tensorrt-bindings==8.6.1
-[rdt4b] Collecting tensorrt-bindings==8.6.1
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 165.4 MB/s eta 0:00:00
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 176.2 MB/s eta 0:00:00
-[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
-[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
-[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
-[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
-[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
-[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
-[rdt4b] Building wheels for collected packages: tensorrt
-[rdt4b] Building wheel for tensorrt (setup.py): started
-[rdt4b] Building wheels for collected packages: tensorrt
-[rdt4b] Building wheel for tensorrt (setup.py): started
-[rdt4b] Collecting tensorrt-bindings==8.6.1
-[rdt4b] Downloading https://pypi.nvidia.com/tensorrt-bindings/tensorrt_bindings-8.6.1-cp310-none-manylinux_2_17_x86_64.whl (979 kB)
-[rdt4b] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 979.4/979.4 kB 208.5 MB/s eta 0:00:00
-[rdt4b] Requirement already satisfied: nvidia-cudnn-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (8.9.2.26)
-[rdt4b] Requirement already satisfied: nvidia-cuda-runtime-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.105)
-[rdt4b] Requirement already satisfied: nvidia-cublas-cu12 in /opt/conda/envs/mlflow-env/lib/python3.10/site-packages (from tensorrt-libs==8.6.1) (12.1.3.1)
-[rdt4b] Building wheels for collected packages: tensorrt
-[rdt4b] Building wheel for tensorrt (setup.py): started
-[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
-[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
-[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
-[rdt4b] Successfully built tensorrt
-[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
-[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
-[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
-[rdt4b] Successfully built tensorrt
-[rdt4b] Building wheel for tensorrt (setup.py): finished with status 'done'
-[rdt4b] Created wheel for tensorrt: filename=tensorrt-8.6.1-py2.py3-none-any.whl size=17062 sha256=3b921f97e07c912b454477b967d9f865072732c2a56b47d8ba9aea883db79d9c
-[rdt4b] Stored in directory: /root/.cache/pip/wheels/94/92/44/400cf70804da8d892965f7b78aaec997a284d9bf171ad23e45
-[rdt4b] Successfully built tensorrt
-[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
-[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
-[rdt4b] Installing collected packages: tensorrt-bindings, tensorrt, tensorrt-libs
-[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
-[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
-[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-[rdt4b] Successfully installed tensorrt-8.6.1 tensorrt-bindings-8.6.1 tensorrt-libs-8.6.1
-[rdt4b] WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
-[rdt4b] In file included from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarraytypes.h:1929,
-[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarrayobject.h:12,
-[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/arrayobject.h:5,
-[rdt4b] from /root/.pyxbld/temp.linux-x86_64-cpython-310/model/artifacts/ditto-model-artifact/core/utils/blend/blend.c:1157:
-[rdt4b] /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning "Using deprecated NumPy API, disable it with " "#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION" [-Wcpp]
-[rdt4b] 17 | #warning "Using deprecated NumPy API, disable it with " \
-[rdt4b] |  ^~~~~~~
-[rdt4b] In file included from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarraytypes.h:1929,
-[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/ndarrayobject.h:12,
-[rdt4b] from /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/arrayobject.h:5,
-[rdt4b] from /root/.pyxbld/temp.linux-x86_64-cpython-310/model/artifacts/ditto-model-artifact/core/utils/blend/blend.c:1157:
-[rdt4b] /opt/conda/envs/mlflow-env/lib/python3.10/site-packages/numpy/core/include/numpy/npy_1_7_deprecated_api.h:17:2: warning: #warning "Using deprecated NumPy API, disable it with " "#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION" [-Wcpp]
-[rdt4b] 17 | #warning "Using deprecated NumPy API, disable it with " \
-[rdt4b] |  ^~~~~~~
-[rdt4b] ==================== setup kwargs ====================
-[rdt4b] max_size <class 'int'> 1920
-[rdt4b] template_n_frames <class 'int'> -1
-[rdt4b] crop_scale <class 'float'> 2.3
-[rdt4b] crop_vx_ratio <class 'int'> 0
-[rdt4b] crop_vy_ratio <class 'float'> -0.125
-[rdt4b] crop_flag_do_rot <class 'bool'> True
-[rdt4b] smo_k_s <class 'int'> 13
-[rdt4b] emo <class 'numpy.ndarray'> (600, 8)
-[rdt4b] eye_f0_mode <class 'bool'> False
-[rdt4b] ch_info <class 'dict'>
-[rdt4b] overlap_v2 <class 'int'> 10
-[rdt4b] fix_kp_cond <class 'int'> 1
-[rdt4b] fix_kp_cond_dim <class 'list'> [0, 202]
-[rdt4b] sampling_timesteps <class 'int'> 50
-[rdt4b] online_mode <class 'bool'> False
-[rdt4b] v_min_max_for_clip <class 'numpy.ndarray'> (4, 265)
-[rdt4b] smo_k_d <class 'int'> 3
-[rdt4b] N_d <class 'int'> -1
-[rdt4b] use_d_keys <class 'NoneType'> None
-[rdt4b] relative_d <class 'bool'> True
-[rdt4b] drive_eye <class 'NoneType'> None
-[rdt4b] delta_eye_arr <class 'numpy.ndarray'> (15, 63)
-[rdt4b] delta_eye_open_n <class 'int'> 0
-[rdt4b] fade_type <class 'str'> d0
-[rdt4b] fade_out_keys <class 'list'> ['exp']
-[rdt4b] flag_stitching <class 'bool'> True
-[rdt4b] overall_ctrl_info <class 'dict'> {'delta_pitch': 2}
-[rdt4b] ==================================================
-[rdt4b] 
-[rdt4b] [2026-01-15 09:11:40 +0000] [443] [INFO] Booting worker with pid: 443
-[rdt4b] 
-[rdt4b] 
-[rdt4b] [2026-01-15 09:11:40 +0000] [447] [INFO] Booting worker with pid: 447
-[rdt4b] 
-[rdt4b] 
-[rdt4b] [2026-01-15 09:11:42 +0000] 2026/01/15 09:11:42 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[rdt4b] 
-[rdt4b] ffmpeg -loglevel error -y -i "/tmp/output_video.mp4.tmp.mp4" -i "/tmp/tmponz_z33f.wav" -map 0:v -map 1:a -c:v copy -c:a aac "/tmp/output_video.mp4"
-[rdt4b] /tmp/output_video.mp4
-[rdt4b] [01/15/2026-09:17:58] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:17:58] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:21:28] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:21:28] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:24:30] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:24:30] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:25:13] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:25:13] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:26:32] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:26:32] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:36:21] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:36:21] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:41:39] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:41:39] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:42:04] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:42:04] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:46:58] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:46:58] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-09:55:45] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-09:55:45] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:07:25] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:07:25] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:09:59] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:09:59] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:10:20] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:10:20] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:10:57] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:10:57] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:14:11] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:14:11] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:14:42] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:14:42] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:21:35] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:21:35] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:21:56] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:21:56] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:26:44] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:26:44] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:27:23] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:27:23] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:36:06] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:36:06] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:36:46] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:36:46] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] [01/15/2026-10:38:29] [TRT] [E] 1: [defaultAllocator.cpp::allocate::19] Error Code 1: Cuda Runtime (out of memory)
-[rdt4b] [01/15/2026-10:38:29] [TRT] [E] 2: [safeDeserialize.cpp::load::358] Error Code 2: OutOfMemory (no further information)
-[rdt4b] Traceback (most recent call last):
-[rdt4b] File "/model/artifacts/ditto-model-artifact/inference.py", line 80, in <module>
-[rdt4b] SDK = StreamSDK(cfg_pkl, data_root)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/stream_pipeline_offline.py", line 37, in __init__
-[rdt4b] self.audio2motion = Audio2Motion(lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/atomic_components/audio2motion.py", line 69, in __init__
-[rdt4b] self.lmdm = LMDM(**lmdm_cfg)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/models/lmdm.py", line 22, in __init__
-[rdt4b] self.model, self.model_type = load_model(model_path, device=device, **kwargs)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/load_model.py", line 22, in load_model
-[rdt4b] model = TRTWrapper(model_path)
-[rdt4b] File "/model/artifacts/ditto-model-artifact/core/utils/tensorrt_utils.py", line 106, in __init__
-[rdt4b] assert self.engine
-[rdt4b] AssertionError
-[rdt4b] 0it [00:00, ?it/s][A[2026-01-15 09:11:40 +0000] [14] [INFO] Handling signal: ttin
-[rdt4b] 1it [00:00,  2.69it/s]
-[rdt4b] 0it [00:00, ?it/s][2026-01-15 09:11:40 +0000] [14] [INFO] Handling signal: ttin
-[rdt4b] 11it [00:15,  1.25it/s]
-[rdt4b] 13it [00:15,  1.69it/s]
-[rdt4b] 15it [00:15,  2.31it/s]
-[rdt4b] 17it [00:15,  3.03it/s]
-[rdt4b] 1it [00:14, 14.64s/it]
-[rdt4b] 20it [00:15,  4.58it/s]
-[rdt4b] 22it [00:16,  5.47it/s][2026-01-15 09:11:42 +0000] 2026/01/15 09:11:42 WARNING mlflow.pyfunc: The version of CloudPickle that was used to save the model, `CloudPickle 2.0.0`, differs from the version of CloudPickle that is currently running, `CloudPickle 3.1.2`, and may be incompatible
-[rdt4b] 24it [00:16,  6.64it/s]
-[rdt4b] 26it [00:16,  8.12it/s]
-[rdt4b] 28it [00:16,  8.88it/s]
-[rdt4b] 30it [00:16, 10.14it/s]
-[rdt4b] 32it [00:16, 10.39it/s]
-[rdt4b] 34it [00:16, 11.31it/s]
-[rdt4b] 36it [00:17, 12.91it/s]
-[rdt4b] 38it [00:18,  2.11it/s]
-[rdt4b] 6it [00:14,  1.84s/it]
-[rdt4b] 9it [00:15,  1.09s/it]
+# Request lock for queuing
+request_lock = Lock()
 
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Serve static frontend files
+STATIC_DIR = Path("static")
+if STATIC_DIR.exists():
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
-COPY backend/app.py .
-COPY backend/.env .
-COPY --from=frontend-build /app/frontend/build ./static
+# Configuration
+DATABRICKS_HOST = os.getenv("DATABRICKS_HOST")
+DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+SARVAM_API_KEY = os.getenv("SARVAM_API_KEY")
+SARVAM_TRANSLATE_URL = os.getenv("SARVAM_TRANSLATE_URL", "https://api.sarvam.ai/translate")
+SARVAM_TTS_URL = os.getenv("SARVAM_TTS_URL", "https://api.sarvam.ai/text-to-speech")
+ENDPOINT_NAME = os.getenv("ENDPOINT_NAME")
+UPLOADS_DIR = Path("uploads")
+UPLOADS_DIR.mkdir(exist_ok=True)
 
-RUN mkdir -p uploads
+# Language & Voice Configuration
+LANGUAGES = {
+    "en-IN": {"name": "English", "native_name": "English"},
+    "hi-IN": {"name": "Hindi", "native_name": "हिंदी"},
+    "ta-IN": {"name": "Tamil", "native_name": "தமிழ்"},
+    "te-IN": {"name": "Telugu", "native_name": "తెలుగు"},
+    "ml-IN": {"name": "Malayalam", "native_name": "മലയാളം"},
+    "kn-IN": {"name": "Kannada", "native_name": "ಕನ್ನಡ"},
+    "mr-IN": {"name": "Marathi", "native_name": "मराठी"},
+    "gu-IN": {"name": "Gujarati", "native_name": "ગુજરાતી"},
+    "bn-IN": {"name": "Bengali", "native_name": "বাংলা"},
+    "pa-IN": {"name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
+    "od-IN": {"name": "Odia", "native_name": "ଓଡ଼ିଆ"},
+}
 
-EXPOSE 8000
+VOICES = {
+    "hi-IN": ["shubh", "ritu", "rahul", "pooja", "simran", "kavya", "ratan", "rohan"],
+    "en-IN": ["shubh", "ritu", "rahul", "pooja", "amelia", "sophia"],
+    "ta-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "te-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "ml-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "kn-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "mr-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "gu-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "bn-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "pa-IN": ["shubh", "ritu", "rahul", "pooja"],
+    "od-IN": ["shubh", "ritu", "rahul", "pooja"],
+}
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# ============ STEP 1: TRANSLATE TEXT (SARVAM TRANSLATION API) ============
+def translate_text(text: str, source_lang: str, target_lang: str) -> str:
+    """
+    Translate text from source language to target language using Sarvam API
+    Source language is always English (en-IN)
+    Returns: Translated text
+    """
+    if source_lang == target_lang:
+        return text
+    
+    url = SARVAM_TRANSLATE_URL
+    
+    headers = {
+        "api-subscription-key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "input": text,
+        "source_language_code": source_lang,
+        "target_language_code": target_lang,
+        "speaker_gender": "Male",
+        "mode": "formal",
+        "model": "mayura:v1",
+        "enable_preprocessing": True,
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+        
+        result = response.json()
+        if 'translated_text' in result:
+            return result['translated_text']
+        else:
+            raise HTTPException(status_code=500, detail="Translation API returned unexpected format")
+    
+    except requests.exceptions.HTTPError as e:
+        error_detail = f"Translation API error: {e.response.status_code} - {e.response.text}"
+        raise HTTPException(status_code=500, detail=error_detail)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Translation error: {str(e)}")
+
+# ============ STEP 2: TEXT TO AUDIO (SARVAM API) ============
+def text_to_audio(text: str, language: str, speaker: str) -> bytes:
+    """
+    Convert text to audio using Sarvam API v3
+    Returns: Audio bytes (MP3 format)
+    """
+    url = SARVAM_TTS_URL
+    
+    headers = {
+        "API-Subscription-Key": SARVAM_API_KEY,
+        "Content-Type": "application/json"
+    }
+    
+    # Split text into chunks of 2500 chars
+    max_chars = 2500
+    chunks = [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
+    
+    all_audio_bytes = b''
+    
+    for chunk in chunks:
+        payload = {
+            "text": chunk,
+            "target_language_code": language,
+            "speaker": speaker,
+            "pace": 1.0,
+            "speech_sample_rate": 8000,
+            "enable_preprocessing": True,
+            "model": "bulbul:v3-beta",
+            "output_audio_codec": "mp3"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            
+            audio_data = response.json()
+            if 'audios' in audio_data and len(audio_data['audios']) > 0:
+                audio_bytes = base64.b64decode(audio_data['audios'][0])
+                all_audio_bytes += audio_bytes
+            else:
+                raise HTTPException(status_code=500, detail="Text-to-Speech API returned no audio")
+        
+        except requests.exceptions.HTTPError as e:
+            error_detail = f"Text-to-Speech API error: {e.response.status_code} - {e.response.text}"
+            raise HTTPException(status_code=500, detail=error_detail)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Text-to-Speech error: {str(e)}")
+    
+    return all_audio_bytes
+
+# ============ STEP 3: FILE TO BASE64 ============
+def file_to_base64(file_bytes: bytes) -> str:
+    """Convert file bytes to base64 string"""
+    return base64.b64encode(file_bytes).decode('utf-8')
+
+# ============ STEP 4: SEND TO DATABRICKS ENDPOINT ============
+def call_databricks_endpoint(image_b64: str, audio_b64: str) -> str:
+    """
+    Send image and audio base64 to Databricks endpoint
+    Returns: Video base64 response
+    """
+    url = f"{DATABRICKS_HOST}/serving-endpoints/{ENDPOINT_NAME}/invocations"
+    
+    headers = {
+        "Authorization": f"Bearer {DATABRICKS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    # Format matches your curl command
+    payload = {
+        "dataframe_split": {
+            "columns": ["audio_b64", "image_b64"],
+            "data": [[audio_b64, image_b64]]
+        }
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=300)
+        response.raise_for_status()
+        
+        result = response.json()
+        
+        # Extract video base64 from response
+        if 'predictions' in result:
+            predictions = result['predictions']
+            # Check for error status
+            if isinstance(predictions, dict):
+                if predictions.get('status') == 'error':
+                    error_msg = predictions.get('message', 'Unknown error from endpoint')
+                    raise HTTPException(status_code=500, detail=f"Endpoint error: {error_msg}")
+                elif 'video_b64' in predictions:
+                    return predictions['video_b64']
+            # Handle list format (fallback)
+            elif isinstance(predictions, list) and len(predictions) > 0:
+                return predictions[0]
+        
+        raise HTTPException(status_code=500, detail=f"Unexpected response format from endpoint: {result}")
+    
+    except requests.exceptions.RequestException as e:
+        raise HTTPException(status_code=500, detail=f"Databricks endpoint error: {str(e)}")
+    finally:
+        # Clear GPU cache after each request
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        gc.collect()
+
+# ============ STEP 5: BASE64 TO VIDEO FILE ============
+def base64_to_video_file(video_b64: str, filename: str) -> Path:
+    """
+    Convert base64 to video file and save
+    Returns: Path to saved video file
+    """
+    try:
+        video_bytes = base64.b64decode(video_b64)
+        file_path = UPLOADS_DIR / filename
+        
+        with open(file_path, 'wb') as f:
+            f.write(video_bytes)
+        
+        return file_path
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error saving video: {str(e)}")
+
+# ============ API ENDPOINTS ============
+
+@app.get("/api/languages")
+async def get_languages():
+    """Get all supported languages and voices"""
+    return {
+        "languages": LANGUAGES,
+        "voices": VOICES
+    }
+
+@app.get("/api/voices/{language}")
+async def get_voices_for_language(language: str):
+    """Get available voices for a specific language"""
+    if language not in VOICES:
+        raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+    
+    return {
+        "language": language,
+        "voices": VOICES[language]
+    }
+
+@app.post("/api/generate-avatar")
+async def generate_avatar(
+    text: str,
+    language: str,
+    speaker: str,
+    image: UploadFile = File(...)
+):
+    """
+    Main endpoint: Accepts text + image + language + speaker, returns video
+    
+    Flow:
+    1. Translate English text to target language
+    2. Convert translated text to audio in target language
+    3. Send image + audio to Databricks endpoint
+    4. Get video back and save it
+    """
+    async with request_lock:
+        try:
+            # Validate language and speaker
+            if language not in LANGUAGES:
+                raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+            
+            if language not in VOICES or speaker not in VOICES[language]:
+                raise HTTPException(status_code=400, detail=f"Speaker {speaker} not supported for {language}")
+            
+            # Read image file
+            image_bytes = await image.read()
+            image_b64 = file_to_base64(image_bytes)
+            
+            print(f"🔄 Step 1: Translating text from en-IN to {language}...")
+            # Step 1: Translate text to target language
+            translated_text = translate_text(text, "en-IN", language)
+            print(f"✅ Translated text: {translated_text}")
+            
+            print(f"🔄 Step 2: Converting translated text to audio ({speaker} voice)...")
+            # Step 2: Convert translated text to audio
+            audio_bytes = text_to_audio(translated_text, language, speaker)
+            audio_b64 = file_to_base64(audio_bytes)
+            print(f"✅ Audio generated successfully")
+            
+            print(f"🔄 Step 3: Sending to Databricks endpoint...")
+            # Step 3: Call Databricks endpoint
+            video_b64 = call_databricks_endpoint(image_b64, audio_b64)
+            print(f"✅ Video received from endpoint (length: {len(video_b64)} chars)")
+            
+            # Debug: Check if video has audio by examining first bytes after decode
+            try:
+                video_test = base64.b64decode(video_b64[:100])
+                print(f"🔍 Video header (first 50 bytes): {video_test[:50]}")
+            except:
+                pass
+            
+            print(f"🔄 Step 4: Saving video...")
+            # Step 4: Save video to file
+            unique_id = str(uuid.uuid4())[:8]
+            video_filename = f"avatar_{unique_id}.mp4"
+            video_path = base64_to_video_file(video_b64, video_filename)
+            print(f"✅ Video saved: {video_filename}")
+            
+            return {
+                "status": "success",
+                "message": "Avatar generated successfully",
+                "video_url": f"/api/download-video/{video_filename}",
+                "filename": video_filename,
+                "language": language,
+                "speaker": speaker,
+                "original_text": text,
+                "translated_text": translated_text
+            }
+        
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+
+@app.get("/api/download-video/{filename}")
+async def download_video(filename: str):
+    """Download generated video"""
+    file_path = UPLOADS_DIR / filename
+    
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    return FileResponse(
+        file_path,
+        media_type="video/mp4",
+        filename=filename
+    )
+
+@app.get("/api/health")
+async def health_check():
+    return {"status": "healthy"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
