@@ -1,74 +1,31 @@
 import React from 'react';
+import { User } from 'lucide-react';
+import AvatarForm from '../components/AvatarForm';
 
-interface AvatarOutputProps {
-  response: {
-    video_url: string;
-    language: string;
-    speaker: string;
-    translated_text: string;
-  };
-}
-
-const AvatarOutput: React.FC<AvatarOutputProps> = ({ response }) => {
-  const handleCreateAnother = () => {
-    window.location.reload();
-  };
-
+const AvatarGenerator: React.FC = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-      <div className="text-green-600 font-semibold mb-4 flex items-center">
-        <span className="mr-2">✅</span>
-        Avatar Generated Successfully!
-      </div>
-
-      <div className="space-y-4">
-        {/* Generation Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-md">
-          <div>
-            <span className="font-semibold text-gray-700">🌍 Language:</span>
-            <span className="ml-2">{response.language}</span>
+    <div className="p-6 pt-40">
+      <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mb-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-[#000099] to-[#0000cc] rounded-xl flex items-center justify-center shadow-lg">
+              <User className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                Avatar Generator
+              </h1>
+              <p className="text-gray-600">
+                Create multilingual avatar videos with AI-powered voice synthesis
+              </p>
+            </div>
           </div>
-          <div>
-            <span className="font-semibold text-gray-700">🎤 Voice:</span>
-            <span className="ml-2">{response.speaker.charAt(0).toUpperCase() + response.speaker.slice(1)}</span>
-          </div>
-          <div className="md:col-span-2">
-            <span className="font-semibold text-gray-700">📝 Translated Text:</span>
-            <p className="mt-1 text-gray-600">{response.translated_text}</p>
-          </div>
-        </div>
-
-        {/* Video Player */}
-        <div className="video-container">
-          <video 
-            controls 
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-md"
-            style={{ maxHeight: '400px' }}
-          >
-            <source src={response.video_url} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-          <a
-            href={response.video_url}
-            download="avatar.mp4"
-            className="bg-[#000099] text-white px-6 py-2 rounded-md hover:bg-[#0000cc] focus:outline-none focus:ring-2 focus:ring-[#000099] focus:ring-offset-2 transition-colors text-center flex items-center justify-center gap-2"
-          >
-            ⬇️ Download Video
-          </a>
-          <button
-            onClick={handleCreateAnother}
-            className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors flex items-center justify-center gap-2"
-          >
-            ➕ Create Another
-          </button>
         </div>
       </div>
+      
+      <AvatarForm />
     </div>
   );
 };
 
-export default AvatarOutput;
+export default AvatarGenerator;
