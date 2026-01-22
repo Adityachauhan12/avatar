@@ -1,23 +1,46 @@
-WARNING:  WatchFiles detected changes in 'main.py'. Reloading...
+
+(venv) C:\Users\aditya.chauhan2\OneDrive - InterGlobe Aviation Limited\Desktop\IBC-365-BE\IBC-365-BE>python main.py
 Debug - API Version: 2024-12-01-preview
 Debug - API Key exists: True
 Debug - API Base: https://openai-lab37-eastus2-sb-poc.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-  File "C:\Program Files\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main        
-    exitcode = _main(fd, parent_sentinel)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\Python312\Lib\multiprocessing\spawn.py", line 131, in _main
-    prepare(preparation_data)
-  File "C:\Program Files\Python312\Lib\multiprocessing\spawn.py", line 246, in prepare
-    _fixup_main_from_path(data['init_main_from_path'])
-  File "C:\Program Files\Python312\Lib\multiprocessing\spawn.py", line 297, in _fixup_main_from_path
-    main_content = runpy.run_path(main_path,
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen runpy>", line 286, in run_path
-  File "<frozen runpy>", line 98, in _run_module_code
-  File "<frozen runpy>", line 88, in _run_code
-  File "C:\Users\aditya.chauhan2\OneDrive - InterGlobe Aviation Limited\Desktop\IBC-365-BE\IBC-365-BE\main.py", line 1535, in <module>
-    text: str = Form(...),
-                ^^^^
-NameError: name 'Form' is not defined
+Loaded permissions from local JSON file
+🚀 Starting IndiGo BluChip AI Search Backend...
+🌐 Server starting on: http://localhost:3000
+📚 API docs available at: http://localhost:3000/docs
+INFO:     Will watch for changes in these directories: ['C:\\Users\\aditya.chauhan2\\OneDrive - InterGlobe Aviation Limited\\Desktop\\IBC-365-BE\\IBC-365-BE']
+INFO:     Uvicorn running on http://127.0.0.1:3000 (Press CTRL+C to quit)
+INFO:     Started reloader process [2968] using WatchFiles
+Debug - API Version: 2024-12-01-preview
+Debug - API Key exists: True
+Debug - API Base: https://openai-lab37-eastus2-sb-poc.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-12-01-preview
+Loaded permissions from local JSON file
+Loaded permissions from local JSON file
+INFO:     Started server process [23396]
+INFO:     Waiting for application startup.
+🚀 Initializing FAQ system...
+🔧 Setting up FAQ system...
+Debug - Available OpenAI-related environment variables:
+  AZURE_OPENAI_API_VERSION: ✓
+  AZURE_OPENAI_EMBEDDING_API_KEY: ✓
+  AZURE_OPENAI_EMBEDDING_API_VERSION: ✓
+  AZURE_OPENAI_EMBEDDING_BASE_URL: ✓
+  AZURE_OPENAI_EMBEDDING_DEPLOYMENT: ✓
+  AZURE_OPENAI_EMBEDDING_ENDPOINT: ✓
+  ENDPOINT_NAME: ✓
+  LLM_MODEL: ✓
+  OPENAI_API_KEY: ✓
+  OPENAI_BASE_URL: ✓
+  OPENAI_ENDPOINT: ✓
+  SARVAM_API_KEY: ✓
+  VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: ✓
+📚 Loading FAQ content...
+🤖 Setting up FAQ chatbot...
+Debug - Checking Azure OpenAI environment variables:
+Debug - API Key exists: True
+Debug - Base URL: https://openai-lab37-eastus2-sb-poc.openai.azure.com
+Debug - API Version: 2024-12-01-preview
+✅ Azure OpenAI client initialized successfully!
+✅ FAQ system initialized successfully!
+🎭 Initializing Avatar Generator service...
+✅ Avatar Generator service initialized!
+INFO:     Application startup complete.
