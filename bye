@@ -1,254 +1,54 @@
 """
-Avatar Generator Service for IBC-365-BE
-Integrates with Sarvam AI for translation/TTS and Databricks for video generation
+Test script for Avatar Generator Service
 """
+import asyncio
+import sys
 import os
-import base64
-import uuid
-import requests
 from pathlib import Path
-from typing import Dict, List, Optional
-from fastapi import HTTPException
-from dotenv import load_dotenv
 
-load_dotenv()
+# Add the parent directory to the path to import the avatar service
+sys.path.append(str(Path(__file__).parent.parent))
 
-class AvatarGeneratorService:
-    def __init__(self):
-        # Configuration from environment
-        self.databricks_host = os.getenv("DATABRICKS_HOST")
-        self.databricks_token = os.getenv("DATABRICKS_TOKEN")
-        self.sarvam_api_key = os.getenv("SARVAM_API_KEY")
-        self.endpoint_name = os.getenv("ENDPOINT_NAME")
-        self.sarvam_translate_url = os.getenv("SARVAM_TRANSLATE_URL", "https://api.sarvam.ai/translate")
-        self.sarvam_tts_url = os.getenv("SARVAM_TTS_URL", "https://api.sarvam.ai/text-to-speech")
-        
-        # Create uploads directory
-        self.uploads_dir = Path("uploads")
-        self.uploads_dir.mkdir(exist_ok=True)
-        
-        # Language and voice configuration
-        self.languages = {
-            "en-IN": {"name": "English", "native_name": "English"},
-            "hi-IN": {"name": "Hindi", "native_name": "हिंदी"},
-            "ta-IN": {"name": "Tamil", "native_name": "தமிழ்"},
-            "te-IN": {"name": "Telugu", "native_name": "తెలుగు"},
-            "ml-IN": {"name": "Malayalam", "native_name": "മലയാളം"},
-            "kn-IN": {"name": "Kannada", "native_name": "ಕನ್ನಡ"},
-            "mr-IN": {"name": "Marathi", "native_name": "मराठी"},
-            "gu-IN": {"name": "Gujarati", "native_name": "ગુજરાતી"},
-            "bn-IN": {"name": "Bengali", "native_name": "বাংলা"},
-            "pa-IN": {"name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
-            "od-IN": {"name": "Odia", "native_name": "ଓଡ଼ିଆ"},
-        }
-        
-        self.voices = {
-            "hi-IN": ["shubh", "ritu", "rahul", "pooja", "simran", "kavya", "ratan", "rohan"],
-            "en-IN": ["shubh", "ritu", "rahul", "pooja", "amelia", "sophia"],
-            "ta-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "te-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "ml-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "kn-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "mr-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "gu-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "bn-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "pa-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "od-IN": ["shubh", "ritu", "rahul", "pooja"],
-        }
+from Avatar_generator.avatar_service import AvatarGeneratorService
+
+async def test_avatar_service():
+    """Test the avatar generator service"""
+    print("🧪 Testing Avatar Generator Service...")
     
-    def get_languages(self) -> Dict:
-        """Get all supported languages and voices"""
-        return {
-            "languages": self.languages,
-            "voices": self.voices
-        }
+    # Initialize service
+    try:
+        service = AvatarGeneratorService()
+        print("✅ Avatar service initialized successfully")
+    except Exception as e:
+        print(f"❌ Failed to initialize avatar service: {e}")
+        return
     
-    def get_voices_for_language(self, language: str) -> Dict:
-        """Get available voices for a specific language"""
-        if language not in self.voices:
-            raise HTTPException(status_code=400, detail=f"Language {language} not supported")
-        
-        return {
-            "language": language,
-            "voices": self.voices[language]
-        }
+    # Test 1: Get languages
+    try:
+        languages = service.get_languages()
+        print(f"✅ Languages retrieved: {len(languages['languages'])} languages supported")
+        print(f"   Sample languages: {list(languages['languages'].keys())[:3]}")
+    except Exception as e:
+        print(f"❌ Failed to get languages: {e}")
     
-    def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
-        """Translate text using Sarvam API"""
-        if source_lang == target_lang:
-            return text
-        
-        headers = {
-            "api-subscription-key": self.sarvam_api_key,
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "input": text,
-            "source_language_code": source_lang,
-            "target_language_code": target_lang,
-            "speaker_gender": "Male",
-            "mode": "formal",
-            "model": "mayura:v1",
-            "enable_preprocessing": True,
-        }
-        
+    # Test 2: Get voices for English
+    try:
+        voices = service.get_voices_for_language("en-IN")
+        print(f"✅ Voices for English: {voices['voices']}")
+    except Exception as e:
+        print(f"❌ Failed to get voices: {e}")
+    
+    # Test 3: Translation (if API key is available)
+    if os.getenv("SARVAM_API_KEY"):
         try:
-            response = requests.post(self.sarvam_translate_url, json=payload, headers=headers, timeout=30)
-            response.raise_for_status()
-            
-            result = response.json()
-            if 'translated_text' in result:
-                return result['translated_text']
-            else:
-                raise HTTPException(status_code=500, detail="Translation API returned unexpected format")
-        
-        except requests.exceptions.HTTPError as e:
-            error_detail = f"Translation API error: {e.response.status_code} - {e.response.text}"
-            raise HTTPException(status_code=500, detail=error_detail)
+            translated = service.translate_text("Hello, how are you?", "en-IN", "hi-IN")
+            print(f"✅ Translation test: 'Hello, how are you?' -> '{translated}'")
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Translation error: {str(e)}")
+            print(f"⚠️ Translation test failed (expected if API not configured): {e}")
+    else:
+        print("⚠️ Skipping translation test - SARVAM_API_KEY not set")
     
-    def text_to_audio(self, text: str, language: str, speaker: str) -> bytes:
-        """Convert text to audio using Sarvam API"""
-        headers = {
-            "API-Subscription-Key": self.sarvam_api_key,
-            "Content-Type": "application/json"
-        }
-        
-        # Split text into chunks of 2500 chars
-        max_chars = 2500
-        chunks = [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
-        
-        all_audio_bytes = b''
-        
-        for chunk in chunks:
-            payload = {
-                "text": chunk,
-                "target_language_code": language,
-                "speaker": speaker,
-                "pace": 1.0,
-                "speech_sample_rate": 8000,
-                "enable_preprocessing": True,
-                "model": "bulbul:v3-beta",
-                "output_audio_codec": "mp3"
-            }
-            
-            try:
-                response = requests.post(self.sarvam_tts_url, json=payload, headers=headers, timeout=30)
-                response.raise_for_status()
-                
-                audio_data = response.json()
-                if 'audios' in audio_data and len(audio_data['audios']) > 0:
-                    audio_bytes = base64.b64decode(audio_data['audios'][0])
-                    all_audio_bytes += audio_bytes
-                else:
-                    raise HTTPException(status_code=500, detail="Text-to-Speech API returned no audio")
-            
-            except requests.exceptions.HTTPError as e:
-                error_detail = f"Text-to-Speech API error: {e.response.status_code} - {e.response.text}"
-                raise HTTPException(status_code=500, detail=error_detail)
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=f"Text-to-Speech error: {str(e)}")
-        
-        return all_audio_bytes
-    
-    def file_to_base64(self, file_bytes: bytes) -> str:
-        """Convert file bytes to base64 string"""
-        return base64.b64encode(file_bytes).decode('utf-8')
-    
-    def call_databricks_endpoint(self, image_b64: str, audio_b64: str) -> str:
-        """Send image and audio base64 to Databricks endpoint"""
-        url = f"{self.databricks_host}/serving-endpoints/{self.endpoint_name}/invocations"
-        
-        headers = {
-            "Authorization": f"Bearer {self.databricks_token}",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "dataframe_split": {
-                "columns": ["audio_b64", "image_b64"],
-                "data": [[audio_b64, image_b64]]
-            }
-        }
-        
-        try:
-            response = requests.post(url, json=payload, headers=headers, timeout=300)
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            if 'predictions' in result:
-                predictions = result['predictions']
-                if isinstance(predictions, dict):
-                    if predictions.get('status') == 'error':
-                        error_msg = predictions.get('message', 'Unknown error from endpoint')
-                        raise HTTPException(status_code=500, detail=f"Endpoint error: {error_msg}")
-                    elif 'video_b64' in predictions:
-                        return predictions['video_b64']
-                elif isinstance(predictions, list) and len(predictions) > 0:
-                    return predictions[0]
-            
-            raise HTTPException(status_code=500, detail=f"Unexpected response format from endpoint: {result}")
-        
-        except requests.exceptions.RequestException as e:
-            raise HTTPException(status_code=500, detail=f"Databricks endpoint error: {str(e)}")
-    
-    def base64_to_video_file(self, video_b64: str, filename: str) -> Path:
-        """Convert base64 to video file and save"""
-        try:
-            video_bytes = base64.b64decode(video_b64)
-            file_path = self.uploads_dir / filename
-            
-            with open(file_path, 'wb') as f:
-                f.write(video_bytes)
-            
-            return file_path
-        
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error saving video: {str(e)}")
-    
-    async def generate_avatar(self, text: str, language: str, speaker: str, image_bytes: bytes) -> Dict:
-        """Main avatar generation method"""
-        try:
-            # Validate inputs
-            if language not in self.languages:
-                raise HTTPException(status_code=400, detail=f"Language {language} not supported")
-            
-            if language not in self.voices or speaker not in self.voices[language]:
-                raise HTTPException(status_code=400, detail=f"Speaker {speaker} not supported for {language}")
-            
-            # Convert image to base64
-            image_b64 = self.file_to_base64(image_bytes)
-            
-            # Step 1: Translate text
-            translated_text = self.translate_text(text, "en-IN", language)
-            
-            # Step 2: Convert to audio
-            audio_bytes = self.text_to_audio(translated_text, language, speaker)
-            audio_b64 = self.file_to_base64(audio_bytes)
-            
-            # Step 3: Generate video
-            video_b64 = self.call_databricks_endpoint(image_b64, audio_b64)
-            
-            # Step 4: Save video
-            unique_id = str(uuid.uuid4())[:8]
-            video_filename = f"avatar_{unique_id}.mp4"
-            video_path = self.base64_to_video_file(video_b64, video_filename)
-            
-            return {
-                "status": "success",
-                "message": "Avatar generated successfully",
-                "video_url": f"/api/avatar/download/{video_filename}",
-                "filename": video_filename,
-                "language": language,
-                "speaker": speaker,
-                "original_text": text,
-                "translated_text": translated_text
-            }
-        
-        except HTTPException as e:
-            raise e
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Avatar generation error: {str(e)}")
+    print("🏁 Avatar service test completed")
+
+if __name__ == "__main__":
+    asyncio.run(test_avatar_service())
