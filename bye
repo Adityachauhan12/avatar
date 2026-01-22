@@ -1,294 +1,42 @@
-Access to fetch at 'http://localhost:3000/user' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
-saml-auth-service.ts:165  GET http://localhost:3000/user net::ERR_FAILED 401 (Unauthorized)
-fetchCurrentUser @ saml-auth-service.ts:165
-initializeAuth @ auth-provider.tsx:114
-await in initializeAuth
-(anonymous) @ auth-provider.tsx:29
-react_stack_bottom_frame @ react-dom-client.development.js:25989
-runWithFiberInDEV @ react-dom-client.development.js:870
-commitHookEffectListMount @ react-dom-client.development.js:13244
-commitHookPassiveMountEffects @ react-dom-client.development.js:13334
-commitPassiveMountOnFiber @ react-dom-client.development.js:15483
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15519
-flushPassiveEffects @ react-dom-client.development.js:18432
-(anonymous) @ react-dom-client.development.js:17923
-performWorkUntilDeadline @ scheduler.development.js:45
-<AuthProvider>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-./src/index.tsx @ index.tsx:7
-options.factory @ react refresh:37
-__webpack_require__ @ bootstrap:22
-(anonymous) @ startup:7
-(anonymous) @ startup:7Understand this error
-saml-auth-service.ts:206 ❌ Error fetching user from backend: TypeError: Failed to fetch
-    at SAMLAuthService.fetchCurrentUser (saml-auth-service.ts:165:1)
-    at initializeAuth (auth-provider.tsx:114:1)
-fetchCurrentUser @ saml-auth-service.ts:206
-await in fetchCurrentUser
-initializeAuth @ auth-provider.tsx:114
-await in initializeAuth
-(anonymous) @ auth-provider.tsx:29
-react_stack_bottom_frame @ react-dom-client.development.js:25989
-runWithFiberInDEV @ react-dom-client.development.js:870
-commitHookEffectListMount @ react-dom-client.development.js:13244
-commitHookPassiveMountEffects @ react-dom-client.development.js:13334
-commitPassiveMountOnFiber @ react-dom-client.development.js:15483
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15519
-flushPassiveEffects @ react-dom-client.development.js:18432
-(anonymous) @ react-dom-client.development.js:17923
-performWorkUntilDeadline @ scheduler.development.js:45
-<AuthProvider>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-./src/index.tsx @ index.tsx:7
-options.factory @ react refresh:37
-__webpack_require__ @ bootstrap:22
-(anonymous) @ startup:7
-(anonymous) @ startup:7Understand this error
-avatar-generator:1 Access to XMLHttpRequest at 'http://localhost:3000/api/avatar/languages' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
-AvatarForm.tsx:33 Failed to fetch languages: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
-fetchLanguages @ AvatarForm.tsx:33
-await in fetchLanguages
-(anonymous) @ AvatarForm.tsx:36
-react_stack_bottom_frame @ react-dom-client.development.js:25989
-runWithFiberInDEV @ react-dom-client.development.js:870
-commitHookEffectListMount @ react-dom-client.development.js:13244
-commitHookPassiveMountEffects @ react-dom-client.development.js:13334
-commitPassiveMountOnFiber @ react-dom-client.development.js:15483
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15647
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15633
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15519
-flushPassiveEffects @ react-dom-client.development.js:18432
-(anonymous) @ react-dom-client.development.js:17923
-performWorkUntilDeadline @ scheduler.development.js:45
-<AvatarForm>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-AvatarGenerator @ AvatarGenerator.tsx:24
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11702
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
-renderRootConcurrent @ react-dom-client.development.js:17615
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<...>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-App @ App.tsx:172
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11778
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopSync @ react-dom-client.development.js:17469
-renderRootSync @ react-dom-client.development.js:17450
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<App>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-./src/index.tsx @ index.tsx:8
-options.factory @ react refresh:37
-__webpack_require__ @ bootstrap:22
-(anonymous) @ startup:7
-(anonymous) @ startup:7Understand this error
-AvatarForm.tsx:24  GET http://localhost:3000/api/avatar/languages net::ERR_FAILED 200 (OK)
-dispatchXhrRequest @ xhr.js:198
-xhr @ xhr.js:15
-dispatchRequest @ dispatchRequest.js:51
-_request @ Axios.js:185
-request @ Axios.js:40
-Axios.<computed> @ Axios.js:211
-wrap @ bind.js:12
-fetchLanguages @ AvatarForm.tsx:24
-(anonymous) @ AvatarForm.tsx:36
-react_stack_bottom_frame @ react-dom-client.development.js:25989
-runWithFiberInDEV @ react-dom-client.development.js:870
-commitHookEffectListMount @ react-dom-client.development.js:13244
-commitHookPassiveMountEffects @ react-dom-client.development.js:13334
-commitPassiveMountOnFiber @ react-dom-client.development.js:15483
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15647
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15633
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15519
-flushPassiveEffects @ react-dom-client.development.js:18432
-(anonymous) @ react-dom-client.development.js:17923
-performWorkUntilDeadline @ scheduler.development.js:45
-<AvatarForm>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-AvatarGenerator @ AvatarGenerator.tsx:24
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11702
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
-renderRootConcurrent @ react-dom-client.development.js:17615
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<...>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-App @ App.tsx:172
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11778
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopSync @ react-dom-client.development.js:17469
-renderRootSync @ react-dom-client.development.js:17450
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<App>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-./src/index.tsx @ index.tsx:8
-options.factory @ react refresh:37
-__webpack_require__ @ bootstrap:22
-(anonymous) @ startup:7
-(anonymous) @ startup:7Understand this error
-avatar-generator:1 Access to XMLHttpRequest at 'http://localhost:3000/api/avatar/voices/en-IN' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
-AvatarForm.tsx:50 Failed to fetch voices: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
-updateVoices @ AvatarForm.tsx:50
-await in updateVoices
-(anonymous) @ AvatarForm.tsx:53
-react_stack_bottom_frame @ react-dom-client.development.js:25989
-runWithFiberInDEV @ react-dom-client.development.js:870
-commitHookEffectListMount @ react-dom-client.development.js:13244
-commitHookPassiveMountEffects @ react-dom-client.development.js:13334
-commitPassiveMountOnFiber @ react-dom-client.development.js:15483
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15647
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15633
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15718
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15476
-recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
-commitPassiveMountOnFiber @ react-dom-client.development.js:15519
-flushPassiveEffects @ react-dom-client.development.js:18432
-(anonymous) @ react-dom-client.development.js:17923
-performWorkUntilDeadline @ scheduler.development.js:45
-<AvatarForm>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-AvatarGenerator @ AvatarGenerator.tsx:24
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11702
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
-renderRootConcurrent @ react-dom-client.development.js:17615
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<...>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-App @ App.tsx:172
-react_stack_bottom_frame @ react-dom-client.development.js:25904
-renderWithHooks @ react-dom-client.development.js:7662
-updateFunctionComponent @ react-dom-client.development.js:10166
-beginWork @ react-dom-client.development.js:11778
-runWithFiberInDEV @ react-dom-client.development.js:870
-performUnitOfWork @ react-dom-client.development.js:17639
-workLoopSync @ react-dom-client.development.js:17469
-renderRootSync @ react-dom-client.development.js:17450
-performWorkOnRoot @ react-dom-client.development.js:16498
-performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
-performWorkUntilDeadline @ scheduler.development.js:45
-<App>
-exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
-./src/index.tsx @ index.tsx:8
-options.factory @ react refresh:37
-__webpack_require__ @ bootstrap:22
-(anonymous) @ startup:7
-(anonymous) @ startup:7Understand this error
-AvatarForm.tsx:44  GET http://localhost:3000/api/avatar/voices/en-IN net::ERR_FAILED 200 (OK)
+Databricks endpoint error: HTTPSConnectionPool(host='adb-7012066134936526.6.azuredatabricks.net', port=443): Max retries exceeded with url: /serving-endpoints/dynamic_tensorrt/invocations (Caused by SSLError(SSLError(1, '[SSL: WRONG_VERSION_NUMBER] wrong version number (_ssl.c:1000)')))
+
+
+
+INFO:     Started server process [3728]
+INFO:     Waiting for application startup.
+🚀 Initializing FAQ system...
+🔧 Setting up FAQ system...
+Debug - Available OpenAI-related environment variables:
+  AZURE_OPENAI_API_VERSION: ✓
+  AZURE_OPENAI_EMBEDDING_API_KEY: ✓
+  AZURE_OPENAI_EMBEDDING_API_VERSION: ✓
+  AZURE_OPENAI_EMBEDDING_BASE_URL: ✓
+  AZURE_OPENAI_EMBEDDING_DEPLOYMENT: ✓
+  AZURE_OPENAI_EMBEDDING_ENDPOINT: ✓
+  ENDPOINT_NAME: ✓
+  LLM_MODEL: ✓
+  OPENAI_API_KEY: ✓
+  OPENAI_BASE_URL: ✓
+  OPENAI_ENDPOINT: ✓
+  SARVAM_API_KEY: ✓
+  VSCODE_DEBUGPY_ADAPTER_ENDPOINTS: ✓
+📚 Loading FAQ content...
+🤖 Setting up FAQ chatbot...
+Debug - Checking Azure OpenAI environment variables:
+Debug - API Key exists: True
+Debug - Base URL: https://openai-lab37-eastus2-sb-poc.openai.azure.com
+Debug - API Version: 2024-12-01-preview
+✅ Azure OpenAI client initialized successfully!
+✅ FAQ system initialized successfully!
+🎭 Initializing Avatar Generator service...
+✅ Avatar Generator service initialized!
+INFO:     Application startup complete.
+INFO:     127.0.0.1:56290 - "GET /user HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63819 - "GET /api/avatar/languages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57537 - "GET /api/avatar/voices/en-IN HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64681 - "GET /api/avatar/voices/hi-IN HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62280 - "POST /api/avatar/generate HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:64986 - "POST /api/avatar/generate HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59725 - "POST /api/avatar/generate HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:59725 - "POST /api/avatar/generate HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:64929 - "POST /api/avatar/generate HTTP/1.1" 500 Internal Server Error
