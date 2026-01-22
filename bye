@@ -20,7 +20,7 @@ const AvatarForm: React.FC = () => {
     const fetchLanguages = async () => {
       try {
         const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-        const response = await axios.get(`${apiDomain}/api/languages`);
+        const response = await axios.get(`${apiDomain}/api/avatar/languages`);
         if (response.data.languages) {
           setLanguages(response.data.languages);
         }
@@ -40,7 +40,7 @@ const AvatarForm: React.FC = () => {
     const updateVoices = async () => {
       try {
         const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-        const response = await axios.get(`${apiDomain}/api/voices/${selectedLanguage}`);
+        const response = await axios.get(`${apiDomain}/api/avatar/voices/${selectedLanguage}`);
         if (response.data.voices?.length) {
           setVoices(response.data.voices);
           setSelectedSpeaker(response.data.voices[0]);
@@ -86,7 +86,7 @@ const AvatarForm: React.FC = () => {
       formData.append('speaker', selectedSpeaker);
 
       const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-      const response = await axios.post(`${apiDomain}/api/generate-avatar`, formData, {
+      const response = await axios.post(`${apiDomain}/api/avatar/generate`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
