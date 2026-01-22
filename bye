@@ -1,229 +1,294 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import AvatarOutput from './AvatarOutput';
-
-const AvatarForm: React.FC = () => {
-  const [text, setText] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState('en-IN');
-  const [selectedSpeaker, setSelectedSpeaker] = useState('anushka');
-  const [languages, setLanguages] = useState<Record<string, any>>({});
-  const [voices, setVoices] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [output, setOutput] = useState<any>(null);
-  const [error, setError] = useState('');
-  const [fileInputKey, setFileInputKey] = useState(Date.now());
-
-  // Fetch available languages and voices on component mount
-  useEffect(() => {
-    const fetchLanguages = async () => {
-      try {
-        const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-        const response = await axios.get(`${apiDomain}/api/avatar/languages`);
-        if (response.data.languages) {
-          setLanguages(response.data.languages);
-        }
-        if (response.data.voices?.['en-IN']) {
-          setVoices(response.data.voices['en-IN']);
-          setSelectedSpeaker(response.data.voices['en-IN'][0] || 'anushka');
-        }
-      } catch (err) {
-        console.error('Failed to fetch languages:', err);
-      }
-    };
-    fetchLanguages();
-  }, []);
-
-  // Update voices when language changes
-  useEffect(() => {
-    const updateVoices = async () => {
-      try {
-        const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-        const response = await axios.get(`${apiDomain}/api/avatar/voices/${selectedLanguage}`);
-        if (response.data.voices?.length) {
-          setVoices(response.data.voices);
-          setSelectedSpeaker(response.data.voices[0]);
-        }
-      } catch (err) {
-        console.error('Failed to fetch voices:', err);
-      }
-    };
-    updateVoices();
-  }, [selectedLanguage]);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    if (!text.trim()) {
-      setError('Please enter text');
-      return;
-    }
-    if (!image) {
-      setError('Please select an image');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    setOutput(null);
-
-    try {
-      const formData = new FormData();
-      formData.append('image', image);
-      formData.append('text', text);
-      formData.append('language', selectedLanguage);
-      formData.append('speaker', selectedSpeaker);
-
-      const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
-      const response = await axios.post(`${apiDomain}/api/avatar/generate`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      setOutput(response.data);
-      // Clear form after successful generation
-      setText('');
-      setImage(null);
-      setImagePreview(null);
-      setFileInputKey(Date.now());
-    } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to generate avatar');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-        <div className="space-y-4">
-          {/* Text Input */}
-          <div>
-            <label htmlFor="text" className="block text-sm font-medium text-gray-700 mb-2">
-              📝 Enter Text (English)
-            </label>
-            <textarea
-              id="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Enter the text you want the avatar to say... (will be translated automatically)"
-              rows={4}
-              disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099] resize-vertical"
-              required
-            />
-          </div>
-
-          {/* Language and Voice Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">
-                🌍 Select Language
-              </label>
-              <select
-                id="language"
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
-              >
-                {Object.entries(languages).map(([code, lang]) => (
-                  <option key={code} value={code}>
-                    {lang.name} ({lang.native_name})
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                Your text will be automatically translated to {languages[selectedLanguage]?.name}
-              </p>
-            </div>
-
-            <div>
-              <label htmlFor="speaker" className="block text-sm font-medium text-gray-700 mb-2">
-                🎤 Select Voice
-              </label>
-              <select
-                id="speaker"
-                value={selectedSpeaker}
-                onChange={(e) => setSelectedSpeaker(e.target.value)}
-                disabled={loading}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
-              >
-                {voices.map((voice) => (
-                  <option key={voice} value={voice}>
-                    {voice.charAt(0).toUpperCase() + voice.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Image Upload */}
-          <div>
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-              🖼️ Upload Image
-            </label>
-            <input
-              key={fileInputKey}
-              id="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              disabled={loading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
-              required
-            />
-            {imagePreview && (
-              <div className="mt-3 p-3 border border-gray-200 rounded-md">
-                <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-md mb-2" />
-                <div className="text-sm text-gray-600">
-                  <span className="font-medium">{image?.name}</span>
-                  <span className="ml-2">({(image?.size! / 1024).toFixed(2)} KB)</span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#000099] text-white py-2 px-4 rounded-md hover:bg-[#0000cc] focus:outline-none focus:ring-2 focus:ring-[#000099] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {loading ? (
-              <>
-                <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></span>
-                Generating Avatar...
-              </>
-            ) : (
-              <>
-                🚀 Generate Avatar
-              </>
-            )}
-          </button>
-
-          {error && (
-            <p className="text-red-600 text-center text-sm">{error}</p>
-          )}
-        </div>
-      </form>
-
-      {output && (
-        <AvatarOutput response={output} />
-      )}
-    </div>
-  );
-};
-
-export default AvatarForm;
+Access to fetch at 'https://ibc-365-be-dev.goindigo.in/user' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+saml-auth-service.ts:165  GET https://ibc-365-be-dev.goindigo.in/user net::ERR_FAILED 401 (Unauthorized)
+fetchCurrentUser @ saml-auth-service.ts:165
+initializeAuth @ auth-provider.tsx:114
+await in initializeAuth
+(anonymous) @ auth-provider.tsx:29
+react_stack_bottom_frame @ react-dom-client.development.js:25989
+runWithFiberInDEV @ react-dom-client.development.js:870
+commitHookEffectListMount @ react-dom-client.development.js:13244
+commitHookPassiveMountEffects @ react-dom-client.development.js:13334
+commitPassiveMountOnFiber @ react-dom-client.development.js:15483
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15519
+flushPassiveEffects @ react-dom-client.development.js:18432
+(anonymous) @ react-dom-client.development.js:17923
+performWorkUntilDeadline @ scheduler.development.js:45
+<AuthProvider>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+./src/index.tsx @ index.tsx:7
+options.factory @ react refresh:37
+__webpack_require__ @ bootstrap:22
+(anonymous) @ startup:7
+(anonymous) @ startup:7Understand this error
+saml-auth-service.ts:206 ❌ Error fetching user from backend: TypeError: Failed to fetch
+    at SAMLAuthService.fetchCurrentUser (saml-auth-service.ts:165:1)
+    at initializeAuth (auth-provider.tsx:114:1)
+fetchCurrentUser @ saml-auth-service.ts:206
+await in fetchCurrentUser
+initializeAuth @ auth-provider.tsx:114
+await in initializeAuth
+(anonymous) @ auth-provider.tsx:29
+react_stack_bottom_frame @ react-dom-client.development.js:25989
+runWithFiberInDEV @ react-dom-client.development.js:870
+commitHookEffectListMount @ react-dom-client.development.js:13244
+commitHookPassiveMountEffects @ react-dom-client.development.js:13334
+commitPassiveMountOnFiber @ react-dom-client.development.js:15483
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15519
+flushPassiveEffects @ react-dom-client.development.js:18432
+(anonymous) @ react-dom-client.development.js:17923
+performWorkUntilDeadline @ scheduler.development.js:45
+<AuthProvider>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+./src/index.tsx @ index.tsx:7
+options.factory @ react refresh:37
+__webpack_require__ @ bootstrap:22
+(anonymous) @ startup:7
+(anonymous) @ startup:7Understand this error
+avatar-generator:1 Access to XMLHttpRequest at 'https://ibc-365-be-dev.goindigo.in/api/avatar/languages' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+AvatarForm.tsx:33 Failed to fetch languages: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+fetchLanguages @ AvatarForm.tsx:33
+await in fetchLanguages
+(anonymous) @ AvatarForm.tsx:36
+react_stack_bottom_frame @ react-dom-client.development.js:25989
+runWithFiberInDEV @ react-dom-client.development.js:870
+commitHookEffectListMount @ react-dom-client.development.js:13244
+commitHookPassiveMountEffects @ react-dom-client.development.js:13334
+commitPassiveMountOnFiber @ react-dom-client.development.js:15483
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15647
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15633
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15519
+flushPassiveEffects @ react-dom-client.development.js:18432
+(anonymous) @ react-dom-client.development.js:17923
+performWorkUntilDeadline @ scheduler.development.js:45
+<AvatarForm>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+AvatarGenerator @ AvatarGenerator.tsx:24
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11702
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
+renderRootConcurrent @ react-dom-client.development.js:17615
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<...>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+App @ App.tsx:172
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11778
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopSync @ react-dom-client.development.js:17469
+renderRootSync @ react-dom-client.development.js:17450
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<App>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+./src/index.tsx @ index.tsx:8
+options.factory @ react refresh:37
+__webpack_require__ @ bootstrap:22
+(anonymous) @ startup:7
+(anonymous) @ startup:7Understand this error
+AvatarForm.tsx:24  GET https://ibc-365-be-dev.goindigo.in/api/avatar/languages net::ERR_FAILED 405 (Method Not Allowed)
+dispatchXhrRequest @ xhr.js:198
+xhr @ xhr.js:15
+dispatchRequest @ dispatchRequest.js:51
+_request @ Axios.js:185
+request @ Axios.js:40
+Axios.<computed> @ Axios.js:211
+wrap @ bind.js:12
+fetchLanguages @ AvatarForm.tsx:24
+(anonymous) @ AvatarForm.tsx:36
+react_stack_bottom_frame @ react-dom-client.development.js:25989
+runWithFiberInDEV @ react-dom-client.development.js:870
+commitHookEffectListMount @ react-dom-client.development.js:13244
+commitHookPassiveMountEffects @ react-dom-client.development.js:13334
+commitPassiveMountOnFiber @ react-dom-client.development.js:15483
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15647
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15633
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15519
+flushPassiveEffects @ react-dom-client.development.js:18432
+(anonymous) @ react-dom-client.development.js:17923
+performWorkUntilDeadline @ scheduler.development.js:45
+<AvatarForm>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+AvatarGenerator @ AvatarGenerator.tsx:24
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11702
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
+renderRootConcurrent @ react-dom-client.development.js:17615
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<...>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+App @ App.tsx:172
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11778
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopSync @ react-dom-client.development.js:17469
+renderRootSync @ react-dom-client.development.js:17450
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<App>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+./src/index.tsx @ index.tsx:8
+options.factory @ react refresh:37
+__webpack_require__ @ bootstrap:22
+(anonymous) @ startup:7
+(anonymous) @ startup:7Understand this error
+avatar-generator:1 Access to XMLHttpRequest at 'https://ibc-365-be-dev.goindigo.in/api/avatar/voices/en-IN' from origin 'http://localhost:3001' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error
+AvatarForm.tsx:50 Failed to fetch voices: AxiosError {message: 'Network Error', name: 'AxiosError', code: 'ERR_NETWORK', config: {…}, request: XMLHttpRequest, …}
+updateVoices @ AvatarForm.tsx:50
+await in updateVoices
+(anonymous) @ AvatarForm.tsx:53
+react_stack_bottom_frame @ react-dom-client.development.js:25989
+runWithFiberInDEV @ react-dom-client.development.js:870
+commitHookEffectListMount @ react-dom-client.development.js:13244
+commitHookPassiveMountEffects @ react-dom-client.development.js:13334
+commitPassiveMountOnFiber @ react-dom-client.development.js:15483
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15647
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15633
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15718
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15476
+recursivelyTraversePassiveMountEffects @ react-dom-client.development.js:15439
+commitPassiveMountOnFiber @ react-dom-client.development.js:15519
+flushPassiveEffects @ react-dom-client.development.js:18432
+(anonymous) @ react-dom-client.development.js:17923
+performWorkUntilDeadline @ scheduler.development.js:45
+<AvatarForm>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+AvatarGenerator @ AvatarGenerator.tsx:24
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11702
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopConcurrentByScheduler @ react-dom-client.development.js:17634
+renderRootConcurrent @ react-dom-client.development.js:17615
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<...>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+App @ App.tsx:172
+react_stack_bottom_frame @ react-dom-client.development.js:25904
+renderWithHooks @ react-dom-client.development.js:7662
+updateFunctionComponent @ react-dom-client.development.js:10166
+beginWork @ react-dom-client.development.js:11778
+runWithFiberInDEV @ react-dom-client.development.js:870
+performUnitOfWork @ react-dom-client.development.js:17639
+workLoopSync @ react-dom-client.development.js:17469
+renderRootSync @ react-dom-client.development.js:17450
+performWorkOnRoot @ react-dom-client.development.js:16498
+performWorkOnRootViaSchedulerTask @ react-dom-client.development.js:18957
+performWorkUntilDeadline @ scheduler.development.js:45
+<App>
+exports.jsxDEV @ react-jsx-dev-runtime.development.js:327
+./src/index.tsx @ index.tsx:8
+options.factory @ react refresh:37
+__webpack_require__ @ bootstrap:22
+(anonymous) @ startup:7
+(anonymous) @ startup:7Understand this error
+AvatarForm.tsx:44  GET https://ibc-365-be-dev.goindigo.in/api/avatar/voices/en-IN net::ERR_FAILED 405 (Method Not Allowed
