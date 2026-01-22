@@ -1,54 +1,105 @@
-"""
-Test script for Avatar Generator Service
-"""
-import asyncio
-import sys
-import os
-from pathlib import Path
+# IBC-365-BE
 
-# Add the parent directory to the path to import the avatar service
-sys.path.append(str(Path(__file__).parent.parent))
+**InterGlobe Backend AI Projects Repository**
 
-from Avatar_generator.avatar_service import AvatarGeneratorService
+## 🚀 Project Overview
 
-async def test_avatar_service():
-    """Test the avatar generator service"""
-    print("🧪 Testing Avatar Generator Service...")
-    
-    # Initialize service
-    try:
-        service = AvatarGeneratorService()
-        print("✅ Avatar service initialized successfully")
-    except Exception as e:
-        print(f"❌ Failed to initialize avatar service: {e}")
-        return
-    
-    # Test 1: Get languages
-    try:
-        languages = service.get_languages()
-        print(f"✅ Languages retrieved: {len(languages['languages'])} languages supported")
-        print(f"   Sample languages: {list(languages['languages'].keys())[:3]}")
-    except Exception as e:
-        print(f"❌ Failed to get languages: {e}")
-    
-    # Test 2: Get voices for English
-    try:
-        voices = service.get_voices_for_language("en-IN")
-        print(f"✅ Voices for English: {voices['voices']}")
-    except Exception as e:
-        print(f"❌ Failed to get voices: {e}")
-    
-    # Test 3: Translation (if API key is available)
-    if os.getenv("SARVAM_API_KEY"):
-        try:
-            translated = service.translate_text("Hello, how are you?", "en-IN", "hi-IN")
-            print(f"✅ Translation test: 'Hello, how are you?' -> '{translated}'")
-        except Exception as e:
-            print(f"⚠️ Translation test failed (expected if API not configured): {e}")
-    else:
-        print("⚠️ Skipping translation test - SARVAM_API_KEY not set")
-    
-    print("🏁 Avatar service test completed")
+FastAPI-based backend service featuring RAG (Retrieval Augmented Generation) chatbot capabilities and Avatar Generator for InterGlobe Aviation's IBC-365 platform.
 
-if __name__ == "__main__":
-    asyncio.run(test_avatar_service())
+## 🏗️ Technology Stack
+
+- **Framework:** FastAPI
+- **AI/ML:** RAG Chatbot System + Avatar Generator
+- **Language:** Python 3.11
+- **Containerization:** Docker
+- **CI/CD:** GitHub Actions
+- **Quality Tools:** Black, isort, flake8
+
+## 📁 Project Structure
+
+```
+IBC-365-BE/
+├── main.py                    # FastAPI application
+├── requirements.txt           # Dependencies
+├── Dockerfile                # Container config
+├── Ai_search/
+│   ├── enhanced_rag_chatbot.py   # RAG implementation
+│   ├── FAQ.txt                   # Knowledge base
+│   └── test_rag.py              # Tests
+├── Avatar_generator/
+│   ├── avatar_service.py         # Avatar generation service
+│   └── test_avatar.py           # Avatar tests
+├── uploads/                      # Generated avatar videos
+└── .github/workflows/           # CI/CD pipelines
+```
+
+## 🔄 CI/CD Workflows
+
+### Development (`dev` branch)
+
+- Code quality checks (formatting, linting)
+- Basic RAG validation
+- Docker build with `dev-{sha}` tags
+
+### UAT (`uat` branch)
+
+- Strict quality gates
+- Full RAG system testing
+- Docker build with `uat-{sha}` tags
+
+### Production (releases)
+
+- Comprehensive testing + security scans
+- Container health checks
+- Production-ready deployment
+
+## 🚢 Quick Start
+
+### Local Development
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run FastAPI server
+python main.py
+
+# Test RAG system
+python Ai_search/test_rag.py
+
+# Test Avatar Generator
+python Avatar_generator/test_avatar.py
+```
+
+### Docker
+
+```bash
+# Build image
+docker build -t ibc-365-be .
+
+# Run container
+docker run -p 8000:8000 ibc-365-be
+```
+
+## 📊 Available VS Code Tasks
+
+- Install Python Dependencies
+- Run FastAPI Server
+- Run RAG Chatbot
+- Test RAG System
+- Format/Lint Code
+- Docker Build/Run
+
+## 🔗 Related Files
+
+- **Detailed Documentation:** [PROJECT_TRACKER.md](PROJECT_TRACKER.md)
+- **Docker Config:** [Dockerfile](Dockerfile)
+- **Dependencies:** [requirements.txt](requirements.txt)
+
+## 🏢 Organization
+
+**InterGlobe Aviation Limited** - IBC-365 Backend Services
+
+---
+
+_For comprehensive project tracking and workflow details, see [PROJECT_TRACKER.md](PROJECT_TRACKER.md)_
