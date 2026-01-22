@@ -1,151 +1,261 @@
-import React, { useEffect, useState } from 'react';
-import { Download, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import AvatarOutput from './AvatarOutput';
 
-interface AvatarOutputProps {
-  response: {
-    videourl: string;
-    filename: string;
-    language: string;
-    speaker: string;
-    translatedtext: string;
-    originaltext: string;
+const AvatarForm: React.FC = () => {
+  const [text, setText] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en-IN');
+  const [selectedSpeaker, setSelectedSpeaker] = useState<string>('anushka');
+  const [languages, setLanguages] = useState<Record<string, any>>({});
+  const [voices, setVoices] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [output, setOutput] = useState<any>(null);
+  const [error, setError] = useState<string>('');
+  const [fileInputKey, setFileInputKey] = useState<number>(Date.now());
+
+  // ⭐ Get API domain from environment (FIXED APPROACH)
+  const getApiDomain = () => {
+    return (
+      (window as any).REACT_APP_API_URL ||
+      (window as any).REACT_APP_BACKEND_URL ||
+      'http://localhost:3001'
+    );
   };
-}
 
-const AvatarOutput: React.FC<AvatarOutputProps> = ({ response }) => {
-  const [videoSrc, setVideoSrc] = useState<string>('');
-  const [downloading, setDownloading] = useState(false);
-  const [downloadError, setDownloadError] = useState<string>('');
-
-  // Extract filename and construct streaming URL
+  // Fetch languages on mount
   useEffect(() => {
-    if (response?.videourl) {
-      const filename = response.videourl.split('/').pop() || response.filename;
-      const apiDomain = (window as any).REACT_APP_API_URL || 'http://localhost:3001';
-      
-      // ⭐ Use streaming endpoint for playback (NOT download)
-      const streamingUrl = `${apiDomain}/api/avatar/stream/${filename}`;
-      setVideoSrc(streamingUrl);
-      console.log('Video Source:', streamingUrl);
-    }
-  }, [response]);
+    const fetchLanguages = async () => {
+      try {
+        const apiDomain = getApiDomain();
+        console.log('[Avatar] Fetching languages from:', apiDomain);
+        
+        const response = await axios.get(`${apiDomain}/api/avatar/languages`);
+        
+        if (response.data.languages) {
+          setLanguages(response.data.languages);
+        }
+        
+        if (response.data.voices?.['en-IN']) {
+          setVoices(response.data.voices['en-IN']);
+          setSelectedSpeaker(response.data.voices['en-IN'][0]);
+        }
+      } catch (err: any) {
+        console.error('[Avatar] Failed to fetch languages:', err);
+        setError('Failed to load languages. Check your backend connection.');
+      }
+    };
 
-  const handleCreateAnother = () => {
-    window.location.reload();
+    fetchLanguages();
+  }, []);
+
+  // Update voices when language changes
+  useEffect(() => {
+    const updateVoices = async () => {
+      try {
+        const apiDomain = getApiDomain();
+        console.log('[Avatar] Fetching voices for language:', selectedLanguage);
+        
+        const response = await axios.get(
+          `${apiDomain}/api/avatar/voices/${selectedLanguage}`
+        );
+        
+        if (response.data.voices?.length) {
+          setVoices(response.data.voices);
+          setSelectedSpeaker(response.data.voices[0]);
+        }
+      } catch (err: any) {
+        console.error('[Avatar] Failed to fetch voices:', err);
+      }
+    };
+
+    updateVoices();
+  }, [selectedLanguage]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleDownload = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!text.trim()) {
+      setError('Please enter text');
+      return;
+    }
+
+    if (!image) {
+      setError('Please select an image');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setOutput(null);
+
     try {
-      setDownloading(true);
-      setDownloadError('');
+      const formData = new FormData();
+      formData.append('image', image);
+      formData.append('text', text);
+      formData.append('language', selectedLanguage);
+      formData.append('speaker', selectedSpeaker);
 
-      const filename = response.videourl.split('/').pop() || response.filename;
-      const apiDomain = (window as any).REACT_APP_API_URL || 'http://localhost:3001';
+      const apiDomain = getApiDomain();
+      console.log('[Avatar] Submitting to:', apiDomain);
       
-      // ⭐ Use download endpoint for saving
-      const downloadUrl = `${apiDomain}/api/avatar/download/${filename}`;
-      console.log('Downloading from:', downloadUrl);
+      const response = await axios.post(
+        `${apiDomain}/api/avatar/generate`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
-      // Fetch as blob
-      const response_fetch = await fetch(downloadUrl, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      console.log('[Avatar] Generation successful:', response.data);
+      setOutput(response.data);
 
-      if (!response_fetch.ok) {
-        throw new Error(`Download failed: ${response_fetch.statusText}`);
-      }
-
-      const blob = await response_fetch.blob();
-
-      // Create blob URL and trigger download
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename || 'avatar.mp4';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Clean up
-      window.URL.revokeObjectURL(blobUrl);
-      console.log('Download initiated successfully');
+      // Clear form
+      setText('');
+      setImage(null);
+      setImagePreview(null);
+      setFileInputKey(Date.now());
     } catch (err: any) {
-      console.error('Download error:', err);
-      setDownloadError(err.message || 'Failed to download video');
+      console.error('[Avatar] Generation error:', err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Failed to generate avatar';
+      setError(errorMsg);
     } finally {
-      setDownloading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-      <div className="text-green-600 font-semibold mb-4 flex items-center">
-        <span className="mr-2">✓</span>
-        Avatar Generated Successfully!
-      </div>
-
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-md">
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+        <div className="space-y-4">
           <div>
-            <span className="font-semibold text-gray-700">Language</span>
-            <span className="ml-2">{response.language}</span>
+            <label htmlFor="text" className="block text-sm font-medium text-gray-700 mb-2">
+              Enter Text (English)
+            </label>
+            <textarea
+              id="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Enter the text you want the avatar to say... (will be translated automatically)"
+              rows={4}
+              disabled={loading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099] resize-vertical"
+              required
+            />
           </div>
-          <div>
-            <span className="font-semibold text-gray-700">Voice</span>
-            <span className="ml-2">{response.speaker.charAt(0).toUpperCase() + response.speaker.slice(1)}</span>
-          </div>
-          <div className="md:col-span-2">
-            <span className="font-semibold text-gray-700">Translated Text</span>
-            <p className="mt-1 text-gray-600">{response.translatedtext}</p>
-          </div>
-        </div>
 
-        <div>
-          <h3 className="font-semibold text-gray-700 mb-2">Video Player</h3>
-          <div className="video-container">
-            {videoSrc ? (
-              <video
-                controls
-                className="w-full max-w-2xl mx-auto rounded-lg shadow-md"
-                style={{ maxHeight: '400px' }}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-2">
+                Select Language
+              </label>
+              <select
+                id="language"
+                value={selectedLanguage}
+                onChange={(e) => setSelectedLanguage(e.target.value)}
+                disabled={loading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
               >
-                <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <div className="text-center text-gray-500 py-8">Loading video...</div>
+                {Object.entries(languages).map(([code, lang]: any) => (
+                  <option key={code} value={code}>
+                    {lang.name} {lang.nativename ? `(${lang.nativename})` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="speaker" className="block text-sm font-medium text-gray-700 mb-2">
+                Select Voice
+              </label>
+              <select
+                id="speaker"
+                value={selectedSpeaker}
+                onChange={(e) => setSelectedSpeaker(e.target.value)}
+                disabled={loading}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
+              >
+                {voices.map((voice) => (
+                  <option key={voice} value={voice}>
+                    {voice.charAt(0).toUpperCase() + voice.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
+              Upload Image
+            </label>
+            <input
+              key={fileInputKey}
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              disabled={loading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#000099] focus:border-[#000099]"
+              required
+            />
+
+            {imagePreview && (
+              <div className="mt-3 p-3 border border-gray-200 rounded-md">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover rounded-md mb-2"
+                />
+                <div className="text-sm text-gray-600">
+                  <span className="font-medium">{image?.name}</span>
+                  <span className="ml-2">{((image?.size || 0) / 1024).toFixed(2)} KB</span>
+                </div>
+              </div>
             )}
           </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
-          <button
-            onClick={handleDownload}
-            disabled={downloading}
-            className="bg-[#000099] text-white px-6 py-2 rounded-md hover:bg-[#0000cc] focus:outline-none focus:ring-2 focus:ring-[#000099] focus:ring-offset-2 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download size={18} />
-            {downloading ? 'Downloading...' : 'Download Video'}
-          </button>
 
           <button
-            onClick={handleCreateAnother}
-            className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors flex items-center justify-center gap-2"
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#000099] text-white py-2 px-4 rounded-md hover:bg-[#0000cc] focus:outline-none focus:ring-2 focus:ring-[#000099] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <RefreshCw size={18} />
-            Create Another
+            {loading ? (
+              <>
+                <span className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                Generating Avatar...
+              </>
+            ) : (
+              'Generate Avatar'
+            )}
           </button>
-        </div>
 
-        {downloadError && (
-          <div className="text-red-600 text-sm p-3 bg-red-50 rounded-md border border-red-200">
-            ⚠️ {downloadError}
-          </div>
-        )}
-      </div>
+          {error && (
+            <p className="text-red-600 text-center text-sm bg-red-50 p-3 rounded-md border border-red-200">
+              ⚠️ {error}
+            </p>
+          )}
+        </div>
+      </form>
+
+      {output && <AvatarOutput response={output} />}
     </div>
   );
 };
 
-export default AvatarOutput;
+export default AvatarForm;
