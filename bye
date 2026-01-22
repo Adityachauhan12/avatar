@@ -1,257 +1,110 @@
-import React, { useState, useEffect, Suspense, useRef } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { useSAMLAuth } from './auth/hooks/auth-provider';
-import ProtectedRoute from "./components/ProtectedRoute";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { User, TrendingUp, BarChart3, Search, Shield, ChevronDown } from 'lucide-react';
 
-// Lazy load all components including Login
-const Login = React.lazy(() => import("./welcome/Login"));
-const SAMLCallback = React.lazy(() => import("./components/SAMLCallback"));
-const ProfileUpdate = React.lazy(() => import("./features/ProfileUpdate"));
-const Marketing = React.lazy(() => import("./features/Marketing"));
-const AvatarGenerator = React.lazy(() => import("./features/AvatarGenerator"));
-const FraudAnalytics = React.lazy(() => import("./features/Fraud_analytics"));
-const AiSearch = React.lazy(() => import("./features/Ai_search"));
-const PartnerAnalytics = React.lazy(
-  () => import("./features/Partner_analytics")
-);
-const RbacComponent = React.lazy(() => import("./features/Rbac"));
+const Tabs: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-// Loading component for Suspense
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="flex flex-col items-center gap-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#000099]"></div>
-      <div className="text-lg text-indigo-600">Loading page...</div>
-    </div>
-  </div>
-);
+  const tabs = [
+    { path: '/profile-update', label: 'Profile Update', icon: User },
+    { path: '/marketing', label: 'Marketing', icon: TrendingUp },
+    { path: '/avatar-generator', label: 'Avatar Generator', icon: User },
+    { path: '/fraud-analytics', label: 'Fraud Analytics', icon: BarChart3 },
+    { path: '/ai-search', label: 'AI Search', icon: Search },
+    { path: '/rbac', label: 'RBAC', icon: Shield },
+    { path: '/partner-analytics', label: 'Partner Analytics', icon: BarChart3 }
+  ];
 
-// Auth loading component
-const AuthLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="flex flex-col items-center gap-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#000099]"></div>
-      <div className="text-lg text-indigo-600">Checking authentication...</div>
-    </div>
-  </div>
-);
+  const currentTab = tabs.find(tab => tab.path === location.pathname);
 
-const App: React.FC = () => {
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useSAMLAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const aiSearchRef = useRef<{ toggleChatHistory: () => void } | null>(null);
-
-  const isDevelopmentMode = (window as any).NODE_ENV === 'development';
-  const enableDevLogin = (window as any).REACT_APP_ENABLE_DEV_LOGIN === 'true' || isDevelopmentMode;
-
-  // Check for existing login state on component mount
   useEffect(() => {
-    // Check if user is authenticated via SAML
-    if (isAuthenticated && user) {
-      setIsLoggedIn(true);
-    } 
-    // For development mode, check localStorage for dev login
-    else if (enableDevLogin) {
-      const savedLoginState = localStorage.getItem("isLoggedIn");
-      if (savedLoginState === "true") {
-        setIsLoggedIn(true);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!(event.target as Element).closest('.tabs-dropdown')) {
+        setIsDropdownOpen(false);
       }
-    }
-    
-    // Set loading to false when auth loading is complete
-    if (!authLoading) {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated, user, enableDevLogin, authLoading]);
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    // Only use localStorage for dev login
-    if (enableDevLogin && !isAuthenticated) {
-      localStorage.setItem("isLoggedIn", "true");
-    }
-    console.log("Login successful, isLoggedIn set to true",isLoggedIn);
+  const handleTabClick = (path: string) => {
+    navigate(path);
+    setIsDropdownOpen(false);
   };
-
-  const handleLogout = async () => {
-    console.log("🚪 App logout initiated");
-    
-    try {
-      // Clear local login state
-      setIsLoggedIn(false);
-      localStorage.removeItem("isLoggedIn");
-      
-      // Call SAML logout (this will handle everything including redirect)
-      logout();
-      
-    } catch (error) {
-      console.error('💥 Logout failed:', error);
-      // Fallback: force redirect even if logout fails
-      // window.location.href = (window as any).REACT_APP_API_URL;
-    }
-  };
-
-  const handleToggleChatHistory = () => {
-    if (aiSearchRef.current) {
-      aiSearchRef.current.toggleChatHistory();
-    }
-  };
-
-  // Get user information for display (use SAML user instead of MSAL accounts)
-  const displayUser = isAuthenticated && user ? user : null;
 
   return (
-    <Router>
-      <Suspense fallback={<PageLoader />}>
-        {isLoading ? (
-          <AuthLoader />
-        ) : (
-          <Routes>
-            <Route
-              path="/sso/acs"
-              element={<SAMLCallback />}
-            />
+    <div className="fixed top-14 sm:top-16 w-full bg-white shadow-lg border-b border-gray-200 z-40">
+      <div className="px-4 py-3">
+        {/* Mobile Dropdown */}
+        <div className="sm:hidden">
+          <div className="relative tabs-dropdown">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border border-[#000099] transition-all duration-300 ${
+                currentTab ? 'bg-[#000099] text-white' : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                {currentTab && <currentTab.icon className="w-4 h-4" />}
+                <span className="font-medium">
+                  {currentTab ? currentTab.label : 'Select Tab'}
+                </span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${
+                isDropdownOpen ? 'rotate-180' : ''
+              }`} />
+            </button>
 
-            <Route
-              path="/sso/logout"
-              element={<SAMLCallback />}
-            />
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.path}
+                      onClick={() => handleTabClick(tab.path)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors duration-200 first:rounded-t-lg last:rounded-b-lg hover:bg-gray-50 ${
+                        location.pathname === tab.path 
+                          ? 'bg-blue-50 text-[#000099] border-l-4 border-[#000099]' 
+                          : 'text-gray-700'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span className="font-medium">{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
 
-            <Route
-              path="/"
-              element={
-                (isLoggedIn && (isAuthenticated || enableDevLogin)) ? (
-                  <Navigate to="/profile-update" replace />
-                ) : (
-                  <Login onLogin={handleLogin} />
-                )
-              }
-            />
-
-            {/* <Route
-              path="/profile-update"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="profile-update"
-                >
-                  <ProfileUpdate />
-                </ProtectedRoute>
-              }
-            /> */}
-
-            <Route
-              path="/marketing"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="marketing"
-                >
-                  <Marketing />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/avatar-generator"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="avatar-generator"
-                >
-                  <AvatarGenerator />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/fraud-analytics"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="fraud-analytics"
-                >
-                  <FraudAnalytics />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/ai-search"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="ai-search" 
-                  onToggleChatHistory={handleToggleChatHistory}
-                >
-                  <AiSearch ref={aiSearchRef} />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/partner-analytics"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="partner-analytics"
-                >
-                  <PartnerAnalytics />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route
-              path="/rbac"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn} 
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="rbac"
-                >
-                  <RbacComponent />
-                </ProtectedRoute>
-              }
-            />
-
-    
-            <Route
-              path="/profile-update"
-              element={
-                <ProtectedRoute 
-                  isLoggedIn={isLoggedIn}
-                  user={displayUser} 
-                  onLogout={handleLogout} 
-                  activeTab="profile-update"
-                >
-                  <ProfileUpdate />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        )}
-      </Suspense>
-    </Router>
+        {/* Desktop Tabs */}
+        <nav className="hidden sm:flex gap-2">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.path}
+                onClick={() => navigate(tab.path)}
+                className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-md transform hover:scale-105 border border-[#000099] ${
+                  location.pathname === tab.path ? 'bg-[#000099] text-white' : 'hover:bg-gray-200 text-gray-700'
+                }`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Icon className="w-4 h-4" />
+                  <span className="whitespace-nowrap">{tab.label}</span>
+                </div>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
   );
 };
 
-export default App;
+
+export default Tabs;
