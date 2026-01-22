@@ -3,7 +3,7 @@ FastAPI Backend for IndiGo BluChip AI Search System
 """
 from fastapi.responses import RedirectResponse, Response
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi import FastAPI, HTTPException, Request, Query, Depends, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Request, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
@@ -15,10 +15,9 @@ import sys
 from dotenv import load_dotenv
 import json
 
-# Add modules to path for imports
+# Add Ai_search to path for imports
 sys.path.append(os.path.join(os.path.dirname(__file__), 'Ai_search'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'Market_campaign'))
-sys.path.append(os.path.join(os.path.dirname(__file__), 'Avatar_generator'))
 
 
 try:
@@ -29,13 +28,13 @@ except ImportError as e:
     SAML_AVAILABLE = False
     OneLogin_Saml2_Auth = None
 
-# RAG System imports
-try:
-    from Ai_search.cosmos_rag_chatbot import CosmosRAG, CosmosRAGChatbot, FAQProcessor
-except ImportError as e:
-    print(f"Error importing RAG modules: {e}")
-    print("Make sure the Ai_search folder contains the cosmos_rag_chatbot.py file")
-    sys.exit(1)
+# RAG System imports - Commented out due to Azure compatibility issues
+# try:
+#     from Ai_search.enhanced_rag_chatbot import FAQProcessor, EnhancedChromaRAG, EnhancedRAGChatbot
+# except ImportError as e:
+#     print(f"Error importing RAG modules: {e}")
+#     print("Make sure the Ai_search folder contains the enhanced_rag_chatbot.py file")
+#     sys.exit(1)
 
 # Import OpenAI for direct LLM integration
 try:
@@ -51,13 +50,6 @@ except ImportError as e:
     print(f"Error importing Market Campaign modules: {e}")
     print("Make sure the Market_campaign folder contains the new.py file")
 
-# Avatar Generator imports
-try:
-    from Avatar_generator.avatar_service import AvatarGeneratorService
-except ImportError as e:
-    print(f"Error importing Avatar Generator modules: {e}")
-    print("Make sure the Avatar_generator folder contains the avatar_service.py file")
-
 # Load environment variables
 load_dotenv()
 
@@ -71,17 +63,102 @@ def debug_environment_variables():
     return openai_vars
 
 # Global variables
-rag_chatbot = None
-avatar_service = None
+faq_chatbot = None
+faq_content = ""
+# rag_chatbot = None  # Uncomment when switching back to RAG system
 initialization_status = {"initialized": False}
 
-# Initialize RAG system
+# Simple FAQ Chatbot Class
+class SimpleFAQChatbot:
+    def __init__(self, faq_content: str):
+        self.faq_content = faq_content
+        self.client = None
+        self._initialize_azure_client()
+    
+    def _initialize_azure_client(self):
+        """Initialize Azure OpenAI client"""
+        try:
+            # Debug output to see what env vars are available
+            print("Debug - Checking Azure OpenAI environment variables:")
+            
+            # Use the correct environment variable names from your .env file
+            api_key = os.getenv("OPENAI_API_KEY")  # Your env uses OPENAI_API_KEY
+            base_url = os.getenv("OPENAI_BASE_URL")  # Your env uses OPENAI_BASE_URL
+            api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
+            
+            print(f"Debug - API Key exists: {bool(api_key)}")
+            print(f"Debug - Base URL: {base_url}")
+            print(f"Debug - API Version: {api_version}")
+            
+            if not api_key:
+                available_keys = [k for k in os.environ.keys() if 'api_key' in k.lower()]
+                raise ValueError(f"Missing OpenAI API key. Available keys: {available_keys}")
+            
+            if not base_url:
+                available_urls = [k for k in os.environ.keys() if 'url' in k.lower() or 'endpoint' in k.lower()]
+                raise ValueError(f"Missing OpenAI base URL. Available URL vars: {available_urls}")
+            
+            # Ensure base_url ends with a slash
+            if not base_url.endswith('/'):
+                base_url += '/'
+            
+            self.client = AzureOpenAI(
+                api_key=api_key,
+                api_version=api_version,
+                azure_endpoint=base_url
+            )
+            print("✅ Azure OpenAI client initialized successfully!")
+        except Exception as e:
+            print(f"❌ Failed to initialize Azure OpenAI client: {e}")
+            raise
+    
+    def answer_question(self, question: str) -> dict:
+        """Answer question using FAQ content and Azure OpenAI"""
+        try:
+            # Use LLM_MODEL from your .env file
+            deployment_name = os.getenv("LLM_MODEL", "gpt-4o")
+            
+            print(f"Debug - Using deployment: {deployment_name}")
+            
+            system_prompt = f"""You are a helpful customer service assistant for IndiGo BluChip loyalty program. 
+            Use the following FAQ information to answer user questions accurately and helpfully.
+            If the question is not covered in the FAQ, politely say you don't have that specific information and suggest contacting customer support.
+            
+            FAQ Content:
+            {self.faq_content}
+            
+            Please provide clear, concise answers based on this information."""
+            
+            response = self.client.chat.completions.create(
+                model=deployment_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": question}
+                ],
+                max_tokens=1000,
+                temperature=0.3
+            )
+            
+            return {
+                "answer": response.choices[0].message.content,
+                "model": deployment_name,
+                "status": "success"
+            }
+            
+        except Exception as e:
+            print(f"Error getting response from Azure OpenAI: {e}")
+            return {
+                "answer": "I'm sorry, I'm having trouble processing your question right now. Please try again later or contact customer support.",
+                "error": str(e),
+                "status": "error"
+            }
 
-def initialize_rag_system():
-    global rag_chatbot, initialization_status
+# Initialize FAQ system
+def initialize_faq_system():
+    global faq_chatbot, faq_content, initialization_status
 
     try:
-        print("🔧 Setting up RAG system...")
+        print("🔧 Setting up FAQ system...")
         
         # Debug environment variables
         debug_environment_variables()
@@ -92,60 +169,80 @@ def initialize_rag_system():
         if not os.path.exists(faq_file_path):
             raise FileNotFoundError(f"FAQ file not found: {faq_file_path}")
         
-        print("📚 Processing FAQ data...")
-        faq_processor = FAQProcessor(faq_file_path)
-        qa_pairs = faq_processor.load_and_parse_faq()
+        print("📚 Loading FAQ content...")
+        with open(faq_file_path, 'r', encoding='utf-8') as f:
+            faq_content = f.read()
         
-        if not qa_pairs:
-            raise ValueError("No Q&A pairs found in FAQ file")
+        if not faq_content.strip():
+            raise ValueError("FAQ file is empty")
         
-        print(f"🧠 Initializing RAG system with {len(qa_pairs)} Q&A pairs...")
-        
-        # Get LLM provider from environment or default
-        llm_provider = os.getenv("DEFAULT_MODEL", "azure_openai")
-        
-        # Initialize Cosmos RAG system (uses environment variables)
-        rag_system = CosmosRAG(llm_provider=llm_provider)
-        
-        # Check if container is empty and add documents if needed
-        current_count = rag_system.vector_store.count_documents()
-        if current_count == 0:
-            print("📊 Adding documents to Cosmos DB vector store...")
-            rag_system.add_documents(qa_pairs)
-        else:
-            print(f"📊 Using existing {current_count} documents in Cosmos DB")
-        
-        print("🤖 Setting up RAG chatbot...")
-        rag_chatbot = CosmosRAGChatbot(rag_system, interface_type="web")
+        print("🤖 Setting up FAQ chatbot...")
+        faq_chatbot = SimpleFAQChatbot(faq_content)
         
         initialization_status = {
             "initialized": True,
             "error": None,
-            "collection_count": current_count,
-            "llm_provider": "Azure OpenAI with Cosmos DB"
+            "faq_content_length": len(faq_content),
+            "llm_provider": "Azure OpenAI"
         }
         
-        print("✅ RAG system initialized successfully!")
+        print("✅ FAQ system initialized successfully!")
         return True
 
     except Exception as e:
-        error_msg = f"Failed to initialize RAG system: {str(e)}"
+        error_msg = f"Failed to initialize FAQ system: {str(e)}"
         print(f"❌ {error_msg}")
         initialization_status = {"initialized": False, "error": error_msg}
-        raise Exception(error_msg)
+        return False
 
-
+# Commented RAG system initialization - can be re-enabled when vector DB issues are resolved
+# def initialize_rag_system():
+#     global rag_chatbot, initialization_status
+#
+#     try:
+#         print("🔧 Setting up FAQ processor...")
+#         faq_processor = FAQProcessor("Ai_search/FAQ.txt")
+#
+#         print("📚 Processing FAQ data...")
+#         questions, answers = faq_processor.process_faq()
+#
+#         print("🧠 Initializing RAG system...")
+#         rag_system = EnhancedChromaRAG(
+#             collection_name="indigo_faq",
+#             persist_directory="./chroma_db"
+#         )
+#
+#         print("📊 Adding documents to vector database...")
+#         rag_system.add_documents(questions, answers)
+#
+#         print("🤖 Setting up chatbot...")
+#         rag_chatbot = EnhancedRAGChatbot(
+#             rag_system=rag_system,
+#             questions=questions,
+#             answers=answers
+#         )
+#
+#         initialization_status = {
+#             "initialized": True,
+#             "collection_count": rag_system.collection.count(),
+#             "llm_provider": rag_system.llm_provider.__class__.__name__
+#         }
+#
+#         print("✅ RAG system initialized successfully!")
+#         return True
+#
+#     except Exception as e:
+#         error_msg = f"Failed to initialize RAG system: {str(e)}"
+#         print(f"❌ {error_msg}")
+#         initialization_status = {"initialized": False, "error": error_msg}
+#         return False
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Handle application lifespan events"""
-    global avatar_service
     # Startup
-    print("🚀 Initializing RAG system...")
-    initialize_rag_system()
-    print("🎭 Initializing Avatar Generator service...")
-    avatar_service = AvatarGeneratorService()
-    print("✅ Avatar Generator service initialized!")
+    print("🚀 Initializing FAQ system...")
+    initialize_faq_system()
     yield
     # Shutdown
     print("🛑 Shutting down gracefully...")
@@ -166,7 +263,8 @@ app.add_middleware(
         "https://ibc-365-fe-dev.goindigo.in", 
         "http://localhost:3000",
         "https://ibc-365-be-dev.goindigo.in/user", 
-        "https://ibc-365-be-uat.goindigo.in", 
+        "https://ibc-365-be-uat.goindigo.in",
+         
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -189,8 +287,9 @@ async def options_handler(path: str):
 
 app.add_middleware(SessionMiddleware, secret_key="your-secret-key-here-change-in-production")
 
-# Global variables for RAG system
-rag_chatbot: Optional[CosmosRAGChatbot] = None
+# Global variables for FAQ system
+faq_chatbot: Optional[SimpleFAQChatbot] = None
+# rag_chatbot: Optional[EnhancedRAGChatbot] = None  # Uncomment when switching back to RAG system
 initialization_status = {"initialized": False, "error": None}
 
 # Pydantic models
@@ -300,223 +399,112 @@ async def root():
         "status": "running",
         "services": {
             "ai_search": "Available",
-            "market_campaign": "Available",
-            "avatar_generator": "Available"
+            "market_campaign": "Available"
         },
         "docs": "/docs"
     }
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    """Comprehensive health check endpoint - tests all AI search connections"""
-    global rag_chatbot, initialization_status
+    """Comprehensive health check endpoint"""
+    global faq_chatbot, initialization_status
 
-    health_results = {
-        "overall_status": "healthy",
-        "issues": [],
-        "connections": {}
+    # Check database connectivity with detailed validation
+    database_status = "unknown"
+    db_env_vars = {
+        'DB_HOST': os.getenv("DB_HOST"),
+        'DB_PORT': os.getenv("DB_PORT"),
+        'DB_NAME': os.getenv("DB_NAME"),
+        'DB_USER': os.getenv("DB_USER"),
+        'DB_PASSWORD': os.getenv("DB_PASSWORD")
     }
-
-    # 1. Test PostgreSQL Database Connection
-    try:
-        conn = await get_db_connection()
-        await conn.fetchval("SELECT 1")
-        await conn.close()
-        health_results["connections"]["postgresql"] = {"status": "healthy", "message": "Connection successful"}
-    except Exception as e:
-        health_results["connections"]["postgresql"] = {"status": "unhealthy", "message": "Connection failed"}
-        health_results["overall_status"] = "unhealthy"
-        health_results["issues"].append("PostgreSQL database unreachable")
-
-    # 2. Test Cosmos DB Connection (for AI search)
-    cosmos_status = {"status": "unknown", "message": "Not tested"}
-    try:
-        # Check Cosmos DB configuration
-        cosmos_endpoint = os.getenv("COSMOS_DB_ENDPOINT")
-        cosmos_key = os.getenv("COSMOS_DB_KEY") 
-        cosmos_db_name = os.getenv("COSMOS_DB_NAME", "rag_db")
-        
-        if not cosmos_endpoint or not cosmos_key:
-            cosmos_status = {"status": "unhealthy", "message": "Missing configuration"}
-            health_results["issues"].append("Cosmos DB configuration incomplete")
-        else:
-            # Test actual connection
-            from azure.cosmos import CosmosClient
-            client = CosmosClient(cosmos_endpoint, cosmos_key)
-            database = client.get_database_client(cosmos_db_name)
-            # Try to read database properties (lightweight operation)
-            properties = database.read()
-            cosmos_status = {"status": "healthy", "message": f"Connected to database '{cosmos_db_name}'"}
-    except ImportError:
-        cosmos_status = {"status": "unhealthy", "message": "Azure Cosmos SDK not available"}
-        health_results["issues"].append("Cosmos DB SDK missing")
-    except Exception as e:
-        cosmos_status = {"status": "unhealthy", "message": "Connection failed"}
-        health_results["issues"].append("Cosmos DB unreachable")
-        if health_results["overall_status"] == "healthy":
-            health_results["overall_status"] = "degraded"
-
-    health_results["connections"]["cosmos_db"] = cosmos_status
-
-    # 3. Test Azure OpenAI Chat Completion Connection
-    openai_chat_status = {"status": "unknown", "message": "Not tested"}
-    try:
-        from openai import AzureOpenAI
-        
-        # Check configuration
-        api_key = os.getenv("OPENAI_API_KEY")
-        base_url = os.getenv("OPENAI_BASE_URL")
-        model = os.getenv("LLM_MODEL", "gpt-4o")
-        
-        if not api_key or not base_url:
-            openai_chat_status = {"status": "unhealthy", "message": "Missing configuration"}
-            health_results["issues"].append("Azure OpenAI Chat configuration incomplete")
-        else:
-            # Test connection with minimal request
-            client = AzureOpenAI(
-                api_key=api_key,
-                api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
-                azure_endpoint=base_url
-            )
-            
-            # Make a minimal test call
-            response = client.chat.completions.create(
-                model=model,
-                messages=[{"role": "user", "content": "test"}],
-                max_tokens=1
-            )
-            openai_chat_status = {"status": "healthy", "message": f"Model '{model}' responding"}
-            
-    except ImportError:
-        openai_chat_status = {"status": "unhealthy", "message": "OpenAI SDK not available"}
-        health_results["issues"].append("OpenAI SDK missing")
-    except Exception as e:
-        openai_chat_status = {"status": "unhealthy", "message": "Connection or authentication failed"}
-        health_results["issues"].append("Azure OpenAI Chat unreachable")
-        if health_results["overall_status"] == "healthy":
-            health_results["overall_status"] = "degraded"
-
-    health_results["connections"]["azure_openai_chat"] = openai_chat_status
-
-    # 4. Test Azure OpenAI Embeddings Connection
-    openai_embedding_status = {"status": "unknown", "message": "Not tested"}
-    try:
-        from openai import AzureOpenAI
-        
-        # Check embedding configuration
-        embedding_base_url = os.getenv("AZURE_OPENAI_EMBEDDING_BASE_URL")
-        embedding_api_key = os.getenv("AZURE_OPENAI_EMBEDDING_API_KEY")
-        embedding_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-ada-002")
-        
-        if not embedding_base_url or not embedding_api_key:
-            openai_embedding_status = {"status": "unhealthy", "message": "Missing configuration"}
-            health_results["issues"].append("Azure OpenAI Embeddings configuration incomplete")
-        else:
-            # Test embedding connection
-            embedding_client = AzureOpenAI(
-                api_key=embedding_api_key,
-                api_version=os.getenv("AZURE_OPENAI_EMBEDDING_API_VERSION", "2023-05-15"),
-                azure_endpoint=embedding_base_url
-            )
-            
-            # Make a minimal embedding test call
-            response = embedding_client.embeddings.create(
-                model=embedding_deployment,
-                input="test"
-            )
-            openai_embedding_status = {"status": "healthy", "message": f"Deployment '{embedding_deployment}' responding"}
-            
-    except Exception as e:
-        openai_embedding_status = {"status": "unhealthy", "message": "Connection or authentication failed"}
-        health_results["issues"].append("Azure OpenAI Embeddings unreachable")
-        if health_results["overall_status"] == "healthy":
-            health_results["overall_status"] = "degraded"
-
-    health_results["connections"]["azure_openai_embeddings"] = openai_embedding_status
-
-    # 5. Check RAG System Status
-    rag_system_status = {"status": "unknown", "message": "Not initialized"}
-    if initialization_status["initialized"] and rag_chatbot:
-        try:
-            # Test if RAG system can perform a simple search
-            test_results = rag_chatbot.rag.search("test query", n_results=1)
-            if test_results:
-                rag_system_status = {"status": "healthy", "message": f"RAG system operational with {len(test_results)} test results"}
-            else:
-                rag_system_status = {"status": "degraded", "message": "RAG system running but no documents found"}
-                if health_results["overall_status"] == "healthy":
-                    health_results["overall_status"] = "degraded"
-        except Exception as e:
-            rag_system_status = {"status": "unhealthy", "message": "RAG search failed"}
-            health_results["issues"].append("RAG system search functionality broken")
-            health_results["overall_status"] = "unhealthy"
+    
+    # Check for missing environment variables
+    missing_vars = [var for var, val in db_env_vars.items() if not val]
+    if missing_vars:
+        database_status = f"error: missing environment variables: {', '.join(missing_vars)}"
     else:
-        rag_system_status = {"status": "unhealthy", "message": initialization_status.get("error", "Not initialized")}
-        health_results["issues"].append("RAG system not initialized")
-        health_results["overall_status"] = "unhealthy"
+        # Validate DB_PORT is a valid integer
+        try:
+            int(db_env_vars['DB_PORT'])
+        except (ValueError, TypeError):
+            database_status = f"error: invalid DB_PORT value: {db_env_vars['DB_PORT']}"
+        else:
+            # Try to connect
+            try:
+                conn = await get_db_connection()
+                await conn.fetchval("SELECT 1")
+                await conn.close()
+                database_status = "connected"
+            except Exception as e:
+                database_status = f"error: {str(e)[:80]}..."
 
-    health_results["connections"]["rag_system"] = rag_system_status
-
-    # 6. Check Essential Files
+    # Check OpenAI API configuration - using your actual env var names
+    openai_api_configured = bool(os.getenv("OPENAI_API_KEY"))
+    azure_openai_configured = bool(
+        os.getenv("OPENAI_API_KEY") and 
+        os.getenv("OPENAI_BASE_URL")
+    )
+    
+    # Check FAQ file availability
     faq_file_exists = os.path.exists(os.path.join("Ai_search", "FAQ.txt"))
+    
+    # Check Azure OpenAI deployment
+    azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+    
+    # Determine overall status and collect issues
+    overall_status = "healthy"
+    health_issues = []
+    
+    # Critical issues that make system unhealthy
+    if not initialization_status["initialized"]:
+        overall_status = "unhealthy"
+        health_issues.append("FAQ system not initialized")
+    
+    if database_status.startswith("error"):
+        overall_status = "unhealthy" 
+        health_issues.append(f"Database issue: {database_status}")
+    
     if not faq_file_exists:
-        health_results["issues"].append("FAQ file missing")
-        health_results["overall_status"] = "unhealthy"
+        overall_status = "unhealthy"
+        health_issues.append("FAQ file missing from Ai_search/FAQ.txt")
+    
+    # Non-critical issues that degrade performance
+    if not azure_openai_configured and not openai_api_configured:
+        if overall_status == "healthy":
+            overall_status = "degraded"
+        health_issues.append("No OpenAI API keys configured")
+    elif not azure_openai_configured:
+        if overall_status == "healthy":
+            overall_status = "degraded"
+        health_issues.append("Azure OpenAI not configured")
 
-    health_results["connections"]["faq_file"] = {
-        "status": "healthy" if faq_file_exists else "unhealthy",
-        "message": "File exists" if faq_file_exists else "File missing from Ai_search/FAQ.txt"
-    }
+    if not initialization_status["initialized"]:
+        return HealthResponse(
+            status=overall_status,
+            rag_initialized=False,
+            collection_info=initialization_status.get("error", "Not initialized"),
+            database_status=database_status,
+            openai_api_configured=openai_api_configured or azure_openai_configured
+        )
 
-    # Determine final status based on critical systems
-    critical_systems = ["postgresql", "cosmos_db", "rag_system"]
-    critical_failures = [
-        system for system in critical_systems 
-        if health_results["connections"].get(system, {}).get("status") == "unhealthy"
-    ]
-    
-    if critical_failures:
-        health_results["overall_status"] = "unhealthy"
-    
-    # Create detailed collection info showing healthy/unhealthy connections
-    healthy_connections = [
-        name for name, details in health_results["connections"].items() 
-        if details["status"] == "healthy"
-    ]
-    unhealthy_connections = [
-        name for name, details in health_results["connections"].items() 
-        if details["status"] == "unhealthy"
-    ]
-    degraded_connections = [
-        name for name, details in health_results["connections"].items() 
-        if details["status"] == "degraded"
-    ]
-    
-    # Build detailed status message
-    status_parts = []
-    if healthy_connections:
-        status_parts.append(f"{len(healthy_connections)} healthy")
-    if degraded_connections:
-        status_parts.append(f"{len(degraded_connections)} degraded ({', '.join(degraded_connections)})")
-    if unhealthy_connections:
-        status_parts.append(f"{len(unhealthy_connections)} unhealthy ({', '.join(unhealthy_connections)})")
-    
-    collection_info = f"Connections: {' | '.join(status_parts)}"
-    
-    # Legacy HealthResponse format for compatibility
+    collection_info = "FAQ-based system (no vector database)"
+    llm_provider = "Azure OpenAI"
+    faq_length = initialization_status.get("faq_content_length", 0)
+
     return HealthResponse(
-        status=health_results["overall_status"],
-        rag_initialized=initialization_status["initialized"],
-        collection_info=collection_info,
-        llm_provider="Azure OpenAI with Cosmos DB",
-        database_status=health_results["connections"]["postgresql"]["status"],
-        openai_api_configured=health_results["connections"]["azure_openai_chat"]["status"] == "healthy"
+        status=overall_status,
+        rag_initialized=True,
+        collection_info=f"FAQ Content: {faq_length} characters",
+        llm_provider=llm_provider,
+        database_status=database_status,
+        openai_api_configured=openai_api_configured or azure_openai_configured
     )
 
 @app.get("/system-info")
 async def system_info():
     """Get comprehensive system information and health details"""
-    global rag_chatbot, initialization_status
+    global faq_chatbot, initialization_status
 
     # Environment variables check
     env_vars = {
@@ -542,22 +530,22 @@ async def system_info():
         "dockerfile": os.path.exists("Dockerfile")
     }
 
-    # RAG system status
-    rag_status = {
+    # FAQ system status
+    faq_status = {
         "initialized": initialization_status["initialized"],
         "error": initialization_status.get("error"),
-        "system_type": "Cosmos DB Vector RAG",
+        "system_type": "Direct LLM (no vector database)",
         "llm_provider": "Azure OpenAI"
     }
 
-    if rag_chatbot:
+    if faq_chatbot:
         try:
-            rag_status.update({
-                "collection_count": initialization_status.get("collection_count", 0),
-                "cosmos_db_configured": True
+            faq_status.update({
+                "faq_content_length": len(faq_chatbot.faq_content),
+                "azure_client_configured": faq_chatbot.client is not None
             })
         except Exception as e:
-            rag_status["system_error"] = str(e)
+            faq_status["client_error"] = str(e)
 
     # Database connectivity test
     try:
@@ -572,7 +560,7 @@ async def system_info():
         "timestamp": datetime.now().isoformat(),
         "environment_variables": env_vars,
         "file_system": file_checks,
-        "rag_system": rag_status,
+        "faq_system": faq_status,
         "database_status": db_status,
         "python_version": sys.version,
         "working_directory": os.getcwd()
@@ -580,13 +568,13 @@ async def system_info():
 
 @app.post("/AI_search-chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
-    """Main chat endpoint using RAG system"""
-    global rag_chatbot
+    """Main chat endpoint"""
+    global faq_chatbot  # , rag_chatbot  # Uncomment when switching back to RAG system
 
-    if not rag_chatbot:
+    if not faq_chatbot:  # Change to: if not rag_chatbot: when switching back to RAG
         raise HTTPException(
             status_code=503,
-            detail="RAG system not initialized. Check /health endpoint."
+            detail="FAQ system not initialized. Check /health endpoint."  # Change to: "RAG system not initialized..."
         )
 
     if not request.question.strip():
@@ -596,22 +584,26 @@ async def chat_endpoint(request: ChatRequest):
         )
 
     try:
-        # Get response from RAG system
-        response = rag_chatbot.answer_question(
-            request.question,
-            n_results=request.max_results
-        )
+        # Get response from FAQ chatbot
+        response = faq_chatbot.answer_question(request.question)
+        
+        # When switching back to RAG system, replace above with:
+        # response = rag_chatbot.answer_question(
+        #     request.question,
+        #     n_results=request.max_results
+        # )
 
         return ChatResponse(
             answer=response["answer"]
+            # confidence=response["confidence"],
+            # sources=response["sources"],
+            # llm_info=response["llm_info"]
         )
 
     except Exception as e:
-        error_msg = f"RAG system error: {str(e)}"
-        print(f"ERROR: {error_msg}")
         raise HTTPException(
             status_code=500,
-            detail=error_msg
+            detail=f"Error processing question: {str(e)}"
         )
 
 # @app.get("/system-info")
@@ -762,97 +754,6 @@ async def test_campaign():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-# Avatar Generator Endpoints
-@app.get("/api/avatar/languages")
-async def get_avatar_languages():
-    """Get all supported languages and voices for avatar generation"""
-    global avatar_service
-    if not avatar_service:
-        raise HTTPException(status_code=503, detail="Avatar service not initialized")
-    
-    return avatar_service.get_languages()
-
-@app.get("/api/avatar/voices/{language}")
-async def get_avatar_voices(language: str):
-    """Get available voices for a specific language"""
-    global avatar_service
-    if not avatar_service:
-        raise HTTPException(status_code=503, detail="Avatar service not initialized")
-    
-    return avatar_service.get_voices_for_language(language)
-
-@app.post("/api/avatar/generate")
-async def generate_avatar(
-    text: str = Form(...),
-    language: str = Form(...),
-    speaker: str = Form(...),
-    image: UploadFile = File(...)
-):
-    """Generate avatar video from text, language, speaker, and image"""
-    global avatar_service
-    if not avatar_service:
-        raise HTTPException(status_code=503, detail="Avatar service not initialized")
-    
-    try:
-        # Validate inputs
-        if not text.strip():
-            raise HTTPException(status_code=400, detail="Text cannot be empty")
-        
-        # Read image file
-        image_bytes = await image.read()
-        if not image_bytes:
-            raise HTTPException(status_code=400, detail="Image file is empty")
-        
-        # Generate avatar
-        result = await avatar_service.generate_avatar(text, language, speaker, image_bytes)
-        return result
-        
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Avatar generation failed: {str(e)}")
-
-@app.get("/api/avatar/download/{filename}")
-async def download_avatar_video(filename: str):
-    """Download generated avatar video"""
-    from fastapi.responses import FileResponse
-    
-    file_path = Path("uploads") / filename
-    
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Video not found")
-    
-    return FileResponse(
-        file_path,
-        media_type="video/mp4",
-        filename=filename
-    )
-
-@app.get("/api/avatar/health")
-async def avatar_health_check():
-    """Check avatar service health"""
-    global avatar_service
-    
-    if not avatar_service:
-        return {"status": "unhealthy", "message": "Avatar service not initialized"}
-    
-    # Check required environment variables
-    required_vars = ["DATABRICKS_HOST", "DATABRICKS_TOKEN", "SARVAM_API_KEY", "ENDPOINT_NAME"]
-    missing_vars = [var for var in required_vars if not os.getenv(var)]
-    
-    if missing_vars:
-        return {
-            "status": "unhealthy", 
-            "message": f"Missing environment variables: {', '.join(missing_vars)}"
-        }
-    
-    return {
-        "status": "healthy",
-        "message": "Avatar service ready",
-        "supported_languages": len(avatar_service.languages),
-        "uploads_dir": str(avatar_service.uploads_dir)
-    }
 
 # Profile Logs API Endpoints
 @app.get("/api/profile-logs", response_model=ProfileLogsResponse)
@@ -1424,7 +1325,7 @@ role_permissions: Dict[str, List[str]] = {
    
     "SuperAdmin": [
         "profile-update", "marketing", "fraud-analytics", "partner-analytics",
-        "ai-search", "rbac", "avatar-generator"
+        "ai-search", "rbac"
     ],
 }
 
@@ -1442,7 +1343,6 @@ row_labels = [
     {"key": "partner-analytics", "label": "Partner Analytics", "category": "SuperAdmin"},
     {"key": "ai-search", "label": "AI Search", "category": "SuperAdmin"},
     {"key": "rbac", "label": "RBAC ", "category": "SuperAdmin"},
-    {"key": "avatar-generator", "label": "Avatar Generator", "category": "SuperAdmin"},
 ]
 # Local JSON storage setup
 PERMISSIONS_FILE = "rbac_permissions.json"
@@ -1493,7 +1393,6 @@ def initialize_default_permissions():
     rbac_permissions["super_admin"]["partner-analytics"] = True
     rbac_permissions["super_admin"]["ai-search"] = True
     rbac_permissions["super_admin"]["rbac"] = True
-    rbac_permissions["super_admin"]["avatar-generator"] = True
     
 
 # some default permission so as we are not getting error while checking for pages
