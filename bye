@@ -1,31 +1,257 @@
-import React from 'react';
-import { User } from 'lucide-react';
-import AvatarForm from '../components/AvatarForm';
+import React, { useState, useEffect, Suspense, useRef } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { useSAMLAuth } from './auth/hooks/auth-provider';
+import ProtectedRoute from "./components/ProtectedRoute";
 
-const AvatarGenerator: React.FC = () => {
-  return (
-    <div className="p-6 pt-40">
-      <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 mb-6">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-[#000099] to-[#0000cc] rounded-xl flex items-center justify-center shadow-lg">
-              <User className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-1">
-                Avatar Generator
-              </h1>
-              <p className="text-gray-600">
-                Create multilingual avatar videos with AI-powered voice synthesis
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <AvatarForm />
+// Lazy load all components including Login
+const Login = React.lazy(() => import("./welcome/Login"));
+const SAMLCallback = React.lazy(() => import("./components/SAMLCallback"));
+const ProfileUpdate = React.lazy(() => import("./features/ProfileUpdate"));
+const Marketing = React.lazy(() => import("./features/Marketing"));
+const AvatarGenerator = React.lazy(() => import("./features/AvatarGenerator"));
+const FraudAnalytics = React.lazy(() => import("./features/Fraud_analytics"));
+const AiSearch = React.lazy(() => import("./features/Ai_search"));
+const PartnerAnalytics = React.lazy(
+  () => import("./features/Partner_analytics")
+);
+const RbacComponent = React.lazy(() => import("./features/Rbac"));
+
+// Loading component for Suspense
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="flex flex-col items-center gap-4">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#000099]"></div>
+      <div className="text-lg text-indigo-600">Loading page...</div>
     </div>
+  </div>
+);
+
+// Auth loading component
+const AuthLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="flex flex-col items-center gap-4">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#000099]"></div>
+      <div className="text-lg text-indigo-600">Checking authentication...</div>
+    </div>
+  </div>
+);
+
+const App: React.FC = () => {
+  const { user, isAuthenticated, isLoading: authLoading, logout } = useSAMLAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const aiSearchRef = useRef<{ toggleChatHistory: () => void } | null>(null);
+
+  const isDevelopmentMode = (window as any).NODE_ENV === 'development';
+  const enableDevLogin = (window as any).REACT_APP_ENABLE_DEV_LOGIN === 'true' || isDevelopmentMode;
+
+  // Check for existing login state on component mount
+  useEffect(() => {
+    // Check if user is authenticated via SAML
+    if (isAuthenticated && user) {
+      setIsLoggedIn(true);
+    } 
+    // For development mode, check localStorage for dev login
+    else if (enableDevLogin) {
+      const savedLoginState = localStorage.getItem("isLoggedIn");
+      if (savedLoginState === "true") {
+        setIsLoggedIn(true);
+      }
+    }
+    
+    // Set loading to false when auth loading is complete
+    if (!authLoading) {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, user, enableDevLogin, authLoading]);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    // Only use localStorage for dev login
+    if (enableDevLogin && !isAuthenticated) {
+      localStorage.setItem("isLoggedIn", "true");
+    }
+    console.log("Login successful, isLoggedIn set to true",isLoggedIn);
+  };
+
+  const handleLogout = async () => {
+    console.log("🚪 App logout initiated");
+    
+    try {
+      // Clear local login state
+      setIsLoggedIn(false);
+      localStorage.removeItem("isLoggedIn");
+      
+      // Call SAML logout (this will handle everything including redirect)
+      logout();
+      
+    } catch (error) {
+      console.error('💥 Logout failed:', error);
+      // Fallback: force redirect even if logout fails
+      // window.location.href = (window as any).REACT_APP_API_URL;
+    }
+  };
+
+  const handleToggleChatHistory = () => {
+    if (aiSearchRef.current) {
+      aiSearchRef.current.toggleChatHistory();
+    }
+  };
+
+  // Get user information for display (use SAML user instead of MSAL accounts)
+  const displayUser = isAuthenticated && user ? user : null;
+
+  return (
+    <Router>
+      <Suspense fallback={<PageLoader />}>
+        {isLoading ? (
+          <AuthLoader />
+        ) : (
+          <Routes>
+            <Route
+              path="/sso/acs"
+              element={<SAMLCallback />}
+            />
+
+            <Route
+              path="/sso/logout"
+              element={<SAMLCallback />}
+            />
+
+            <Route
+              path="/"
+              element={
+                (isLoggedIn && (isAuthenticated || enableDevLogin)) ? (
+                  <Navigate to="/profile-update" replace />
+                ) : (
+                  <Login onLogin={handleLogin} />
+                )
+              }
+            />
+
+            {/* <Route
+              path="/profile-update"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="profile-update"
+                >
+                  <ProfileUpdate />
+                </ProtectedRoute>
+              }
+            /> */}
+
+            <Route
+              path="/marketing"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="marketing"
+                >
+                  <Marketing />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/avatar-generator"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="avatar-generator"
+                >
+                  <AvatarGenerator />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/fraud-analytics"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="fraud-analytics"
+                >
+                  <FraudAnalytics />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/ai-search"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="ai-search" 
+                  onToggleChatHistory={handleToggleChatHistory}
+                >
+                  <AiSearch ref={aiSearchRef} />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/partner-analytics"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="partner-analytics"
+                >
+                  <PartnerAnalytics />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/rbac"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn} 
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="rbac"
+                >
+                  <RbacComponent />
+                </ProtectedRoute>
+              }
+            />
+
+    
+            <Route
+              path="/profile-update"
+              element={
+                <ProtectedRoute 
+                  isLoggedIn={isLoggedIn}
+                  user={displayUser} 
+                  onLogout={handleLogout} 
+                  activeTab="profile-update"
+                >
+                  <ProfileUpdate />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        )}
+      </Suspense>
+    </Router>
   );
 };
 
-export default AvatarGenerator;
+export default App;
