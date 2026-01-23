@@ -1,2 +1,316 @@
-Endpoint error: Inference failed: Command '['/opt/conda/envs/mlflow-env/bin/python', '/model/artifacts/ditto-model-artifact/inference.py', '--data_root', '/model/artifacts/ditto-model-artifact/checkpoints/ditto_trt_t4', '--cfg_pkl', '/model/artifacts/ditto-model-artifact/checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl', '--audio_path', '/tmp/tmp4vkw1u6r.wav', '--source_path', '/tmp/tmp03i175d2.png', '--output_path', '/tmp/output_video.mp4']' returned non-zero exit status 1. Traceback (most recent call last): File "/root/.ipykernel/1892/command-5229137947302944-991871639", line 85, in predict File "/opt/conda/envs/mlflow-env/lib/python3.10/subprocess.py", line 526, in run raise CalledProcessError(retcode, process.args, subprocess.CalledProcessError: Command '['/opt/conda/envs/mlflow-env/bin/python', '/model/artifacts/ditto-model-artifact/inference.py', '--data_root', '/model/artifacts/ditto-model-artifact/checkpoints/ditto_trt_t4', '--cfg_pkl', '/model/artifacts/ditto-model-artifact/checkpoints/ditto_cfg/v0.4_hubert_cfg_trt.pkl', '--audio_path', '/tmp/tmp4vkw1u6r.wav', '--source_path', '/tmp/tmp03i175d2.png', '--output_path', '/tmp/output_video.mp4']' returned non-zero exit status 1.
-AvatarForm.tsx:90  POST http://localhost:3000/api/avatar/generate 500 (Internal Server Error)
+"""
+Avatar Generator Service for IBC-365-BE
+Integrates with Sarvam AI for translation/TTS and Databricks for video generation
+"""
+import os
+import base64
+import binascii
+import uuid
+import requests
+from pathlib import Path
+from typing import Dict, List, Optional
+from fastapi import HTTPException
+from dotenv import load_dotenv
+import urllib3
+
+# Disable SSL warnings for testing
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+load_dotenv()
+
+class AvatarGeneratorService:
+    def __init__(self):
+        # Configuration from environment
+        self.databricks_host = os.getenv("DATABRICKS_HOST")
+        self.databricks_token = os.getenv("DATABRICKS_TOKEN")
+        self.sarvam_api_key = os.getenv("SARVAM_API_KEY")
+        self.endpoint_name = os.getenv("ENDPOINT_NAME")
+        self.sarvam_translate_url = os.getenv("SARVAM_TRANSLATE_URL", "https://api.sarvam.ai/translate")
+        self.sarvam_tts_url = os.getenv("SARVAM_TTS_URL", "https://api.sarvam.ai/text-to-speech")
+        
+        # Create uploads directory
+        self.uploads_dir = Path("uploads")
+        self.uploads_dir.mkdir(exist_ok=True)
+        
+        # Language and voice configuration
+        self.languages = {
+            "en-IN": {"name": "English", "native_name": "English"},
+            "hi-IN": {"name": "Hindi", "native_name": "हिंदी"},
+            "ta-IN": {"name": "Tamil", "native_name": "தமிழ்"},
+            "te-IN": {"name": "Telugu", "native_name": "తెలుగు"},
+            "ml-IN": {"name": "Malayalam", "native_name": "മലയാളം"},
+            "kn-IN": {"name": "Kannada", "native_name": "ಕನ್ನಡ"},
+            "mr-IN": {"name": "Marathi", "native_name": "मराठी"},
+            "gu-IN": {"name": "Gujarati", "native_name": "ગુજરાતી"},
+            "bn-IN": {"name": "Bengali", "native_name": "বাংলা"},
+            "pa-IN": {"name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
+            "od-IN": {"name": "Odia", "native_name": "ଓଡ଼ିଆ"},
+        }
+        
+        self.voices = {
+            "hi-IN": ["shubh", "ritu", "rahul", "pooja", "simran", "kavya", "ratan", "rohan"],
+            "en-IN": ["shubh", "ritu", "rahul", "pooja", "amelia", "sophia"],
+            "ta-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "te-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "ml-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "kn-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "mr-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "gu-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "bn-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "pa-IN": ["shubh", "ritu", "rahul", "pooja"],
+            "od-IN": ["shubh", "ritu", "rahul", "pooja"],
+        }
+    
+    def get_languages(self) -> Dict:
+        """Get all supported languages and voices"""
+        return {
+            "languages": self.languages,
+            "voices": self.voices
+        }
+    
+    def get_voices_for_language(self, language: str) -> Dict:
+        """Get available voices for a specific language"""
+        if language not in self.voices:
+            raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+        
+        return {
+            "language": language,
+            "voices": self.voices[language]
+        }
+    
+    def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
+        """Translate text using Sarvam API"""
+        if source_lang == target_lang:
+            return text
+        
+        headers = {
+            "api-subscription-key": self.sarvam_api_key,
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "input": text,
+            "source_language_code": source_lang,
+            "target_language_code": target_lang,
+            "speaker_gender": "Male",
+            "mode": "formal",
+            "model": "mayura:v1",
+            "enable_preprocessing": True,
+        }
+        
+        try:
+            response = requests.post(self.sarvam_translate_url, json=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            
+            result = response.json()
+            if 'translated_text' in result:
+                return result['translated_text']
+            else:
+                raise HTTPException(status_code=500, detail="Translation API returned unexpected format")
+        
+        except requests.exceptions.HTTPError as e:
+            error_detail = f"Translation API error: {e.response.status_code} - {e.response.text}"
+            raise HTTPException(status_code=500, detail=error_detail)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Translation error: {str(e)}")
+    
+    def text_to_audio(self, text: str, language: str, speaker: str) -> bytes:
+        """Convert text to audio using Sarvam API"""
+        headers = {
+            "API-Subscription-Key": self.sarvam_api_key,
+            "Content-Type": "application/json"
+        }
+        
+        # Split text into chunks of 2500 chars
+        max_chars = 2500
+        chunks = [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
+        
+        all_audio_bytes = b''
+        
+        for chunk in chunks:
+            payload = {
+                "text": chunk,
+                "target_language_code": language,
+                "speaker": speaker,
+                "pace": 1.0,
+                "speech_sample_rate": 8000,
+                "enable_preprocessing": True,
+                "model": "bulbul:v3-beta",
+                "output_audio_codec": "wav"
+            }
+            
+            try:
+                response = requests.post(self.sarvam_tts_url, json=payload, headers=headers, timeout=30)
+                response.raise_for_status()
+                
+                audio_data = response.json()
+                if 'audios' in audio_data and len(audio_data['audios']) > 0:
+                    audio_bytes = base64.b64decode(audio_data['audios'][0])
+                    all_audio_bytes += audio_bytes
+                else:
+                    raise HTTPException(status_code=500, detail="Text-to-Speech API returned no audio")
+            
+            except requests.exceptions.HTTPError as e:
+                error_detail = f"Text-to-Speech API error: {e.response.status_code} - {e.response.text}"
+                raise HTTPException(status_code=500, detail=error_detail)
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=f"Text-to-Speech error: {str(e)}")
+        
+        return all_audio_bytes
+    
+    def file_to_base64(self, file_bytes: bytes) -> str:
+        """Convert file bytes to base64 string"""
+        return base64.b64encode(file_bytes).decode('utf-8')
+    
+    def call_databricks_endpoint(self, image_b64: str, audio_b64: str) -> str:
+        """Send image and audio base64 to Databricks endpoint"""
+        url = f"{self.databricks_host}/serving-endpoints/{self.endpoint_name}/invocations"
+        
+        headers = {
+            "Authorization": f"Bearer {self.databricks_token}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "dataframe_split": {
+                "columns": ["audio_b64", "image_b64"],
+                "data": [[audio_b64, image_b64]]
+            }
+        }
+        
+        print(f"🔄 Calling Databricks endpoint: {url}")
+        print(f"📊 Payload size - Audio: {len(audio_b64)} chars, Image: {len(image_b64)} chars")
+        
+        try:
+            response = requests.post(
+                url, 
+                json=payload, 
+                headers=headers, 
+                timeout=300,
+                verify=False
+            )
+            
+            print(f"📡 Response status: {response.status_code}")
+            
+            if not response.ok:
+                error_text = response.text
+                print(f"❌ Databricks error response: {error_text}")
+                raise HTTPException(
+                    status_code=response.status_code, 
+                    detail=f"Databricks endpoint failed: {response.status_code} - {error_text}"
+                )
+            
+            result = response.json()
+            print(f"📋 Response keys: {list(result.keys()) if isinstance(result, dict) else 'Not a dict'}")
+            
+            if 'predictions' in result:
+                predictions = result['predictions']
+                if isinstance(predictions, dict):
+                    if predictions.get('status') == 'error':
+                        error_msg = predictions.get('message', 'Unknown error from endpoint')
+                        print(f"❌ Endpoint returned error: {error_msg}")
+                        raise HTTPException(status_code=500, detail=f"Endpoint error: {error_msg}")
+                    elif 'video_b64' in predictions:
+                        video_b64 = predictions['video_b64']
+                        print(f"📹 Received video data: {len(video_b64)} characters")
+                        return video_b64
+                elif isinstance(predictions, list) and len(predictions) > 0:
+                    video_b64 = predictions[0]
+                    print(f"📹 Received video data: {len(video_b64)} characters")
+                    return video_b64
+            
+            print(f"⚠️ Unexpected response format: {result}")
+            raise HTTPException(status_code=500, detail=f"Unexpected response format from endpoint: {result}")
+        
+        except requests.exceptions.SSLError as e:
+            raise HTTPException(status_code=500, detail=f"SSL connection error to Databricks: {str(e)}. Check endpoint URL and SSL configuration.")
+        except requests.exceptions.ConnectionError as e:
+            raise HTTPException(status_code=500, detail=f"Connection error to Databricks: {str(e)}. Check network connectivity and endpoint URL.")
+        except requests.exceptions.Timeout as e:
+            raise HTTPException(status_code=500, detail=f"Timeout error: {str(e)}. Databricks endpoint took too long to respond.")
+        except requests.exceptions.RequestException as e:
+            raise HTTPException(status_code=500, detail=f"Databricks endpoint error: {str(e)}")
+    
+    def base64_to_video_file(self, video_b64: str, filename: str) -> Path:
+        """Convert base64 to video file and save"""
+        try:
+            # Clean the base64 string - remove any whitespace/newlines
+            video_b64_clean = video_b64.strip().replace('\n', '').replace('\r', '')
+            
+            # Decode base64 to bytes
+            video_bytes = base64.b64decode(video_b64_clean)
+            
+            # Validate that we have actual video data
+            if len(video_bytes) < 100:  # MP4 files should be much larger
+                raise HTTPException(status_code=500, detail="Generated video data is too small")
+            
+            file_path = self.uploads_dir / filename
+            
+            # Write video bytes to file
+            with open(file_path, 'wb') as f:
+                f.write(video_bytes)
+            
+            # Verify file was created and has content
+            if not file_path.exists() or file_path.stat().st_size == 0:
+                raise HTTPException(status_code=500, detail="Video file was not created properly")
+            
+            print(f"✅ Video saved: {file_path} ({file_path.stat().st_size} bytes)")
+            return file_path
+        
+        except base64.binascii.Error as e:
+            raise HTTPException(status_code=500, detail=f"Invalid base64 video data: {str(e)}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error saving video: {str(e)}")
+    
+    async def generate_avatar(self, text: str, language: str, speaker: str, image_bytes: bytes) -> Dict:
+        """Main avatar generation method"""
+        try:
+            # Validate inputs
+            if language not in self.languages:
+                raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+            
+            if language not in self.voices or speaker not in self.voices[language]:
+                raise HTTPException(status_code=400, detail=f"Speaker {speaker} not supported for {language}")
+            
+            # Validate environment variables
+            if not all([self.databricks_host, self.databricks_token, self.sarvam_api_key, self.endpoint_name]):
+                missing = []
+                if not self.databricks_host: missing.append("DATABRICKS_HOST")
+                if not self.databricks_token: missing.append("DATABRICKS_TOKEN")
+                if not self.sarvam_api_key: missing.append("SARVAM_API_KEY")
+                if not self.endpoint_name: missing.append("ENDPOINT_NAME")
+                raise HTTPException(status_code=500, detail=f"Missing environment variables: {', '.join(missing)}")
+            
+            # Convert image to base64
+            image_b64 = self.file_to_base64(image_bytes)
+            
+            # Step 1: Translate text
+            translated_text = self.translate_text(text, "en-IN", language)
+            
+            # Step 2: Convert to audio
+            audio_bytes = self.text_to_audio(translated_text, language, speaker)
+            audio_b64 = self.file_to_base64(audio_bytes)
+            
+            # Step 3: Generate video
+            video_b64 = self.call_databricks_endpoint(image_b64, audio_b64)
+            
+            # Step 4: Save video
+            unique_id = str(uuid.uuid4())[:8]
+            video_filename = f"avatar_{unique_id}.mp4"
+            video_path = self.base64_to_video_file(video_b64, video_filename)
+            
+            return {
+                "status": "success",
+                "message": "Avatar generated successfully",
+                "video_url": f"/api/avatar/download/{video_filename}",
+                "filename": video_filename,
+                "language": language,
+                "speaker": speaker,
+                "original_text": text,
+                "translated_text": translated_text
+            }
+        
+        except HTTPException as e:
+            raise e
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Avatar generation error: {str(e)}")
