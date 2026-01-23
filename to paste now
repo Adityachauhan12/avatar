@@ -1,84 +1,104 @@
-Epic Goal
-Build a step-by-step, avatar-led flight booking experience with static pre-recorded videos in multiple Indian languages to help non-tech users book flights easily.
+import React from 'react';
 
-In-Scope (Merged Work Items)
+interface AvatarOutputProps {
+  response: {
+    video_url: string;
+    language: string;
+    speaker: string;
+    translated_text: string;
+  };
+}
 
-Entry, Language & Session Handling
+const AvatarOutput: React.FC<AvatarOutputProps> = ({ response }) => {
+  const handleCreateAnother = () => {
+    window.location.reload();
+  };
 
-Book Flight entry point
+  const handleDownload = async (videoUrl: string) => {
+    try {
+      const apiDomain = `${(window as any).REACT_APP_REDIRECT_URL}`;
+      const response = await fetch(videoUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to download video');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'avatar.mp4';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Failed to download video. Please try again.');
+    }
+  };
 
-Language selection & persistence
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+      <div className="text-green-600 font-semibold mb-4 flex items-center">
+        <span className="mr-2">✅</span>
+        Avatar Generated Successfully!
+      </div>
 
-Session creation and state management
+      <div className="space-y-4">
+        {/* Generation Info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-md">
+          <div>
+            <span className="font-semibold text-gray-700">🌍 Language:</span>
+            <span className="ml-2">{response.language}</span>
+          </div>
+          <div>
+            <span className="font-semibold text-gray-700">🎤 Voice:</span>
+            <span className="ml-2">{response.speaker.charAt(0).toUpperCase() + response.speaker.slice(1)}</span>
+          </div>
+          <div className="md:col-span-2">
+            <span className="font-semibold text-gray-700">📝 Translated Text:</span>
+            <p className="mt-1 text-gray-600">{response.translated_text}</p>
+          </div>
+        </div>
 
-Language fallback to English
+        {/* Video Player */}
+        <div className="video-container">
+          <video 
+            controls 
+            className="w-full max-w-2xl mx-auto rounded-lg shadow-md"
+            style={{ maxHeight: '400px' }}
+            crossOrigin="anonymous"
+            preload="metadata"
+          >
+            <source src={response.video_url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
-Static Avatar Video Engine
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-200">
+          <button
+            onClick={() => handleDownload(response.video_url)}
+            className="bg-[#000099] text-white px-6 py-2 rounded-md hover:bg-[#0000cc] focus:outline-none focus:ring-2 focus:ring-[#000099] focus:ring-offset-2 transition-colors text-center flex items-center justify-center gap-2"
+          >
+            ⬇️ Download Video
+          </button>
+          <button
+            onClick={handleCreateAnother}
+            className="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors flex items-center justify-center gap-2"
+          >
+            ➕ Create Another
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-Reusable avatar player (auto-play, replay, skip, subtitles)
-
-Static video resolver (language + step → video)
-
-Asset structure & CDN delivery
-
-Guided Flow Engine
-
-Step-based flow (FSM)
-
-Forward/back navigation
-
-Validation + vernacular error handling
-
-Config-driven flow definition
-
-Flight Search Input Collection
-
-Origin & destination (auto-suggest)
-
-Travel date selection
-
-Passenger count selection
-
-Input validation
-
-Flight Search & Selection
-
-Flight search API integration
-
-Display simplified flight results
-
-Flight selection & confirmation
-
-Passenger Details Collection
-
-Guided passenger data entry (one-by-one)
-
-Field-level avatar prompts
-
-Data validation
-
-Review & Payment Handoff
-
-Booking summary (flight, passengers, fare)
-
-Edit previous steps
-
-Proceed to existing payment flow
-
-Configuration & Content Management
-
-JSON/YAML-based flow & language config
-
-Easy addition of new languages/videos
-
-Documentation for content updates
-
-Analytics & Quality
-
-Step-wise drop-off tracking
-
-Language usage metrics
-
-Booking completion metrics
-
-Performance & accessibility checks
+export default AvatarOutput;
