@@ -1,113 +1,38 @@
-window.REACT_APP_REDIRECT_URL = 'http://localhost:3000';
+Done! ✅
 
+Backend Team Prompt
+Here's what to tell your backend team:
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>6E-IBC-365</title>
-    <script src="%PUBLIC_URL%/env-config.js"></script>
+BACKEND VIDEO PLAYBACK & DOWNLOAD FIX
 
-  </head>
-  <body>
+Problem:
 
-   
-    <script>
-      window.APP_CONFIG = {
-        supportUrl: "https://www.goindigo.in/loyalty",
-      };
+Videos are being generated and saved in /uploads folder but cannot be accessed by the frontend
+Both video playback in browser and download are failing with 405 Method Not Allowed
+The backend is rejecting GET requests to /uploads/ and /api/avatar/download/
+Required Fixes:
 
-      window.REACT_APP_REDIRECT_URL="http://localhost:3000";
-      window.REACT_APP_API_URL="http://localhost:3001"; //fr
-      window.REACT_APP_SAML_ENTITY_ID="http://localhost:3000/metadata";
-      window.REACT_APP_SAML_ACS_URL=window.REACT_APP_REDIRECT_URL+"/sso/acs";
-      window.REACT_APP_SAML_LOGOUT_URL=window.REACT_APP_REDIRECT_URL+"/sso/logout";
-      window.REACT_APP_BASE_URL="http://localhost:3001";
+Serve /uploads folder as static files (this is critical)
 
-    </script>
+Make all files in the /uploads directory accessible via HTTP GET requests
+URLs should be like: http://localhost:3000/uploads/avatar_filename.mp4
+Return complete video URLs from the generate endpoint
 
-     <div id="root">
-      <!-- Initial loading state -->
-      <div class="app-loading">
-        <div class="spinner"></div>
-        <div>
-          <h2 class="portalstyle">IBC-365 Portal</h2>
-          <p class="portal_style">Loading application...</p>
-        </div>
-      </div>
-    </div>
+When /api/avatar/generate completes, return the video_url in the response
+The video_url should be the full accessible path the frontend can use:
+Example: /uploads/avatar_7684cdc0.mp4 (relative) or
+Example: http://localhost:3000/uploads/avatar_7684cdc0.mp4 (absolute)
+Do NOT return /api/avatar/download/ paths - these endpoints are returning 405
+Add CORS headers (if frontend is on different port)
 
-      <!-- Prevent FOUC (Flash of Unstyled Content) -->
-    <style>
-      #root {
-        min-height: 100vh;
-        background-color: #f9fafb;
-      }
-      
-      /* Loading state styling */
-      .app-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #000099, #0066cc);
-        color: white;
-        font-family:  'BauahuasStd-Medium';
-      }
-      
-      .app-loading .spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid white;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-right: 16px;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      .noscript-style{
-         display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        min-height: 100vh; 
-        background: #000099; 
-        color: white; 
-        font-family: 'BauhausStd-Medium'; 
-        text-align: center; 
-        padding: 20px;
-      }
-      .portalstye{
-        margin: 0; 
-        font-weight: 600;
-      }
-      .portal_style{
-        margin: 8px 0 0 0; 
-        opacity: 0.8; 
-        font-size: 14px;
-      }
-    </style>
+Ensure /uploads/* routes allow GET requests from the frontend origin
+Test the fix
 
-    <noscript>
-      <div class="noscript-style">
-        <div>
-          <h1> JavaScript Required</h1>
-          <p>You need to enable JavaScript to run the IndiGo Crew Portal.</p>
-          <p>Please enable JavaScript in your browser settings and refresh the page.</p>
-        </div>
-      </div>
-    </noscript>
-  
-  </body>
-</html>
+Verify: GET http://localhost:3000/uploads/any_video_file.mp4 returns 200 and serves the file
+Verify: The generate endpoint returns a working video_url in the response
+Once these are fixed, the frontend will:
+
+✅ Play videos in the browser
+✅ Allow users to download videos
+That's the prompt to give them! Let me know when they fix it. 👍
+
