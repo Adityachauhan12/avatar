@@ -1,304 +1,1669 @@
-
 """
-Avatar Generator Service for IBC-365-BE
-Integrates with Sarvam AI for translation/TTS and Databricks for video generation
+FastAPI Backend for IndiGo BluChip AI Search System
 """
+from fastapi.responses import RedirectResponse, Response, FileResponse
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
+from fastapi import FastAPI, HTTPException, Request, Query, Depends, Form, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
+from contextlib import asynccontextmanager
+from datetime import datetime, date
+import asyncpg
 import os
-import base64
-import binascii
-import uuid
-import requests
-from pathlib import Path
-from typing import Dict, List, Optional
-from fastapi import HTTPException
+import sys
 from dotenv import load_dotenv
-import urllib3
+import json
 
-# Disable SSL warnings for testing
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# Add modules to path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Ai_search'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Market_campaign'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Avatar_generator'))
 
+
+try:
+    from onelogin.saml2.auth import OneLogin_Saml2_Auth
+    SAML_AVAILABLE = True
+except ImportError as e:
+    print(f"SAML functionality not available: {e}")
+    SAML_AVAILABLE = False
+    OneLogin_Saml2_Auth = None
+
+# RAG System imports - Commented out due to Azure compatibility issues
+# try:
+#     from Ai_search.enhanced_rag_chatbot import FAQProcessor, EnhancedChromaRAG, EnhancedRAGChatbot
+# except ImportError as e:
+#     print(f"Error importing RAG modules: {e}")
+#     print("Make sure the Ai_search folder contains the enhanced_rag_chatbot.py file")
+#     sys.exit(1)
+
+# Import OpenAI for direct LLM integration
+try:
+    from openai import AzureOpenAI
+except ImportError as e:
+    print(f"Error importing OpenAI: {e}")
+    print("Please install openai package: pip install openai")
+    sys.exit(1)
+
+try:
+    from Market_campaign.new import generate_social_media_notification, generate_pushnotification, generate_email
+except ImportError as e:
+    print(f"Error importing Market Campaign modules: {e}")
+    print("Make sure the Market_campaign folder contains the new.py file")
+
+# Avatar Generator imports
+try:
+    from Avatar_generator.avatar_service import AvatarGeneratorService
+except ImportError as e:
+    print(f"Error importing Avatar Generator modules: {e}")
+    print("Make sure the Avatar_generator folder contains the avatar_service.py file")
+
+# Load environment variables
 load_dotenv()
 
-class AvatarGeneratorService:
-    def __init__(self):
-        # Configuration from environment
-        self.databricks_host = os.getenv("DATABRICKS_HOST")
-        self.databricks_token = os.getenv("DATABRICKS_TOKEN")
-        self.sarvam_api_key = os.getenv("SARVAM_API_KEY")
-        self.endpoint_name = os.getenv("ENDPOINT_NAME")
-        self.sarvam_translate_url = os.getenv("SARVAM_TRANSLATE_URL", "https://api.sarvam.ai/translate")
-        self.sarvam_tts_url = os.getenv("SARVAM_TTS_URL", "https://api.sarvam.ai/text-to-speech")
-        
-        # Create uploads directory
-        self.uploads_dir = Path("uploads")
-        self.uploads_dir.mkdir(exist_ok=True)
-        
-        # Language and voice configuration
-        self.languages = {
-            "en-IN": {"name": "English", "native_name": "English"},
-            "hi-IN": {"name": "Hindi", "native_name": "हिंदी"},
-            "ta-IN": {"name": "Tamil", "native_name": "தமிழ்"},
-            "te-IN": {"name": "Telugu", "native_name": "తెలుగు"},
-            "ml-IN": {"name": "Malayalam", "native_name": "മലയാളം"},
-            "kn-IN": {"name": "Kannada", "native_name": "ಕನ್ನಡ"},
-            "mr-IN": {"name": "Marathi", "native_name": "मराठी"},
-            "gu-IN": {"name": "Gujarati", "native_name": "ગુજરાતી"},
-            "bn-IN": {"name": "Bengali", "native_name": "বাংলা"},
-            "pa-IN": {"name": "Punjabi", "native_name": "ਪੰਜਾਬੀ"},
-            "od-IN": {"name": "Odia", "native_name": "ଓଡ଼ିଆ"},
-        }
-        
-        self.voices = {
-            "hi-IN": ["shubh", "ritu", "rahul", "pooja", "simran", "kavya", "ratan", "rohan"],
-            "en-IN": ["shubh", "ritu", "rahul", "pooja", "amelia", "sophia"],
-            "ta-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "te-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "ml-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "kn-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "mr-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "gu-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "bn-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "pa-IN": ["shubh", "ritu", "rahul", "pooja"],
-            "od-IN": ["shubh", "ritu", "rahul", "pooja"],
-        }
+# Debug function to check environment variables
+def debug_environment_variables():
+    """Debug function to check available environment variables"""
+    print("Debug - Available OpenAI-related environment variables:")
+    openai_vars = {k: bool(v) for k, v in os.environ.items() if any(term in k.lower() for term in ['openai', 'api_key', 'endpoint', 'deployment', 'model'])}
+    for key, has_value in openai_vars.items():
+        print(f"  {key}: {'✓' if has_value else '✗'}")
+    return openai_vars
+
+# Global variables
+faq_chatbot = None
+faq_content = ""
+avatar_service = None
+initialization_status = {"initialized": False}
+
+# Simple FAQ Chatbot Class
+class SimpleFAQChatbot:
+    def __init__(self, faq_content: str):
+        self.faq_content = faq_content
+        self.client = None
+        self._initialize_azure_client()
     
-    def get_languages(self) -> Dict:
-        """Get all supported languages and voices"""
-        return {
-            "languages": self.languages,
-            "voices": self.voices
-        }
-    
-    def get_voices_for_language(self, language: str) -> Dict:
-        """Get available voices for a specific language"""
-        if language not in self.voices:
-            raise HTTPException(status_code=400, detail=f"Language {language} not supported")
-        
-        return {
-            "language": language,
-            "voices": self.voices[language]
-        }
-    
-    def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
-        """Translate text using Sarvam API"""
-        if source_lang == target_lang:
-            return text
-        
-        headers = {
-            "api-subscription-key": self.sarvam_api_key,
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "input": text,
-            "source_language_code": source_lang,
-            "target_language_code": target_lang,
-            "speaker_gender": "Male",
-            "mode": "formal",
-            "model": "mayura:v1",
-            "enable_preprocessing": True,
-        }
-        
+    def _initialize_azure_client(self):
+        """Initialize Azure OpenAI client"""
         try:
-            response = requests.post(self.sarvam_translate_url, json=payload, headers=headers, timeout=30)
-            response.raise_for_status()
+            # Debug output to see what env vars are available
+            print("Debug - Checking Azure OpenAI environment variables:")
             
-            result = response.json()
-            if 'translated_text' in result:
-                return result['translated_text']
-            else:
-                raise HTTPException(status_code=500, detail="Translation API returned unexpected format")
-        
-        except requests.exceptions.HTTPError as e:
-            error_detail = f"Translation API error: {e.response.status_code} - {e.response.text}"
-            raise HTTPException(status_code=500, detail=error_detail)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Translation error: {str(e)}")
-    
-    def text_to_audio(self, text: str, language: str, speaker: str) -> bytes:
-        """Convert text to audio using Sarvam API"""
-        headers = {
-            "API-Subscription-Key": self.sarvam_api_key,
-            "Content-Type": "application/json"
-        }
-        
-        # Split text into chunks of 2500 chars
-        max_chars = 2500
-        chunks = [text[i:i+max_chars] for i in range(0, len(text), max_chars)]
-        
-        all_audio_bytes = b''
-        
-        for chunk in chunks:
-            payload = {
-                "text": chunk,
-                "target_language_code": language,
-                "speaker": speaker,
-                "pace": 1.0,
-                "speech_sample_rate": 8000,
-                "enable_preprocessing": True,
-                "model": "bulbul:v3-beta",
-                "output_audio_codec": "mp3"
-            }
+            # Use the correct environment variable names from your .env file
+            api_key = os.getenv("OPENAI_API_KEY")  # Your env uses OPENAI_API_KEY
+            base_url = os.getenv("OPENAI_BASE_URL")  # Your env uses OPENAI_BASE_URL
+            api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
             
-            try:
-                response = requests.post(self.sarvam_tts_url, json=payload, headers=headers, timeout=30)
-                response.raise_for_status()
-                
-                audio_data = response.json()
-                if 'audios' in audio_data and len(audio_data['audios']) > 0:
-                    audio_bytes = base64.b64decode(audio_data['audios'][0])
-                    all_audio_bytes += audio_bytes
-                else:
-                    raise HTTPException(status_code=500, detail="Text-to-Speech API returned no audio")
+            print(f"Debug - API Key exists: {bool(api_key)}")
+            print(f"Debug - Base URL: {base_url}")
+            print(f"Debug - API Version: {api_version}")
             
-            except requests.exceptions.HTTPError as e:
-                error_detail = f"Text-to-Speech API error: {e.response.status_code} - {e.response.text}"
-                raise HTTPException(status_code=500, detail=error_detail)
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=f"Text-to-Speech error: {str(e)}")
-        
-        return all_audio_bytes
-    
-    def file_to_base64(self, file_bytes: bytes) -> str:
-        """Convert file bytes to base64 string"""
-        return base64.b64encode(file_bytes).decode('utf-8')
-    
-    def call_databricks_endpoint(self, image_b64: str, audio_b64: str) -> str:
-        """Send image and audio base64 to Databricks endpoint"""
-        url = f"{self.databricks_host}/serving-endpoints/{self.endpoint_name}/invocations"
-        
-        headers = {
-            "Authorization": f"Bearer {self.databricks_token}",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "dataframe_split": {
-                "columns": ["audio_b64", "image_b64"],
-                "data": [[audio_b64, image_b64]]
-            }
-        }
-        
-        try:
-            # Add SSL verification and timeout settings
-            response = requests.post(
-                url, 
-                json=payload, 
-                headers=headers, 
-                timeout=300,
-                verify=False  # Disable SSL verification for testing
+            if not api_key:
+                available_keys = [k for k in os.environ.keys() if 'api_key' in k.lower()]
+                raise ValueError(f"Missing OpenAI API key. Available keys: {available_keys}")
+            
+            if not base_url:
+                available_urls = [k for k in os.environ.keys() if 'url' in k.lower() or 'endpoint' in k.lower()]
+                raise ValueError(f"Missing OpenAI base URL. Available URL vars: {available_urls}")
+            
+            # Ensure base_url ends with a slash
+            if not base_url.endswith('/'):
+                base_url += '/'
+            
+            self.client = AzureOpenAI(
+                api_key=api_key,
+                api_version=api_version,
+                azure_endpoint=base_url
             )
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            if 'predictions' in result:
-                predictions = result['predictions']
-                if isinstance(predictions, dict):
-                    if predictions.get('status') == 'error':
-                        error_msg = predictions.get('message', 'Unknown error from endpoint')
-                        raise HTTPException(status_code=500, detail=f"Endpoint error: {error_msg}")
-                    elif 'video_b64' in predictions:
-                        video_b64 = predictions['video_b64']
-                        print(f"📹 Received video data: {len(video_b64)} characters")
-                        return video_b64
-                elif isinstance(predictions, list) and len(predictions) > 0:
-                    video_b64 = predictions[0]
-                    print(f"📹 Received video data: {len(video_b64)} characters")
-                    return video_b64
-            
-            print(f"⚠️ Unexpected response format: {result}")
-            raise HTTPException(status_code=500, detail=f"Unexpected response format from endpoint: {result}")
-        
-        except requests.exceptions.SSLError as e:
-            raise HTTPException(status_code=500, detail=f"SSL connection error to Databricks: {str(e)}. Check endpoint URL and SSL configuration.")
-        except requests.exceptions.ConnectionError as e:
-            raise HTTPException(status_code=500, detail=f"Connection error to Databricks: {str(e)}. Check network connectivity and endpoint URL.")
-        except requests.exceptions.Timeout as e:
-            raise HTTPException(status_code=500, detail=f"Timeout error: {str(e)}. Databricks endpoint took too long to respond.")
-        except requests.exceptions.RequestException as e:
-            raise HTTPException(status_code=500, detail=f"Databricks endpoint error: {str(e)}")
-    
-    def base64_to_video_file(self, video_b64: str, filename: str) -> Path:
-        """Convert base64 to video file and save"""
-        try:
-            # Clean the base64 string - remove any whitespace/newlines
-            video_b64_clean = video_b64.strip().replace('\n', '').replace('\r', '')
-            
-            # Decode base64 to bytes
-            video_bytes = base64.b64decode(video_b64_clean)
-            
-            # Validate that we have actual video data
-            if len(video_bytes) < 100:  # MP4 files should be much larger
-                raise HTTPException(status_code=500, detail="Generated video data is too small")
-            
-            file_path = self.uploads_dir / filename
-            
-            # Write video bytes to file
-            with open(file_path, 'wb') as f:
-                f.write(video_bytes)
-            
-            # Verify file was created and has content
-            if not file_path.exists() or file_path.stat().st_size == 0:
-                raise HTTPException(status_code=500, detail="Video file was not created properly")
-            
-            print(f"✅ Video saved: {file_path} ({file_path.stat().st_size} bytes)")
-            return file_path
-        
-        except base64.binascii.Error as e:
-            raise HTTPException(status_code=500, detail=f"Invalid base64 video data: {str(e)}")
+            print("✅ Azure OpenAI client initialized successfully!")
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error saving video: {str(e)}")
+            print(f"❌ Failed to initialize Azure OpenAI client: {e}")
+            raise
     
-    async def generate_avatar(self, text: str, language: str, speaker: str, image_bytes: bytes) -> Dict:
-        """Main avatar generation method"""
+    def answer_question(self, question: str) -> dict:
+        """Answer question using FAQ content and Azure OpenAI"""
         try:
-            # Validate inputs
-            if language not in self.languages:
-                raise HTTPException(status_code=400, detail=f"Language {language} not supported")
+            # Use LLM_MODEL from your .env file
+            deployment_name = os.getenv("LLM_MODEL", "gpt-4o")
             
-            if language not in self.voices or speaker not in self.voices[language]:
-                raise HTTPException(status_code=400, detail=f"Speaker {speaker} not supported for {language}")
+            print(f"Debug - Using deployment: {deployment_name}")
             
-            # Validate environment variables
-            if not all([self.databricks_host, self.databricks_token, self.sarvam_api_key, self.endpoint_name]):
-                missing = []
-                if not self.databricks_host: missing.append("DATABRICKS_HOST")
-                if not self.databricks_token: missing.append("DATABRICKS_TOKEN")
-                if not self.sarvam_api_key: missing.append("SARVAM_API_KEY")
-                if not self.endpoint_name: missing.append("ENDPOINT_NAME")
-                raise HTTPException(status_code=500, detail=f"Missing environment variables: {', '.join(missing)}")
+            system_prompt = f"""You are a helpful customer service assistant for IndiGo BluChip loyalty program. 
+            Use the following FAQ information to answer user questions accurately and helpfully.
+            If the question is not covered in the FAQ, politely say you don't have that specific information and suggest contacting customer support.
             
-            # Convert image to base64
-            image_b64 = self.file_to_base64(image_bytes)
+            FAQ Content:
+            {self.faq_content}
             
-            # Step 1: Translate text
-            translated_text = self.translate_text(text, "en-IN", language)
+            Please provide clear, concise answers based on this information."""
             
-            # Step 2: Convert to audio
-            audio_bytes = self.text_to_audio(translated_text, language, speaker)
-            audio_b64 = self.file_to_base64(audio_bytes)
-            
-            # Step 3: Generate video
-            video_b64 = self.call_databricks_endpoint(image_b64, audio_b64)
-            
-            # Step 4: Save video
-            unique_id = str(uuid.uuid4())[:8]
-            video_filename = f"avatar_{unique_id}.mp4"
-            video_path = self.base64_to_video_file(video_b64, video_filename)
+            response = self.client.chat.completions.create(
+                model=deployment_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": question}
+                ],
+                max_tokens=1000,
+                temperature=0.3
+            )
             
             return {
-                "status": "success",
-                "message": "Avatar generated successfully",
-                "video_url": f"/uploads/{video_filename}",
-                "filename": video_filename,
-                "language": language,
-                "speaker": speaker,
-                "original_text": text,
-                "translated_text": translated_text
+                "answer": response.choices[0].message.content,
+                "model": deployment_name,
+                "status": "success"
             }
-        
-        except HTTPException as e:
-            raise e
+            
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Avatar generation error: {str(e)}")
+            print(f"Error getting response from Azure OpenAI: {e}")
+            return {
+                "answer": "I'm sorry, I'm having trouble processing your question right now. Please try again later or contact customer support.",
+                "error": str(e),
+                "status": "error"
+            }
+
+# Initialize FAQ system
+def initialize_faq_system():
+    global faq_chatbot, faq_content, initialization_status
+
+    try:
+        print("🔧 Setting up FAQ system...")
+        
+        # Debug environment variables
+        debug_environment_variables()
+        
+        # Load FAQ file
+        faq_file_path = os.path.join("Ai_search", "FAQ.txt")
+        
+        if not os.path.exists(faq_file_path):
+            raise FileNotFoundError(f"FAQ file not found: {faq_file_path}")
+        
+        print("📚 Loading FAQ content...")
+        with open(faq_file_path, 'r', encoding='utf-8') as f:
+            faq_content = f.read()
+        
+        if not faq_content.strip():
+            raise ValueError("FAQ file is empty")
+        
+        print("🤖 Setting up FAQ chatbot...")
+        faq_chatbot = SimpleFAQChatbot(faq_content)
+        
+        initialization_status = {
+            "initialized": True,
+            "error": None,
+            "faq_content_length": len(faq_content),
+            "llm_provider": "Azure OpenAI"
+        }
+        
+        print("✅ FAQ system initialized successfully!")
+        return True
+
+    except Exception as e:
+        error_msg = f"Failed to initialize FAQ system: {str(e)}"
+        print(f"❌ {error_msg}")
+        initialization_status = {"initialized": False, "error": error_msg}
+        return False
+
+# Commented RAG system initialization - can be re-enabled when vector DB issues are resolved
+# def initialize_rag_system():
+#     global rag_chatbot, initialization_status
+#
+#     try:
+#         print("🔧 Setting up FAQ processor...")
+#         faq_processor = FAQProcessor("Ai_search/FAQ.txt")
+#
+#         print("📚 Processing FAQ data...")
+#         questions, answers = faq_processor.process_faq()
+#
+#         print("🧠 Initializing RAG system...")
+#         rag_system = EnhancedChromaRAG(
+#             collection_name="indigo_faq",
+#             persist_directory="./chroma_db"
+#         )
+#
+#         print("📊 Adding documents to vector database...")
+#         rag_system.add_documents(questions, answers)
+#
+#         print("🤖 Setting up chatbot...")
+#         rag_chatbot = EnhancedRAGChatbot(
+#             rag_system=rag_system,
+#             questions=questions,
+#             answers=answers
+#         )
+#
+#         initialization_status = {
+#             "initialized": True,
+#             "collection_count": rag_system.collection.count(),
+#             "llm_provider": rag_system.llm_provider.__class__.__name__
+#         }
+#
+#         print("✅ RAG system initialized successfully!")
+#         return True
+#
+#     except Exception as e:
+#         error_msg = f"Failed to initialize RAG system: {str(e)}"
+#         print(f"❌ {error_msg}")
+#         initialization_status = {"initialized": False, "error": error_msg}
+#         return False
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle application lifespan events"""
+    global avatar_service
+    # Startup
+    print("🚀 Initializing FAQ system...")
+    initialize_faq_system()
+    print("🎭 Initializing Avatar Generator service...")
+    try:
+        avatar_service = AvatarGeneratorService()
+        print("✅ Avatar Generator service initialized!")
+    except Exception as e:
+        print(f"⚠️ Avatar Generator service failed to initialize: {e}")
+        avatar_service = None
+    yield
+    # Shutdown
+    print("🛑 Shutting down gracefully...")
+
+# Initialize FastAPI app with lifespan
+app = FastAPI(
+    title="IndiGo BluChip Backend API",
+    description="IndiGo BluChip loyalty program ",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://ibc-365-be-dev.goindigo.in",
+        "https://ibc-365-fe-dev.goindigo.in", 
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://ibc-365-be-dev.goindigo.in/user", 
+        "https://ibc-365-be-uat.goindigo.in",
+         
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"]
+)
+
+@app.options("/{path:path}")
+async def options_handler(path: str):
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Credentials": "true"
+        }
+    )
+
+
+app.add_middleware(SessionMiddleware, secret_key="your-secret-key-here-change-in-production")
+
+# Mount static files for uploads directory
+from pathlib import Path
+uploads_dir = Path("uploads").resolve().absolute()
+uploads_dir.mkdir(exist_ok=True, parents=True)
+try:
+    app.mount("/uploads", StaticFiles(directory=str(uploads_dir)), name="uploads")
+    print(f"✅ Static files mounted: /uploads -> {uploads_dir}")
+except Exception as e:
+    print(f"⚠️ Failed to mount static files: {e}")
+
+# Global variables for FAQ system
+faq_chatbot: Optional[SimpleFAQChatbot] = None
+# rag_chatbot: Optional[EnhancedRAGChatbot] = None  # Uncomment when switching back to RAG system
+initialization_status = {"initialized": False, "error": None}
+
+# Pydantic models
+class ChatRequest(BaseModel):
+    question: str
+    max_results: Optional[int] = 3
+
+class ChatResponse(BaseModel):
+    answer: str
+    # confidence: float
+    # sources: List[str]
+    # llm_info: Dict[str, Any]
+    # status: str = "success"
+
+class CampaignRequest(BaseModel):
+    instructions: str
+    campaign_type: Optional[str] = "full"
+
+class CampaignResponse(BaseModel):
+    success: bool
+    campaign_type: str
+    data: Dict[str, Any]
+    status: str = "success"
+
+class HealthResponse(BaseModel):
+    status: str
+    rag_initialized: bool
+    collection_info: Optional[str] = None
+    llm_provider: Optional[str] = None
+    database_status: Optional[str] = None
+    openai_api_configured: Optional[bool] = None
+
+class PermissionUpdate(BaseModel):
+    role_key: str
+    page_key: str
+    access: bool
+
+class BulkPermissionUpdate(BaseModel):
+    permissions: Dict[str, Dict[str, bool]]
+
+# Profile logs models
+class ProfileLogEntry(BaseModel):
+    id: int
+    timestamp: datetime
+    statuscodeibc: int
+    case_id: str
+    session_id: str
+
+class ProfileLogsResponse(BaseModel):
+    success: bool
+    data: List[ProfileLogEntry]
+    pagination: Dict[str, Any]
+    summary: Dict[str, Any]
+
+class ProfileLogsFilter(BaseModel):
+    statuscodeibc: Optional[int] = None
+    case_id: Optional[str] = None
+    session_id: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    page: Optional[int] = 1
+    page_size: Optional[int] = 10
+
+# Database connection
+async def get_db_connection():
+    """Get database connection with proper error handling"""
+    try:
+        # Validate all required environment variables
+        db_host = os.getenv("DB_HOST")
+        db_port = os.getenv("DB_PORT")
+        db_name = os.getenv("DB_NAME")
+        db_user = os.getenv("DB_USER")
+        db_password = os.getenv("DB_PASSWORD")
+        
+        if not all([db_host, db_port, db_name, db_user, db_password]):
+            missing_vars = [var for var, val in {
+                'DB_HOST': db_host, 'DB_PORT': db_port, 'DB_NAME': db_name,
+                'DB_USER': db_user, 'DB_PASSWORD': db_password
+            }.items() if not val]
+            raise ValueError(f"Missing database environment variables: {', '.join(missing_vars)}")
+        
+        # Convert port to integer
+        try:
+            db_port_int = int(db_port)
+        except (ValueError, TypeError):
+            raise ValueError(f"Invalid DB_PORT value: {db_port}")
+        
+        database_config = {
+            "host": db_host,
+            "port": db_port_int,
+            "database": db_name,
+            "user": db_user,
+            "password": db_password,
+            "ssl": "require"
+        }
+        
+        conn = await asyncpg.connect(**database_config)
+        return conn
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {str(e)}")
+
+@app.get("/", response_model=Dict[str, Any])
+async def root():
+    """Root endpoint"""
+    return {
+        "message": "IndiGo BluChip Backend API",
+        "status": "running",
+        "services": {
+            "ai_search": "Available",
+            "market_campaign": "Available",
+            "avatar_generator": "Available"
+        },
+        "docs": "/docs"
+    }
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check():
+    """Comprehensive health check endpoint"""
+    global faq_chatbot, initialization_status
+
+    # Check database connectivity with detailed validation
+    database_status = "unknown"
+    db_env_vars = {
+        'DB_HOST': os.getenv("DB_HOST"),
+        'DB_PORT': os.getenv("DB_PORT"),
+        'DB_NAME': os.getenv("DB_NAME"),
+        'DB_USER': os.getenv("DB_USER"),
+        'DB_PASSWORD': os.getenv("DB_PASSWORD")
+    }
+    
+    # Check for missing environment variables
+    missing_vars = [var for var, val in db_env_vars.items() if not val]
+    if missing_vars:
+        database_status = f"error: missing environment variables: {', '.join(missing_vars)}"
+    else:
+        # Validate DB_PORT is a valid integer
+        try:
+            int(db_env_vars['DB_PORT'])
+        except (ValueError, TypeError):
+            database_status = f"error: invalid DB_PORT value: {db_env_vars['DB_PORT']}"
+        else:
+            # Try to connect
+            try:
+                conn = await get_db_connection()
+                await conn.fetchval("SELECT 1")
+                await conn.close()
+                database_status = "connected"
+            except Exception as e:
+                database_status = f"error: {str(e)[:80]}..."
+
+    # Check OpenAI API configuration - using your actual env var names
+    openai_api_configured = bool(os.getenv("OPENAI_API_KEY"))
+    azure_openai_configured = bool(
+        os.getenv("OPENAI_API_KEY") and 
+        os.getenv("OPENAI_BASE_URL")
+    )
+    
+    # Check FAQ file availability
+    faq_file_exists = os.path.exists(os.path.join("Ai_search", "FAQ.txt"))
+    
+    # Check Azure OpenAI deployment
+    azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT")
+    
+    # Determine overall status and collect issues
+    overall_status = "healthy"
+    health_issues = []
+    
+    # Critical issues that make system unhealthy
+    if not initialization_status["initialized"]:
+        overall_status = "unhealthy"
+        health_issues.append("FAQ system not initialized")
+    
+    if database_status.startswith("error"):
+        overall_status = "unhealthy" 
+        health_issues.append(f"Database issue: {database_status}")
+    
+    if not faq_file_exists:
+        overall_status = "unhealthy"
+        health_issues.append("FAQ file missing from Ai_search/FAQ.txt")
+    
+    # Non-critical issues that degrade performance
+    if not azure_openai_configured and not openai_api_configured:
+        if overall_status == "healthy":
+            overall_status = "degraded"
+        health_issues.append("No OpenAI API keys configured")
+    elif not azure_openai_configured:
+        if overall_status == "healthy":
+            overall_status = "degraded"
+        health_issues.append("Azure OpenAI not configured")
+
+    if not initialization_status["initialized"]:
+        return HealthResponse(
+            status=overall_status,
+            rag_initialized=False,
+            collection_info=initialization_status.get("error", "Not initialized"),
+            database_status=database_status,
+            openai_api_configured=openai_api_configured or azure_openai_configured
+        )
+
+    collection_info = "FAQ-based system (no vector database)"
+    llm_provider = "Azure OpenAI"
+    faq_length = initialization_status.get("faq_content_length", 0)
+
+    return HealthResponse(
+        status=overall_status,
+        rag_initialized=True,
+        collection_info=f"FAQ Content: {faq_length} characters",
+        llm_provider=llm_provider,
+        database_status=database_status,
+        openai_api_configured=openai_api_configured or azure_openai_configured
+    )
+
+@app.get("/system-info")
+async def system_info():
+    """Get comprehensive system information and health details"""
+    global faq_chatbot, initialization_status
+
+    # Environment variables check
+    env_vars = {
+        "database": {
+            "DB_HOST": bool(os.getenv("DB_HOST")),
+            "DB_PORT": bool(os.getenv("DB_PORT")),
+            "DB_NAME": bool(os.getenv("DB_NAME")),
+            "DB_USER": bool(os.getenv("DB_USER")),
+            "DB_PASSWORD": bool(os.getenv("DB_PASSWORD"))
+        },
+        "openai": {
+            "OPENAI_API_KEY": bool(os.getenv("OPENAI_API_KEY")),
+            "AZURE_OPENAI_API_KEY": bool(os.getenv("AZURE_OPENAI_API_KEY")),
+            "OPENAI_ENDPOINT": bool(os.getenv("OPENAI_ENDPOINT")),
+            "AZURE_OPENAI_DEPLOYMENT": bool(os.getenv("AZURE_OPENAI_DEPLOYMENT"))
+        }
+    }
+
+    # File system checks
+    file_checks = {
+        "faq_file": os.path.exists(os.path.join("Ai_search", "FAQ.txt")),
+        "requirements": os.path.exists("requirements.txt"),
+        "dockerfile": os.path.exists("Dockerfile")
+    }
+
+    # FAQ system status
+    faq_status = {
+        "initialized": initialization_status["initialized"],
+        "error": initialization_status.get("error"),
+        "system_type": "Direct LLM (no vector database)",
+        "llm_provider": "Azure OpenAI"
+    }
+
+    if faq_chatbot:
+        try:
+            faq_status.update({
+                "faq_content_length": len(faq_chatbot.faq_content),
+                "azure_client_configured": faq_chatbot.client is not None
+            })
+        except Exception as e:
+            faq_status["client_error"] = str(e)
+
+    # Database connectivity test
+    try:
+        conn = await get_db_connection()
+        await conn.fetchval("SELECT version()")
+        await conn.close()
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+
+    return {
+        "timestamp": datetime.now().isoformat(),
+        "environment_variables": env_vars,
+        "file_system": file_checks,
+        "faq_system": faq_status,
+        "database_status": db_status,
+        "python_version": sys.version,
+        "working_directory": os.getcwd()
+    }
+
+@app.post("/AI_search-chat", response_model=ChatResponse)
+async def chat_endpoint(request: ChatRequest):
+    """Main chat endpoint"""
+    global faq_chatbot  # , rag_chatbot  # Uncomment when switching back to RAG system
+
+    if not faq_chatbot:  # Change to: if not rag_chatbot: when switching back to RAG
+        raise HTTPException(
+            status_code=503,
+            detail="FAQ system not initialized. Check /health endpoint."  # Change to: "RAG system not initialized..."
+        )
+
+    if not request.question.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Question cannot be empty"
+        )
+
+    try:
+        # Get response from FAQ chatbot
+        response = faq_chatbot.answer_question(request.question)
+        
+        # When switching back to RAG system, replace above with:
+        # response = rag_chatbot.answer_question(
+        #     request.question,
+        #     n_results=request.max_results
+        # )
+
+        return ChatResponse(
+            answer=response["answer"]
+            # confidence=response["confidence"],
+            # sources=response["sources"],
+            # llm_info=response["llm_info"]
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error processing question: {str(e)}"
+        )
+
+# @app.get("/system-info")
+# async def system_info():
+#     """Get system information"""
+#     global rag_chatbot, initialization_status
+
+#     info = {
+#         "initialized": initialization_status["initialized"],
+#         "error": initialization_status.get("error"),
+#         "environment": {
+#             "default_model": os.getenv("DEFAULT_MODEL"),
+#             "embedding_model": os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+#             "has_openai_key": bool(os.getenv("OPENAI_API_KEY")),
+#             "has_openai_endpoint": bool(os.getenv("OPENAI_ENDPOINT")),
+#         }
+#     }
+
+#     if rag_chatbot:
+#         info.update({
+#             "collection_info": rag_chatbot.rag.get_collection_info(),
+#             "llm_provider": rag_chatbot.rag.llm_provider.__class__.__name__,
+#             "model": getattr(rag_chatbot.rag.llm_provider, 'model', 'unknown')
+#         })
+
+#     return info
+
+# @app.post("/reinitialize")
+# async def reinitialize_system():
+#     """Reinitialize the RAG system"""
+#     success = initialize_rag_system()
+
+#     if success:
+#         return {"status": "success", "message": "RAG system reinitialized successfully"}
+#     else:
+#         raise HTTPException(
+#             status_code=500,
+#             detail=initialization_status.get("error", "Failed to reinitialize")
+#         )
+
+# # Example questions endpoint
+# @app.get("/examples")
+# async def get_example_questions():
+    """Get example questions to ask the chatbot"""
+    return {
+        "examples": [
+            "What is IndiGo BluChip?",
+            "How do I become a member?",
+            "What are the membership tiers?",
+            "How do I earn BluChips?",
+            "How can I redeem my BluChips?",
+            "Do BluChips expire?",
+            "What benefits do Blu 1 members get?",
+            "Can I transfer BluChips to someone else?",
+            "How do I contact customer support?",
+            "What are 6E Add-ons?"
+        ]
+    }
+
+# Market Campaign Endpoints
+@app.post("/campaign/generate", response_model=CampaignResponse)
+async def generate_campaign(request: CampaignRequest):
+    """Generate marketing campaign content"""
+    try:
+        import json
+
+        if request.campaign_type == "social":
+            result_json = generate_social_media_notification(request.instructions)
+            result = json.loads(result_json)
+        elif request.campaign_type == "push":
+            result_json = generate_pushnotification(request.instructions)
+            result = json.loads(result_json)
+        elif request.campaign_type == "email":
+            result_json = generate_email(request.instructions)
+            result = json.loads(result_json)
+        else:  # full campaign
+            social_json = generate_social_media_notification(request.instructions)
+            push_json = generate_pushnotification(request.instructions)
+            email_json = generate_email(request.instructions)
+            result = {
+                "social_media": json.loads(social_json),
+                "push_notification": json.loads(push_json),
+                "email_campaign": json.loads(email_json)
+            }
+
+        return CampaignResponse(
+            success=True,
+            campaign_type=request.campaign_type,
+            data=result
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error generating campaign: {str(e)}"
+        )
+
+@app.post("/campaign/social")
+async def generate_social_campaign(request: CampaignRequest):
+    """Generate social media campaign"""
+    try:
+        import json
+        result_json = generate_social_media_notification(request.instructions)
+        result = json.loads(result_json)
+        return {"success": True, "type": "social_media", "data": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/campaign/push")
+async def generate_push_campaign(request: CampaignRequest):
+    """Generate push notification campaign"""
+    try:
+        import json
+        result_json = generate_pushnotification(request.instructions)
+        result = json.loads(result_json)
+        return {"success": True, "type": "push_notification", "data": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/campaign/email")
+async def generate_email_campaign(request: CampaignRequest):
+    """Generate email campaign"""
+    try:
+        import json
+        result_json = generate_email(request.instructions)
+        result = json.loads(result_json)
+        return {"success": True, "type": "email", "data": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/campaign/test")
+async def test_campaign():
+    """Test campaign generation with sample data"""
+    try:
+        import json
+        test_instructions = "Flash sale: 40% off on all domestic flights this weekend only!"
+
+        social_json = generate_social_media_notification(test_instructions)
+        push_json = generate_pushnotification(test_instructions)
+        email_json = generate_email(test_instructions)
+
+        return {
+            "test_instructions": test_instructions,
+            "results": {
+                "social_media": json.loads(social_json),
+                "push_notification": json.loads(push_json),
+                "email_campaign": json.loads(email_json)
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Profile Logs API Endpoints
+@app.get("/api/profile-logs", response_model=ProfileLogsResponse)
+async def get_profile_logs(
+    statuscodeibc: Optional[int] = Query(None, description="Filter by status code (701-704)"),
+    case_id: Optional[str] = Query(None, description="Filter by case ID"),
+    session_id: Optional[str] = Query(None, description="Filter by session ID"),
+    start_date: Optional[date] = Query(None, description="Start date filter (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(None, description="End date filter (YYYY-MM-DD)"),
+    page: int = Query(1, ge=1, description="Page number"),
+    page_size: int = Query(10, ge=1, le=100, description="Items per page")
+):
+    """Get profile logs with filtering and pagination"""
+    
+    conn = await get_db_connection()
+    try:
+        # Build WHERE clause
+        where_conditions = []
+        params = []
+        param_count = 0
+        
+        if statuscodeibc is not None:
+            param_count += 1
+            where_conditions.append(f"l.statuscodeibc = ${param_count}")
+            params.append(statuscodeibc)
+            
+        if case_id:
+            param_count += 1
+            where_conditions.append(f"l.case_id ILIKE ${param_count}")
+            params.append(f"%{case_id}%")
+            
+        if session_id:
+            param_count += 1
+            where_conditions.append(f"l.session_id ILIKE ${param_count}")
+            params.append(f"%{session_id}%")
+            
+        if start_date:
+            param_count += 1
+            where_conditions.append(f"DATE(l.timestamp) >= ${param_count}")
+            params.append(start_date)
+            
+        if end_date:
+            param_count += 1
+            where_conditions.append(f"DATE(l.timestamp) <= ${param_count}")
+            params.append(end_date)
+        
+        where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
+        
+        # Get total count for pagination
+        count_query = f"""
+            SELECT COUNT(*) as total
+            FROM IBC_main.logsprofileupdate l
+            WHERE {where_clause}
+        """
+        total_result = await conn.fetchrow(count_query, *params)
+        total_records = total_result['total']
+        
+        # Calculate pagination
+        offset = (page - 1) * page_size
+        total_pages = (total_records + page_size - 1) // page_size
+        
+        # Get paginated data
+        data_query = f"""
+            SELECT 
+                l.id,
+                l.timestamp,
+                l.statuscodeibc,
+                l.case_id,
+                l.session_id
+            FROM IBC_main.logsprofileupdate l
+            WHERE {where_clause}
+            ORDER BY l.timestamp DESC
+            LIMIT ${param_count + 1} OFFSET ${param_count + 2}
+        """
+        
+        params.extend([page_size, offset])
+        results = await conn.fetch(data_query, *params)
+        
+        # Get status code summary
+        summary_query = f"""
+            SELECT 
+                COUNT(*) as total_records,
+                COUNT(DISTINCT l.statuscodeibc) as unique_status_codes,
+                COUNT(DISTINCT l.case_id) as unique_case_ids,
+                COUNT(DISTINCT l.session_id) as unique_sessions
+            FROM IBC_main.logsprofileupdate l
+            WHERE {where_clause}
+        """
+        summary_result = await conn.fetchrow(summary_query, *params[:-2])  # Exclude LIMIT/OFFSET params
+        
+        # Convert results to ProfileLogEntry objects
+        log_entries = [
+            ProfileLogEntry(
+                id=row['id'],
+                timestamp=row['timestamp'],
+                statuscodeibc=row['statuscodeibc'],
+                case_id=row['case_id'],
+                session_id=row['session_id']
+            )
+            for row in results
+        ]
+        
+        return ProfileLogsResponse(
+            success=True,
+            data=log_entries,
+            pagination={
+                "current_page": page,
+                "page_size": page_size,
+                "total_pages": total_pages,
+                "total_records": total_records,
+                "has_next": page < total_pages,
+                "has_previous": page > 1
+            },
+            summary={
+                "total_records": summary_result['total_records'],
+                "unique_status_codes": summary_result['unique_status_codes'],
+                "unique_case_ids": summary_result['unique_case_ids'],
+                "unique_sessions": summary_result['unique_sessions']
+            }
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+    finally:
+        await conn.close()
+
+@app.get("/api/profile-logs/status-summary")
+async def get_status_summary(
+    page: Optional[int] = Query(1, description="Page number (1-based)"),
+    page_size: Optional[int] = Query(10, description="Number of records per page"),
+    case_id: Optional[str] = Query(None, description="Filter by case ID"),
+    statuscode: Optional[int] = Query(None, description="Filter by status code"),
+    start_date: Optional[str] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[str] = Query(None, description="End date (YYYY-MM-DD)"),
+    sort_by: Optional[str] = Query("timestamp", description="Sort field"),
+    sort_order: Optional[str] = Query("desc", description="Sort order: asc or desc")
+):
+    """Get comprehensive status summary with pagination and detailed analytics"""
+    
+    conn = await get_db_connection()
+    try:
+        # Build WHERE conditions
+        where_conditions = []
+        params = []
+        param_count = 0
+        
+        if case_id:
+            param_count += 1
+            where_conditions.append(f"l.case_id ILIKE ${param_count}")
+            params.append(f"%{case_id}%")
+            
+        if statuscode:
+            param_count += 1
+            where_conditions.append(f"l.statuscodeibc = ${param_count}")
+            params.append(statuscode)
+            
+        if start_date:
+            param_count += 1
+            where_conditions.append(f"DATE(l.timestamp) >= ${param_count}")
+            params.append(start_date)
+            
+        if end_date:
+            param_count += 1
+            where_conditions.append(f"DATE(l.timestamp) <= ${param_count}")
+            params.append(end_date)
+        
+        where_clause = "WHERE " + " AND ".join(where_conditions) if where_conditions else ""
+        
+        # Get total count for pagination
+        count_query = f"""
+            SELECT COUNT(*) as total
+            FROM IBC_main.logsprofileupdate l
+            {where_clause}
+        """
+        
+        total_result = await conn.fetchrow(count_query, *params)
+        total_records = total_result['total'] if total_result else 0
+        
+        # Calculate pagination
+        total_pages = (total_records + page_size - 1) // page_size if total_records > 0 else 1
+        offset = (page - 1) * page_size
+        
+        # Get status code distribution
+        status_dist_query = f"""
+            SELECT 
+                s.statuscodeibc as statuscode,
+                s.description,
+                COALESCE(COUNT(l.id), 0) as count
+            FROM IBC_main.status_codes s
+            LEFT JOIN IBC_main.logsprofileupdate l ON s.statuscodeibc = l.statuscodeibc
+            {where_clause.replace('WHERE', 'WHERE' if not where_clause else 'AND')}
+            GROUP BY s.statuscodeibc, s.description
+            ORDER BY s.statuscodeibc
+        """
+        
+        status_results = await conn.fetch(status_dist_query, *params)
+        
+        # Get summary statistics
+        summary_query = f"""
+            SELECT 
+                COUNT(*) as total_records,
+                COUNT(DISTINCT statuscodeibc) as unique_status_codes,
+                COUNT(DISTINCT case_id) as unique_case_ids,
+                COUNT(DISTINCT session_id) as unique_sessions
+            FROM IBC_main.logsprofileupdate l
+            {where_clause}
+        """
+        
+        summary_result = await conn.fetchrow(summary_query, *params)
+        
+        # Get raw data with pagination
+        sort_clause = f"ORDER BY l.{sort_by} {sort_order.upper()}"
+        if sort_by not in ['id', 'timestamp', 'statuscodeibc', 'case_id', 'session_id']:
+            sort_clause = "ORDER BY l.timestamp DESC"
+            
+        raw_data_query = f"""
+            SELECT 
+                l.id,
+                l.timestamp,
+                l.statuscodeibc as statuscode,
+                l.case_id,
+                l.session_id,
+                s.description,
+                COALESCE('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', '') as user_agent,
+                COALESCE('192.168.1.' || (100 + (l.id % 45)), '192.168.1.100') as ip_address
+            FROM IBC_main.logsprofileupdate l
+            LEFT JOIN IBC_main.status_codes s ON l.statuscodeibc = s.statuscodeibc
+            {where_clause}
+            {sort_clause}
+            LIMIT ${len(params) + 1} OFFSET ${len(params) + 2}
+        """
+        
+        params.extend([page_size, offset])
+        raw_results = await conn.fetch(raw_data_query, *params)
+        
+        # Format response data
+        status_distribution = [
+            {
+                "statuscode": row['statuscode'],
+                "count": row['count'],
+                "description": row['description']
+            }
+            for row in status_results
+        ]
+        
+        raw_data = []
+        for row in raw_results:
+            # Format timestamp to match your desired format
+            timestamp_formatted = row['timestamp'].strftime("%m/%d/%Y, %I:%M:%S.%f %p")[:-3] + " " + row['timestamp'].strftime("%p")
+            
+            raw_data.append({
+                "id": row['id'],
+                "timestamp": timestamp_formatted,
+                "statuscode": row['statuscode'],
+                "case_id": row['case_id'],
+                "session_id": row['session_id'],
+                "user_agent": row['user_agent'],
+                "ip_address": row['ip_address']
+            })
+        
+        # Generate search suggestions based on current data
+        suggestions = []
+        if statuscode:
+            suggestions.append(f"status:{statuscode}")
+        if case_id:
+            suggestions.append(f"case:{case_id}")
+        if start_date:
+            suggestions.append(f"date:{start_date}")
+        
+        # Add some dynamic suggestions from recent data
+        if raw_results:
+            suggestions.extend([
+                f"status:{raw_results[0]['statuscode']}",
+                f"case:{raw_results[0]['case_id']}",
+                f"date:{raw_results[0]['timestamp'].strftime('%Y-%m-%d')}",
+                f"ip:{raw_results[0]['ip_address'] if 'ip_address' in raw_results[0] else '192.168.1.101'}"
+            ])
+        
+        # Remove duplicates and limit suggestions
+        suggestions = list(dict.fromkeys(suggestions))[:4]
+        
+        return {
+            "pagination": {
+                "current_page": page,
+                "page_size": page_size,
+                "total_pages": total_pages,
+                "total_records": total_records,
+                "has_next": page < total_pages,
+                "has_previous": page > 1
+            },
+            "search_criteria": {
+                "filters": {
+                    "case_id": case_id or "",
+                    "statuscode": statuscode or "",
+                    "date_range": {
+                        "start": start_date or "",
+                        "end": end_date or ""
+                    }
+                },
+                "sort_by": sort_by,
+                "sort_order": sort_order
+            },
+            "summary": {
+                "total_records": summary_result['total_records'] if summary_result else 0,
+                "unique_status_codes": summary_result['unique_status_codes'] if summary_result else 0,
+                "unique_case_ids": summary_result['unique_case_ids'] if summary_result else 0,
+                "unique_sessions": summary_result['unique_sessions'] if summary_result else 0
+            },
+            "status_code_distribution": status_distribution,
+            "raw_data": raw_data,
+            "search_suggestions": suggestions
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+    finally:
+        await conn.close()
+
+@app.get("/api/profile-logs/daily-summary")
+async def get_daily_summary(
+    start_date: Optional[date] = Query(None, description="Start date (YYYY-MM-DD)"),
+    end_date: Optional[date] = Query(None, description="End date (YYYY-MM-DD)")
+):
+    """Get daily summary of profile logs"""
+    
+    conn = await get_db_connection()
+    try:
+        where_conditions = []
+        params = []
+        param_count = 0
+        
+        if start_date:
+            param_count += 1
+            where_conditions.append(f"DATE(timestamp) >= ${param_count}")
+            params.append(start_date)
+            
+        if end_date:
+            param_count += 1
+            where_conditions.append(f"DATE(timestamp) <= ${param_count}")
+            params.append(end_date)
+        
+        where_clause = " AND ".join(where_conditions) if where_conditions else "1=1"
+        
+        query = f"""
+            SELECT 
+                DATE(timestamp) as log_date,
+                COUNT(*) as total_logs,
+                COUNT(CASE WHEN statuscodeibc = 701 THEN 1 END) as not_profile_updates,
+                COUNT(CASE WHEN statuscodeibc = 702 THEN 1 END) as ai_rejected,
+                COUNT(CASE WHEN statuscodeibc = 703 THEN 1 END) as missing_details,
+                COUNT(CASE WHEN statuscodeibc = 704 THEN 1 END) as successful_updates
+            FROM IBC_main.logsprofileupdate
+            WHERE {where_clause}
+            GROUP BY DATE(timestamp)
+            ORDER BY log_date DESC
+        """
+        
+        results = await conn.fetch(query, *params)
+        
+        daily_summary = [
+            {
+                "log_date": row['log_date'].isoformat(),
+                "total_logs": row['total_logs'],
+                "not_profile_updates": row['not_profile_updates'],
+                "ai_rejected": row['ai_rejected'],
+                "missing_details": row['missing_details'],
+                "successful_updates": row['successful_updates']
+            }
+            for row in results
+        ]
+        
+        return {
+            "success": True,
+            "daily_summary": daily_summary
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
+    finally:
+        await conn.close()
+    
+
+# try:
+    #with open("sso/settings.json", 'r') as f:
+SAML_SETTINGS = {
+  "strict": True,
+  "debug": True,
+  "sp": {
+    "entityId": os.getenv("SAML_SP_ENTITY_ID", "http://localhost:3000/metadata/"),
+    "assertionConsumerService": {
+      "url": os.getenv("SAML_SP_ACS_URL"),
+      "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    },
+    "singleLogoutService": {
+      "url": os.getenv("SAML_SP_SLS_URL"),
+      "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+    },
+    "x509cert": "MIIDdTCCAl2gAwIBAgIUYAflYUSAHUBrInhy8GszlRDamlYwDQYJKoZIhvcNAQELBQAwYzELMAkGA1UEBhMCSU4xDjAMBgNVBAgMBURlbGhpMQ4wDAYDVQQHDAVEZWxoaTETMBEGA1UECgwKSW50ZXJHbG9iZTELMAkGA1UECwwCSVQxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0yNjAxMDUwNTI3MDZaFw0yNzAxMDUwNTI3MDZaMGMxCzAJBgNVBAYTAklOMQ4wDAYDVQQIDAVEZWxoaTEOMAwGA1UEBwwFRGVsaGkxEzARBgNVBAoMCkludGVyR2xvYmUxCzAJBgNVBAsMAklUMRIwEAYDVQQDDAlsb2NhbGhvc3QwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDVNI20p1wVPYXL0Nn9+pa/r4WZ/DIPHVjwN9a1p+FFR0MAxxJOlWUhCeXkyvQxAOC3vdUWFB0BaHc/p9XgRczxjkaynlBDdzUIWhPZ4hnE+KR3YNKFT2d8LO4y/oGJyfc+arHWYbhMostIuo/oufSRc1ElaU8myea4dGGMvFahm73BaB3Y04LshztSlJmf9P2LSg0lLI+mnG40z97Sz8XXsWbcsh+7mQVfUJIjQ2FOrsVptD5eH4wg6UjyHSfAjU62BYdUQKY9EWxbhL0Xafp7fgmXBTcj6qs4xYLuObKRF/kMaBfRny3oJDn76YD219rDngwqyo5YYQyQotiqzYkNAgMBAAGjITAfMB0GA1UdDgQWBBTJqBT4wCCmngKMyVrULhuS7xpQBzANBgkqhkiG9w0BAQsFAAOCAQEAuxkmJU3fcDswrwjl5SEDbKrN0J+4v7yxFpUG5ro2YdTss7B9mFTZtlwqtyEfiLY+KO75eH7v2jMFHQwmRRm2WlA13TZAxFMSwRQ+J/VA4Zq93X5wN5JXc7HNR3ehce0gaN4+PPUOxMgAkWvDQHJmWyS6dTp93v0Fmu53qj8xRRTzGc0LT2JOiHS3k0FDoRPgXmpSA0rAW6U38ciR4Nf3MnfcCuiSzCrFdEF+UQJI5lNRQGZlnMz5D9713dr7qCmy/uFxFgA4qiuDEsk+Sl5Z1A==",
+    "privateKey":"-----BEGIN PRIVATE KEY-----MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDVNI20p1wVPYXL0Nn9+pa/r4WZ/DIPHVjwN9a1p+FFR0MAxxJOlWUhCeXkyvQxAOC3vdUWFB0BaHc/p9XgRczxjkaynlBDdzUIWhPZ4hnE+KR3YNKFT2d8LO4y/oGJyfc+arHWYbhMostIuo/oufSRc1ElaU8myea4dGGMvFahm73BaB3Y04LshztSlJmf9P2LSg0lLI+mnG40z97Sz8XXsWbcsh+7mQVfUJIjQ2FOrsVptD5eH4wg6UjyHSfAjU62BYdUQKY9EWxbhL0Xafp7fgmXBTcj6qs4xYLuObKRF/kMaBfRny3oJDn76YD219rDngwqyo5YYQyQotiqzYkNAgMBAAECggEANkRHIUlL5dgf+w2wvrWOs0GQxu3rK++zWIlN7DTL4N9PjZ4d6cSa1fr3+fEykFqB2CLIXvNForsdRyWICaqajI1DL2meUl3AMN0EmnuzRXBoJD6PtwDL/U5OXspq3FB8zvVHSKLczxzMkzlxMbJLLs5kRBp23A+d2ys8PR8fCcjsUEZIex/GabDZcYiCfAmfBdGQK2t6jt7GGIIBHWa78SUGIF24vpPyu0mO7EcLEABxSMPapViqRXkYa7YeVhT2ftrLAA08jrYIZyVJvpc1NtHR3jsnPPizuJrqeHSQcJqLkMf87b90a6Pa6D7RN2gstUSwCdJqN9Vg132D5bG1HQKBgQDzIq98fL28dBAUjPepkjnx5w8r0tH1ihZfrok7jXbBru0fSpxU4Y5df/tYNrtyPXqWt7dOpUZ9qvugwgj0JXxOVTIejrODTMXoexaj06HO4EvfjVgtWcjXTcQ4RQzYNc4oiIeP4KtS439HYWh6Quhk9XZhdBKgOrOhe1E9lLnUSwKBgQDgfHU/CrZfDoHQv0p2tqLL7iGWvIs4k790TNi+wDOA3oT4SHgGi9LdiVsOCNyY0UbTCn2sp0lPEY38lTTAXQ+MzeQfyODAeXC2y2zPrcCXjiKjVpAl+tAoJuDktNKpUiwtX6ZutxLqNcPkziKHYeKov/frEgZl0TH1UF4nTodRBwKBgHd6KvwknGRYMHK41xdIGRtrbQQfBDgB1H7OWPefy6Tf3fxLgMkhUgFWW9/8fV5lIbGgs/58r0gf1qkn0JiRNyWTLh7gBwzVlEdq/TQiUlhD1mUToyod/dj3iR4RqH8y6Yz3ko48XFROIQSltF6oNGUwTi0TifedARqwa7q0NCFDAoGBAI+3fkSG8iy3F+rxnJWV5XGTmdNsD+F/zZGCZTzxxcdaLlzZ4GWofK4x8qZwi/IWATa5P64aRzeksHcleukwavUlF0g2DZWL6dpNL/NhdKxSZeCWWaDHCx65jT8+eKPIJNpDo0S8VhK1qx0/zyFHTJnmlKzdFFV48XfxJOYbQ0xfAoGBAMWonRDh+cmQZNSU1HDXWEXQoW/bPVOgcghBX8Gnm5fYhm/XHihmsJSHWS7xV4OyZG+QUFM4PdSOCrpRSPNjhwogGLUHlkUqNdMT0IuYl19uQmurnFm09T1z3IPPckrjEdRBzq0edqlVpQkjoq83c+KOX6E9yHQNH2srh2xFtcMW-----END PRIVATE KEY-----"
+  },
+  "idp": {
+    "entityId": os.getenv("SAML_IDP_ENTITY_ID"),
+    "singleSignOnService": {
+      "url": os.getenv("SAML_IDP_SSO_URL"),
+      "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+    },
+    "singleLogoutService": {
+      "url": os.getenv("SAML_IDP_SLO_URL"),
+      "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+    },
+    "x509cert": os.getenv("SAML_IDP_X509_CERT")  
+  },
+  "security": {
+    "authnRequestsSigned": True,
+    "wantAssertionsSigned": True,
+    "wantMessagesSigned": False,
+    "requestedAuthnContext": False
+  }
+}
+# except FileNotFoundError:
+#     # Fallback settings if file doesn't exist
+#     SAML_SETTINGS = {}    
+
+def init_saml_auth(req):
+    try:
+        if not SAML_AVAILABLE:
+            raise Exception("SAML functionality not available - dependency conflict")
+        if not SAML_SETTINGS:
+            raise Exception("SAML settings not loaded")
+        return OneLogin_Saml2_Auth(req, SAML_SETTINGS)
+    except Exception as e:
+        print(f"Error initializing SAML auth: {e}")
+        raise HTTPException(status_code=500, detail=f"SAML configuration error: {str(e)}")
+
+async def prepare_fastapi_request(request: Request):
+    form_data = {}
+    if request.method == "POST":
+        form_data = dict(await request.form())
+    return {
+        # "https": "on" if request.url.scheme == "https" else "off",
+        "https": "on" ,
+        'http_host': request.headers.get('host'),
+        'script_name': request.url.path,
+        'server_port': request.headers.get('x-forwarded-port') or str(request.url.port) if request.url.port else None,
+        'get_data': dict(request.query_params),
+        'post_data': form_data
+    }
+
+@app.get('/sso/login')
+async def sso_login(request: Request):
+    req = await prepare_fastapi_request(request)
+    auth = init_saml_auth(req)
+    
+    # Get RelayState from frontend (default to frontend callback)
+    relay_state = request.query_params.get('RelayState', 'http://localhost:3000/sso/callback')
+    
+    # Pass RelayState to Azure AD
+    return RedirectResponse(auth.login(return_to=relay_state))
+
+@app.post('/sso/callback')
+async def sso_callback(request: Request):
+    # Azure AD is posting here instead of /sso/acs - handle it the same way
+    return await sso_acs(request)
+
+async def sso_acs(request: Request):
+    try:
+        print(f"SAML ACS called - SAML Available: {SAML_AVAILABLE}")
+        
+        if not SAML_AVAILABLE:
+            raise HTTPException(status_code=503, detail="SAML functionality not available - please check dependencies")
+        
+        req = await prepare_fastapi_request(request)
+        print(f"FastAPI request prepared: {req}")
+        
+        auth = init_saml_auth(req)
+        auth.process_response()
+
+        errors = auth.get_errors()
+        if errors:
+            print(f"SAML Errors: {errors}")
+            print(f"Last Error Reason: {auth.get_last_error_reason()}")
+            raise HTTPException(status_code=400, detail={'error': errors, 'reason': auth.get_last_error_reason()})
+
+        attributes = auth.get_attributes()
+        print(f"SAML Attributes received: {attributes}")
+        
+        # Simplified user info without RBAC
+        user_info = {
+            "name_id": auth.get_nameid(),
+            "email": attributes.get("emailaddress", attributes.get("user.mail", [""]))[0],
+            "first_name": attributes.get("givenname", attributes.get("user.givenname", [""]))[0],
+            "last_name": attributes.get("surname", attributes.get("user.surname", [""]))[0],
+            "name": attributes.get("name", attributes.get("user.userprincipalname", [""]))[0],
+            "job_title": attributes.get("user.jobtitle", [""])[0],
+            "department": attributes.get("user.department", [""])[0],
+            "division": attributes.get("user.division", attributes.get("extension_6e8beda8be77480cab245f0b38a440d0_division", [""]))[0],
+            "iga_code": attributes.get("igacode", attributes.get("user.igaempcode", attributes.get("extension_6e8beda8be77480cab245f0b38a440d0_igaempcode", [""])))[0],
+            "office_location": attributes.get("user.officelocation", [""])[0],
+            "user_base": "DEL",
+            "terminal": "T1",
+            "access_granted": True  # Allow access for all authenticated users
+        }
+
+        # Store user info in session
+        request.session['user'] = user_info
+        print(f"User info stored in session: {user_info}")
+
+        # Redirect directly to profile update page
+        return RedirectResponse(os.getenv("FRONTEND_BASE_URL")+"/profile-update", status_code=302)
+        
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions as-is
+    except Exception as e:
+        print(f"Unexpected error in SAML ACS: {e}")
+        import traceback
+        print(f"Full traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"SAML processing error: {str(e)}")
+
+@app.post('/sso/acs')
+async def sso_acs_endpoint(request: Request):
+    return await sso_acs(request)
+
+
+@app.get('/metadata')
+async def metadata(request: Request):
+    req = await prepare_fastapi_request(request)
+    auth = init_saml_auth(req)
+    settings = auth.get_settings()
+    metadata = settings.get_sp_metadata()
+    errors = settings.validate_metadata(metadata)
+
+    if errors:
+        raise HTTPException(status_code=500, detail=f"Metadata errors: {errors}")
+    return Response(content=metadata, media_type='text/xml')
+
+@app.get('/logout')
+def logout_get(request: Request):
+    request.session.clear()
+    return RedirectResponse('/')
+
+@app.post('/logout')
+def logout_post(request: Request):
+    try:
+        # Clear the session completely
+        request.session.clear()
+        
+        # Return JSON response for API calls
+        return {
+            'success': True,
+            'message': 'Logged out successfully'
+        }
+            
+    except Exception as e:
+        print(f"Logout error: {str(e)}")
+        raise HTTPException(status_code=500, detail={
+            'success': False,
+            'error': str(e)
+        })
+
+@app.get('/user')
+def get_user_info(request: Request):
+    """Get current user information from session"""
+    user = request.session.get('user')
+    if not user:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+    return user
+
+role_permissions: Dict[str, List[str]] = {
+   
+    "SuperAdmin": [
+        "profile-update", "marketing", "fraud-analytics", "partner-analytics",
+        "ai-search", "rbac", "avatar-generator"
+    ],
+}
+
+# Column headers mapping (roles)
+column_headers = [
+    {"key": "super_admin", "label": "Super Admin", "color": "bg-red-100 text-red-800"},
+]
+
+# Row labels (pages) - using same IDs as frontend
+row_labels = [
+    # Superadmin Pages
+    {"key": "profile-update", "label": "Profile Update", "category": "SuperAdmin"},
+    {"key": "marketing", "label": "Marketing", "category": "SuperAdmin"},
+    {"key": "fraud-analytics", "label": "Fraud Analytics", "category": "SuperAdmin"},
+    {"key": "partner-analytics", "label": "Partner Analytics", "category": "SuperAdmin"},
+    {"key": "ai-search", "label": "AI Search", "category": "SuperAdmin"},
+    {"key": "rbac", "label": "RBAC ", "category": "SuperAdmin"},
+    {"key": "avatar-generator", "label": "Avatar Generator", "category": "SuperAdmin"},
+]
+# Local JSON storage setup
+PERMISSIONS_FILE = "rbac_permissions.json"
+rbac_permissions = {}
+
+def load_permissions():
+    global rbac_permissions
+    try:
+        if os.path.exists(PERMISSIONS_FILE):
+            with open(PERMISSIONS_FILE, 'r') as f:
+                data = json.load(f)
+                rbac_permissions = data.get('permissions', {})
+                print("Loaded permissions from local JSON file")
+                return
+    except Exception as e:
+        print(f"Error loading permissions from JSON file: {e}")
+    initialize_default_permissions()
+    save_permissions()  # Save default permissions to file
+
+def save_permissions():
+    try:
+        from datetime import datetime
+        data = {
+            'permissions': rbac_permissions,
+            'updated_at': datetime.now().isoformat()
+        }
+        with open(PERMISSIONS_FILE, 'w') as f:
+            json.dump(data, f, indent=2)
+        print("Saved permissions to local JSON file")
+    except Exception as e:
+        print(f"Error saving permissions to JSON file: {e}")
+
+
+# save all permissions in local JSON file if any update from frontend
+
+def initialize_default_permissions():
+    """Initialize permissions matrix with default values"""
+    global rbac_permissions
+    for role in column_headers:
+        rbac_permissions[role["key"]] = {}
+        for page in row_labels:
+            rbac_permissions[role["key"]][page["key"]] = False
+    
+    # SuperAdmin - Give access to ALL pages
+    rbac_permissions["super_admin"]["profile-update"] = True
+    rbac_permissions["super_admin"]["marketing"] = True
+    rbac_permissions["super_admin"]["fraud-analytics"] = True
+    rbac_permissions["super_admin"]["partner-analytics"] = True
+    rbac_permissions["super_admin"]["ai-search"] = True
+    rbac_permissions["super_admin"]["rbac"] = True
+    rbac_permissions["super_admin"]["avatar-generator"] = True
+    
+
+# some default permission so as we are not getting error while checking for pages
+
+def get_pages_for_role(user_role: str) -> List[str]:
+    role_mapping = {
+        "SuperAdmin": "super_admin",
+    }
+    
+    rbac_role_key = role_mapping.get(user_role)
+    if not rbac_role_key or rbac_role_key not in rbac_permissions:
+        return []
+    
+    user_pages = []
+    for page_key, has_access in rbac_permissions[rbac_role_key].items():
+        if has_access:
+            user_pages.append(page_key)
+    
+    return user_pages
+
+
+def is_authorized_for_test_role(email: str) -> bool:
+    authorized_emails_str = os.getenv('AUTHORIZED_TEST_ROLE_EMAILS', '')
+    authorized_emails = [email.strip().lower() for email in authorized_emails_str.split(',') if email.strip()]
+    return email.lower() in authorized_emails
+
+
+
+# RBAC endpoints
+@app.get("/api/rbac/roles")
+async def api_get_roles():
+    return {"roles": column_headers}
+
+@app.get("/api/rbac/pages")
+async def api_get_pages():
+    return {"pages": row_labels}
+
+@app.get("/api/rbac/permissions")
+async def api_get_all_permissions():
+    return {
+        "permissions": rbac_permissions,
+        "roles": column_headers,
+        "pages": row_labels
+    }
+
+@app.post("/api/rbac/permissions/single")
+async def api_update_single_permission(permission: PermissionUpdate):
+    if permission.role_key not in rbac_permissions:
+        raise HTTPException(status_code=404, detail=f"Role '{permission.role_key}' not found")
+    
+    page_exists = any(page["key"] == permission.page_key for page in row_labels)
+    if not page_exists:
+        raise HTTPException(status_code=404, detail=f"Page '{permission.page_key}' not found")
+    
+    rbac_permissions[permission.role_key][permission.page_key] = permission.access
+    save_permissions()
+    
+    return {
+        "message": "Permission updated successfully",
+        "role": permission.role_key,
+        "page": permission.page_key,
+        "access": permission.access
+    }
+
+@app.post("/api/rbac/permissions/bulk")
+async def api_update_bulk_permissions(bulk_update: BulkPermissionUpdate):
+    updated_count = 0
+    errors = []
+    
+    for role_key, page_permissions in bulk_update.permissions.items():
+        if role_key not in rbac_permissions:
+            errors.append(f"Role '{role_key}' not found")
+            continue
+            
+        for page_key, access in page_permissions.items():
+            page_exists = any(page["key"] == page_key for page in row_labels)
+            if not page_exists:
+                errors.append(f"Page '{page_key}' not found")
+                continue
+                
+            rbac_permissions[role_key][page_key] = access
+            updated_count += 1
+    
+    if updated_count > 0:
+        save_permissions()
+    
+    return {
+        "message": f"Bulk update completed. {updated_count} permissions updated.",
+        "updated_count": updated_count,
+        "errors": errors
+    }
+
+@app.post("/api/rbac/reset-to-default")
+async def reset_to_default():
+    """Reset all permissions to default values"""
+    initialize_default_permissions()
+    save_permissions()
+    return {"message": "Permissions reset to default successfully"}
+
+# Avatar Generator Endpoints
+@app.get("/api/avatar/languages")
+async def get_avatar_languages():
+    """Get all supported languages and voices for avatar generation"""
+    global avatar_service
+    if not avatar_service:
+        raise HTTPException(status_code=503, detail="Avatar service not initialized")
+    
+    return avatar_service.get_languages()
+
+@app.get("/api/avatar/voices/{language}")
+async def get_avatar_voices(language: str):
+    """Get available voices for a specific language"""
+    global avatar_service
+    if not avatar_service:
+        raise HTTPException(status_code=503, detail="Avatar service not initialized")
+    
+    return avatar_service.get_voices_for_language(language)
+
+@app.post("/api/avatar/generate")
+async def generate_avatar(
+    text: str = Form(...),
+    language: str = Form(...),
+    speaker: str = Form(...),
+    image: UploadFile = File(...)
+):
+    """Generate avatar video from text, language, speaker, and image"""
+    global avatar_service
+    if not avatar_service:
+        raise HTTPException(status_code=503, detail="Avatar service not initialized")
+    
+    try:
+        if not text.strip():
+            raise HTTPException(status_code=400, detail="Text cannot be empty")
+        
+        image_bytes = await image.read()
+        if not image_bytes:
+            raise HTTPException(status_code=400, detail="Image file is empty")
+        
+        result = await avatar_service.generate_avatar(text, language, speaker, image_bytes)
+        return result
+        
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Avatar generation failed: {str(e)}")
+
+@app.get("/api/avatar/download/{filename}")
+async def download_avatar_video(filename: str):
+    """Download generated avatar video from disk"""
+    from fastapi.responses import FileResponse
+    from pathlib import Path
+    
+    # Validate filename to prevent directory traversal
+    if ".." in filename or "/" in filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    
+    filepath = Path("uploads") / filename
+    
+    if not filepath.exists():
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Return with proper headers for BOTH streaming and download
+    return FileResponse(
+        filepath,
+        media_type="video/mp4",
+        filename=filename,
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}",
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "no-cache",
+            "Content-Length": str(filepath.stat().st_size)
+        }
+    )
+
+
+@app.get("/api/avatar/stream/{filename}")
+async def stream_avatar_video(filename: str):
+    """Stream generated avatar video for browser playback"""
+    from fastapi.responses import FileResponse
+    from pathlib import Path
+    
+    # Validate filename to prevent directory traversal
+    if ".." in filename or "/" in filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    
+    filepath = Path("uploads") / filename
+    
+    if not filepath.exists():
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    # Return with proper headers for inline streaming
+    return FileResponse(
+        filepath,
+        media_type="video/mp4",
+        headers={
+            "Content-Disposition": "inline",
+            "Accept-Ranges": "bytes",
+            "Cache-Control": "public, max-age=3600",
+            "Content-Length": str(filepath.stat().st_size)
+        }
+    )
+
+@app.get("/api/avatar/health")
+async def avatar_health_check():
+    """Check avatar service health"""
+    global avatar_service
+    
+    if not avatar_service:
+        return {"status": "unhealthy", "message": "Avatar service not initialized"}
+    
+    required_vars = ["DATABRICKS_HOST", "DATABRICKS_TOKEN", "SARVAM_API_KEY", "ENDPOINT_NAME"]
+    missing_vars = [var for var in required_vars if not os.getenv(var)]
+    
+    if missing_vars:
+        return {
+            "status": "unhealthy", 
+            "message": f"Missing environment variables: {', '.join(missing_vars)}"
+        }
+    
+    return {
+        "status": "healthy",
+        "message": "Avatar service ready",
+        "supported_languages": len(avatar_service.languages),
+        "uploads_dir": str(avatar_service.uploads_dir)
+    }
+
+# Load permissions on startup
+load_permissions()    
+
+if __name__ == "__main__":
+    import uvicorn
+    
+    print("🚀 Starting IndiGo BluChip AI Search Backend...")
+    print(f"🌐 Server starting on: http://localhost:3000")
+    print(f"📚 API docs available at: http://localhost:3000/docs")
+    
+    uvicorn.run(
+        "main:app",
+        host="127.0.0.1",
+        port=3000,
+        reload=True,
+        log_level="info"
+    )
