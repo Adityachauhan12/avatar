@@ -1,16 +1,113 @@
+window.REACT_APP_REDIRECT_URL = 'http://localhost:3000';
 
-C:\Users\aditya.chauhan2\OneDrive - InterGlobe Aviation Limited\Desktop\IBC-365 FE\IBC-365-FE>git status
-interactive rebase in progress; onto 9c23900
-Last command done (1 command done):
-   pick c6cad23 Added email service in Market Campaign
-Next commands to do (2 remaining commands):
-   pick b21fd67 email service added
-   pick 8067386 Added avatar page
-  (use "git rebase --edit-todo" to view and edit)
-You are currently editing a commit while rebasing branch 'Aditya_FE' on '9c23900'.
-  (use "git commit --amend" to amend the current commit)
-  (use "git rebase --continue" once you are satisfied with your changes)      
 
-nothing to commit, working tree clean
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>6E-IBC-365</title>
+    <script src="%PUBLIC_URL%/env-config.js"></script>
 
-C:\Users\aditya.chauhan2\OneDrive - InterGlobe Aviation Limited\Desktop\IBC-365 FE\IBC-365-FE>
+  </head>
+  <body>
+
+   
+    <script>
+      window.APP_CONFIG = {
+        supportUrl: "https://www.goindigo.in/loyalty",
+      };
+
+      window.REACT_APP_REDIRECT_URL="http://localhost:3000";
+      window.REACT_APP_API_URL="http://localhost:3001"; //fr
+      window.REACT_APP_SAML_ENTITY_ID="http://localhost:3000/metadata";
+      window.REACT_APP_SAML_ACS_URL=window.REACT_APP_REDIRECT_URL+"/sso/acs";
+      window.REACT_APP_SAML_LOGOUT_URL=window.REACT_APP_REDIRECT_URL+"/sso/logout";
+      window.REACT_APP_BASE_URL="http://localhost:3001";
+
+    </script>
+
+     <div id="root">
+      <!-- Initial loading state -->
+      <div class="app-loading">
+        <div class="spinner"></div>
+        <div>
+          <h2 class="portalstyle">IBC-365 Portal</h2>
+          <p class="portal_style">Loading application...</p>
+        </div>
+      </div>
+    </div>
+
+      <!-- Prevent FOUC (Flash of Unstyled Content) -->
+    <style>
+      #root {
+        min-height: 100vh;
+        background-color: #f9fafb;
+      }
+      
+      /* Loading state styling */
+      .app-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #000099, #0066cc);
+        color: white;
+        font-family:  'BauahuasStd-Medium';
+      }
+      
+      .app-loading .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 16px;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .noscript-style{
+         display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh; 
+        background: #000099; 
+        color: white; 
+        font-family: 'BauhausStd-Medium'; 
+        text-align: center; 
+        padding: 20px;
+      }
+      .portalstye{
+        margin: 0; 
+        font-weight: 600;
+      }
+      .portal_style{
+        margin: 8px 0 0 0; 
+        opacity: 0.8; 
+        font-size: 14px;
+      }
+    </style>
+
+    <noscript>
+      <div class="noscript-style">
+        <div>
+          <h1> JavaScript Required</h1>
+          <p>You need to enable JavaScript to run the IndiGo Crew Portal.</p>
+          <p>Please enable JavaScript in your browser settings and refresh the page.</p>
+        </div>
+      </div>
+    </noscript>
+  
+  </body>
+</html>
