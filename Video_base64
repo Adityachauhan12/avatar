@@ -1,66 +1,8 @@
-# ============================================================================
-# CELL 4: LOAD WAV2LIP MODEL (FIXED IMPORTS)
-# ============================================================================
+🤖 Loading Wav2Lip model...
+💻 Checking GPU availability...
+⚠️  Using CPU (no GPU detected)
+⚠️  Wav2Lip import failed: No module named 'wav2lip'
+💡 Check Cell 1 cloned repo correctly
 
-print("🤖 Loading Wav2Lip model...")
-print("💻 Checking GPU availability...")
-
-# Safe torch import
-device = "cpu"  # Force CPU first (safe)
-try:
-    import torch
-    if torch.cuda.is_available():
-        device = "cuda"
-    print(f"✅ Device: {device}")
-except:
-    device = "cpu"
-    print("⚠️  CPU only")
-
-# Verify BASE_DIR from Cell 1 exists
-print(f"📁 BASE_DIR: {BASE_DIR}")
-print(f"📁 Files in BASE_DIR: {os.listdir(BASE_DIR)}")
-
-# CORRECT IMPORT PATHS (Rudrabha/Wav2Lip structure)
-try:
-    sys.path.insert(0, BASE_DIR)
-    
-    # Check what's actually in the models folder
-    models_path = os.path.join(BASE_DIR, "models")
-    if os.path.exists(models_path):
-        print(f"📁 Models folder: {os.listdir(models_path)}")
-    
-    # Try direct imports (correct structure)
-    from models import Wav2Lip  # ← NOT wav2lip.models
-    print("✅ Wav2Lip model class found!")
-    
-    # Load checkpoint
-    checkpoint_path = f"{CHECKPOINT_DIR}/wav2lip.pth"
-    if os.path.exists(checkpoint_path):
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-        model = Wav2Lip()
-        
-        # Handle both checkpoint formats
-        if 'state_dict' in checkpoint:
-            model.load_state_dict(checkpoint['state_dict'])
-        else:
-            model.load_state_dict(checkpoint)
-            
-        model = model.to(device)
-        model.eval()
-        print(f"✅ Model LOADED on {device}")
-        print(f"📊 {sum(p.numel() for p in model.parameters())/1e6:.1f}M params")
-    else:
-        print(f"❌ Missing: {checkpoint_path}")
-        print("💡 Download from Cell 2")
-        
-except ImportError as e:
-    print(f"❌ Import error: {e}")
-    print("📁 Checking folder structure...")
-    if os.path.exists(BASE_DIR):
-        for root, dirs, files in os.walk(BASE_DIR):
-            print(f"  {root}: {len(files)} files")
-except Exception as e:
-    print(f"❌ Load error: {e}")
-    model = None
-
-print(f"\n🎬 Status: {'✅ READY' if 'model' in locals() and model else '⚠️ PENDING'}")
+🎬 Model status: ⚠️  PENDING
+📝 Next: Cell 5 inference engine
