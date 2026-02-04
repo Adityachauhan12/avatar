@@ -1,61 +1,112 @@
-import os
+import torch
+import cv2
+import numpy as np
+import librosa
+from scipy import signal
+import dlib
 from pathlib import Path
-import urllib.request
-import subprocess
+from tqdm import tqdm
 
-print("📥 Setting up model checkpoints...")
-
-CHECKPOINT_DIR = os.path.join(BASE_DIR, "checkpoints")
-os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-
-# Download Wav2Lip checkpoint (652MB)
-WAV2LIP_CHECKPOINT = os.path.join(CHECKPOINT_DIR, "wav2lip.pth")
-
-if not os.path.exists(WAV2LIP_CHECKPOINT):
-    print("⏳ Downloading Wav2Lip model (652MB - may take 2-5 minutes)...")
+class VideoPreprocessor:
+    """Preprocess video and extract faces/audio"""
     
-    checkpoint_url = "https://github.com/Rudrabha/Wav2Lip/releases/download/initial_release/checkpoints_v3.zip"
+    def __init__(self, checkpoint_dir):
+        self.checkpoint_dir = checkpoint_dir
+        self.face_det_checkpoint = os.path.join(checkpoint_dir, "mmod_human_face_detector.dat")
+        
+        # Try to load dlib face detector
+        try:
+            import dlib
+            self.face_detector = dlib.cnn_face_detection_model_v1(self.face_det_checkpoint)
+            print("✅ dlib face detector loaded")
+        except:
+            print("⚠️ dlib detector not available, will use MediaPipe")
+            try:
+                import mediapipe as mp
+                self.face_detector = None
+                self.mp_face_detection = mp.solutions.face_detection.FaceDetection()
+                print("✅ MediaPipe face detector loaded")
+            except:
+                print("❌ No face detector available")
+                self.face_detector = None
     
-    # Download zip file
-    zip_path = os.path.join(CHECKPOINT_DIR, "checkpoints_v3.zip")
-    try:
-        urllib.request.urlretrieve(checkpoint_url, zip_path)
-        print("✅ Downloaded successfully")
+    def extract_audio(self, video_path, sample_rate=16000):
+        """Extract audio from video"""
+        print(f"🔊 Extracting audio from {video_path}...")
         
-        # Extract
-        import zipfile
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(CHECKPOINT_DIR)
+        try:
+            # Use ffmpeg to extract audio
+            audio_path = video_path.replace('.mp4', '_audio.wav')
+            cmd = f"ffmpeg -i '{video_path}' -q:a 9 -n '{audio_path}' -loglevel error"
+            os.system(cmd)
+            
+            # Load with librosa
+            wav, sr = librosa.load(audio_path, sr=sample_rate)
+            print(f"✅ Audio extracted: {len(wav)/sample_rate:.1f}s @ {sr}Hz")
+            
+            return wav, sr, audio_path
+        except Exception as e:
+            print(f"❌ Audio extraction failed: {e}")
+            return None, None, None
+    
+    def get_mel_spectrogram(self, audio, sample_rate=16000):
+        """Convert audio to mel-spectrogram"""
+        mel = librosa.feature.melspectrogram(y=audio, sr=sample_rate)
         
-        os.remove(zip_path)
-        print("✅ Extracted checkpoints")
-    except Exception as e:
-        print(f"⚠️ Download failed: {e}")
-        print("💡 Alternative: Download manually from https://github.com/Rudrabha/Wav2Lip/releases")
-else:
-    print("✅ Checkpoint already exists")
+        # Normalize
+        mel = np.log(np.clip(mel, 1e-9, None))
+        
+        return mel
+    
+    def extract_frames(self, video_path, fps=25, face_padding=10):
+        """Extract frames from video"""
+        print(f"🎬 Extracting frames from {video_path}...")
+        
+        cap = cv2.VideoCapture(video_path)
+        fps_video = cap.get(cv2.CAP_PROP_FPS)
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        frames = []
+        face_boxes = []
+        
+        for frame_idx in tqdm(range(total_frames)):
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            # Detect face
+            try:
+                face_box = self._detect_face(frame)
+                if face_box is not None:
+                    frames.append(frame)
+                    face_boxes.append(face_box)
+            except:
+                pass
+        
+        cap.release()
+        
+        print(f"✅ Extracted {len(frames)} frames with detected faces")
+        return frames, face_boxes, fps_video
+    
+    def _detect_face(self, frame):
+        """Detect face in frame (dlib)"""
+        if self.face_detector is None:
+            return None
+        
+        try:
+            dets = self.face_detector(frame, 1)
+            if len(dets) > 0:
+                det = dets
+                x1 = det.rect.left()
+                y1 = det.rect.top()
+                x2 = det.rect.right()
+                y2 = det.rect.bottom()
+                return (x1, y1, x2, y2)
+        except:
+            pass
+        
+        return None
 
-# Download face detection model (dlib)
-print("📥 Downloading face detection model...")
-FACE_DET_CHECKPOINT = os.path.join(CHECKPOINT_DIR, "mmod_human_face_detector.dat")
-
-if not os.path.exists(FACE_DET_CHECKPOINT):
-    face_det_url = "http://dlib.net/files/mmod_human_face_detector.dat.bz2"
-    try:
-        bz2_path = os.path.join(CHECKPOINT_DIR, "mmod_human_face_detector.dat.bz2")
-        urllib.request.urlretrieve(face_det_url, bz2_path)
-        
-        import bz2
-        with bz2.open(bz2_path, 'rb') as f_in:
-            with open(FACE_DET_CHECKPOINT, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
-        
-        os.remove(bz2_path)
-        print("✅ Face detection model downloaded")
-    except Exception as e:
-        print(f"⚠️ Face detection download failed: {e}")
-        print("💡 Will try to use MediaPipe as fallback")
-else:
-    print("✅ Face detection model already exists")
-
-print("✅ Model Weights Setup Complete!")
+# Initialize preprocessor
+preprocessor = VideoPreprocessor(CHECKPOINT_DIR)
+print("✅ Preprocessor ready!")
