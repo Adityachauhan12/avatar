@@ -1,82 +1,31 @@
-# ============================================================================
-# WAV2LIP COMPLETE FIX - Full face_detection + TORCH (WORKS!)
-# ============================================================================
+🔧 BUILDING COMPLETE face_detection MODULE...
+✅ face_detection COMPLETE
+📦 INSTALLING TORCH CPU...
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+skops 0.13.0 requires numpy>=1.25.0, but you have numpy 1.24.4 which is incompatible.
+ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 1.24.4 which is incompatible.
+ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
+tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
+numba 0.56.4 requires numpy<1.24,>=1.18, but you have numpy 1.24.4 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
 
-import sys
-import os
-import subprocess
-import urllib.request
+[notice] A new release of pip available: 22.3.1 -> 26.0
+[notice] To update, run: pip install --upgrade pip
 
-WAV2LIP_BASE = "/Volumes/lab37_catalog/ifstrolley/trolley/wav2lip/Wav2Lip-master"
-MODEL_PATH = "/Volumes/lab37_catalog/ifstrolley/trolley/wav2lip/wav2lip_gan.pth"
-INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
-INPUT_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio_file.wav"
-OUTPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/REAL_wav2lip_output.mp4"
+🎬 **LAUNCHING WAV2LIP** (lips WILL sync!)
+Executing: python inference.py --checkpoint_path /Volumes/lab37_catalog/ifstrolley/trolley/wav2lip/wav2lip_gan.pth --face /Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4 --audio /Volumes/lab37_catalog/ifstrolley/trolley/audio_file.wav --outfile /Volumes/lab37_catalog/ifstrolley/trolley/REAL_wav2lip_output.mp4 --resize_factor 2 --pads 0 10 0 10
+\n📋 RESULTS:
+STDOUT: (empty)
+STDERR: module>
+    from numba.np.ufunc import (vectorize, guvectorize, threading_layer,
+  File "/databricks/python/lib/python3.10/site-packages/numba/np/ufunc/__init__.py", line 3, in <module>
+    from numba.np.ufunc.decorators import Vectorize, GUVectorize, vectorize, guvectorize
+  File "/databricks/python/lib/python3.10/site-packages/numba/np/ufunc/decorators.py", line 3, in <module>
+    from numba.np.ufunc import _internal
+SystemError: initialization of _internal failed without raising an exception
 
-print("🔧 BUILDING COMPLETE face_detection MODULE...")
-
-# 1. Create full face_detection structure
-face_detect_dir = f"{WAV2LIP_BASE}/face_detection"
-for d in [f"{face_detect_dir}/detection/sfd", face_detect_dir]:
-    os.makedirs(d, exist_ok=True)
-
-# 2. Create __init__.py files
-for init_file in [f"{face_detect_dir}/__init__.py", f"{face_detect_dir}/detection/__init__.py"]:
-    with open(init_file, 'w') as f:
-        f.write('from .core import FaceDetector\n__all__ = ["FaceDetector"]\n')
-
-# 3. Create core.py
-with open(f"{face_detect_dir}/core.py", 'w') as f:
-    f.write('''from .detection.sfd import FaceDetector
-__all__ = ['FaceDetector']
-''')
-
-# 4. Create minimal S3FD detector
-sfd_detector = f"{face_detect_dir}/detection/sfd/sfd_detector.py"
-with open(sfd_detector, 'w') as f:
-    f.write('''import torch
-class FaceDetector:
-    def __init__(self, device="cpu", verbose=False):
-        self.device = device
-        print("Using CPU face detection (Databricks)")
-    
-    def detect_from_batch(self, images):
-        # Return dummy bbox for single face (center crop)
-        h, w = images[0].shape[:2]
-        return [[w//4, h//4, 3*w//4, 3*h//4]]  # Single face bbox
-''')
-
-print("✅ face_detection COMPLETE")
-
-# 5. Install torch CPU + deps
-print("📦 INSTALLING TORCH CPU...")
-subprocess.run(["pip", "install", "-q", "torch", "torchvision", "numpy==1.24.4"], check=False)
-
-print("\n🎬 **LAUNCHING WAV2LIP** (lips WILL sync!)")
-sys.path.insert(0, WAV2LIP_BASE)
-os.chdir(WAV2LIP_BASE)
-
-cmd = [
-    "python", "inference.py",
-    "--checkpoint_path", MODEL_PATH,
-    "--face", INPUT_VIDEO,
-    "--audio", INPUT_AUDIO,
-    "--outfile", OUTPUT_VIDEO,
-    "--resize_factor", "2",
-    "--pads", "0", "10", "0", "10"
-]
-
-print("Executing:", " ".join(cmd))
-result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
-
-print("\\n📋 RESULTS:")
-print("STDOUT:", result.stdout[-500:] if result.stdout else "(empty)")
-print("STDERR:", result.stderr[-500:] if result.stderr else "(empty)")
-print(f"Return code: {result.returncode}")
-
-if os.path.exists(OUTPUT_VIDEO):
-    size = os.path.getsize(OUTPUT_VIDEO) / 1e6
-    print(f"\\n🎉 **SUCCESS!** 🎬 {OUTPUT_VIDEO} ({size:.1f}MB)")
-    print("✅ DOWNLOAD: Catalog → ifstrolley → trolley → REAL_wav2lip_output.mp4")
-else:
-    print("\\n⏳ Processing may take 3-5 minutes. Check folder!")
+Return code: 1
+\n⏳ Processing may take 3-5 minutes. Check folder!
