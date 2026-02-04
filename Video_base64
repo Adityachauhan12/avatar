@@ -1,84 +1,25 @@
 # ============================================================================
-# CELL 1: NO-GIT Wav2Lip Setup (Guaranteed)
+# CELL 2: DOWNLOAD REAL MODEL WEIGHTS
 # ============================================================================
 
-import os
-import sys
-import subprocess
-import urllib.request
-import zipfile
-from pathlib import Path
+print("📥 Downloading REAL Wav2Lip checkpoint (350MB)...")
 
-print("🧹 ULTRA-SAFE INSTALL (No git needed)")
+checkpoint_url = "https://iiitaphyd-my.sharepoint.com/:u:/g/personal/radrabha_m_research_iiit_ac_in/Eb3LeLuNggJNr1j6hrnYmFwBIY_nuK8Aqd82VIRh3vF8oQ?e=O8j6IQ"
+checkpoint_path = f"{CHECKPOINT_DIR}/wav2lip.pth"
 
-# Clean workspace
-BASE_DIR = "/tmp/wav2lip"
-CHECKPOINT_DIR = f"{BASE_DIR}/checkpoints"
-for d in [BASE_DIR, CHECKPOINT_DIR]:
-    if os.path.exists(d):
-        import shutil
-        shutil.rmtree(d)
-    os.makedirs(d, exist_ok=True)
+if not os.path.exists(checkpoint_path):
+    try:
+        import urllib.request
+        print("⏳ Downloading (3-5 min)...")
+        urllib.request.urlretrieve(checkpoint_url, checkpoint_path)
+        print("✅ Checkpoint downloaded!")
+    except:
+        # Fallback URL
+        print("💡 Manual download needed:")
+        print("   1. Go to: https://github.com/Rudrabha/Wav2Lip/releases")
+        print("   2. Download 'wav2lip_gan.pth'")
+        print("   3. Upload to /FileStore/wav2lip.pth")
+else:
+    print("✅ Checkpoint exists")
 
-print("✅ Workspace ready")
-
-# Install MINIMUM dependencies
-print("📦 Core packages...")
-%pip install -q librosa==0.8.1 numpy opencv-python-headless imageio imageio-ffmpeg
-dbutils.library.restartPython()
-
-print("✅ Dependencies OK")
-
-# Download Wav2Lip files DIRECTLY (no git)
-print("📥 Downloading core files...")
-core_files = {
-    "inference.py": "https://raw.githubusercontent.com/Rudrabha/Wav2Lip/master/inference.py",
-    "face_detection/detection/sfd/s3fd.pth": "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth"
-}
-
-for local_path, url in core_files.items():
-    path = os.path.join(BASE_DIR, local_path)
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    urllib.request.urlretrieve(url, path)
-    print(f"✅ {local_path}")
-
-# Create models directory + Wav2Lip class
-models_dir = os.path.join(BASE_DIR, "models")
-os.makedirs(models_dir, exist_ok=True)
-
-# Write Wav2Lip model class directly
-wav2lip_model = """
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-class Wav2Lip(nn.Module):
-    def __init__(self):
-        super(Wav2Lip, self).__init__()
-        self.encoder = nn.LSTM(80, 256, 2, batch_first=True)
-        self.decoder = nn.LSTM(256, 256, 2, batch_first=True)
-        self.face_discriminator = nn.Sequential(
-            nn.Conv2d(3, 64, 5, stride=2, padding=2),
-            nn.ReLU(),
-            nn.Conv2d(64, 128, 5, stride=2, padding=2),
-            nn.ReLU(),
-            nn.AdaptiveAvgPool2d(1),
-            nn.Flatten(),
-            nn.Linear(128, 1)
-        )
-    
-    def forward(self, mel, face):
-        mel_out, _ = self.encoder(mel)
-        face_out = self.decoder(mel_out)
-        return face_out
-
-print("✅ Wav2Lip model class ready")
-"""
-with open(os.path.join(models_dir, "__init__.py"), "w") as f:
-    f.write("from .Wav2Lip import Wav2Lip")
-with open(os.path.join(models_dir, "Wav2Lip.py"), "w") as f:
-    f.write(wav2lip_model)
-
-sys.path.insert(0, BASE_DIR)
-print("✅ Wav2Lip READY (no git!)")
-print("📁 Structure:", os.listdir(BASE_DIR))
+print(f"📊 Size: {os.path.getsize(checkpoint_path)/1e6:.0f}MB" if os.path.exists(checkpoint_path) else "❌ Missing")
