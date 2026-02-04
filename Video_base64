@@ -1,62 +1,12 @@
-# ============================================================================
-# CELL 3: FFMPEG-ONLY LIP SYNC (No PyTorch!)
-# ============================================================================
-
-import os
-import subprocess
-import librosa
-import numpy as np
-from pathlib import Path
-
-print("🎬 FFMPEG-ONLY LIP SYNC PIPELINE")
-print("✅ NO PyTorch, NO CUDA, NO crashes")
-print("✅ Professional audio replacement")
-
-def pro_lipsync(input_video, new_audio, output_video):
-    """Production FFmpeg pipeline"""
-    print(f"🎬 Input: {input_video}")
-    print(f"🔊 New audio: {new_audio}")
-    
-    # 1. Validate inputs
-    if not os.path.exists(input_video):
-        print(f"❌ Video missing: {input_video}")
-        return False
-    if not os.path.exists(new_audio):
-        print(f"❌ Audio missing: {new_audio}")
-        return False
-    
-    # 2. High-quality audio replacement
-    cmd = f'''
-    ffmpeg -y -i "{input_video}" -i "{new_audio}" \
-        -c:v copy -c:a aac -b:a 192k \
-        -map 0:v:0 -map 1:a:0 \
-        -shortest -movflags +faststart \
-        "{output_video}" -loglevel error
-    '''
-    
-    print("🔄 Processing...")
-    result = os.system(cmd)
-    
-    if result == 0 and os.path.exists(output_video):
-        size_mb = os.path.getsize(output_video) / (1024*1024)
-        print(f"✅ SUCCESS: {output_video} ({size_mb:.1f}MB)")
-        print("🎉 Perfect audio sync achieved!")
-        return True
-    else:
-        print("❌ FFmpeg failed")
-        return False
-
-# Create test audio (if needed)
-def create_test_audio(path="/FileStore/test_audio.wav", duration=10):
-    """Generate 10s test audio"""
-    sr = 16000
-    t = np.linspace(0, duration, int(sr * duration))
-    audio = 0.3 * np.sin(2 * np.pi * 440 * t)  # A note
-    audio += 0.2 * np.sin(2 * np.pi * 523 * t)  # C note
-    
-    import soundfile as sf
-    sf.write(path, audio, sr)
-    print(f"✅ Test audio: {path}")
 
 print("✅ PIPELINE READY!")
 print("🎬 Run Cell 4 with your files!")
+
+
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+AttributeError: module 'numpy' has no attribute 'complex'.
+`np.complex` was a deprecated alias for the builtin `complex`. To avoid this error in existing code, use `complex` by itself. Doing this will not modify any behavior and is safe. If you specifically wanted the numpy scalar type, use `np.complex128` here.
+The aliases was originally deprecated in NumPy 1.20; for more details and guidance see the original release note at:
