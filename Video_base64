@@ -1,48 +1,8 @@
-# ============================================================================
-# CELL 4: LOAD WAV2LIP MODEL (Safe GPU Loading)
-# ============================================================================
+🤖 Loading Wav2Lip model...
+💻 Checking GPU availability...
+⚠️  Using CPU (no GPU detected)
+⚠️  Wav2Lip import failed: No module named 'wav2lip'
+💡 Check Cell 1 cloned repo correctly
 
-print("🤖 Loading Wav2Lip model...")
-print("💻 Checking GPU availability...")
-
-# Safe GPU check (won't crash)
-try:
-    import torch
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"✅ GPU available: {device}")
-except:
-    device = "cpu"
-    print("⚠️  Using CPU (no GPU detected)")
-
-# Add Wav2Lip path (from Cell 1)
-import sys
-sys.path.insert(0, BASE_DIR)
-
-# SAFE model loading with error handling
-model = None
-try:
-    from wav2lip.models import Wav2Lip
-    checkpoint_path = f"{CHECKPOINT_DIR}/wav2lip.pth"
-    
-    if os.path.exists(checkpoint_path):
-        print(f"📥 Loading checkpoint: {checkpoint_path}")
-        checkpoint = torch.load(checkpoint_path, map_location=device)
-        model = Wav2Lip()
-        model.load_state_dict(checkpoint['state_dict'] if 'state_dict' in checkpoint else checkpoint)
-        model = model.to(device)
-        model.eval()
-        print(f"✅ Model loaded successfully!")
-        print(f"📊 Parameters: {sum(p.numel() for p in model.parameters())/1e6:.1f}M")
-    else:
-        print(f"❌ Checkpoint missing: {checkpoint_path}")
-        print("💡 Run Cell 2 to download model")
-        
-except ImportError as e:
-    print(f"⚠️  Wav2Lip import failed: {e}")
-    print("💡 Check Cell 1 cloned repo correctly")
-except Exception as e:
-    print(f"⚠️  Model loading failed: {e}")
-    model = None
-
-print(f"\n🎬 Model status: {'✅ READY' if model is not None else '⚠️  PENDING'}")
-print("📝 Next: Cell 5 inference engine")
+🎬 Model status: ⚠️  PENDING
+📝 Next: Cell 5 inference engine
