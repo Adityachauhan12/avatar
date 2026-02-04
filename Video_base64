@@ -1,12 +1,43 @@
-🎬 CREATING TEST FILES FROM image-28.jpg
-✅ Files created!
-📹 Video: /FileStore/demo_video.mp4 (❌)
-🔊 Audio: /FileStore/demo_audio.wav (❌)
-❌ Video missing: /FileStore/demo_video.mp4
-ffmpeg version n4.4.4-0ubuntu1~22.04.db1 Copyright (c) 2000-2023 the FFmpeg developers
-  built with gcc 11 (Ubuntu 11.4.0-1ubuntu1~22.04)
-  configuration: --prefix=/usr --extra-version='0ubuntu1~22.04.db1' --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --enable-gnutls --enable-ladspa --enable-libaom --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librabbitmq --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal --enable-opencl --enable-opengl --enable-sdl2 --enable-pocketsphinx --enable-librsvg --enable-libmfx --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-libx264 --enable-shared
-  libavutil      56. 70.100 / 56. 70.100
-  libavcodec     58.134.100 / 58.134.100
-  libavformat    58. 76.100 / 58. 76.100
-  libavdevice    58. 13.100 / 58. 13.100
+# ============================================================================
+# CELL 4: UNITY CATALOG VERSION (Production)
+# ============================================================================
+
+# YOUR CATALOG PATHS (Perfect!)
+INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4"
+NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio.wav" 
+OUTPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/output.mp4"
+
+print("📁 CATALOG PATHS:")
+print(f"Input:  {INPUT_VIDEO}")
+print(f"Audio:  {NEW_AUDIO}")
+print(f"Output: {OUTPUT_VIDEO}")
+
+# 🔍 Verify files exist
+print("\n🔍 CHECKING FILES...")
+for path, name in [(INPUT_VIDEO, "Video"), (NEW_AUDIO, "Audio")]:
+    exists = os.path.exists(path)
+    print(f"{name}: {'✅' if exists else '❌'} {path}")
+
+# 🎬 PROCESS (FFmpeg magic)
+if os.path.exists(INPUT_VIDEO) and os.path.exists(NEW_AUDIO):
+    print("\n🚀 PROCESSING...")
+    
+    cmd = f'''
+    ffmpeg -y -i "{INPUT_VIDEO}" -i "{NEW_AUDIO}" \
+        -c:v copy -c:a aac -b:a 320k \
+        -map 0:v:0 -map 1:a:0 \
+        -shortest -movflags +faststart \
+        "{OUTPUT_VIDEO}" -loglevel error
+    '''
+    
+    result = os.system(cmd)
+    if result == 0:
+        print(f"\n🎉 SUCCESS! 🎬")
+        print(f"📥 Output: {OUTPUT_VIDEO}")
+        print("✅ Perfect audio sync - Hollywood quality!")
+    else:
+        print("❌ FFmpeg failed")
+else:
+    print("\n💡 UPLOAD FILES FIRST:")
+    print("   Catalog → lab37_catalog → ifstrolley → trolley")
+    print("   Upload: input.mp4 + audio.wav")
