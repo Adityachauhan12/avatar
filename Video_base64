@@ -1,103 +1,6 @@
-# ============================================================================
-# CELL 3: PREPROCESSING - PURE CPU (NO torch/cv2/torch AT ALL)
-# ============================================================================
-
-import os
-import subprocess
-import numpy as np
-import librosa
-from tqdm import tqdm
-from pathlib import Path
-
-print("🔧 Loading ULTRA-SAFE CPU preprocessing...")
-print("✅ NO torch, NO cv2, NO CUDA - 100% bulletproof")
-
-# ============================================================================
-# PURE NUMPY FACE DETECTION (NO OPENCV)
-# ============================================================================
-
-def simple_face_detection(frame_bgr):
-    """Pure numpy skin-tone + edge detection"""
-    # Convert BGR to RGB
-    frame_rgb = frame_bgr[:, :, [2,1,0]]
-    
-    # Skin tone detection (HSV-like)
-    b, g, r = frame_rgb[:,:,0], frame_rgb[:,:,1], frame_rgb[:,:,2]
-    skin = ((r > 95) & (g > 40) & (b > 20) & 
-            (r > g) & (r > b) & ((r - b) > 15) & 
-            (g - b > -5) & (g - b < 15))
-    
-    # Find bounding box of largest skin region
-    rows, cols = np.where(skin)
-    if len(rows) > 100:  # Minimum face size
-        y1, y2 = rows.min(), rows.max()
-        x1, x2 = cols.min(), cols.max()
-        return (x1, y1, x2, y2)
-    return None
-
-# ============================================================================
-# MAIN PREPROCESSOR CLASS
-# ============================================================================
-
-class SafePreprocessor:
-    def __init__(self):
-        print("✅ SAFE preprocessor ready (numpy only)")
-    
-    def extract_audio_only(self, video_path, sr=16000):
-        """Audio ONLY - no video processing"""
-        print(f"🔊 Extracting audio from {video_path}")
-        audio_path = video_path.rsplit('.', 1)[0] + '_audio.wav'
-        
-        cmd = f"ffmpeg -y -i '{video_path}' -vn -acodec pcm_s16le -ar {sr} -ac 1 '{audio_path}' -loglevel error"
-        os.system(cmd)
-        
-        if os.path.exists(audio_path):
-            wav, sr = librosa.load(audio_path, sr=sr)
-            os.remove(audio_path)
-            print(f"✅ Audio: {len(wav)/sr:.1f}s")
-            return wav, sr
-        print("❌ Audio failed")
-        return None, None
-    
-    def get_mel_spectrogram(self, audio, sr=16000):
-        """Wav2Lip mel spectrogram"""
-        print("🎵 Computing mel spectrogram...")
-        mel = librosa.feature.melspectrogram(
-            y=audio, sr=sr, 
-            n_fft=1024, hop_length=256,
-            n_mels=80, fmin=90, fmax=7600
-        )
-        mel_db = librosa.power_to_db(mel, ref=np.max)
-        print(f"✅ Mel: {mel_db.shape}")
-        return mel_db
-    
-    def get_mel_chunks(self, mel, target_frames):
-        """Create mel chunks for each video frame"""
-        print("🔄 Creating mel chunks...")
-        mel_chunks = []
-        mel_idx_multiplier = 80.0 / 25.0
-        
-        for i in range(target_frames):
-            start_idx = int(i * mel_idx_multiplier)
-            end_idx = min(start_idx + 16, mel.shape[1])
-            if end_idx - start_idx < 16:
-                chunk = np.pad(mel[:, start_idx:end_idx], 
-                              ((0,0),(0,16-(end_idx-start_idx))), 
-                              mode='edge')
-            else:
-                chunk = mel[:, start_idx:end_idx][:,:16]
-            mel_chunks.append(chunk)
-        
-        print(f"✅ {len(mel_chunks)} mel chunks ready")
-        return mel_chunks
-
-# ============================================================================
-# GLOBAL UTILITIES
-# ============================================================================
-
-preprocessor = SafePreprocessor()
-
-def dummy_frames(num_frames=100):
+just now (<1s)
+3
+3
     """Placeholder frames for testing (skip video for now)"""
     print(f"⏭️  Skipping video frames (using dummy {num_frames} frames)")
     return [np.zeros((256, 256, 3), dtype=np.uint8) for _ in range(num_frames)]
@@ -105,3 +8,10 @@ def dummy_frames(num_frames=100):
 print("\n✅ CELL 3 COMPLETE - PURE CPU SUCCESS!")
 print("🎬 Audio pipeline ready for Wav2Lip")
 print("📝 Next: Test audio extraction in Cell 7")
+🔧 Loading ULTRA-SAFE CPU preprocessing...
+✅ NO torch, NO cv2, NO CUDA - 100% bulletproof
+✅ SAFE preprocessor ready (numpy only)
+
+✅ CELL 3 COMPLETE - PURE CPU SUCCESS!
+🎬 Audio pipeline ready for Wav2Lip
+📝 Next: Test audio extraction in Cell 7
