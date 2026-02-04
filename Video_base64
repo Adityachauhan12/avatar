@@ -1,13 +1,4 @@
-# ============================================================================
-# CELL 7: RUN PIPELINE (Your Files)
-# ============================================================================
 
-INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4"
-NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio.wav" 
-OUTPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/output.mp4"
-
-print("🎬 PROCESSING YOUR FILES...")
-success = inference_engine.process_video(INPUT_VIDEO, NEW_AUDIO, OUTPUT_VIDEO)
 
 if success:
     print("\n🎉 SUCCESS!")
@@ -16,3 +7,10 @@ if success:
     print("🎬 Play to verify!")
 else:
     print("❌ Check file paths")
+🎬 PROCESSING YOUR FILES...
+🎬 Running MOCK lip-sync pipeline...
+🔊 Extracting audio from /Volumes/lab37_catalog/ifstrolley/trolley/input.mp4
+❌ Audio failed
+❌ Audio failed
+❌ Check file paths
+/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4: No such file or directory
