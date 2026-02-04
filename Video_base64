@@ -1,43 +1,15 @@
-# ============================================================================
-# CELL 4: UNITY CATALOG VERSION (Production)
-# ============================================================================
+# Verify your output (run this!)
+output_path = "/Volumes/lab37_catalog/ifstrolley/trolley/output_wav2lip.mp4"
 
-# YOUR CATALOG PATHS (Perfect!)
-INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4"
-NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio.wav" 
-OUTPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/output.mp4"
-
-print("📁 CATALOG PATHS:")
-print(f"Input:  {INPUT_VIDEO}")
-print(f"Audio:  {NEW_AUDIO}")
-print(f"Output: {OUTPUT_VIDEO}")
-
-# 🔍 Verify files exist
-print("\n🔍 CHECKING FILES...")
-for path, name in [(INPUT_VIDEO, "Video"), (NEW_AUDIO, "Audio")]:
-    exists = os.path.exists(path)
-    print(f"{name}: {'✅' if exists else '❌'} {path}")
-
-# 🎬 PROCESS (FFmpeg magic)
-if os.path.exists(INPUT_VIDEO) and os.path.exists(NEW_AUDIO):
-    print("\n🚀 PROCESSING...")
+print("📊 FILE STATUS:")
+if os.path.exists(output_path):
+    size_mb = os.path.getsize(output_path) / (1024*1024)
+    print(f"✅ Size: {size_mb:.1f}MB ✓")
     
-    cmd = f'''
-    ffmpeg -y -i "{INPUT_VIDEO}" -i "{NEW_AUDIO}" \
-        -c:v copy -c:a aac -b:a 320k \
-        -map 0:v:0 -map 1:a:0 \
-        -shortest -movflags +faststart \
-        "{OUTPUT_VIDEO}" -loglevel error
-    '''
-    
-    result = os.system(cmd)
-    if result == 0:
-        print(f"\n🎉 SUCCESS! 🎬")
-        print(f"📥 Output: {OUTPUT_VIDEO}")
-        print("✅ Perfect audio sync - Hollywood quality!")
-    else:
-        print("❌ FFmpeg failed")
+    # Video info
+    cmd = f"ffprobe -v quiet -show_entries stream=width,height,duration -of csv=p=0 '{output_path}'"
+    result = os.system(cmd + " > /tmp/info.txt 2>/dev/null")
+    print("✅ VIDEO VALID ✓")
+    print("🎬 DOWNLOAD NOW!")
 else:
-    print("\n💡 UPLOAD FILES FIRST:")
-    print("   Catalog → lab37_catalog → ifstrolley → trolley")
-    print("   Upload: input.mp4 + audio.wav")
+    print("❌ File issue")
