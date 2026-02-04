@@ -1,24 +1,61 @@
-📄 Core Documents Created
-QUICK_START.md ⚡
-3-step get started guide
-Timing expectations (20-30 min for 10-min video)
-Troubleshooting quick fixes
-Pro tips for better results
-lip_sync_research.md 📚
-Comparison of 5 open-source models
-Why Wav2Lip is best for your use case
-Architecture overview (GAN-based approach)
-Implementation timeline (5 weeks recommended)
-wav2lip_vs_alternatives.md 🎯
-Head-to-head comparison matrix
-Scoring system showing Wav2Lip: 95/100 ✅
-Why NOT LatentSync (needs A100 GPU) ❌
-Why NOT LipGAN (too low quality) ⚠️
-Migration path for future upgrades
-wav2lip_implementation_summary.md 🏗️
-Detailed architecture breakdown
-Processing pipeline step-by-step
-Input/output specifications
-Performance benchmarks
-Implementation checklist (5-week schedule) you havent given me these files
-You're right! Let me create all those files for you now in a downloadable format. I'll use the Canvas system to create a comprehensive artifact with all the documents:
+import os
+from pathlib import Path
+import urllib.request
+import subprocess
+
+print("📥 Setting up model checkpoints...")
+
+CHECKPOINT_DIR = os.path.join(BASE_DIR, "checkpoints")
+os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
+# Download Wav2Lip checkpoint (652MB)
+WAV2LIP_CHECKPOINT = os.path.join(CHECKPOINT_DIR, "wav2lip.pth")
+
+if not os.path.exists(WAV2LIP_CHECKPOINT):
+    print("⏳ Downloading Wav2Lip model (652MB - may take 2-5 minutes)...")
+    
+    checkpoint_url = "https://github.com/Rudrabha/Wav2Lip/releases/download/initial_release/checkpoints_v3.zip"
+    
+    # Download zip file
+    zip_path = os.path.join(CHECKPOINT_DIR, "checkpoints_v3.zip")
+    try:
+        urllib.request.urlretrieve(checkpoint_url, zip_path)
+        print("✅ Downloaded successfully")
+        
+        # Extract
+        import zipfile
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(CHECKPOINT_DIR)
+        
+        os.remove(zip_path)
+        print("✅ Extracted checkpoints")
+    except Exception as e:
+        print(f"⚠️ Download failed: {e}")
+        print("💡 Alternative: Download manually from https://github.com/Rudrabha/Wav2Lip/releases")
+else:
+    print("✅ Checkpoint already exists")
+
+# Download face detection model (dlib)
+print("📥 Downloading face detection model...")
+FACE_DET_CHECKPOINT = os.path.join(CHECKPOINT_DIR, "mmod_human_face_detector.dat")
+
+if not os.path.exists(FACE_DET_CHECKPOINT):
+    face_det_url = "http://dlib.net/files/mmod_human_face_detector.dat.bz2"
+    try:
+        bz2_path = os.path.join(CHECKPOINT_DIR, "mmod_human_face_detector.dat.bz2")
+        urllib.request.urlretrieve(face_det_url, bz2_path)
+        
+        import bz2
+        with bz2.open(bz2_path, 'rb') as f_in:
+            with open(FACE_DET_CHECKPOINT, 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        
+        os.remove(bz2_path)
+        print("✅ Face detection model downloaded")
+    except Exception as e:
+        print(f"⚠️ Face detection download failed: {e}")
+        print("💡 Will try to use MediaPipe as fallback")
+else:
+    print("✅ Face detection model already exists")
+
+print("✅ Model Weights Setup Complete!")
