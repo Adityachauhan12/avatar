@@ -1,3 +1,7 @@
+# ============================================================================
+# CELL 3: PREPROCESSING & UTILITY FUNCTIONS (CPU-ONLY)
+# ============================================================================
+
 import os
 import torch
 import cv2
@@ -7,57 +11,44 @@ from pathlib import Path
 from tqdm import tqdm
 import subprocess
 
+print("🔧 Loading CPU-only utilities...")
+
+# ============================================================================
+# CPU-ONLY VIDEO PREPROCESSOR
+# ============================================================================
+
 class VideoPreprocessor:
-    """Databricks-ready video preprocessor for Wav2Lip"""
+    """Databricks-safe video preprocessing (NO CUDA/dlib)"""
     
-    def __init__(self, checkpoint_dir="/tmp/wav2lip/checkpoints"):
-        self.checkpoint_dir = checkpoint_dir
-        os.makedirs(checkpoint_dir, exist_ok=True)
-        self.face_detector = None  # Start with None
-        
-        # Install ffmpeg if missing
-        try:
-            subprocess.run(["which", "ffmpeg"], 
-                         capture_output=True, check=True)
-        except:
-            print("📦 Installing ffmpeg...")
-            subprocess.run(["apt-get", "update", "-qq"], 
-                         capture_output=True)
-            subprocess.run(["apt-get", "install", "-y", "ffmpeg"], 
-                         capture_output=True)
-        
-        print("✅ Preprocessor initialized")
+    def __init__(self):
+        self.face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        print("✅ OpenCV Haar face detector ready (CPU)")
     
-    def extract_audio(self, video_path, sample_rate=16000):
-        """Extract audio using ffmpeg"""
-        print(f"🔊 Extracting audio from {video_path}...")
-        
+    def extract_audio(self, video_path, sr=16000):
+        """Extract audio with ffmpeg"""
         audio_path = video_path.rsplit('.', 1)[0] + '_audio.wav'
-        cmd = f"ffmpeg -y -i '{video_path}' -vn -acodec pcm_s16le -ar {sample_rate} -ac 1 '{audio_path}' -loglevel error"
-        result = subprocess.run(cmd, shell=True, capture_output=True)
+        cmd = f"ffmpeg -y -i '{video_path}' -vn -acodec pcm_s16le -ar {sr} -ac 1 '{audio_path}' -loglevel error"
+        os.system(cmd)
         
-        if result.returncode == 0 and os.path.exists(audio_path):
-            wav, sr = librosa.load(audio_path, sr=sample_rate)
-            duration = len(wav) / sample_rate
-            print(f"✅ Audio: {duration:.1f}s @ {sr}Hz")
-            return wav, sr, audio_path
-        else:
-            print("❌ Audio extraction failed")
-            return None, None, None
+        if os.path.exists(audio_path):
+            wav, sr_actual = librosa.load(audio_path, sr=sr)
+            os.remove(audio_path)  # Cleanup
+            print(f"✅ Audio: {len(wav)/sr:.1f}s")
+            return wav, sr_actual
+        return None, None
     
-    def get_mel_spectrogram(self, audio, sample_rate=16000):
-        """Mel spectrogram for Wav2Lip"""
+    def get_mel_spectrogram(self, audio, sr=16000):
+        """Wav2Lip-compatible mel spectrogram"""
         mel = librosa.feature.melspectrogram(
-            y=audio, sr=sample_rate, 
-            n_fft=1024, hop_length=256, 
+            y=audio, sr=sr, n_fft=1024, hop_length=256,
             n_mels=80, fmin=90, fmax=7600
         )
         mel_db = librosa.power_to_db(mel, ref=np.max)
         return mel_db
     
-    def extract_frames(self, video_path, face_padding=0.2):
-        """Extract ALL frames + detect faces"""
-        print(f"🎬 Processing {video_path}...")
+    def extract_frames_faces(self, video_path):
+        """Extract frames + detect faces (OpenCV CPU)"""
+        print("📹 Extracting frames + faces...")
         
         cap = cv2.VideoCapture(video_path)
         fps = cap.get(cv2.CAP_PROP_FPS)
@@ -66,76 +57,86 @@ class VideoPreprocessor:
         frames = []
         face_boxes = []
         
-        for frame_idx in tqdm(range(total_frames), desc="Frames"):
+        for i in tqdm(range(total_frames), desc="Processing"):
             ret, frame = cap.read()
-            if not ret:
-                break
+            if not ret: break
             
-            # Resize for speed (optional)
-            h, w = frame.shape[:2]
-            if max(h, w) > 720:
-                scale = 720 / max(h, w)
-                new_w, new_h = int(w * scale), int(h * scale)
-                frame = cv2.resize(frame, (new_w, new_h))
+            # Face detection
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = self.face_cascade.detectMultiScale(gray, 1.1, 4, minSize=(50, 50))
             
-            # Detect face
-            face_box = self._detect_face(frame)
+            if len(faces) > 0:
+                x, y, w, h = faces[0]
+                pad = int(0.2 * w)
+                face_box = (max(0, x-pad), max(0, y-pad), min(frame.shape[1], x+w+pad), min(frame.shape[0], y+h+pad))
+            else:
+                face_box = None
+            
             frames.append(frame)
             face_boxes.append(face_box)
         
         cap.release()
-        print(f"✅ {len(frames)} frames @ {fps:.1f}fps")
+        print(f"✅ {len(frames)} frames, {sum(1 for b in face_boxes if b is not None)} faces @ {fps:.1f}fps")
         return frames, face_boxes, fps
     
-    def _detect_face(self, frame):
-        """Multi-strategy face detection"""
-        h, w = frame.shape[:2]
+    def get_mel_chunks(self, mel, num_frames):
+        """Split mel into chunks matching video frames"""
+        mel_chunks = []
+        mel_idx_multiplier = 80.0 / 25.0  # Audio-visual sync
         
-        # Strategy 1: OpenCV Haar (fastest, built-in)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-        
-        if len(faces) > 0:
-            x, y, bw, bh = faces[0]
-            pad = int(face_padding * bw)
-            return (max(0, x-pad), max(0, y-pad), min(w, x+bw+pad), min(h, y+bh+pad))
-        
-        # Strategy 2: Simple color/blob detection (backup)
-        return self._simple_face_detection(frame)
-    
-    def _simple_face_detection(self, frame):
-        """Fallback: Skin color + motion detection"""
-        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        skin_mask = cv2.inRange(hsv, (0, 20, 70), (20, 255, 255))
-        
-        # Find largest contour
-        contours, _ = cv2.findContours(skin_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        if contours:
-            largest = max(contours, key=cv2.contourArea)
-            if cv2.contourArea(largest) > 5000:
-                x, y, w, h = cv2.boundingRect(largest)
-                return (x, y, x+w, y+h)
-        
+        i = 0
+        while True:
+            start_idx = int(i * mel_idx_multiplier)
+            if start + 16 > mel.shape[1]:
+                mel_chunks.append(mel[:, -16:])
+                break
+            mel_chunks.append(mel[:, start_idx:start_idx + 16])
+            i += 1
+            
+        # Pad/truncate to match video frames
+        while len(mel_chunks) < num_frames:
+            mel_chunks.append(mel_chunks[-1])
+        return mel_chunks[:num_frames]
+
+# Global preprocessor instance
+preprocessor = VideoPreprocessor()
+
+# ============================================================================
+# FRAME PROCESSING UTILITIES
+# ============================================================================
+
+def prepare_face_for_model(frame, face_box, img_size=96):
+    """Crop + resize face for Wav2Lip"""
+    if face_box is None:
         return None
+    
+    x1, y1, x2, y2 = face_box
+    face = frame[y1:y2, x1:x2]
+    
+    if face.size == 0:
+        return None
+    
+    # Resize to model input size
+    face_resized = cv2.resize(face, (img_size, img_size))
+    face_normalized = face_resized.astype(np.float32) / 255.0
+    return face_normalized
 
-# ============================================================================
-# USAGE - Copy this to test!
-# ============================================================================
+def blend_face_back(original_frame, generated_face, face_box):
+    """Blend generated face back into original frame"""
+    if generated_face is None or face_box is None:
+        return original_frame
+    
+    x1, y1, x2, y2 = face_box
+    h, w = generated_face.shape[:2]
+    
+    # Resize generated face to original box size
+    generated_resized = cv2.resize(generated_face, (x2-x1, y2-y1))
+    
+    # Blend (simple replace for now)
+    result = original_frame.copy()
+    result[y1:y2, x1:x2] = generated_resized
+    
+    return result
 
-CHECKPOINT_DIR = "/tmp/wav2lip/checkpoints"
-preprocessor = VideoPreprocessor(CHECKPOINT_DIR)
-
-# Test with your files
-INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4"
-# NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio.wav"
-
-# Extract everything
-frames, face_boxes, fps = preprocessor.extract_frames(INPUT_VIDEO)
-audio, sr, audio_path = preprocessor.extract_audio(INPUT_VIDEO)
-
-print(f"\n🎉 READY!")
-print(f"Frames: {len(frames)}")
-print(f"Faces detected: {sum(1 for b in face_boxes if b is not None)}")
-print(f"FPS: {fps}")
-print(f"Audio: {len(audio)/sr if audio is not None else 0:.1f}s")
+print("✅ CPU-ONLY preprocessing pipeline ready!")
+print("🎬 Ready for Wav2Lip inference in Cell 5")
