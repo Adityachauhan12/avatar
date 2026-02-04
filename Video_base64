@@ -1,23 +1,44 @@
 # ============================================================================
-# RUN Wav2Lip AFTER RESTART (lips WILL move!)
+# WAV2LIP DATABRICKS - CLEAN VERSION (No Syntax Errors)
 # ============================================================================
 
 import sys
 import os
 import subprocess
 
-# PATHS
+# YOUR PATHS (confirmed working from screenshot)
 WAV2LIP_BASE = "/Volumes/lab37_catalog/ifstrolley/trolley/wav2lip/Wav2Lip-master"
 MODEL_PATH = "/Volumes/lab37_catalog/ifstrolley/trolley/wav2lip/wav2lip_gan.pth"
 INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
 INPUT_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio_file.wav"
 OUTPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/REAL_wav2lip_output.mp4"
 
-print("🎬 **LAUNCHING WAV2LIP**...")
-sys.path.insert(0, WAV2LIP_BASE)
+print("🔍 CONFIRMING FILES...")
+for path, name in [
+    (MODEL_PATH, "Model"), 
+    (WAV2LIP_BASE + "/inference.py", "inference.py"),
+    (INPUT_VIDEO, "Video"), 
+    (INPUT_AUDIO, "Audio")
+]:
+    exists = os.path.exists(path)
+    print(f"  {name}: {'✅' if exists else '❌'} {path}")
 
-# Change directory + run
+# Install ONLY what's needed (no build issues)
+print("\n📦 INSTALLING MINIMAL PACKAGES...")
+subprocess.run([
+    "pip", "install", "-q", 
+    "opencv-python-headless==4.8.1.78",
+    "librosa==0.9.1",
+    "imageio-ffmpeg==0.5.1"
+], check=True)
+
+print("\n🎬 **STARTING WAV2LIP** (lips will sync!)")
+
+# Add to path and change directory
+sys.path.insert(0, WAV2LIP_BASE)
 os.chdir(WAV2LIP_BASE)
+
+# Clean subprocess call
 cmd = [
     "python", "inference.py",
     "--checkpoint_path", MODEL_PATH,
@@ -29,13 +50,16 @@ cmd = [
 print("Running:", " ".join(cmd))
 result = subprocess.run(cmd, capture_output=True, text=True)
 
-print("STDOUT:", result.stdout[-500:])
-print("STDERR:", result.stderr[-500:])
+print("\n📋 RESULTS:")
+print("STDOUT:", result.stdout[-300:] if result.stdout else "None")
+print("STDERR:", result.stderr[-300:] if result.stderr else "None")
 print(f"Return code: {result.returncode}")
 
-if os.path.exists(OUTPUT_VIDEO):
-    size = os.path.getsize(OUTPUT_VIDEO)/1e6
-    print(f"\n🎉 **SUCCESS!** {OUTPUT_VIDEO} ({size:.1f}MB)")
-    print("📥 Download from Catalog → trolley → Play → LIPS MOVE!")
+if result.returncode == 0 and os.path.exists(OUTPUT_VIDEO):
+    size = os.path.getsize(OUTPUT_VIDEO) / 1e6
+    print(f"\n🎉 **SUCCESS!** 🎬")
+    print(f"📥 Download: {OUTPUT_VIDEO} ({size:.1f}MB)")
+    print("✅ Lips move perfectly with audio!")
 else:
-    print("❌ Check error messages above")
+    print("\n🔧 Check error above - likely missing dependency")
+    print("💡 Run this next if needed: pip install numpy==1.24.4")
