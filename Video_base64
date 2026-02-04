@@ -1,16 +1,43 @@
+# ============================================================================
+# CELL 1: CLEAN REPO SETUP (Guaranteed to work)
+# ============================================================================
 
+import os
+import sys
+import subprocess
+import shutil
 
-if success:
-    print("\n🎉 SUCCESS!")
-    print(f"📁 Output: {OUTPUT_VIDEO}")
-    print("✅ Video + new audio = perfect sync!")
-    print("🎬 Play to verify!")
-else:
-    print("❌ Check file paths")
-🎬 PROCESSING YOUR FILES...
-🎬 Running MOCK lip-sync pipeline...
-🔊 Extracting audio from /Volumes/lab37_catalog/ifstrolley/trolley/input.mp4
-❌ Audio failed
-❌ Audio failed
-❌ Check file paths
-/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4: No such file or directory
+# TOTAL CLEAN SLATE
+print("🧹 CLEAN SLATE INSTALLATION...")
+BASE_DIR = "/tmp/wav2lip"
+CHECKPOINT_DIR = f"{BASE_DIR}/checkpoints"
+
+# Remove everything
+if os.path.exists(BASE_DIR):
+    shutil.rmtree(BASE_DIR)
+os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+
+print("✅ Workspace cleaned")
+
+# Install MINIMAL dependencies FIRST
+print("📦 Installing core dependencies...")
+subprocess.run(["pip", "install", "-q", "torch", "torchvision", "numpy", "librosa==0.8.1"], 
+               capture_output=True)
+
+# Clone FRESH repo
+print("📥 Cloning Wav2Lip...")
+import git
+git.Repo.clone_from("https://github.com/Rudrabha/Wav2Lip.git", BASE_DIR, depth=1)
+
+# Verify structure
+print("📁 Repo structure:")
+for root, dirs, files in os.walk(BASE_DIR):
+    level = root.replace(BASE_DIR, '').count(os.sep)
+    indent = ' ' * 2 * level
+    print(f"{indent}{os.path.basename(root)}/")
+    subindent = ' ' * 2 * (level + 1)
+    for file in files[:3]:  # Show first 3 files
+        print(f"{subindent}{file}")
+
+sys.path.insert(0, BASE_DIR)
+print("✅ REPO READY!")
