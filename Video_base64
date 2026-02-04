@@ -1,117 +1,141 @@
+import os
 import torch
 import cv2
 import numpy as np
 import librosa
-from scipy import signal
-import dlib
 from pathlib import Path
 from tqdm import tqdm
+import subprocess
 
 class VideoPreprocessor:
-    """Preprocess video and extract faces/audio"""
+    """Databricks-ready video preprocessor for Wav2Lip"""
     
-    def __init__(self, checkpoint_dir):
+    def __init__(self, checkpoint_dir="/tmp/wav2lip/checkpoints"):
         self.checkpoint_dir = checkpoint_dir
-        self.face_det_checkpoint = os.path.join(checkpoint_dir, "mmod_human_face_detector.dat")
+        os.makedirs(checkpoint_dir, exist_ok=True)
+        self.face_detector = None  # Start with None
         
-        # Try to load dlib face detector
+        # Install ffmpeg if missing
         try:
-            import dlib
-            self.face_detector = dlib.cnn_face_detection_model_v1(self.face_det_checkpoint)
-            print("✅ dlib face detector loaded")
+            subprocess.run(["which", "ffmpeg"], 
+                         capture_output=True, check=True)
         except:
-            print("⚠️ dlib detector not available, will use MediaPipe")
-            try:
-                import mediapipe as mp
-                self.face_detector = None
-                self.mp_face_detection = mp.solutions.face_detection.FaceDetection()
-                print("✅ MediaPipe face detector loaded")
-            except:
-                print("❌ No face detector available")
-                self.face_detector = None
+            print("📦 Installing ffmpeg...")
+            subprocess.run(["apt-get", "update", "-qq"], 
+                         capture_output=True)
+            subprocess.run(["apt-get", "install", "-y", "ffmpeg"], 
+                         capture_output=True)
+        
+        print("✅ Preprocessor initialized")
     
     def extract_audio(self, video_path, sample_rate=16000):
-        """Extract audio from video"""
+        """Extract audio using ffmpeg"""
         print(f"🔊 Extracting audio from {video_path}...")
         
-        try:
-            # Use ffmpeg to extract audio
-            audio_path = video_path.replace('.mp4', '_audio.wav')
-            cmd = f"ffmpeg -i '{video_path}' -q:a 9 -n '{audio_path}' -loglevel error"
-            os.system(cmd)
-            
-            # Load with librosa
+        audio_path = video_path.rsplit('.', 1)[0] + '_audio.wav'
+        cmd = f"ffmpeg -y -i '{video_path}' -vn -acodec pcm_s16le -ar {sample_rate} -ac 1 '{audio_path}' -loglevel error"
+        result = subprocess.run(cmd, shell=True, capture_output=True)
+        
+        if result.returncode == 0 and os.path.exists(audio_path):
             wav, sr = librosa.load(audio_path, sr=sample_rate)
-            print(f"✅ Audio extracted: {len(wav)/sample_rate:.1f}s @ {sr}Hz")
-            
+            duration = len(wav) / sample_rate
+            print(f"✅ Audio: {duration:.1f}s @ {sr}Hz")
             return wav, sr, audio_path
-        except Exception as e:
-            print(f"❌ Audio extraction failed: {e}")
+        else:
+            print("❌ Audio extraction failed")
             return None, None, None
     
     def get_mel_spectrogram(self, audio, sample_rate=16000):
-        """Convert audio to mel-spectrogram"""
-        mel = librosa.feature.melspectrogram(y=audio, sr=sample_rate)
-        
-        # Normalize
-        mel = np.log(np.clip(mel, 1e-9, None))
-        
-        return mel
+        """Mel spectrogram for Wav2Lip"""
+        mel = librosa.feature.melspectrogram(
+            y=audio, sr=sample_rate, 
+            n_fft=1024, hop_length=256, 
+            n_mels=80, fmin=90, fmax=7600
+        )
+        mel_db = librosa.power_to_db(mel, ref=np.max)
+        return mel_db
     
-    def extract_frames(self, video_path, fps=25, face_padding=10):
-        """Extract frames from video"""
-        print(f"🎬 Extracting frames from {video_path}...")
+    def extract_frames(self, video_path, face_padding=0.2):
+        """Extract ALL frames + detect faces"""
+        print(f"🎬 Processing {video_path}...")
         
         cap = cv2.VideoCapture(video_path)
-        fps_video = cap.get(cv2.CAP_PROP_FPS)
+        fps = cap.get(cv2.CAP_PROP_FPS)
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         
         frames = []
         face_boxes = []
         
-        for frame_idx in tqdm(range(total_frames)):
+        for frame_idx in tqdm(range(total_frames), desc="Frames"):
             ret, frame = cap.read()
             if not ret:
                 break
             
+            # Resize for speed (optional)
+            h, w = frame.shape[:2]
+            if max(h, w) > 720:
+                scale = 720 / max(h, w)
+                new_w, new_h = int(w * scale), int(h * scale)
+                frame = cv2.resize(frame, (new_w, new_h))
+            
             # Detect face
-            try:
-                face_box = self._detect_face(frame)
-                if face_box is not None:
-                    frames.append(frame)
-                    face_boxes.append(face_box)
-            except:
-                pass
+            face_box = self._detect_face(frame)
+            frames.append(frame)
+            face_boxes.append(face_box)
         
         cap.release()
-        
-        print(f"✅ Extracted {len(frames)} frames with detected faces")
-        return frames, face_boxes, fps_video
+        print(f"✅ {len(frames)} frames @ {fps:.1f}fps")
+        return frames, face_boxes, fps
     
     def _detect_face(self, frame):
-        """Detect face in frame (dlib)"""
-        if self.face_detector is None:
-            return None
+        """Multi-strategy face detection"""
+        h, w = frame.shape[:2]
         
-        try:
-            dets = self.face_detector(frame, 1)
-            if len(dets) > 0:
-                det = dets
-                x1 = det.rect.left()
-                y1 = det.rect.top()
-                x2 = det.rect.right()
-                y2 = det.rect.bottom()
-                return (x1, y1, x2, y2)
-        except:
-            pass
+        # Strategy 1: OpenCV Haar (fastest, built-in)
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        
+        if len(faces) > 0:
+            x, y, bw, bh = faces[0]
+            pad = int(face_padding * bw)
+            return (max(0, x-pad), max(0, y-pad), min(w, x+bw+pad), min(h, y+bh+pad))
+        
+        # Strategy 2: Simple color/blob detection (backup)
+        return self._simple_face_detection(frame)
+    
+    def _simple_face_detection(self, frame):
+        """Fallback: Skin color + motion detection"""
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        skin_mask = cv2.inRange(hsv, (0, 20, 70), (20, 255, 255))
+        
+        # Find largest contour
+        contours, _ = cv2.findContours(skin_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if contours:
+            largest = max(contours, key=cv2.contourArea)
+            if cv2.contourArea(largest) > 5000:
+                x, y, w, h = cv2.boundingRect(largest)
+                return (x, y, x+w, y+h)
         
         return None
 
+# ============================================================================
+# USAGE - Copy this to test!
+# ============================================================================
 
-
-
-ImportError: libnvJitLink.so.12: cannot open shared object file: No such file or directory
-# Initialize preprocessor
+CHECKPOINT_DIR = "/tmp/wav2lip/checkpoints"
 preprocessor = VideoPreprocessor(CHECKPOINT_DIR)
-print("✅ Preprocessor ready!")
 
+# Test with your files
+INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/input.mp4"
+# NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio.wav"
+
+# Extract everything
+frames, face_boxes, fps = preprocessor.extract_frames(INPUT_VIDEO)
+audio, sr, audio_path = preprocessor.extract_audio(INPUT_VIDEO)
+
+print(f"\n🎉 READY!")
+print(f"Frames: {len(frames)}")
+print(f"Faces detected: {sum(1 for b in face_boxes if b is not None)}")
+print(f"FPS: {fps}")
+print(f"Audio: {len(audio)/sr if audio is not None else 0:.1f}s")
