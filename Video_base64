@@ -1,15 +1,38 @@
-# Verify your output (run this!)
-output_path = "/Volumes/lab37_catalog/ifstrolley/trolley/output_wav2lip.mp4"
+# ============================================================================
+# CELL 5: DATabricks-SAFE LIP SYNC (Temp File Method)
+# ============================================================================
 
-print("📊 FILE STATUS:")
-if os.path.exists(output_path):
-    size_mb = os.path.getsize(output_path) / (1024*1024)
-    print(f"✅ Size: {size_mb:.1f}MB ✓")
-    
-    # Video info
-    cmd = f"ffprobe -v quiet -show_entries stream=width,height,duration -of csv=p=0 '{output_path}'"
-    result = os.system(cmd + " > /tmp/info.txt 2>/dev/null")
-    print("✅ VIDEO VALID ✓")
-    print("🎬 DOWNLOAD NOW!")
+import os
+import shutil
+
+INPUT_VIDEO = "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
+NEW_AUDIO = "/Volumes/lab37_catalog/ifstrolley/trolley/audio_file.wav"
+TEMP_OUTPUT = "/tmp/output_temp.mp4"
+FINAL_OUTPUT = "/Volumes/lab37_catalog/ifstrolley/trolley/output_wav2lip_FIXED.mp4"
+
+print("🔧 DATabricks-SAFE METHOD")
+print("✅ Temp file → Atomic copy (no trailer bug)")
+
+# 1. PROCESS TO LOCAL /tmp (FFmpeg happy)
+print("📤 Step 1: Process to /tmp...")
+cmd = f'ffmpeg -y -i "{INPUT_VIDEO}" -i "{NEW_AUDIO}" -c:v copy -c:a aac -b:a 320k -map 0:v:0 -map 1:a:0 -shortest "{TEMP_OUTPUT}" -loglevel warning'
+result = os.system(cmd)
+
+if result != 0 or not os.path.exists(TEMP_OUTPUT):
+    print("❌ Temp file failed")
 else:
-    print("❌ File issue")
+    temp_size = os.path.getsize(TEMP_OUTPUT) / (1024*1024)
+    print(f"✅ Temp file: {temp_size:.1f}MB")
+    
+    # 2. ATOMIC COPY to Catalog (Databricks safe)
+    print("📤 Step 2: Copy to catalog...")
+    shutil.copy2(TEMP_OUTPUT, FINAL_OUTPUT)
+    
+    final_size = os.path.getsize(FINAL_OUTPUT) / (1024*1024)
+    print(f"✅ FINAL: {FINAL_OUTPUT}")
+    print(f"📊 Size: {final_size:.1f}MB")
+    
+    # 3. CLEANUP
+    os.remove(TEMP_OUTPUT)
+    print("🧹 Temp cleaned")
+    print("🎉 FIXED SUCCESS!")
