@@ -1,25 +1,48 @@
 # ============================================================================
-# CELL 2: DOWNLOAD REAL MODEL WEIGHTS
+# CELL 3: LOAD & TEST Wav2Lip MODEL
 # ============================================================================
 
-print("📥 Downloading REAL Wav2Lip checkpoint (350MB)...")
+import sys
+import torch
+import os
 
-checkpoint_url = "https://iiitaphyd-my.sharepoint.com/:u:/g/personal/radrabha_m_research_iiit_ac_in/Eb3LeLuNggJNr1j6hrnYmFwBIY_nuK8Aqd82VIRh3vF8oQ?e=O8j6IQ"
-checkpoint_path = f"{CHECKPOINT_DIR}/wav2lip.pth"
+# Paths (same as Cell 2)
+BASE_DIR = "/tmp/wav2lip"
+CHECKPOINT_DIR = "/tmp/wav2lip/checkpoints"
+sys.path.insert(0, BASE_DIR)
 
-if not os.path.exists(checkpoint_path):
-    try:
-        import urllib.request
-        print("⏳ Downloading (3-5 min)...")
-        urllib.request.urlretrieve(checkpoint_url, checkpoint_path)
-        print("✅ Checkpoint downloaded!")
-    except:
-        # Fallback URL
-        print("💡 Manual download needed:")
-        print("   1. Go to: https://github.com/Rudrabha/Wav2Lip/releases")
-        print("   2. Download 'wav2lip_gan.pth'")
-        print("   3. Upload to /FileStore/wav2lip.pth")
-else:
-    print("✅ Checkpoint exists")
+print("🤖 LOADING Wav2Lip MODEL...")
+print(f"📁 Model path: {BASE_DIR}/models")
+print(f"📁 Checkpoint: {CHECKPOINT_DIR}/wav2lip_gan.pth")
 
-print(f"📊 Size: {os.path.getsize(checkpoint_path)/1e6:.0f}MB" if os.path.exists(checkpoint_path) else "❌ Missing")
+# Test import + load
+try:
+    from models.Wav2Lip import Wav2Lip
+    print("✅ 1. Model class imported!")
+    
+    # Create model
+    model = Wav2Lip()
+    print(f"✅ 2. Model created: {sum(p.numel() for p in model.parameters())/1e6:.1f}M params")
+    
+    # Load checkpoint
+    checkpoint_path = f"{CHECKPOINT_DIR}/wav2lip_gan.pth"
+    checkpoint = torch.load(checkpoint_path, map_location='cpu')
+    
+    # Handle checkpoint format
+    if 'state_dict' in checkpoint:
+        model.load_state_dict(checkpoint['state_dict'])
+    else:
+        model.load_state_dict(checkpoint)
+    
+    print("✅ 3. WEIGHTS LOADED!")
+    print("🎉 FULL Wav2Lip READY!")
+    
+    # Global model for later cells
+    global wav2lip_model
+    wav2lip_model = model
+    print("✅ Model saved as 'wav2lip_model' for pipeline")
+    
+except Exception as e:
+    print(f"❌ ERROR: {e}")
+    import traceback
+    traceback.print_exc()
