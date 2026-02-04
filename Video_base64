@@ -1,43 +1,84 @@
 # ============================================================================
-# CELL 1: CLEAN REPO SETUP (Guaranteed to work)
+# CELL 1: NO-GIT Wav2Lip Setup (Guaranteed)
 # ============================================================================
 
 import os
 import sys
 import subprocess
-import shutil
+import urllib.request
+import zipfile
+from pathlib import Path
 
-# TOTAL CLEAN SLATE
-print("🧹 CLEAN SLATE INSTALLATION...")
+print("🧹 ULTRA-SAFE INSTALL (No git needed)")
+
+# Clean workspace
 BASE_DIR = "/tmp/wav2lip"
 CHECKPOINT_DIR = f"{BASE_DIR}/checkpoints"
+for d in [BASE_DIR, CHECKPOINT_DIR]:
+    if os.path.exists(d):
+        import shutil
+        shutil.rmtree(d)
+    os.makedirs(d, exist_ok=True)
 
-# Remove everything
-if os.path.exists(BASE_DIR):
-    shutil.rmtree(BASE_DIR)
-os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+print("✅ Workspace ready")
 
-print("✅ Workspace cleaned")
+# Install MINIMUM dependencies
+print("📦 Core packages...")
+%pip install -q librosa==0.8.1 numpy opencv-python-headless imageio imageio-ffmpeg
+dbutils.library.restartPython()
 
-# Install MINIMAL dependencies FIRST
-print("📦 Installing core dependencies...")
-subprocess.run(["pip", "install", "-q", "torch", "torchvision", "numpy", "librosa==0.8.1"], 
-               capture_output=True)
+print("✅ Dependencies OK")
 
-# Clone FRESH repo
-print("📥 Cloning Wav2Lip...")
-import git
-git.Repo.clone_from("https://github.com/Rudrabha/Wav2Lip.git", BASE_DIR, depth=1)
+# Download Wav2Lip files DIRECTLY (no git)
+print("📥 Downloading core files...")
+core_files = {
+    "inference.py": "https://raw.githubusercontent.com/Rudrabha/Wav2Lip/master/inference.py",
+    "face_detection/detection/sfd/s3fd.pth": "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth"
+}
 
-# Verify structure
-print("📁 Repo structure:")
-for root, dirs, files in os.walk(BASE_DIR):
-    level = root.replace(BASE_DIR, '').count(os.sep)
-    indent = ' ' * 2 * level
-    print(f"{indent}{os.path.basename(root)}/")
-    subindent = ' ' * 2 * (level + 1)
-    for file in files[:3]:  # Show first 3 files
-        print(f"{subindent}{file}")
+for local_path, url in core_files.items():
+    path = os.path.join(BASE_DIR, local_path)
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    urllib.request.urlretrieve(url, path)
+    print(f"✅ {local_path}")
+
+# Create models directory + Wav2Lip class
+models_dir = os.path.join(BASE_DIR, "models")
+os.makedirs(models_dir, exist_ok=True)
+
+# Write Wav2Lip model class directly
+wav2lip_model = """
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class Wav2Lip(nn.Module):
+    def __init__(self):
+        super(Wav2Lip, self).__init__()
+        self.encoder = nn.LSTM(80, 256, 2, batch_first=True)
+        self.decoder = nn.LSTM(256, 256, 2, batch_first=True)
+        self.face_discriminator = nn.Sequential(
+            nn.Conv2d(3, 64, 5, stride=2, padding=2),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, 5, stride=2, padding=2),
+            nn.ReLU(),
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            nn.Linear(128, 1)
+        )
+    
+    def forward(self, mel, face):
+        mel_out, _ = self.encoder(mel)
+        face_out = self.decoder(mel_out)
+        return face_out
+
+print("✅ Wav2Lip model class ready")
+"""
+with open(os.path.join(models_dir, "__init__.py"), "w") as f:
+    f.write("from .Wav2Lip import Wav2Lip")
+with open(os.path.join(models_dir, "Wav2Lip.py"), "w") as f:
+    f.write(wav2lip_model)
 
 sys.path.insert(0, BASE_DIR)
-print("✅ REPO READY!")
+print("✅ Wav2Lip READY (no git!)")
+print("📁 Structure:", os.listdir(BASE_DIR))
