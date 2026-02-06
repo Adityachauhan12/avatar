@@ -1,28 +1,44 @@
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Collecting opencv-python-headless
-  Downloading opencv_python_headless-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl (60.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 8.7 MB/s eta 0:00:00
-Collecting numpy>=2
-  Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 36.0 MB/s eta 0:00:00
-Installing collected packages: numpy, opencv-python-headless
-  Attempting uninstall: numpy
-    Found existing installation: numpy 1.26.4
-    Not uninstalling numpy at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-d187b825-11f1-4fc0-9b88-3198d301ae45
-    Can't uninstall 'numpy'. No files were found to uninstall.
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
-databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
-ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 2.2.6 which is incompatible.
-ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
-torchvision 0.15.2+cu118 requires torch==2.0.1, but you have torch 2.10.0 which is incompatible.
-tensorflow 2.14.1 requires numpy<2.0.0,>=1.23.5, but you have numpy 2.2.6 which is incompatible.
-tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
-scipy 1.10.0 requires numpy<1.27.0,>=1.19.5, but you have numpy 2.2.6 which is incompatible.
-numba 0.56.4 requires numpy<1.24,>=1.18, but you have numpy 2.2.6 which is incompatible.
-langchain 0.0.348 requires numpy<2,>=1, but you have numpy 2.2.6 which is incompatible.
-databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
-databricks-feature-engineering 0.2.1 requires numpy<2,>=1.19.2, but you have numpy 2.2.6 which is incompatible.
-databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
-Successfully installed numpy-2.2.6 opencv-python-headless-4.13.0.92
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+/dbfs/FileStore/VideoReTalking
+/databricks/python/lib/python3.10/site-packages/scipy/__init__.py:143: UserWarning: A NumPy version >=1.19.5 and <1.27.0 is required for this version of SciPy (detected version 2.2.6)
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+
+A module that was compiled using NumPy 1.x cannot be run in
+NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+versions of NumPy, modules must be compiled with NumPy 2.0.
+Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+If you are a user of the module, the easiest solution will be to
+downgrade to 'numpy<2' or try to upgrade the affected module.
+We expect that some modules will need time to support NumPy 2.
+
+Traceback (most recent call last):  File "/dbfs/FileStore/VideoReTalking/inference.py", line 5, in <module>
+    from scipy.io import loadmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/__init__.py", line 98, in <module>
+    from .matlab import loadmat, savemat, whosmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/__init__.py", line 45, in <module>
+    from ._mio import loadmat, savemat, whosmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 9, in <module>
+    from ._mio4 import MatFile4Reader, MatFile4Writer
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio4.py", line 8, in <module>
+    import scipy.sparse
+  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/__init__.py", line 267, in <module>
+    from ._csr import *
+  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/_csr.py", line 10, in <module>
+    from ._sparsetools import (csr_tocsc, csr_tobsr, csr_count_blocks,
+AttributeError: _ARRAY_API not found
+Traceback (most recent call last):
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 5, in <module>
+    from scipy.io import loadmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/__init__.py", line 98, in <module>
+    from .matlab import loadmat, savemat, whosmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/__init__.py", line 45, in <module>
+    from ._mio import loadmat, savemat, whosmat
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 9, in <module>
+    from ._mio4 import MatFile4Reader, MatFile4Writer
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio4.py", line 8, in <module>
+    import scipy.sparse
+  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/__init__.py", line 267, in <module>
+    from ._csr import *
+  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/_csr.py", line 10, in <module>
+    from ._sparsetools import (csr_tocsc, csr_tobsr, csr_count_blocks,
+ImportError: numpy.core.multiarray failed to import
