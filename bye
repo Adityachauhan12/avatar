@@ -1,34 +1,35 @@
-/dbfs/FileStore/VideoReTalking
-/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "cipher": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "class": algorithms.TripleDES,
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  if align_type is 'cv2_affine':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'cv2_rigid':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'affine':
-/databricks/python/lib/python3.10/site-packages/torchvision/transforms/functional_tensor.py:5: UserWarning: The torchvision.transforms.functional_tensor module is deprecated in 0.15 and will be **removed in 0.17**. Please don't rely on it. You probably just need to use APIs in torchvision.transforms.functional or in torchvision.transforms.v2.functional.
-  warnings.warn(
-[Info] Using cuda for inference.
-Downloading: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth" to /root/.cache/torch/hub/checkpoints/s3fd-619a316812.pth
-100%|██████████████████████████████████████| 85.7M/85.7M [00:03<00:00, 25.1MB/s]
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
-    main()
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 36, in main
-    enhancer = FaceEnhancement(base_dir='checkpoints', size=512, model='GPEN-BFR-512', use_sr=False, \
-  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py", line 26, in __init__
-    self.facegan = FaceGAN(base_dir, size, model,
-  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/face_model/face_gan.py", line 22, in __init__
-    self.load_model(channel_multiplier, narrow)
-  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/face_model/face_gan.py", line 26, in load_model
-    pretrained_dict = torch.load(self.mfile, map_location=torch.device('cpu'))
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 791, in load
-    with _open_file_like(f, 'rb') as opened_file:
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 271, in _open_file_like
-    return _open_file(name_or_buffer, mode)
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 252, in __init__
-    super().__init__(open(name, mode))
-FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/GPEN-BFR-512.pth'
+Last execution failed
+42
+42
+12345678910111213141516171819202122232425262728293031323334353637383940414243
+
+print("✅ GPEN disabled completely (no model required)")
+
+RepositoryNotFoundError: 401 Client Error. (Request ID: Root=1-69859c1d-5bfdb1dd797f4b970e49f430;d88a35b3-06ed-4dbf-ba4e-b547d9ba8cc6)
+
+Repository Not Found for url: https://huggingface.co/akhaliq/GPEN/resolve/main/GPEN-BFR-512.pth.
+Please make sure you specified the correct `repo_id` and `repo_type`.
+If you are trying to access a private or gated repo, make sure you are authenticated. For more details, see https://huggingface.co/docs/huggingface_hub/authentication
+Invalid username or password.
+File /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/huggingface_hub/utils/_http.py:657, in hf_raise_for_status(response, endpoint_name)
+    656 try:
+--> 657     response.raise_for_status()
+    658 except httpx.HTTPStatusError as e:
+File /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/huggingface_hub/utils/_http.py:710, in hf_raise_for_status(response, endpoint_name)
+    689 elif error_code == "RepoNotFound" or (
+    690     response.status_code == 401
+    691     and error_message != "Invalid credentials in Authorization header"
+   (...)
+    699     # => for now, we process them as `RepoNotFound` anyway.
+    700     # See https://gist.github.com/Wauplin/46c27ad266b15998ce56a6603796f0b9" target="_blank" rel="noopener noreferrer">https://gist.github.com/Wauplin/46c27ad266b15998ce56a6603796f0b9</a></span>
+    701     message = (
+    702         f"{response.status_code} Client Error."
+    703         + "\n\n"
+   (...)
+    708         " https://huggingface.co/docs/huggingface_hub/authentication" target="_blank" rel="noopener noreferrer">https://huggingface.co/docs/huggingface_hub/authentication</a></span><span>"
+    709     )
+--> 710     raise _format(RepositoryNotFoundError, message, response) from e
+    712 elif response.status_code == 400:
+    713     message = (
+    714         f"\n\nBad request for {endpoint_name} endpoint:" if endpoint_name is not None else "\n\nBad request:"
+    715     )
