@@ -1,76 +1,28 @@
-code = r'''
-import cv2
-import numpy as np
-
-from align_faces import warp_and_crop_face, get_reference_facial_points
-from utils.inference_utils import Laplacian_Pyramid_Blending_with_mask
-
-# Face detector (SFD)
-from face_detection.api import FaceAlignment, LandmarksType
-
-
-class FaceEnhancement(object):
-    def __init__(self, base_dir='./', size=512, model=None,
-                 use_sr=False, sr_model=None,
-                 channel_multiplier=2, narrow=1, device='cuda'):
-
-        self.facedetector = FaceAlignment(
-            landmarks_type=LandmarksType._2D,
-            device=device,
-            face_detector='sfd'
-        )
-
-        self.size = size
-        self.threshold = 0.9
-
-        # Simple blending mask
-        self.mask = np.zeros((512, 512), np.float32)
-        cv2.rectangle(self.mask, (40, 40), (472, 472), (1, 1, 1), -1)
-        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 15)
-
-        self.reference_5pts = get_reference_facial_points(
-            (self.size, self.size), 0.25, (0, 0), True
-        )
-
-    def process(self, img, ori_img, bbox=None,
-                face_enhance=False, possion_blending=False):
-
-        detections = self.facedetector.get_detections_for_batch(
-            np.expand_dims(img[..., ::-1], axis=0)
-        )
-
-        if detections[0] is None:
-            return ori_img, [], []
-
-        x1, y1, x2, y2 = detections[0]
-
-        # Fake landmarks (not used)
-        facial5points = np.zeros((2, 5))
-
-        of, tfm_inv = warp_and_crop_face(
-            img, facial5points,
-            reference_pts=self.reference_5pts,
-            crop_size=(self.size, self.size)
-        )
-
-        ef = of  # no enhancement
-
-        h, w = img.shape[:2]
-        tmp_mask = cv2.resize(self.mask, ef.shape[:2])
-        tmp_mask = cv2.warpAffine(tmp_mask, tfm_inv, (w, h))
-        tmp_img = cv2.warpAffine(ef, tfm_inv, (w, h))
-
-        full_mask = tmp_mask[:, :, None]
-        out = cv2.convertScaleAbs(
-            ori_img * (1 - full_mask) + tmp_img * full_mask
-        )
-
-        return out, [], []
-'''
-
-path = "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py"
-
-with open(path, "w") as f:
-    f.write(code)
-
-print("✅ FaceEnhancement rewritten: NO GPEN, NO FaceParse, NO external models")
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Collecting opencv-python-headless
+  Downloading opencv_python_headless-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl (60.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 8.7 MB/s eta 0:00:00
+Collecting numpy>=2
+  Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 36.0 MB/s eta 0:00:00
+Installing collected packages: numpy, opencv-python-headless
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.26.4
+    Not uninstalling numpy at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-d187b825-11f1-4fc0-9b88-3198d301ae45
+    Can't uninstall 'numpy'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 2.2.6 which is incompatible.
+ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
+torchvision 0.15.2+cu118 requires torch==2.0.1, but you have torch 2.10.0 which is incompatible.
+tensorflow 2.14.1 requires numpy<2.0.0,>=1.23.5, but you have numpy 2.2.6 which is incompatible.
+tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
+scipy 1.10.0 requires numpy<1.27.0,>=1.19.5, but you have numpy 2.2.6 which is incompatible.
+numba 0.56.4 requires numpy<1.24,>=1.18, but you have numpy 2.2.6 which is incompatible.
+langchain 0.0.348 requires numpy<2,>=1, but you have numpy 2.2.6 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
+databricks-feature-engineering 0.2.1 requires numpy<2,>=1.19.2, but you have numpy 2.2.6 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
+Successfully installed numpy-2.2.6 opencv-python-headless-4.13.0.92
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
