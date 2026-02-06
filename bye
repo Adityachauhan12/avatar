@@ -1,35 +1,105 @@
-Last execution failed
-42
-42
-12345678910111213141516171819202122232425262728293031323334353637383940414243
+code = r'''
+import cv2
+import numpy as np
 
-print("✅ GPEN disabled completely (no model required)")
+from face_parse.face_parsing import FaceParse
+from align_faces import warp_and_crop_face, get_reference_facial_points
+from utils.inference_utils import Laplacian_Pyramid_Blending_with_mask
 
-RepositoryNotFoundError: 401 Client Error. (Request ID: Root=1-69859c1d-5bfdb1dd797f4b970e49f430;d88a35b3-06ed-4dbf-ba4e-b547d9ba8cc6)
+# Use built-in SFD face detector
+from face_detection.api import FaceAlignment, LandmarksType
 
-Repository Not Found for url: https://huggingface.co/akhaliq/GPEN/resolve/main/GPEN-BFR-512.pth.
-Please make sure you specified the correct `repo_id` and `repo_type`.
-If you are trying to access a private or gated repo, make sure you are authenticated. For more details, see https://huggingface.co/docs/huggingface_hub/authentication
-Invalid username or password.
-File /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/huggingface_hub/utils/_http.py:657, in hf_raise_for_status(response, endpoint_name)
-    656 try:
---> 657     response.raise_for_status()
-    658 except httpx.HTTPStatusError as e:
-File /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/huggingface_hub/utils/_http.py:710, in hf_raise_for_status(response, endpoint_name)
-    689 elif error_code == "RepoNotFound" or (
-    690     response.status_code == 401
-    691     and error_message != "Invalid credentials in Authorization header"
-   (...)
-    699     # => for now, we process them as `RepoNotFound` anyway.
-    700     # See https://gist.github.com/Wauplin/46c27ad266b15998ce56a6603796f0b9" target="_blank" rel="noopener noreferrer">https://gist.github.com/Wauplin/46c27ad266b15998ce56a6603796f0b9</a></span>
-    701     message = (
-    702         f"{response.status_code} Client Error."
-    703         + "\n\n"
-   (...)
-    708         " https://huggingface.co/docs/huggingface_hub/authentication" target="_blank" rel="noopener noreferrer">https://huggingface.co/docs/huggingface_hub/authentication</a></span><span>"
-    709     )
---> 710     raise _format(RepositoryNotFoundError, message, response) from e
-    712 elif response.status_code == 400:
-    713     message = (
-    714         f"\n\nBad request for {endpoint_name} endpoint:" if endpoint_name is not None else "\n\nBad request:"
-    715     )
+
+class FaceEnhancement(object):
+    def __init__(self, base_dir='./', size=512, model=None,
+                 use_sr=False, sr_model=None,
+                 channel_multiplier=2, narrow=1, device='cuda'):
+
+        # Face detector (SFD)
+        self.facedetector = FaceAlignment(
+            landmarks_type=LandmarksType._2D,
+            device=device,
+            face_detector='sfd'
+        )
+
+        self.faceparser = FaceParse(base_dir, device=device)
+
+        self.size = size
+        self.threshold = 0.9
+
+        # Blending mask
+        self.mask = np.zeros((512, 512), np.float32)
+        cv2.rectangle(self.mask, (26, 26), (486, 486), (1, 1, 1), -1, cv2.LINE_AA)
+        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
+        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
+
+        self.reference_5pts = get_reference_facial_points(
+            (self.size, self.size), 0.25, (0, 0), True
+        )
+
+    def mask_postprocess(self, mask, thres=20):
+        mask[:thres, :] = 0
+        mask[-thres:, :] = 0
+        mask[:, :thres] = 0
+        mask[:, -thres:] = 0
+        mask = cv2.GaussianBlur(mask, (101, 101), 11)
+        mask = cv2.GaussianBlur(mask, (101, 101), 11)
+        return mask.astype(np.float32)
+
+    def process(self, img, ori_img, bbox=None,
+                face_enhance=False, possion_blending=False):
+
+        detections = self.facedetector.get_detections_for_batch(
+            np.expand_dims(img[..., ::-1], axis=0)
+        )
+
+        facebs = []
+        landms = []
+
+        if detections[0] is not None:
+            x1, y1, x2, y2 = detections[0]
+            facebs.append([x1, y1, x2, y2, 1.0])
+            landms.append(np.zeros((5, 2)))
+
+        height, width = img.shape[:2]
+        full_mask = np.zeros((height, width), dtype=np.float32)
+        full_img = np.zeros_like(ori_img)
+
+        for faceb, facial5points in zip(facebs, landms):
+            if faceb[4] < self.threshold:
+                continue
+
+            facial5points = np.reshape(facial5points, (2, 5))
+            of, tfm_inv = warp_and_crop_face(
+                img, facial5points,
+                reference_pts=self.reference_5pts,
+                crop_size=(self.size, self.size)
+            )
+
+            ef = of  # GPEN disabled
+
+            mask_sharp = self.faceparser.process(ef, [255]*19)[0] / 255.
+            tmp_mask = self.mask_postprocess(mask_sharp)
+            tmp_mask = cv2.resize(tmp_mask, ef.shape[:2])
+
+            tmp_mask = cv2.warpAffine(tmp_mask, tfm_inv, (width, height))
+            tmp_img = cv2.warpAffine(ef, tfm_inv, (width, height))
+
+            mask = tmp_mask - full_mask
+            full_mask[mask > 0] = tmp_mask[mask > 0]
+            full_img[mask > 0] = tmp_img[mask > 0]
+
+        full_mask = full_mask[:, :, None]
+        img = cv2.convertScaleAbs(
+            ori_img * (1 - full_mask) + full_img * full_mask
+        )
+
+        return img, [], []
+'''
+
+path = "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py"
+
+with open(path, "w") as f:
+    f.write(code)
+
+print("✅ gpen_face_enhancer.py rewritten cleanly (no GPEN, no indentation issues)")
