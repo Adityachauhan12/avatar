@@ -1,2 +1,8 @@
+just now (1s)
+2
+2
 !git clone https://github.com/OpenTalker/VideoReTalking.git
 %cd VideoReTalking
+fatal: could not create work tree dir 'VideoReTalking': Permission denied
+[Errno 2] No such file or directory: 'VideoReTalking'
+/databricks/driver
