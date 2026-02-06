@@ -1,39 +1,56 @@
-
-!./inference_videoretalking.sh --help
-
-/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "cipher": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "class": algorithms.TripleDES,
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  if align_type is 'cv2_affine':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'cv2_rigid':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'affine':
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 16, in <module>
-    from third_part.GPEN.gpen_face_enhancer import FaceEnhancement
-  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py", line 11, in <module>
-    from utils.inference_utils import Laplacian_Pyramid_Blending_with_mask
-  File "/dbfs/FileStore/VideoReTalking/utils/inference_utils.py", line 5, in <module>
-    from models import load_network, load_DNet
-  File "/dbfs/FileStore/VideoReTalking/models/__init__.py", line 2, in <module>
-    from models.DNet import DNet
-  File "/dbfs/FileStore/VideoReTalking/models/DNet.py", line 10, in <module>
-    from models.base_blocks import LayerNorm2d, ADAINHourglass, FineEncoder, FineDecoder
-  File "/dbfs/FileStore/VideoReTalking/models/base_blocks.py", line 9, in <module>
-    from basicsr.archs.arch_util import default_init_weights
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/basicsr/__init__.py", line 4, in <module>
-    from .data import *
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/basicsr/data/__init__.py", line 22, in <module>
-    _dataset_modules = [importlib.import_module(f'basicsr.data.{file_name}') for file_name in dataset_filenames]
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/basicsr/data/__init__.py", line 22, in <listcomp>
-    _dataset_modules = [importlib.import_module(f'basicsr.data.{file_name}') for file_name in dataset_filenames]
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/basicsr/data/realesrgan_dataset.py", line 11, in <module>
-    from basicsr.data.degradations import circular_lowpass_kernel, random_mixed_kernels
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/basicsr/data/degradations.py", line 8, in <module>
-    from torchvision.transforms.functional_tensor import rgb_to_grayscale
-ModuleNotFoundError: No module named 'torchvision.transforms.functional_tensor'
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Found existing installation: torch 2.10.0
+Not uninstalling torch at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a
+Can't uninstall 'torch'. No files were found to uninstall.
+Found existing installation: torchvision 0.25.0
+Uninstalling torchvision-0.25.0:
+  Successfully uninstalled torchvision-0.25.0
+Found existing installation: torchaudio 2.10.0
+Not uninstalling torchaudio at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a
+Can't uninstall 'torchaudio'. No files were found to uninstall.
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cu118
+Collecting torch==2.0.1
+  Using cached https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
+Requirement already satisfied: torchvision==0.15.2 in /databricks/python3/lib/python3.10/site-packages (0.15.2+cu118)
+Collecting torchaudio==2.0.2
+  Downloading https://download.pytorch.org/whl/cu118/torchaudio-2.0.2%2Bcu118-cp310-cp310-linux_x86_64.whl (4.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 2.6 MB/s eta 0:00:00
+Requirement already satisfied: typing-extensions in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1) (4.15.0)
+Requirement already satisfied: networkx in /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages (from torch==2.0.1) (3.4.2)
+Requirement already satisfied: sympy in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1) (1.14.0)
+Requirement already satisfied: jinja2 in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1) (3.1.2)
+Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1) (3.9.0)
+Collecting triton==2.0.0
+  Downloading https://download.pytorch.org/whl/triton-2.0.0-1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (63.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 MB 2.5 MB/s eta 0:00:00
+Requirement already satisfied: numpy in /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages (from torchvision==0.15.2) (1.23.4)
+Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from torchvision==0.15.2) (2.28.1)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages (from torchvision==0.15.2) (12.1.0)
+Requirement already satisfied: cmake in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1) (3.28.1)
+Requirement already satisfied: lit in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1) (17.0.6)
+Requirement already satisfied: MarkupSafe>=2.0 in /databricks/python3/lib/python3.10/site-packages (from jinja2->torch==2.0.1) (2.1.1)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (2.0.4)
+Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (2022.12.7)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (1.26.14)
+Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (3.4)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from sympy->torch==2.0.1) (1.2.1)
+Installing collected packages: triton, torch, torchaudio
+  Attempting uninstall: triton
+    Found existing installation: triton 3.6.0
+    Not uninstalling triton at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a
+    Can't uninstall 'triton'. No files were found to uninstall.
+  Attempting uninstall: torch
+    Found existing installation: torch 2.10.0
+    Not uninstalling torch at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a
+    Can't uninstall 'torch'. No files were found to uninstall.
+  Attempting uninstall: torchaudio
+    Found existing installation: torchaudio 2.10.0
+    Not uninstalling torchaudio at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a
+    Can't uninstall 'torchaudio'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+xformers 0.0.34 requires torch==2.10.0, but you have torch 2.0.1+cu118 which is incompatible.
+bitsandbytes 0.49.1 requires torch<3,>=2.3, but you have torch 2.0.1+cu118 which is incompatible.
+Successfully installed torch-2.0.1+cu118 torchaudio-2.0.2+cu118 triton-2.0.0
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
