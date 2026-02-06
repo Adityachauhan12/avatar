@@ -1,118 +1,34 @@
-code = r'''
-import cv2
-import numpy as np
-
-# -------- Face enhancement --------
-from face_parse.face_parsing import FaceParse
-from face_model.face_gan import FaceGAN
-from align_faces import warp_and_crop_face, get_reference_facial_points
-from utils.inference_utils import Laplacian_Pyramid_Blending_with_mask
-
-# ✅ CORRECT detector import
-from face_detection.api import FaceAlignment, LandmarksType
-
-
-class FaceEnhancement(object):
-    def __init__(self, base_dir='./', size=512, model=None, use_sr=True,
-                 sr_model=None, channel_multiplier=2, narrow=1, device='cuda'):
-
-        # ✅ Use SFD via FaceAlignment (NO RetinaFace)
-        self.facedetector = FaceAlignment(
-            landmarks_type=LandmarksType._2D,
-            device=device,
-            face_detector='sfd'
-        )
-
-        self.facegan = FaceGAN(base_dir, size, model,
-                               channel_multiplier, narrow, device=device)
-        self.faceparser = FaceParse(base_dir, device=device)
-
-        self.use_sr = use_sr
-        self.size = size
-        self.threshold = 0.9
-
-        self.mask = np.zeros((512, 512), np.float32)
-        cv2.rectangle(self.mask, (26, 26), (486, 486), (1, 1, 1), -1, cv2.LINE_AA)
-        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
-        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
-
-        self.kernel = np.array([
-            [0.0625, 0.125, 0.0625],
-            [0.125, 0.25, 0.125],
-            [0.0625, 0.125, 0.0625]
-        ], dtype="float32")
-
-        self.reference_5pts = get_reference_facial_points(
-            (self.size, self.size), 0.25, (0, 0), True
-        )
-
-    def mask_postprocess(self, mask, thres=20):
-        mask[:thres, :] = 0
-        mask[-thres:, :] = 0
-        mask[:, :thres] = 0
-        mask[:, -thres:] = 0
-        mask = cv2.GaussianBlur(mask, (101, 101), 11)
-        mask = cv2.GaussianBlur(mask, (101, 101), 11)
-        return mask.astype(np.float32)
-
-    def process(self, img, ori_img, bbox=None, face_enhance=True, possion_blending=False):
-
-        detections = self.facedetector.get_detections_for_batch(
-            np.expand_dims(img[..., ::-1], axis=0)
-        )
-
-        facebs = []
-        landms = []
-
-        if detections[0] is not None:
-            x1, y1, x2, y2 = detections[0]
-            facebs.append([x1, y1, x2, y2, 1.0])
-            landms.append(np.zeros((5, 2)))
-
-        orig_faces, enhanced_faces = [], []
-        height, width = img.shape[:2]
-        full_mask = np.zeros((height, width), dtype=np.float32)
-        full_img = np.zeros(ori_img.shape, dtype=np.uint8)
-
-        for faceb, facial5points in zip(facebs, landms):
-            if faceb[4] < self.threshold:
-                continue
-
-            facial5points = np.reshape(facial5points, (2, 5))
-            of, tfm_inv = warp_and_crop_face(
-                img, facial5points,
-                reference_pts=self.reference_5pts,
-                crop_size=(self.size, self.size)
-            )
-
-            ef = self.facegan.process(of) if face_enhance else of
-
-            orig_faces.append(of)
-            enhanced_faces.append(ef)
-
-            mm = [0, 255, 255, 255, 255, 255, 255, 255, 0, 0,
-                  255, 255, 255, 0, 0, 0, 0, 0, 0]
-
-            mask_sharp = self.faceparser.process(ef, mm)[0] / 255.
-            tmp_mask = self.mask_postprocess(mask_sharp)
-            tmp_mask = cv2.resize(tmp_mask, ef.shape[:2])
-
-            tmp_mask = cv2.warpAffine(tmp_mask, tfm_inv, (width, height))
-            tmp_img = cv2.warpAffine(ef, tfm_inv, (width, height))
-
-            mask = tmp_mask - full_mask
-            full_mask[mask > 0] = tmp_mask[mask > 0]
-            full_img[mask > 0] = tmp_img[mask > 0]
-
-        full_mask = full_mask[:, :, None]
-        img = cv2.convertScaleAbs(ori_img * (1 - full_mask) + full_img * full_mask)
-
-        return img, orig_faces, enhanced_faces
-'''
-
-path = "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py"
-
-with open(path, "w") as f:
-    f.write(code)
-
-print("🔥 gpen_face_enhancer.py FORCE-OVERWRITTEN")
+/dbfs/FileStore/VideoReTalking
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if align_type is 'cv2_affine':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'cv2_rigid':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'affine':
+/databricks/python/lib/python3.10/site-packages/torchvision/transforms/functional_tensor.py:5: UserWarning: The torchvision.transforms.functional_tensor module is deprecated in 0.15 and will be **removed in 0.17**. Please don't rely on it. You probably just need to use APIs in torchvision.transforms.functional or in torchvision.transforms.v2.functional.
+  warnings.warn(
+[Info] Using cuda for inference.
+Downloading: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth" to /root/.cache/torch/hub/checkpoints/s3fd-619a316812.pth
+100%|██████████████████████████████████████| 85.7M/85.7M [00:03<00:00, 25.1MB/s]
+Traceback (most recent call last):
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
+    main()
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 36, in main
+    enhancer = FaceEnhancement(base_dir='checkpoints', size=512, model='GPEN-BFR-512', use_sr=False, \
+  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py", line 26, in __init__
+    self.facegan = FaceGAN(base_dir, size, model,
+  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/face_model/face_gan.py", line 22, in __init__
+    self.load_model(channel_multiplier, narrow)
+  File "/dbfs/FileStore/VideoReTalking/third_part/GPEN/face_model/face_gan.py", line 26, in load_model
+    pretrained_dict = torch.load(self.mfile, map_location=torch.device('cpu'))
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 791, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 271, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-58e5cb55-759f-4171-b406-098b74d9081a/lib/python3.10/site-packages/torch/serialization.py", line 252, in __init__
+    super().__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/GPEN-BFR-512.pth'
