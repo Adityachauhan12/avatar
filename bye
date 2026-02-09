@@ -1,44 +1,20 @@
-/dbfs/FileStore/VideoReTalking
-/databricks/python/lib/python3.10/site-packages/scipy/__init__.py:143: UserWarning: A NumPy version >=1.19.5 and <1.27.0 is required for this version of SciPy (detected version 2.2.6)
-  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
-
-A module that was compiled using NumPy 1.x cannot be run in
-NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
-versions of NumPy, modules must be compiled with NumPy 2.0.
-Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
-
-If you are a user of the module, the easiest solution will be to
-downgrade to 'numpy<2' or try to upgrade the affected module.
-We expect that some modules will need time to support NumPy 2.
-
-Traceback (most recent call last):  File "/dbfs/FileStore/VideoReTalking/inference.py", line 5, in <module>
-    from scipy.io import loadmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/__init__.py", line 98, in <module>
-    from .matlab import loadmat, savemat, whosmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/__init__.py", line 45, in <module>
-    from ._mio import loadmat, savemat, whosmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 9, in <module>
-    from ._mio4 import MatFile4Reader, MatFile4Writer
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio4.py", line 8, in <module>
-    import scipy.sparse
-  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/__init__.py", line 267, in <module>
-    from ._csr import *
-  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/_csr.py", line 10, in <module>
-    from ._sparsetools import (csr_tocsc, csr_tobsr, csr_count_blocks,
-AttributeError: _ARRAY_API not found
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 5, in <module>
-    from scipy.io import loadmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/__init__.py", line 98, in <module>
-    from .matlab import loadmat, savemat, whosmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/__init__.py", line 45, in <module>
-    from ._mio import loadmat, savemat, whosmat
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 9, in <module>
-    from ._mio4 import MatFile4Reader, MatFile4Writer
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio4.py", line 8, in <module>
-    import scipy.sparse
-  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/__init__.py", line 267, in <module>
-    from ._csr import *
-  File "/databricks/python/lib/python3.10/site-packages/scipy/sparse/_csr.py", line 10, in <module>
-    from ._sparsetools import (csr_tocsc, csr_tobsr, csr_count_blocks,
-ImportError: numpy.core.multiarray failed to import
+Mon Feb  9 05:10:10 2026       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.161.07             Driver Version: 535.161.07   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  Tesla T4                       Off | 00000001:00:00.0 Off |                    0 |
+| N/A   33C    P8               9W /  70W |      2MiB / 15360MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
