@@ -1,91 +1,15 @@
-code = r'''
-import cv2
-import numpy as np
+path = '/dbfs/FileStore/VideoReTalking/inference.py'
 
-from align_faces import warp_and_crop_face, get_reference_facial_points
-from utils.inference_utils import Laplacian_Pyramid_Blending_with_mask
+with open(path, 'r') as f:
+    text = f.read()
 
-# Use face_detection package (SFD detector, weights auto-download)
-from face_detection.api import FaceAlignment, LandmarksType
+# If GPEN model string exists, neutralize it
+text = text.replace("model='GPEN-BFR-512'", "model=None")
 
-
-class FaceEnhancement(object):
-    def __init__(self, base_dir='./', size=512, model=None,
-                 use_sr=False, sr_model=None,
-                 channel_multiplier=2, narrow=1, device='cuda'):
-
-        print("[Info] Initializing SFD face detector (no GPEN model files)")
-        self.facedetector = FaceAlignment(
-            landmarks_type=LandmarksType._2D,
-            device=device,
-            face_detector='sfd'
-        )
-
-        self.size = size
-        self.threshold = 0.9
-
-        # Simple rectangular blending mask
-        self.mask = np.zeros((512, 512), np.float32)
-        cv2.rectangle(self.mask, (26, 26), (486, 486), (1, 1, 1), -1, cv2.LINE_AA)
-        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
-        self.mask = cv2.GaussianBlur(self.mask, (101, 101), 11)
-
-        self.reference_5pts = get_reference_facial_points(
-            (self.size, self.size), 0.25, (0, 0), True
-        )
-
-    def process(self, img, ori_img, bbox=None,
-                face_enhance=False, possion_blending=False):
-
-        # Detect face using SFD
-        detections = self.facedetector.get_detections_for_batch(
-            np.expand_dims(img[..., ::-1], axis=0)
-        )
-
-        if detections[0] is None:
-            print("⚠️  No face detected, returning original image")
-            return ori_img, [], []
-
-        x1, y1, x2, y2 = detections[0][:4]
-        
-        # Approximate 5 landmarks inside the detected box
-        w = x2 - x1
-        h = y2 - y1
-        facial5points = np.array([
-            [x1 + 0.3*w, y1 + 0.4*h],  # left eye
-            [x1 + 0.7*w, y1 + 0.4*h],  # right eye
-            [x1 + 0.5*w, y1 + 0.6*h],  # nose
-            [x1 + 0.3*w, y1 + 0.8*h],  # left mouth
-            [x1 + 0.7*w, y1 + 0.8*h],  # right mouth
-        ]).T
-
-        # Warp face to standard position
-        of, tfm_inv = warp_and_crop_face(
-            img, facial5points,
-            reference_pts=self.reference_5pts,
-            crop_size=(self.size, self.size)
-        )
-
-        # No enhancement (GPEN disabled)
-        ef = of
-
-        # Blend back into original image
-        h, w = img.shape[:2]
-        tmp_mask = cv2.resize(self.mask, ef.shape[:2])
-        tmp_mask = cv2.warpAffine(tmp_mask, tfm_inv, (w, h))
-        tmp_img = cv2.warpAffine(ef, tfm_inv, (w, h))
-
-        full_mask = tmp_mask[:, :, None]
-        out = cv2.convertScaleAbs(
-            ori_img * (1 - full_mask) + tmp_img * full_mask
-        )
-
-        return out, [of], [ef]
-'''
-
-path = '/dbfs/FileStore/VideoReTalking/third_part/GPEN/gpen_face_enhancer.py'
+# Make sure super-resolution via GPEN is disabled
+text = text.replace('use_sr=True', 'use_sr=False')
 
 with open(path, 'w') as f:
-    f.write(code)
+    f.write(text)
 
-print("✅ GPEN replaced with simple SFD-based face enhancer (no GPEN checkpoints)")
+print("✅ inference.py patched: GPEN disabled")
