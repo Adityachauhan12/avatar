@@ -1,40 +1,52 @@
-/dbfs/FileStore/VideoReTalking
-🎬 Running VideoReTalking on your custom video and audio...
+# Create registry.py in basicsr/utils/
+registry_code = '''
+"""Registry system for architectures, models, datasets, etc."""
 
-/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "cipher": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "class": algorithms.TripleDES,
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  if align_type is 'cv2_affine':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'cv2_rigid':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'affine':
-/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-  warn(
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 17, in <module>
-    from third_part.GFPGAN.gfpgan import GFPGANer
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/__init__.py", line 3, in <module>
-    from .archs import *
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <module>
-    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <listcomp>
-    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/__init__.py", line 3, in <module>
-    from .archs import *
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <module>
-    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <listcomp>
-    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/arcface_arch.py", line 2, in <module>
-    from basicsr.utils.registry import ARCH_REGISTRY
-ModuleNotFoundError: No module named 'basicsr.utils.registry'
+class Registry:
+    """A registry to map strings to classes or functions."""
+    
+    def __init__(self, name):
+        self._name = name
+        self._obj_map = {}
+    
+    def _register_module(self, module_class, module_name=None, force=False):
+        if module_name is None:
+            module_name = module_class.__name__
+        if not force and module_name in self._obj_map:
+            raise KeyError(f'{module_name} is already registered in {self._name}')
+        self._obj_map[module_name] = module_class
+    
+    def register(self, module_name=None, force=False):
+        """Decorator to register a module."""
+        def _register(cls):
+            self._register_module(module_class=cls, module_name=module_name, force=force)
+            return cls
+        return _register
+    
+    def get(self, key):
+        """Get the registered module."""
+        return self._obj_map.get(key, None)
+    
+    def __contains__(self, key):
+        return key in self._obj_map
+    
+    def __repr__(self):
+        return f'Registry(name={self._name}, items={list(self._obj_map.keys())})'
 
-✅ Processing complete!
-📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
+
+# Create global registries (used by GFPGAN and other modules)
+ARCH_REGISTRY = Registry('arch')
+MODEL_REGISTRY = Registry('model')
+DATASET_REGISTRY = Registry('dataset')
+LOSS_REGISTRY = Registry('loss')
+METRIC_REGISTRY = Registry('metric')
+'''
+
+with open('/dbfs/FileStore/VideoReTalking/basicsr/utils/registry.py', 'w') as f:
+    f.write(registry_code)
+
+# Update utils __init__.py to include registry
+with open('/dbfs/FileStore/VideoReTalking/basicsr/utils/__init__.py', 'w') as f:
+    f.write('from .misc import scandir\nfrom .registry import ARCH_REGISTRY, MODEL_REGISTRY, DATASET_REGISTRY, LOSS_REGISTRY, METRIC_REGISTRY\n')
+
+print("✅ BasicSR registry stub created")
