@@ -1,20 +1,60 @@
-/dbfs/FileStore/VideoReTalking
-🎬 Running VideoReTalking on your custom video and audio...
+import os
 
-/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "cipher": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "class": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-  warn(
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 17, in <module>
-    from third_part.GFPGAN.gfpgan import GFPGANer
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/__init__.py", line 3, in <module>
-    from .archs import *
-  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 2, in <module>
-    from basicsr.utils import scandir
-ModuleNotFoundError: No module named 'basicsr.utils'
+# Create basicsr.utils directory
+os.makedirs('/dbfs/FileStore/VideoReTalking/basicsr/utils', exist_ok=True)
 
-✅ Processing complete!
-📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
+# Empty __init__.py
+with open('/dbfs/FileStore/VideoReTalking/basicsr/utils/__init__.py', 'w') as f:
+    f.write('from .misc import scandir\n')
+
+# Create minimal scandir function (used by GFPGAN to find files)
+misc_code = '''
+import os
+from pathlib import Path
+
+def scandir(dir_path, suffix=None, recursive=False, full_path=False):
+    """Scan a directory to find files with given suffix.
+    
+    Args:
+        dir_path (str | Path): Path of the directory.
+        suffix (str | tuple(str), optional): File suffix. Default: None.
+        recursive (bool, optional): If True, recursively scan subdirectories. Default: False.
+        full_path (bool, optional): If True, return full path. Default: False.
+        
+    Returns:
+        list[str]: List of file paths.
+    """
+    if isinstance(dir_path, (str, Path)):
+        dir_path = str(dir_path)
+    else:
+        raise TypeError('"dir_path" must be a string or Path object')
+
+    if (suffix is not None) and not isinstance(suffix, (str, tuple)):
+        raise TypeError('"suffix" must be a string or tuple of strings')
+
+    root = dir_path
+
+    def _scandir(dir_path, suffix, recursive):
+        for entry in os.scandir(dir_path):
+            if not entry.name.startswith('.') and entry.is_file():
+                if suffix is None:
+                    yield entry.path
+                elif entry.name.endswith(suffix):
+                    yield entry.path
+            elif recursive and entry.is_dir():
+                yield from _scandir(entry.path, suffix=suffix, recursive=recursive)
+
+    result = list(_scandir(dir_path, suffix=suffix, recursive=recursive))
+    
+    if full_path:
+        result = [os.path.abspath(p) for p in result]
+    else:
+        result = [os.path.relpath(p, root) for p in result]
+
+    return result
+'''
+
+with open('/dbfs/FileStore/VideoReTalking/basicsr/utils/misc.py', 'w') as f:
+    f.write(misc_code)
+
+print("✅ BasicSR utils.scandir stub created")
