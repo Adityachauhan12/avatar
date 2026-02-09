@@ -1,18 +1,22 @@
-path = '/dbfs/FileStore/VideoReTalking/inference.py'
+/dbfs/FileStore/VideoReTalking
+🎬 Running VideoReTalking on your custom video and audio...
 
-with open(path, 'r') as f:
-    lines = f.readlines()
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[Info] Using cuda for inference.
+[Info] Initializing SFD face detector (no GPEN model files)
+Downloading: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth" to /root/.cache/torch/hub/checkpoints/s3fd-619a316812.pth
+100%|██████████████████████████████████████| 85.7M/85.7M [00:03<00:00, 25.3MB/s]
+Traceback (most recent call last):
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
+    main()
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 38, in main
+    restorer = GFPGANer(model_path='checkpoints/GFPGANv1.3.pth', upscale=1, arch='clean', \
+NameError: name 'GFPGANer' is not defined
 
-# Comment out GFPGAN import line
-new_lines = []
-for line in lines:
-    if 'from third_part.GFPGAN.gfpgan import GFPGANer' in line:
-        new_lines.append(f'# {line}')  # Comment it out
-        print(f"✅ Commented out: {line.strip()}")
-    else:
-        new_lines.append(line)
-
-with open(path, 'w') as f:
-    f.writelines(new_lines)
-
-print("✅ GFPGAN import disabled in inference.py")
+✅ Processing complete!
+📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
