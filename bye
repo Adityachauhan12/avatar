@@ -1,269 +1,54 @@
-/dbfs/FileStore/VideoReTalking
-/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "cipher": algorithms.TripleDES,
-/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
-  "class": algorithms.TripleDES,
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  if align_type is 'cv2_affine':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'cv2_rigid':
-/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
-  elif align_type is 'affine':
-/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-  warn(
-[Info] Using cuda for inference.
-[Info] Initializing SFD face detector (no GPEN model files)
-[Step 0] Number of frames available for inference: 440
-[Step 1] Using saved landmarks.
-[Step 2] 3DMM Extraction In Video:: 100%|████| 440/440 [00:04<00:00, 109.22it/s]
-using expression center
-Load checkpoint from: checkpoints/DNet.pt
-Load checkpoint from: checkpoints/LNet.pth
-Load checkpoint from: checkpoints/ENet.pth
-[Step 3] Using saved stabilized video.
-[Step 4] Load audio; Length of mel chunks: 584
-[Step 5] Reference Enhancement: 100%|█████████| 440/440 [00:10<00:00, 41.67it/s]
-[Step 6] Lip Synthesis::   0%|                           | 0/37 [00:00<?, ?it/s]
-landmark Det::   0%|                                    | 0/440 [00:00<?, ?it/s]
-landmark Det::   0%|                            | 1/440 [00:05<41:00,  5.60s/it]
-landmark Det::   0%|▏                           | 2/440 [00:08<27:25,  3.76s/it]
-landmark Det::   1%|▎                           | 4/440 [00:08<10:25,  1.44s/it]
-landmark Det::   2%|▍                           | 7/440 [00:08<04:35,  1.57it/s]
-landmark Det::   2%|▌                          | 10/440 [00:08<02:37,  2.74it/s]
-landmark Det::   3%|▊                          | 14/440 [00:08<01:29,  4.76it/s]
-landmark Det::   4%|█                          | 18/440 [00:08<00:58,  7.24it/s]
-landmark Det::   5%|█▎                         | 22/440 [00:08<00:41, 10.04it/s]
-landmark Det::   6%|█▌                         | 26/440 [00:08<00:31, 13.27it/s]
-landmark Det::   7%|█▊                         | 30/440 [00:08<00:24, 16.65it/s]
-landmark Det::   8%|██                         | 34/440 [00:09<00:20, 19.97it/s]
-landmark Det::   9%|██▎                        | 38/440 [00:09<00:17, 23.06it/s]
-landmark Det::  10%|██▌                        | 42/440 [00:09<00:15, 25.71it/s]
-landmark Det::  10%|██▊                        | 46/440 [00:09<00:14, 27.57it/s]
-landmark Det::  11%|███                        | 50/440 [00:09<00:13, 29.39it/s]
-landmark Det::  12%|███▎                       | 54/440 [00:09<00:12, 30.83it/s]
-landmark Det::  13%|███▌                       | 58/440 [00:09<00:11, 31.91it/s]
-landmark Det::  14%|███▊                       | 62/440 [00:09<00:11, 32.68it/s]
-landmark Det::  15%|████                       | 66/440 [00:10<00:11, 33.39it/s]
-landmark Det::  16%|████▎                      | 70/440 [00:10<00:10, 33.85it/s]
-landmark Det::  17%|████▌                      | 74/440 [00:10<00:10, 33.53it/s]
-landmark Det::  18%|████▊                      | 78/440 [00:10<00:10, 33.77it/s]
-landmark Det::  19%|█████                      | 82/440 [00:10<00:10, 34.10it/s]
-landmark Det::  20%|█████▎                     | 86/440 [00:10<00:10, 33.91it/s]
-landmark Det::  20%|█████▌                     | 90/440 [00:10<00:10, 34.21it/s]
-landmark Det::  21%|█████▊                     | 94/440 [00:10<00:10, 34.17it/s]
-landmark Det::  22%|██████                     | 98/440 [00:10<00:10, 33.85it/s]
-landmark Det::  23%|██████                    | 102/440 [00:11<00:09, 34.15it/s]
-landmark Det::  24%|██████▎                   | 106/440 [00:11<00:09, 34.19it/s]
-landmark Det::  25%|██████▌                   | 110/440 [00:11<00:09, 34.31it/s]
-landmark Det::  26%|██████▋                   | 114/440 [00:11<00:09, 34.14it/s]
-landmark Det::  27%|██████▉                   | 118/440 [00:11<00:09, 34.43it/s]
-landmark Det::  28%|███████▏                  | 122/440 [00:11<00:09, 34.37it/s]
-landmark Det::  29%|███████▍                  | 126/440 [00:11<00:09, 33.91it/s]
-landmark Det::  30%|███████▋                  | 130/440 [00:11<00:09, 34.19it/s]
-landmark Det::  30%|███████▉                  | 134/440 [00:12<00:08, 34.39it/s]
-landmark Det::  31%|████████▏                 | 138/440 [00:12<00:08, 34.52it/s]
-landmark Det::  32%|████████▍                 | 142/440 [00:12<00:08, 34.24it/s]
-landmark Det::  33%|████████▋                 | 146/440 [00:12<00:08, 34.33it/s]
-landmark Det::  34%|████████▊                 | 150/440 [00:12<00:08, 34.47it/s]
-landmark Det::  35%|█████████                 | 154/440 [00:12<00:08, 33.61it/s]
-landmark Det::  36%|█████████▎                | 158/440 [00:12<00:08, 33.98it/s]
-landmark Det::  37%|█████████▌                | 162/440 [00:12<00:08, 34.09it/s]
-landmark Det::  38%|█████████▊                | 166/440 [00:12<00:07, 34.28it/s]
-landmark Det::  39%|██████████                | 170/440 [00:13<00:07, 34.21it/s]
-landmark Det::  40%|██████████▎               | 174/440 [00:13<00:07, 34.36it/s]
-landmark Det::  40%|██████████▌               | 178/440 [00:13<00:07, 33.68it/s]
-landmark Det::  41%|██████████▊               | 182/440 [00:13<00:07, 33.96it/s]
-landmark Det::  42%|██████████▉               | 186/440 [00:13<00:07, 33.62it/s]
-landmark Det::  43%|███████████▏              | 190/440 [00:13<00:07, 33.94it/s]
-landmark Det::  44%|███████████▍              | 194/440 [00:13<00:07, 33.44it/s]
-landmark Det::  45%|███████████▋              | 198/440 [00:13<00:07, 33.83it/s]
-landmark Det::  46%|███████████▉              | 202/440 [00:14<00:06, 34.08it/s]
-landmark Det::  47%|████████████▏             | 206/440 [00:14<00:06, 33.55it/s]
-landmark Det::  48%|████████████▍             | 210/440 [00:14<00:06, 33.76it/s]
-landmark Det::  49%|████████████▋             | 214/440 [00:14<00:06, 34.05it/s]
-landmark Det::  50%|████████████▉             | 218/440 [00:14<00:06, 33.68it/s]
-landmark Det::  50%|█████████████             | 222/440 [00:14<00:06, 33.84it/s]
-landmark Det::  51%|█████████████▎            | 226/440 [00:14<00:06, 34.08it/s]
-landmark Det::  52%|█████████████▌            | 230/440 [00:14<00:06, 34.16it/s]
-landmark Det::  53%|█████████████▊            | 234/440 [00:14<00:06, 34.28it/s]
-landmark Det::  54%|██████████████            | 238/440 [00:15<00:05, 34.28it/s]
-landmark Det::  55%|██████████████▎           | 242/440 [00:15<00:05, 34.35it/s]
-landmark Det::  56%|██████████████▌           | 246/440 [00:15<00:05, 34.17it/s]
-landmark Det::  57%|██████████████▊           | 250/440 [00:15<00:05, 34.39it/s]
-landmark Det::  58%|███████████████           | 254/440 [00:15<00:05, 34.38it/s]
-landmark Det::  59%|███████████████▏          | 258/440 [00:15<00:05, 33.86it/s]
-landmark Det::  60%|███████████████▍          | 262/440 [00:15<00:05, 34.16it/s]
-landmark Det::  60%|███████████████▋          | 266/440 [00:15<00:05, 34.16it/s]
-landmark Det::  61%|███████████████▉          | 270/440 [00:16<00:04, 34.21it/s]
-landmark Det::  62%|████████████████▏         | 274/440 [00:16<00:04, 34.26it/s]
-landmark Det::  63%|████████████████▍         | 278/440 [00:16<00:04, 34.09it/s]
-landmark Det::  64%|████████████████▋         | 282/440 [00:16<00:04, 33.39it/s]
-landmark Det::  65%|████████████████▉         | 286/440 [00:16<00:04, 33.78it/s]
-landmark Det::  66%|█████████████████▏        | 290/440 [00:16<00:04, 34.01it/s]
-landmark Det::  67%|█████████████████▎        | 294/440 [00:16<00:04, 33.83it/s]
-landmark Det::  68%|█████████████████▌        | 298/440 [00:16<00:04, 34.13it/s]
-landmark Det::  69%|█████████████████▊        | 302/440 [00:16<00:04, 34.25it/s]
-landmark Det::  70%|██████████████████        | 306/440 [00:17<00:03, 34.24it/s]
-landmark Det::  70%|██████████████████▎       | 310/440 [00:17<00:03, 33.48it/s]
-landmark Det::  71%|██████████████████▌       | 314/440 [00:17<00:03, 31.91it/s]
-landmark Det::  72%|██████████████████▊       | 318/440 [00:17<00:03, 32.17it/s]
-landmark Det::  73%|███████████████████       | 322/440 [00:17<00:03, 32.53it/s]
-landmark Det::  74%|███████████████████▎      | 326/440 [00:17<00:03, 33.21it/s]
-landmark Det::  75%|███████████████████▌      | 330/440 [00:17<00:03, 32.85it/s]
-landmark Det::  76%|███████████████████▋      | 334/440 [00:17<00:03, 33.47it/s]
-landmark Det::  77%|███████████████████▉      | 338/440 [00:18<00:03, 33.78it/s]
-landmark Det::  78%|████████████████████▏     | 342/440 [00:18<00:02, 33.76it/s]
-landmark Det::  79%|████████████████████▍     | 346/440 [00:18<00:02, 33.82it/s]
-landmark Det::  80%|████████████████████▋     | 350/440 [00:18<00:02, 34.12it/s]
-landmark Det::  80%|████████████████████▉     | 354/440 [00:18<00:02, 34.15it/s]
-landmark Det::  81%|█████████████████████▏    | 358/440 [00:18<00:02, 34.30it/s]
-landmark Det::  82%|█████████████████████▍    | 362/440 [00:18<00:02, 33.72it/s]
-landmark Det::  83%|█████████████████████▋    | 366/440 [00:18<00:02, 33.95it/s]
-landmark Det::  84%|█████████████████████▊    | 370/440 [00:18<00:02, 33.63it/s]
-landmark Det::  85%|██████████████████████    | 374/440 [00:19<00:01, 33.88it/s]
-landmark Det::  86%|██████████████████████▎   | 378/440 [00:19<00:01, 34.11it/s]
-landmark Det::  87%|██████████████████████▌   | 382/440 [00:19<00:01, 32.71it/s]
-landmark Det::  88%|██████████████████████▊   | 386/440 [00:19<00:01, 33.22it/s]
-landmark Det::  89%|███████████████████████   | 390/440 [00:19<00:01, 33.08it/s]
-landmark Det::  90%|███████████████████████▎  | 394/440 [00:19<00:01, 33.49it/s]
-landmark Det::  90%|███████████████████████▌  | 398/440 [00:19<00:01, 33.75it/s]
-landmark Det::  91%|███████████████████████▊  | 402/440 [00:19<00:01, 33.99it/s]
-landmark Det::  92%|███████████████████████▉  | 406/440 [00:20<00:00, 34.03it/s]
-landmark Det::  93%|████████████████████████▏ | 410/440 [00:20<00:00, 33.96it/s]
-landmark Det::  94%|████████████████████████▍ | 414/440 [00:20<00:00, 34.04it/s]
-landmark Det::  95%|████████████████████████▋ | 418/440 [00:20<00:00, 33.77it/s]
-landmark Det::  96%|████████████████████████▉ | 422/440 [00:20<00:00, 33.27it/s]
-landmark Det::  97%|█████████████████████████▏| 426/440 [00:20<00:00, 33.49it/s]
-landmark Det::  98%|█████████████████████████▍| 430/440 [00:20<00:00, 33.62it/s]
-landmark Det::  99%|█████████████████████████▋| 434/440 [00:20<00:00, 32.79it/s]
-landmark Det:: 100%|██████████████████████████| 440/440 [00:21<00:00, 20.87it/s]
+3 minutes ago (9s)
+1
+1
+%cd /dbfs/FileStore/
 
-100%|██████████████████████████████████████| 440/440 [00:00<00:00, 16628.62it/s]
+# Clone MuseTalk
+!git clone https://github.com/TMElyralab/MuseTalk.git
+%cd MuseTalk
 
-  0%|                                                   | 0/440 [00:00<?, ?it/s]
- 13%|█████▍                                   | 59/440 [00:00<00:00, 580.81it/s]
- 27%|██████████▊                             | 119/440 [00:00<00:00, 591.31it/s]
- 41%|████████████████▎                       | 179/440 [00:00<00:00, 593.14it/s]
- 54%|█████████████████████▋                  | 239/440 [00:00<00:00, 593.47it/s]
- 68%|███████████████████████████▏            | 299/440 [00:00<00:00, 590.81it/s]
- 82%|████████████████████████████████▋       | 359/440 [00:00<00:00, 589.11it/s]
-100%|████████████████████████████████████████| 440/440 [00:00<00:00, 588.63it/s]
+print("✅ Repository cloned!")
 
-FaceDet::   0%|                                         | 0/110 [00:00<?, ?it/s]
-FaceDet::   1%|▎                                | 1/110 [00:10<18:14, 10.04s/it]
-FaceDet::   2%|▌                                | 2/110 [00:10<08:08,  4.52s/it]
-FaceDet::   3%|▉                                | 3/110 [00:11<04:55,  2.76s/it]
-FaceDet::   4%|█▏                               | 4/110 [00:12<03:24,  1.93s/it]
-FaceDet::   5%|█▌                               | 5/110 [00:12<02:34,  1.47s/it]
-FaceDet::   5%|█▊                               | 6/110 [00:13<02:03,  1.19s/it]
-FaceDet::   6%|██                               | 7/110 [00:13<01:44,  1.02s/it]
-FaceDet::   7%|██▍                              | 8/110 [00:14<01:32,  1.11it/s]
-FaceDet::   8%|██▋                              | 9/110 [00:15<01:23,  1.21it/s]
-FaceDet::   9%|██▉                             | 10/110 [00:15<01:17,  1.29it/s]
-FaceDet::  10%|███▏                            | 11/110 [00:16<01:13,  1.35it/s]
-FaceDet::  11%|███▍                            | 12/110 [00:17<01:09,  1.40it/s]
-FaceDet::  12%|███▊                            | 13/110 [00:17<01:07,  1.44it/s]
-FaceDet::  13%|████                            | 14/110 [00:18<01:05,  1.46it/s]
-FaceDet::  14%|████▎                           | 15/110 [00:19<01:04,  1.48it/s]
-FaceDet::  15%|████▋                           | 16/110 [00:19<01:03,  1.49it/s]
-FaceDet::  15%|████▉                           | 17/110 [00:20<01:02,  1.50it/s]
-FaceDet::  16%|█████▏                          | 18/110 [00:21<01:01,  1.50it/s]
-FaceDet::  17%|█████▌                          | 19/110 [00:21<01:00,  1.51it/s]
-FaceDet::  18%|█████▊                          | 20/110 [00:22<00:59,  1.51it/s]
-FaceDet::  19%|██████                          | 21/110 [00:23<00:58,  1.51it/s]
-FaceDet::  20%|██████▍                         | 22/110 [00:23<00:58,  1.51it/s]
-FaceDet::  21%|██████▋                         | 23/110 [00:24<00:57,  1.50it/s]
-FaceDet::  22%|██████▉                         | 24/110 [00:25<00:57,  1.51it/s]
-FaceDet::  23%|███████▎                        | 25/110 [00:25<00:56,  1.51it/s]
-FaceDet::  24%|███████▌                        | 26/110 [00:26<00:55,  1.51it/s]
-FaceDet::  25%|███████▊                        | 27/110 [00:27<00:54,  1.51it/s]
-FaceDet::  25%|████████▏                       | 28/110 [00:27<00:54,  1.51it/s]
-FaceDet::  26%|████████▍                       | 29/110 [00:28<00:53,  1.51it/s]
-FaceDet::  27%|████████▋                       | 30/110 [00:29<00:52,  1.51it/s]
-FaceDet::  28%|█████████                       | 31/110 [00:29<00:52,  1.51it/s]
-FaceDet::  29%|█████████▎                      | 32/110 [00:30<00:51,  1.51it/s]
-FaceDet::  30%|█████████▌                      | 33/110 [00:31<00:51,  1.50it/s]
-FaceDet::  31%|█████████▉                      | 34/110 [00:31<00:50,  1.51it/s]
-FaceDet::  32%|██████████▏                     | 35/110 [00:32<00:49,  1.51it/s]
-FaceDet::  33%|██████████▍                     | 36/110 [00:33<00:48,  1.51it/s]
-FaceDet::  34%|██████████▊                     | 37/110 [00:33<00:48,  1.52it/s]
-FaceDet::  35%|███████████                     | 38/110 [00:34<00:47,  1.52it/s]
-FaceDet::  35%|███████████▎                    | 39/110 [00:35<00:46,  1.52it/s]
-FaceDet::  36%|███████████▋                    | 40/110 [00:35<00:46,  1.52it/s]
-FaceDet::  37%|███████████▉                    | 41/110 [00:36<00:45,  1.52it/s]
-FaceDet::  38%|████████████▏                   | 42/110 [00:37<00:44,  1.52it/s]
-FaceDet::  39%|████████████▌                   | 43/110 [00:37<00:44,  1.52it/s]
-FaceDet::  40%|████████████▊                   | 44/110 [00:38<00:43,  1.51it/s]
-FaceDet::  41%|█████████████                   | 45/110 [00:39<00:43,  1.51it/s]
-FaceDet::  42%|█████████████▍                  | 46/110 [00:39<00:42,  1.51it/s]
-FaceDet::  43%|█████████████▋                  | 47/110 [00:40<00:41,  1.51it/s]
-FaceDet::  44%|█████████████▉                  | 48/110 [00:41<00:41,  1.51it/s]
-FaceDet::  45%|██████████████▎                 | 49/110 [00:41<00:40,  1.51it/s]
-FaceDet::  45%|██████████████▌                 | 50/110 [00:42<00:39,  1.51it/s]
-FaceDet::  46%|██████████████▊                 | 51/110 [00:43<00:39,  1.51it/s]
-FaceDet::  47%|███████████████▏                | 52/110 [00:43<00:38,  1.51it/s]
-FaceDet::  48%|███████████████▍                | 53/110 [00:44<00:37,  1.50it/s]
-FaceDet::  49%|███████████████▋                | 54/110 [00:45<00:37,  1.50it/s]
-FaceDet::  50%|████████████████                | 55/110 [00:45<00:36,  1.50it/s]
-FaceDet::  51%|████████████████▎               | 56/110 [00:46<00:35,  1.50it/s]
-FaceDet::  52%|████████████████▌               | 57/110 [00:47<00:35,  1.50it/s]
-FaceDet::  53%|████████████████▊               | 58/110 [00:47<00:34,  1.51it/s]
-FaceDet::  54%|█████████████████▏              | 59/110 [00:48<00:33,  1.50it/s]
-FaceDet::  55%|█████████████████▍              | 60/110 [00:49<00:33,  1.51it/s]
-FaceDet::  55%|█████████████████▋              | 61/110 [00:49<00:32,  1.51it/s]
-FaceDet::  56%|██████████████████              | 62/110 [00:50<00:31,  1.51it/s]
-FaceDet::  57%|██████████████████▎             | 63/110 [00:51<00:31,  1.51it/s]
-FaceDet::  58%|██████████████████▌             | 64/110 [00:51<00:30,  1.51it/s]
-FaceDet::  59%|██████████████████▉             | 65/110 [00:52<00:29,  1.51it/s]
-FaceDet::  60%|███████████████████▏            | 66/110 [00:52<00:29,  1.51it/s]
-FaceDet::  61%|███████████████████▍            | 67/110 [00:53<00:28,  1.51it/s]
-FaceDet::  62%|███████████████████▊            | 68/110 [00:54<00:27,  1.51it/s]
-FaceDet::  63%|████████████████████            | 69/110 [00:54<00:27,  1.51it/s]
-FaceDet::  64%|████████████████████▎           | 70/110 [00:55<00:26,  1.51it/s]
-FaceDet::  65%|████████████████████▋           | 71/110 [00:56<00:25,  1.51it/s]
-FaceDet::  65%|████████████████████▉           | 72/110 [00:56<00:25,  1.51it/s]
-FaceDet::  66%|█████████████████████▏          | 73/110 [00:57<00:24,  1.51it/s]
-FaceDet::  67%|█████████████████████▌          | 74/110 [00:58<00:23,  1.51it/s]
-FaceDet::  68%|█████████████████████▊          | 75/110 [00:58<00:23,  1.52it/s]
-FaceDet::  69%|██████████████████████          | 76/110 [00:59<00:22,  1.52it/s]
-FaceDet::  70%|██████████████████████▍         | 77/110 [01:00<00:21,  1.51it/s]
-FaceDet::  71%|██████████████████████▋         | 78/110 [01:00<00:21,  1.50it/s]
-FaceDet::  72%|██████████████████████▉         | 79/110 [01:01<00:20,  1.51it/s]
-FaceDet::  73%|███████████████████████▎        | 80/110 [01:02<00:19,  1.51it/s]
-FaceDet::  74%|███████████████████████▌        | 81/110 [01:02<00:19,  1.51it/s]
-FaceDet::  75%|███████████████████████▊        | 82/110 [01:03<00:18,  1.51it/s]
-FaceDet::  75%|████████████████████████▏       | 83/110 [01:04<00:17,  1.51it/s]
-FaceDet::  76%|████████████████████████▍       | 84/110 [01:04<00:17,  1.50it/s]
-FaceDet::  77%|████████████████████████▋       | 85/110 [01:05<00:16,  1.51it/s]
-FaceDet::  78%|█████████████████████████       | 86/110 [01:06<00:15,  1.51it/s]
-FaceDet::  79%|█████████████████████████▎      | 87/110 [01:06<00:15,  1.51it/s]
-FaceDet::  80%|█████████████████████████▌      | 88/110 [01:07<00:14,  1.51it/s]
-FaceDet::  81%|█████████████████████████▉      | 89/110 [01:08<00:13,  1.51it/s]
-FaceDet::  82%|██████████████████████████▏     | 90/110 [01:08<00:13,  1.51it/s]
-FaceDet::  83%|██████████████████████████▍     | 91/110 [01:09<00:12,  1.52it/s]
-FaceDet::  84%|██████████████████████████▊     | 92/110 [01:10<00:11,  1.52it/s]
-FaceDet::  85%|███████████████████████████     | 93/110 [01:10<00:11,  1.52it/s]
-FaceDet::  85%|███████████████████████████▎    | 94/110 [01:11<00:10,  1.52it/s]
-FaceDet::  86%|███████████████████████████▋    | 95/110 [01:12<00:09,  1.52it/s]
-FaceDet::  87%|███████████████████████████▉    | 96/110 [01:12<00:09,  1.52it/s]
-FaceDet::  88%|████████████████████████████▏   | 97/110 [01:13<00:08,  1.52it/s]
-FaceDet::  89%|████████████████████████████▌   | 98/110 [01:14<00:07,  1.52it/s]
-FaceDet::  90%|████████████████████████████▊   | 99/110 [01:14<00:07,  1.51it/s]
-FaceDet::  91%|████████████████████████████▏  | 100/110 [01:15<00:06,  1.52it/s]
-FaceDet::  92%|████████████████████████████▍  | 101/110 [01:16<00:05,  1.52it/s]
-FaceDet::  93%|████████████████████████████▋  | 102/110 [01:16<00:05,  1.52it/s]
-FaceDet::  94%|█████████████████████████████  | 103/110 [01:17<00:04,  1.51it/s]
-FaceDet::  95%|█████████████████████████████▎ | 104/110 [01:18<00:03,  1.52it/s]
-FaceDet::  95%|█████████████████████████████▌ | 105/110 [01:18<00:03,  1.51it/s]
-FaceDet::  96%|█████████████████████████████▊ | 106/110 [01:19<00:02,  1.51it/s]
-FaceDet::  97%|██████████████████████████████▏| 107/110 [01:20<00:01,  1.51it/s]
-FaceDet::  98%|██████████████████████████████▍| 108/110 [01:20<00:01,  1.51it/s]
-FaceDet::  99%|██████████████████████████████▋| 109/110 [01:21<00:00,  1.51it/s]
-FaceDet:: 100%|███████████████████████████████| 110/110 [01:22<00:00,  1.34it/s]
-[Step 6] Lip Synthesis::   0%|                           | 0/37 [02:19<?, ?it/s]
-Traceback (most recent call last):
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 344, in <module>
-    main()
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 259, in main
-    mouse_mask[y1:y2, x1:x2]= cv2.resize(tmp_mask, (x2 - x1, y2 - y1))[:, :, np.newaxis] / 255.
-NameError: name 'tmp_mask' is not defined
+/dbfs/FileStore
+Cloning into 'MuseTalk'...
+remote: Enumerating objects: 534, done.
+remote: Counting objects: 100% (125/125), done.
+remote: Compressing objects: 100% (68/68), done.
+remote: Total 534 (delta 76), reused 57 (delta 57), pack-reused 409 (from 1)
+Receiving objects: 100% (534/534), 25.75 MiB | 11.05 MiB/s, done.
+fatal: cannot pread pack file: Invalid argument
+fatal: fetch-pack: invalid index-pack output
+[Errno 2] No such file or directory: 'MuseTalk'
+/dbfs/FileStore
+✅ Repository cloned! Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Looking in indexes: https://download.pytorch.org/whl/cu118
+Collecting torch==2.0.1
+  Downloading https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
+Requirement already satisfied: torchvision==0.15.2 in /databricks/python3/lib/python3.10/site-packages (0.15.2+cu118)
+Collecting torchaudio==2.0.2
+  Downloading https://download.pytorch.org/whl/cu118/torchaudio-2.0.2%2Bcu118-cp310-cp310-linux_x86_64.whl (4.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 59.4 MB/s eta 0:00:00
+Requirement already satisfied: networkx in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1) (2.8.4)
+Requirement already satisfied: sympy in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1) (1.14.0)
+Requirement already satisfied: jinja2 in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1) (3.1.2)
+Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1) (3.9.0)
+Requirement already satisfied: typing-extensions in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1) (4.15.0)
+Collecting triton==2.0.0
+  Downloading https://download.pytorch.org/whl/triton-2.0.0-1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (63.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 MB 9.2 MB/s eta 0:00:00
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /databricks/python3/lib/python3.10/site-packages (from torchvision==0.15.2) (9.4.0)
+Requirement already satisfied: numpy in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torchvision==0.15.2) (1.26.4)
+Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from torchvision==0.15.2) (2.28.1)
+Requirement already satisfied: cmake in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1) (3.28.1)
+Requirement already satisfied: lit in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1) (17.0.6)
+Requirement already satisfied: MarkupSafe>=2.0 in /databricks/python3/lib/python3.10/site-packages (from jinja2->torch==2.0.1) (2.1.1)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (2.0.4)
+Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (2022.12.7)
+Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (3.4)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2) (1.26.14)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from sympy->torch==2.0.1) (1.2.1)
+Installing collected packages: triton, torch, torchaudio
+  Attempting uninstall: triton
+    Found existing installation: triton 3.6.0
+    Not uninstalling trit
