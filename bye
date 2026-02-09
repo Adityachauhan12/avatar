@@ -1,4 +1,37 @@
-!find /dbfs/FileStore/VideoReTalking -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-!find /dbfs/FileStore/VideoReTalking -name "*.pyc" -delete 2>/dev/null || true
+import os
 
-print("✅ Python cache cleared")
+ckpt_dir = '/dbfs/FileStore/VideoReTalking/checkpoints'
+os.makedirs(ckpt_dir, exist_ok=True)
+
+print("⏳ Downloading model checkpoints (2–3 minutes)...\n")
+
+models = {
+    'BFM_Fitting.pth': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/BFM_Fitting.pth',
+    'DNet.pt': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/DNet.pt',
+    'ENet.pth': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/ENet.pth',
+    'LNet.pth': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/LNet.pth',
+    'ParseNet-latest.pth': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/ParseNet-latest.pth',
+    'reference_full.pkl': 'https://github.com/OpenTalker/video-retalking/releases/download/v0.0.1/reference_full.pkl',
+}
+
+for filename, url in models.items():
+    output_path = f'{ckpt_dir}/{filename}'
+    if not os.path.exists(output_path):
+        print(f"📥 Downloading {filename}...")
+        !wget -q -O {output_path} {url}
+        print(f"   ✅ {filename}")
+    else:
+        print(f"   ⏭️  {filename} already exists")
+
+# Dlib shape predictor (used for 68-point landmarks)
+shape_dat = f'{ckpt_dir}/shape_predictor_68_face_landmarks.dat'
+if not os.path.exists(shape_dat):
+    print("\n📥 Downloading shape_predictor_68_face_landmarks.dat...")
+    !wget -q -O {ckpt_dir}/shape_predictor_68_face_landmarks.dat.bz2 \
+        http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+    !bunzip2 -f {ckpt_dir}/shape_predictor_68_face_landmarks.dat.bz2
+    print("   ✅ shape_predictor_68_face_landmarks.dat")
+else:
+    print("   ⏭️  shape_predictor_68_face_landmarks.dat already exists")
+
+print("\n✅ All model checkpoints ready!")
