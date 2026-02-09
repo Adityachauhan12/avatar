@@ -1,26 +1,4 @@
-3 minutes ago (9s)
-1
-1
-%cd /dbfs/FileStore/
-
-# Clone MuseTalk
-!git clone https://github.com/TMElyralab/MuseTalk.git
-%cd MuseTalk
-
-print("✅ Repository cloned!")
-
-/dbfs/FileStore
-Cloning into 'MuseTalk'...
-remote: Enumerating objects: 534, done.
-remote: Counting objects: 100% (125/125), done.
-remote: Compressing objects: 100% (68/68), done.
-remote: Total 534 (delta 76), reused 57 (delta 57), pack-reused 409 (from 1)
-Receiving objects: 100% (534/534), 25.75 MiB | 11.05 MiB/s, done.
-fatal: cannot pread pack file: Invalid argument
-fatal: fetch-pack: invalid index-pack output
-[Errno 2] No such file or directory: 'MuseTalk'
-/dbfs/FileStore
-✅ Repository cloned! Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
 Looking in indexes: https://download.pytorch.org/whl/cu118
 Collecting torch==2.0.1
   Downloading https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
@@ -51,4 +29,18 @@ Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/pyt
 Installing collected packages: triton, torch, torchaudio
   Attempting uninstall: triton
     Found existing installation: triton 3.6.0
-    Not uninstalling trit
+    Not uninstalling triton at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2e147e00-dfc1-454e-8cba-edd6d88a7c19
+    Can't uninstall 'triton'. No files were found to uninstall.
+  Attempting uninstall: torch
+    Found existing installation: torch 2.10.0
+    Not uninstalling torch at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2e147e00-dfc1-454e-8cba-edd6d88a7c19
+    Can't uninstall 'torch'. No files were found to uninstall.
+  Attempting uninstall: torchaudio
+    Found existing installation: torchaudio 2.10.0
+    Not uninstalling torchaudio at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2e147e00-dfc1-454e-8cba-edd6d88a7c19
+    Can't uninstall 'torchaudio'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+xformers 0.0.34 requires torch==2.10.0, but you have torch 2.0.1+cu118 which is incompatible.
+bitsandbytes 0.49.1 requires torch<3,>=2.3, but you have torch 2.0.1+cu118 which is incompatible.
+Successfully installed torch-2.0.1+cu118 torchaudio-2.0.2+cu118 triton-2.0.0
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages. also got the following output on running cell 2
