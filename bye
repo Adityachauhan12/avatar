@@ -1,1 +1,79 @@
-%pip install opencv-python-headless==4.10.0.84 librosa==0.9.2 ffmpeg-python yacs av
+✅ VideoReTalking downloaded
+CODE_OF_CONDUCT.md
+LICENSE
+README.md
+cog.yaml
+docs
+examples
+inference.py
+inference_videoretalking.sh
+models
+predict.py
+quick_demo.ipynb
+requirements.txt
+third_part
+utils
+webUI.py
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Collecting opencv-python-headless==4.10.0.84
+  Downloading opencv_python_headless-4.10.0.84-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (49.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.9/49.9 MB 11.7 MB/s eta 0:00:00
+Collecting librosa==0.9.2
+  Downloading librosa-0.9.2-py3-none-any.whl (214 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 214.3/214.3 kB 19.6 MB/s eta 0:00:00
+Collecting ffmpeg-python
+  Downloading ffmpeg_python-0.2.0-py3-none-any.whl (25 kB)
+Collecting yacs
+  Downloading yacs-0.1.8-py3-none-any.whl (14 kB)
+Collecting av
+  Downloading av-16.1.0-cp310-cp310-manylinux_2_28_x86_64.whl (40.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 40.3/40.3 MB 14.6 MB/s eta 0:00:00
+Requirement already satisfied: numpy>=1.17.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from opencv-python-headless==4.10.0.84) (1.26.4)
+Requirement already satisfied: pooch>=1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (1.4.0)
+Requirement already satisfied: scikit-learn>=0.19.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from librosa==0.9.2) (1.7.2)
+Requirement already satisfied: decorator>=4.0.10 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (5.1.1)
+Requirement already satisfied: packaging>=20.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (23.2)
+Requirement already satisfied: joblib>=0.14 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (1.2.0)
+Requirement already satisfied: numba>=0.45.1 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (0.56.4)
+Requirement already satisfied: audioread>=2.1.9 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (3.0.1)
+Requirement already satisfied: scipy>=1.2.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (1.10.0)
+Requirement already satisfied: soundfile>=0.10.2 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.9.2) (0.12.1)
+Collecting resampy>=0.2.2
+  Downloading resampy-0.4.3-py3-none-any.whl (3.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 72.3 MB/s eta 0:00:00
+Requirement already satisfied: future in /databricks/python3/lib/python3.10/site-packages (from ffmpeg-python) (0.18.3)
+Requirement already satisfied: PyYAML in /databricks/python3/lib/python3.10/site-packages (from yacs) (6.0)
+Collecting numpy>=1.17.0
+  Downloading numpy-1.23.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.1/17.1 MB 29.9 MB/s eta 0:00:00
+Requirement already satisfied: setuptools in /databricks/python3/lib/python3.10/site-packages (from numba>=0.45.1->librosa==0.9.2) (65.6.3)
+Requirement already satisfied: llvmlite<0.40,>=0.39.0dev0 in /databricks/python3/lib/python3.10/site-packages (from numba>=0.45.1->librosa==0.9.2) (0.39.1)
+Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from pooch>=1.0->librosa==0.9.2) (2.28.1)
+Requirement already satisfied: appdirs in /databricks/python3/lib/python3.10/site-packages (from pooch>=1.0->librosa==0.9.2) (1.4.4)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from scikit-learn>=0.19.1->librosa==0.9.2) (3.6.0)
+Requirement already satisfied: cffi>=1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from soundfile>=0.10.2->librosa==0.9.2) (2.0.0)
+Requirement already satisfied: pycparser in /databricks/python3/lib/python3.10/site-packages (from cffi>=1.0->soundfile>=0.10.2->librosa==0.9.2) (2.21)
+Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->pooch>=1.0->librosa==0.9.2) (3.4)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->pooch>=1.0->librosa==0.9.2) (2.0.4)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->pooch>=1.0->librosa==0.9.2) (1.26.14)
+Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->pooch>=1.0->librosa==0.9.2) (2022.12.7)
+Installing collected packages: yacs, numpy, ffmpeg-python, av, opencv-python-headless, resampy, librosa
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.26.4
+    Not uninstalling numpy at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-84bf4aaf-11bc-4350-92d0-243d474ccc05
+    Can't uninstall 'numpy'. No files were found to uninstall.
+  Attempting uninstall: librosa
+    Found existing installation: librosa 0.10.1
+    Not uninstalling librosa at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-84bf4aaf-11bc-4350-92d0-243d474ccc05
+    Can't uninstall 'librosa'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+skops 0.13.0 requires numpy>=1.25.0, but you have numpy 1.23.5 which is incompatible.
+ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
+torchvision 0.15.2+cu118 requires torch==2.0.1, but you have torch 2.10.0 which is incompatible.
+tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
+Successfully installed av-16.1.0 ffmpeg-python-0.2.0 librosa-0.9.2 numpy-1.23.5 opencv-python-headless-4.10.0.84 resampy-0.4.3 yacs-0.1.8
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
