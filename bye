@@ -1,4 +1,8 @@
-✅ PyTorch: 2.10.0+cu128
-✅ CUDA available: True
-✅ NumPy: 1.26.4
-✅ Pandas: 1.5.3
+%sh
+cd /dbfs/FileStore
+rm -rf VideoReTalking
+wget -q https://github.com/OpenTalker/video-retalking/archive/refs/heads/main.zip
+unzip -q main.zip
+mv video-retalking-main VideoReTalking
+echo "✅ VideoReTalking downloaded"
+ls VideoReTalking
