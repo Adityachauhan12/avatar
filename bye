@@ -1,32 +1,11 @@
-3 minutes ago (2m)
-12
-12
-        http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
-    !bunzip2 -f {ckpt_dir}/shape_predictor_68_face_landmarks.dat.bz2
-    print("   ✅ shape_predictor_68_face_landmarks.dat")
-else:
-    print("   ⏭️  shape_predictor_68_face_landmarks.dat already exists")
+%cd /dbfs/FileStore/VideoReTalking
 
-print("\n✅ All model checkpoints ready!")
-⏳ Downloading model checkpoints (2–3 minutes)...
+print("🎬 Running VideoReTalking on your custom video and audio...\n")
 
-📥 Downloading BFM_Fitting.pth...
-   ✅ BFM_Fitting.pth
-📥 Downloading DNet.pt...
-   ✅ DNet.pt
-📥 Downloading ENet.pth...
-   ✅ ENet.pth
-📥 Downloading LNet.pth...
-   ✅ LNet.pth
-📥 Downloading ParseNet-latest.pth...
-   ✅ ParseNet-latest.pth
-📥 Downloading reference_full.pkl...
-   ✅ reference_full.pkl
+!python inference.py \
+  --face "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4" \
+  --audio "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav" \
+  --outfile "/Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4"
 
-📥 Downloading shape_predictor_68_face_landmarks.dat...
-   ✅ shape_predictor_68_face_landmarks.dat
-
-✅ All model checkpoints ready!
-/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
-/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4
-also i want to save the video here as Output_videoretalking in catalogs only
+print("\n✅ Processing complete!")
+print("📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4")
