@@ -12,28 +12,19 @@
 [Step 0] Number of frames available for inference: 440
 [Step 1] Using saved landmarks.
 Traceback (most recent call last):
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 39, in _open_file
-    return open(file_like, mode), True
-FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/BFM/similarity_Lm3D_all.mat'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
   File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
     main()
   File "/dbfs/FileStore/VideoReTalking/inference.py", line 90, in main
     lm3d_std = load_lm3d('checkpoints/BFM')
   File "/dbfs/FileStore/VideoReTalking/third_part/face3d/util/load_mats.py", line 107, in load_lm3d
     Lm3D = loadmat(osp.join(bfm_folder, 'similarity_Lm3D_all.mat'))
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 225, in loadmat
-    with _open_file_context(file_name, appendmat) as f:
-  File "/usr/lib/python3.10/contextlib.py", line 135, in __enter__
-    return next(self.gen)
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 17, in _open_file_context
-    f, opened = _open_file(file_like, appendmat, mode)
-  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 45, in _open_file
-    return open(file_like, mode), True
-FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/BFM/similarity_Lm3D_all.mat'
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 226, in loadmat
+    MR, _ = mat_reader_factory(f, **kwargs)
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_mio.py", line 74, in mat_reader_factory
+    mjv, mnv = _get_matfile_version(byte_stream)
+  File "/databricks/python/lib/python3.10/site-packages/scipy/io/matlab/_miobase.py", line 234, in _get_matfile_version
+    raise MatReadError("Mat file appears to be empty")
+scipy.io.matlab._miobase.MatReadError: Mat file appears to be empty
 
 ✅ Processing complete!
 📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
