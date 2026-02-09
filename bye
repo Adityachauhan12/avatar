@@ -1,23 +1,9 @@
-path = '/dbfs/FileStore/VideoReTalking/inference.py'
+/dbfs/FileStore/VideoReTalking
+🎬 Running VideoReTalking on your custom video and audio...
 
-with open(path, 'r') as f:
-    lines = f.readlines()
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 39
+    channel_multiplier=2, bg_upsampler=None)
+IndentationError: unexpected indent
 
-# Comment out GFPGANer instantiation and usage
-new_lines = []
-for line in lines:
-    # Comment out the line that creates GFPGANer
-    if 'restorer = GFPGANer' in line or 'restorer=' in line and 'GFPGANer' in line:
-        new_lines.append(f'    # {line.lstrip()}')  # Comment with proper indent
-        print(f"✅ Commented out: {line.strip()}")
-    # Also comment out any lines using restorer.enhance()
-    elif 'restorer.enhance' in line:
-        new_lines.append(f'    # {line.lstrip()}')
-        print(f"✅ Commented out: {line.strip()}")
-    else:
-        new_lines.append(line)
-
-with open(path, 'w') as f:
-    f.writelines(new_lines)
-
-print("\n✅ GFPGANer usage disabled in inference.py")
+✅ Processing complete!
+📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
