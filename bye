@@ -1,9 +1,42 @@
-/dbfs/FileStore/VideoReTalking
-🎬 Running VideoReTalking on your custom video and audio...
+path = '/dbfs/FileStore/VideoReTalking/inference.py'
 
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 39
-    channel_multiplier=2, bg_upsampler=None)
-IndentationError: unexpected indent
+with open(path, 'r') as f:
+    text = f.read()
 
-✅ Processing complete!
-📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
+# Find and replace the entire GFPGANer block (multi-line statement)
+# Look for the pattern and comment out all related lines
+import re
+
+# Pattern 1: Comment out GFPGANer creation (may span multiple lines)
+text = re.sub(
+    r'(\s*)(restorer\s*=\s*GFPGANer\([^)]*\)[^;]*)',
+    r'\1# \2  # GFPGAN disabled',
+    text,
+    flags=re.DOTALL
+)
+
+# Pattern 2: Comment out any continuation lines with parameters
+lines = text.split('\n')
+new_lines = []
+skip_next = False
+
+for i, line in enumerate(lines):
+    # If previous line had commented GFPGANer and this is a continuation
+    if skip_next and ('channel_multiplier' in line or 'bg_upsampler' in line or 'arch=' in line):
+        new_lines.append(f'    # {line.lstrip()}')
+        if ')' in line:  # End of statement
+            skip_next = False
+    elif '# restorer = GFPGANer' in line or '# restorer=' in line and 'GFPGANer' in line:
+        new_lines.append(line)
+        skip_next = True
+    elif 'restorer.enhance' in line:
+        new_lines.append(f'    # {line.lstrip()}')
+    else:
+        new_lines.append(line)
+
+text = '\n'.join(new_lines)
+
+with open(path, 'w') as f:
+    f.write(text)
+
+print("✅ GFPGANer block properly commented out")
