@@ -1,15 +1,4 @@
-path = '/dbfs/FileStore/VideoReTalking/inference.py'
+!find /dbfs/FileStore/VideoReTalking -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+!find /dbfs/FileStore/VideoReTalking -name "*.pyc" -delete 2>/dev/null || true
 
-with open(path, 'r') as f:
-    text = f.read()
-
-# If GPEN model string exists, neutralize it
-text = text.replace("model='GPEN-BFR-512'", "model=None")
-
-# Make sure super-resolution via GPEN is disabled
-text = text.replace('use_sr=True', 'use_sr=False')
-
-with open(path, 'w') as f:
-    f.write(text)
-
-print("✅ inference.py patched: GPEN disabled")
+print("✅ Python cache cleared")
