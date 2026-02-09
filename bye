@@ -1,8 +1,1 @@
-%sh
-cd /dbfs/FileStore
-rm -rf VideoReTalking
-wget -q https://github.com/OpenTalker/video-retalking/archive/refs/heads/main.zip
-unzip -q main.zip
-mv video-retalking-main VideoReTalking
-echo "✅ VideoReTalking downloaded"
-ls VideoReTalking
+%pip install opencv-python-headless==4.10.0.84 librosa==0.9.2 ffmpeg-python yacs av
