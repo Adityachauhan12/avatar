@@ -1,12 +1,10 @@
-import torch
-import cv2
-import numpy as np
-import librosa
-import face_alignment
-
-print("✅ PyTorch:", torch.__version__)
-print("✅ CUDA available:", torch.cuda.is_available())
-print("✅ OpenCV:", cv2.__version__)
-print("✅ NumPy:", np.__version__)
-print("✅ Librosa:", librosa.__version__)
-print("✅ Face-alignment imported successfully")
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+✅ PyTorch: 2.10.0+cu128
+✅ CUDA available: True
+✅ OpenCV: 4.11.0
+✅ NumPy: 1.23.5
+✅ Librosa: 0.9.2
+✅ Face-alignment imported successfully
