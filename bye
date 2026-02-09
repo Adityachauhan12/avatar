@@ -1,42 +1,32 @@
-path = '/dbfs/FileStore/VideoReTalking/inference.py'
+/dbfs/FileStore/VideoReTalking
+🎬 Running VideoReTalking on your custom video and audio...
 
-with open(path, 'r') as f:
-    text = f.read()
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if align_type is 'cv2_affine':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'cv2_rigid':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'affine':
+/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[Info] Using cuda for inference.
+[Info] Initializing SFD face detector (no GPEN model files)
+[Step 0] Number of frames available for inference: 440
+[Step 1] Landmarks Extraction in Video.
+Traceback (most recent call last):
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
+    main()
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 81, in main
+    kp_extractor = KeypointExtractor()
+  File "/dbfs/FileStore/VideoReTalking/third_part/face3d/extract_kp_videos.py", line 18, in __init__
+    self.detector = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D, device=device)   
+  File "/usr/lib/python3.10/enum.py", line 437, in __getattr__
+    raise AttributeError(name) from None
+AttributeError: _2D
 
-# Find and replace the entire GFPGANer block (multi-line statement)
-# Look for the pattern and comment out all related lines
-import re
-
-# Pattern 1: Comment out GFPGANer creation (may span multiple lines)
-text = re.sub(
-    r'(\s*)(restorer\s*=\s*GFPGANer\([^)]*\)[^;]*)',
-    r'\1# \2  # GFPGAN disabled',
-    text,
-    flags=re.DOTALL
-)
-
-# Pattern 2: Comment out any continuation lines with parameters
-lines = text.split('\n')
-new_lines = []
-skip_next = False
-
-for i, line in enumerate(lines):
-    # If previous line had commented GFPGANer and this is a continuation
-    if skip_next and ('channel_multiplier' in line or 'bg_upsampler' in line or 'arch=' in line):
-        new_lines.append(f'    # {line.lstrip()}')
-        if ')' in line:  # End of statement
-            skip_next = False
-    elif '# restorer = GFPGANer' in line or '# restorer=' in line and 'GFPGANer' in line:
-        new_lines.append(line)
-        skip_next = True
-    elif 'restorer.enhance' in line:
-        new_lines.append(f'    # {line.lstrip()}')
-    else:
-        new_lines.append(line)
-
-text = '\n'.join(new_lines)
-
-with open(path, 'w') as f:
-    f.write(text)
-
-print("✅ GFPGANer block properly commented out")
+✅ Processing complete!
+📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
