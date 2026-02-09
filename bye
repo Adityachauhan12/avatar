@@ -1,20 +1,8 @@
-Mon Feb  9 05:10:10 2026       
-+---------------------------------------------------------------------------------------+
-| NVIDIA-SMI 535.161.07             Driver Version: 535.161.07   CUDA Version: 12.2     |
-|-----------------------------------------+----------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
-|                                         |                      |               MIG M. |
-|=========================================+======================+======================|
-|   0  Tesla T4                       Off | 00000001:00:00.0 Off |                    0 |
-| N/A   33C    P8               9W /  70W |      2MiB / 15360MiB |      0%      Default |
-|                                         |                      |                  N/A |
-+-----------------------------------------+----------------------+----------------------+
-                                                                                         
-+---------------------------------------------------------------------------------------+
-| Processes:                                                                            |
-|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
-|        ID   ID                                                             Usage      |
-|=======================================================================================|
-|  No running processes found                                                           |
-+---------------------------------------------------------------------------------------+
+import torch
+import numpy as np
+import pandas as pd
+
+print("✅ PyTorch:", torch.__version__)
+print("✅ CUDA available:", torch.cuda.is_available())
+print("✅ NumPy:", np.__version__)
+print("✅ Pandas:", pd.__version__)
