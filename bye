@@ -1,4 +1,40 @@
-!find /dbfs/FileStore/VideoReTalking -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
-!find /dbfs/FileStore/VideoReTalking -name "*.pyc" -delete 2>/dev/null || true
+/dbfs/FileStore/VideoReTalking
+🎬 Running VideoReTalking on your custom video and audio...
 
-print("✅ Cache cleared")
+/databricks/python/lib/python3.10/site-packages/paramiko/pkey.py:82: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "cipher": algorithms.TripleDES,
+/databricks/python/lib/python3.10/site-packages/paramiko/transport.py:260: CryptographyDeprecationWarning: TripleDES has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.TripleDES and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  "class": algorithms.TripleDES,
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:251: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  if align_type is 'cv2_affine':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:254: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'cv2_rigid':
+/dbfs/FileStore/VideoReTalking/third_part/GPEN/align_faces.py:257: SyntaxWarning: "is" with a literal. Did you mean "=="?
+  elif align_type is 'affine':
+/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+Traceback (most recent call last):
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 17, in <module>
+    from third_part.GFPGAN.gfpgan import GFPGANer
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/__init__.py", line 3, in <module>
+    from .archs import *
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <module>
+    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <listcomp>
+    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/__init__.py", line 3, in <module>
+    from .archs import *
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <module>
+    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/__init__.py", line 10, in <listcomp>
+    _arch_modules = [importlib.import_module(f'gfpgan.archs.{file_name}') for file_name in arch_filenames]
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "/dbfs/FileStore/VideoReTalking/third_part/GFPGAN/gfpgan/archs/arcface_arch.py", line 2, in <module>
+    from basicsr.utils.registry import ARCH_REGISTRY
+ModuleNotFoundError: No module named 'basicsr.utils.registry'
+
+✅ Processing complete!
+📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
