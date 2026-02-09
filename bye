@@ -17,16 +17,23 @@
 [Info] Initializing SFD face detector (no GPEN model files)
 [Step 0] Number of frames available for inference: 440
 [Step 1] Landmarks Extraction in Video.
+Downloading: "https://www.adrianbulat.com/downloads/python-fan/2DFAN4-cd938726ad.zip" to /root/.cache/torch/hub/checkpoints/2DFAN4-cd938726ad.zip
+100%|██████████████████████████████████████| 91.9M/91.9M [00:03<00:00, 26.4MB/s]
+landmark Det:: 100%|██████████████████████████| 440/440 [00:23<00:00, 19.07it/s]
 Traceback (most recent call last):
   File "/dbfs/FileStore/VideoReTalking/inference.py", line 345, in <module>
     main()
-  File "/dbfs/FileStore/VideoReTalking/inference.py", line 81, in main
-    kp_extractor = KeypointExtractor()
-  File "/dbfs/FileStore/VideoReTalking/third_part/face3d/extract_kp_videos.py", line 18, in __init__
-    self.detector = face_alignment.FaceAlignment(face_alignment.LandmarksType._2D, device=device)   
-  File "/usr/lib/python3.10/enum.py", line 437, in __getattr__
-    raise AttributeError(name) from None
-AttributeError: _2D
+  File "/dbfs/FileStore/VideoReTalking/inference.py", line 89, in main
+    net_recon = load_face3d_net(args.face3d_net_path, device)
+  File "/dbfs/FileStore/VideoReTalking/utils/inference_utils.py", line 250, in load_face3d_net
+    checkpoint = torch.load(ckpt_path, map_location=device)    
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/torch/serialization.py", line 1500, in load
+    with _open_file_like(f, "rb") as opened_file:
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/torch/serialization.py", line 768, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/torch/serialization.py", line 749, in __init__
+    super().__init__(open(name, mode))  # noqa: SIM115
+FileNotFoundError: [Errno 2] No such file or directory: 'checkpoints/face3d_pretrain_epoch_20.pth'
 
 ✅ Processing complete!
 📁 Output saved to: /Volumes/lab37_catalog/ifstrolley/trolley/Output_videoretalking.mp4
