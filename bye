@@ -1,251 +1,135 @@
-🔨 Building fresh environment at /local_disk0/tmp/musetalk_clean_env...
-⬇️ Downloading get-pip.py...
-🔧 Bootstrapping pip...
-Collecting pip
-  Downloading pip-26.0.1-py3-none-any.whl.metadata (4.7 kB)
-Collecting setuptools
-  Downloading setuptools-82.0.0-py3-none-any.whl.metadata (6.6 kB)
-Collecting wheel
-  Downloading wheel-0.46.3-py3-none-any.whl.metadata (2.4 kB)
-Collecting packaging>=24.0 (from wheel)
-  Downloading packaging-26.0-py3-none-any.whl.metadata (3.3 kB)
-Downloading pip-26.0.1-py3-none-any.whl (1.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 52.3 MB/s  0:00:00
-Downloading setuptools-82.0.0-py3-none-any.whl (1.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 40.2 MB/s  0:00:00
-Downloading wheel-0.46.3-py3-none-any.whl (30 kB)
-Downloading packaging-26.0-py3-none-any.whl (74 kB)
-Installing collected packages: setuptools, pip, packaging, wheel
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [wheel]32m2/4 [packaging]
-Successfully installed packaging-26.0 pip-26.0.1 setuptools-82.0.0 wheel-0.46.3
-📦 Installing base dependencies...
-Collecting torch==2.0.1
-  Downloading torch-2.0.1-cp310-cp310-manylinux1_x86_64.whl.metadata (24 kB)
-Collecting torchvision==0.15.2
-  Downloading torchvision-0.15.2-cp310-cp310-manylinux1_x86_64.whl.metadata (11 kB)
-Collecting torchaudio==2.0.2
-  Downloading torchaudio-2.0.2-cp310-cp310-manylinux1_x86_64.whl.metadata (1.2 kB)
-Collecting numpy==1.23.5
-  Downloading numpy-1.23.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.3 kB)
-Collecting diffusers==0.27.2
-  Downloading diffusers-0.27.2-py3-none-any.whl.metadata (18 kB)
-Collecting accelerate==0.28.0
-  Downloading accelerate-0.28.0-py3-none-any.whl.metadata (18 kB)
-Collecting transformers==4.39.2
-  Downloading transformers-4.39.2-py3-none-any.whl.metadata (134 kB)
-Collecting huggingface_hub==0.25.2
-  Downloading huggingface_hub-0.25.2-py3-none-any.whl.metadata (13 kB)
-Collecting omegaconf==2.3.0
-  Downloading omegaconf-2.3.0-py3-none-any.whl.metadata (3.9 kB)
-Collecting tensorboardX==2.6.2.2
-  Downloading tensorboardX-2.6.2.2-py2.py3-none-any.whl.metadata (5.8 kB)
-Collecting ffmpeg-python==0.2.0
-  Downloading ffmpeg_python-0.2.0-py3-none-any.whl.metadata (1.7 kB)
-Collecting lpips
-  Downloading lpips-0.1.4-py3-none-any.whl.metadata (10 kB)
-Collecting facexlib
-  Downloading facexlib-0.3.0-py3-none-any.whl.metadata (4.6 kB)
-Collecting soundfile
-  Downloading soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl.metadata (16 kB)
-Collecting filelock (from torch==2.0.1)
-  Downloading filelock-3.20.3-py3-none-any.whl.metadata (2.1 kB)
-Collecting typing-extensions (from torch==2.0.1)
-  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
-Collecting sympy (from torch==2.0.1)
-  Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
-Collecting networkx (from torch==2.0.1)
-  Downloading networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
-Collecting jinja2 (from torch==2.0.1)
-  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
-Collecting nvidia-cuda-nvrtc-cu11==11.7.99 (from torch==2.0.1)
-  Downloading nvidia_cuda_nvrtc_cu11-11.7.99-2-py3-none-manylinux1_x86_64.whl.metadata (1.5 kB)
-Collecting nvidia-cuda-runtime-cu11==11.7.99 (from torch==2.0.1)
-  Downloading nvidia_cuda_runtime_cu11-11.7.99-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cuda-cupti-cu11==11.7.101 (from torch==2.0.1)
-  Downloading nvidia_cuda_cupti_cu11-11.7.101-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cudnn-cu11==8.5.0.96 (from torch==2.0.1)
-  Downloading nvidia_cudnn_cu11-8.5.0.96-2-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cublas-cu11==11.10.3.66 (from torch==2.0.1)
-  Downloading nvidia_cublas_cu11-11.10.3.66-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cufft-cu11==10.9.0.58 (from torch==2.0.1)
-  Downloading nvidia_cufft_cu11-10.9.0.58-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
-Collecting nvidia-curand-cu11==10.2.10.91 (from torch==2.0.1)
-  Downloading nvidia_curand_cu11-10.2.10.91-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cusolver-cu11==11.4.0.1 (from torch==2.0.1)
-  Downloading nvidia_cusolver_cu11-11.4.0.1-2-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-cusparse-cu11==11.7.4.91 (from torch==2.0.1)
-  Downloading nvidia_cusparse_cu11-11.7.4.91-py3-none-manylinux1_x86_64.whl.metadata (1.6 kB)
-Collecting nvidia-nccl-cu11==2.14.3 (from torch==2.0.1)
-  Downloading nvidia_nccl_cu11-2.14.3-py3-none-manylinux1_x86_64.whl.metadata (1.8 kB)
-Collecting nvidia-nvtx-cu11==11.7.91 (from torch==2.0.1)
-  Downloading nvidia_nvtx_cu11-11.7.91-py3-none-manylinux1_x86_64.whl.metadata (1.7 kB)
-Collecting triton==2.0.0 (from torch==2.0.1)
-  Downloading triton-2.0.0-1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (1.0 kB)
-Collecting requests (from torchvision==0.15.2)
-  Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
-Collecting pillow!=8.3.*,>=5.3.0 (from torchvision==0.15.2)
-  Downloading pillow-12.1.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
-Collecting importlib-metadata (from diffusers==0.27.2)
-  Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
-Collecting regex!=2019.12.17 (from diffusers==0.27.2)
-  Downloading regex-2026.1.15-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
-Collecting safetensors>=0.3.1 (from diffusers==0.27.2)
-  Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from accelerate==0.28.0) (26.0)
-Collecting psutil (from accelerate==0.28.0)
-  Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
-Collecting pyyaml (from accelerate==0.28.0)
-  Downloading pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
-Collecting tokenizers<0.19,>=0.14 (from transformers==4.39.2)
-  Downloading tokenizers-0.15.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
-Collecting tqdm>=4.27 (from transformers==4.39.2)
-  Downloading tqdm-4.67.3-py3-none-any.whl.metadata (57 kB)
-Collecting fsspec>=2023.5.0 (from huggingface_hub==0.25.2)
-  Downloading fsspec-2026.2.0-py3-none-any.whl.metadata (10 kB)
-Collecting antlr4-python3-runtime==4.9.* (from omegaconf==2.3.0)
-  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
-  Installing build dependencies: started
-  Installing build dependencies: finished with status 'done'
-  Getting requirements to build wheel: started
-  Getting requirements to build wheel: finished with status 'done'
-  Preparing metadata (pyproject.toml): started
-  Preparing metadata (pyproject.toml): finished with status 'done'
-Collecting protobuf>=3.20 (from tensorboardX==2.6.2.2)
-  Downloading protobuf-6.33.5-cp39-abi3-manylinux2014_x86_64.whl.metadata (593 bytes)
-Collecting future (from ffmpeg-python==0.2.0)
-  Downloading future-1.0.0-py3-none-any.whl.metadata (4.0 kB)
-Requirement already satisfied: setuptools in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66->torch==2.0.1) (82.0.0)
-Requirement already satisfied: wheel in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from nvidia-cublas-cu11==11.10.3.66->torch==2.0.1) (0.46.3)
-Collecting cmake (from triton==2.0.0->torch==2.0.1)
-  Downloading cmake-4.2.1-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.5 kB)
-Collecting lit (from triton==2.0.0->torch==2.0.1)
-  Downloading lit-18.1.8-py3-none-any.whl.metadata (2.5 kB)
-Collecting scipy>=1.0.1 (from lpips)
-  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
-Collecting filterpy (from facexlib)
-  Downloading filterpy-1.4.5.zip (177 kB)
-  Installing build dependencies: started
-  Installing build dependencies: finished with status 'done'
-  Getting requirements to build wheel: started
-  Getting requirements to build wheel: finished with status 'done'
-  Preparing metadata (pyproject.toml): started
-  Preparing metadata (pyproject.toml): finished with status 'done'
-Collecting numba (from facexlib)
-  Downloading numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
-Collecting opencv-python (from facexlib)
-  Downloading opencv_python-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (19 kB)
-Collecting cffi>=1.0 (from soundfile)
-  Downloading cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
-Collecting pycparser (from cffi>=1.0->soundfile)
-  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
-Collecting matplotlib (from filterpy->facexlib)
-  Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
-Collecting zipp>=3.20 (from importlib-metadata->diffusers==0.27.2)
-  Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
-Collecting MarkupSafe>=2.0 (from jinja2->torch==2.0.1)
-  Downloading markupsafe-3.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
-Collecting contourpy>=1.0.1 (from matplotlib->filterpy->facexlib)
-  Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
-Collecting cycler>=0.10 (from matplotlib->filterpy->facexlib)
-  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
-Collecting fonttools>=4.22.0 (from matplotlib->filterpy->facexlib)
-  Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
-Collecting kiwisolver>=1.3.1 (from matplotlib->filterpy->facexlib)
-  Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
-Collecting pyparsing>=3 (from matplotlib->filterpy->facexlib)
-  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
-Collecting python-dateutil>=2.7 (from matplotlib->filterpy->facexlib)
-  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
-Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->filterpy->facexlib)
-  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
-Collecting llvmlite<0.47,>=0.46.0dev0 (from numba->facexlib)
-  Downloading llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.0 kB)
-INFO: pip is looking at multiple versions of opencv-python to determine which version is compatible with other requirements. This could take a while.
-Collecting opencv-python (from facexlib)
-  Downloading opencv_python-4.13.0.90-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (19 kB)
-  Downloading opencv_python-4.12.0.88-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (19 kB)
-  Downloading opencv_python-4.11.0.86-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
-Collecting charset_normalizer<4,>=2 (from requests->torchvision==0.15.2)
-  Downloading charset_normalizer-3.4.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
-Collecting idna<4,>=2.5 (from requests->torchvision==0.15.2)
-  Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
-Collecting urllib3<3,>=1.21.1 (from requests->torchvision==0.15.2)
-  Downloading urllib3-2.6.3-py3-none-any.whl.metadata (6.9 kB)
-Collecting certifi>=2017.4.17 (from requests->torchvision==0.15.2)
-  Downloading certifi-2026.1.4-py3-none-any.whl.metadata (2.5 kB)
-Collecting mpmath<1.4,>=1.1.0 (from sympy->torch==2.0.1)
-  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
-Downloading torch-2.0.1-cp310-cp310-manylinux1_x86_64.whl (619.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 619.7/619.9 MB 221.2 MB/s eta 0:00:0100:01
+import os
+import subprocess
+import sys
+import yaml
+import urllib.request
 
-*** WARNING: max output size exceeded, skipping output. ***
+# --- CONFIGURATION ---
+musetalk_root = "/dbfs/FileStore/MuseTalk"
+output_dir = "/Volumes/lab37_catalog/ifstrolley/trolley/musetalk_output"
+os.makedirs(output_dir, exist_ok=True)
+my_video = "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
+my_audio = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
 
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68/68 [accelerate]celerate]rchaudio]]]ub]
-Successfully installed MarkupSafe-3.0.3 accelerate-0.28.0 antlr4-python3-runtime-4.9.3 certifi-2026.1.4 cffi-2.0.0 charset_normalizer-3.4.4 cmake-4.2.1 contourpy-1.3.2 cycler-0.12.1 diffusers-0.27.2 facexlib-0.3.0 ffmpeg-python-0.2.0 filelock-3.20.3 filterpy-1.4.5 fonttools-4.61.1 fsspec-2026.2.0 future-1.0.0 huggingface_hub-0.25.2 idna-3.11 importlib-metadata-8.7.1 jinja2-3.1.6 kiwisolver-1.4.9 lit-18.1.8 llvmlite-0.46.0 lpips-0.1.4 matplotlib-3.10.8 mpmath-1.3.0 networkx-3.4.2 numba-0.63.1 numpy-1.23.5 nvidia-cublas-cu11-11.10.3.66 nvidia-cuda-cupti-cu11-11.7.101 nvidia-cuda-nvrtc-cu11-11.7.99 nvidia-cuda-runtime-cu11-11.7.99 nvidia-cudnn-cu11-8.5.0.96 nvidia-cufft-cu11-10.9.0.58 nvidia-curand-cu11-10.2.10.91 nvidia-cusolver-cu11-11.4.0.1 nvidia-cusparse-cu11-11.7.4.91 nvidia-nccl-cu11-2.14.3 nvidia-nvtx-cu11-11.7.91 omegaconf-2.3.0 opencv-python-4.11.0.86 pillow-12.1.0 protobuf-6.33.5 psutil-7.2.2 pycparser-3.0 pyparsing-3.3.2 python-dateutil-2.9.0.post0 pyyaml-6.0.3 regex-2026.1.15 requests-2.32.5 safetensors-0.7.0 scipy-1.15.3 six-1.17.0 soundfile-0.13.1 sympy-1.14.0 tensorboardX-2.6.2.2 tokenizers-0.15.2 torch-2.0.1 torchaudio-2.0.2 torchvision-0.15.2 tqdm-4.67.3 transformers-4.39.2 triton-2.0.0 typing-extensions-4.15.0 urllib3-2.6.3 zipp-3.23.0
-📦 Installing OpenMMLab...
-Looking in links: https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
-Collecting mmcv==2.0.1
-  Downloading https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/mmcv-2.0.1-cp310-cp310-manylinux1_x86_64.whl (74.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 MB 27.3 MB/s  0:00:02m0:00:0100:01
-Collecting mmdet==3.1.0
-  Downloading mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
-Collecting mmpose==1.1.0
-  Downloading mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
-Collecting addict (from mmcv==2.0.1)
-  Downloading addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
-Collecting mmengine>=0.3.0 (from mmcv==2.0.1)
-  Downloading mmengine-0.10.7-py3-none-any.whl.metadata (20 kB)
-Requirement already satisfied: numpy in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmcv==2.0.1) (1.23.5)
-Requirement already satisfied: packaging in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmcv==2.0.1) (26.0)
-Requirement already satisfied: Pillow in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmcv==2.0.1) (12.1.0)
-Requirement already satisfied: pyyaml in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmcv==2.0.1) (6.0.3)
-Collecting yapf (from mmcv==2.0.1)
-  Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
-Requirement already satisfied: opencv-python>=3 in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmcv==2.0.1) (4.11.0.86)
-Requirement already satisfied: matplotlib in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmdet==3.1.0) (3.10.8)
-Collecting pycocotools (from mmdet==3.1.0)
-  Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
-Requirement already satisfied: scipy in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmdet==3.1.0) (1.15.3)
-Collecting shapely (from mmdet==3.1.0)
-  Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
-Requirement already satisfied: six in /local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages (from mmdet==3.1.0) (1.17.0)
-Collecting terminaltables (from mmdet==3.1.0)
-  Downloading terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
-Collecting chumpy (from mmpose==1.1.0)
-  Downloading chumpy-0.70.tar.gz (50 kB)
-  Installing build dependencies: started
-  Installing build dependencies: finished with status 'done'
-  Getting requirements to build wheel: started
-  Getting requirements to build wheel: finished with status 'error'
-  error: subprocess-exited-with-error
-  
-  × Getting requirements to build wheel did not run successfully.
-  │ exit code: 1
-  ╰─> [23 lines of output]
-      Traceback (most recent call last):
-        File "<string>", line 9, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      
-      During handling of the above exception, another exception occurred:
-      
-      Traceback (most recent call last):
-        File "/local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
-          main()
-        File "/local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
-          json_out["return_val"] = hook(**hook_input["kwargs"])
-        File "/local_disk0/tmp/musetalk_clean_env/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
-          return hook(config_settings)
-        File "/tmp/pip-build-env-lhbofsl2/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
-          return self._get_build_requires(config_settings, requirements=[])
-        File "/tmp/pip-build-env-lhbofsl2/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
-          self.run_setup()
-        File "/tmp/pip-build-env-lhbofsl2/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
-          super().run_setup(setup_script=setup_script)
-        File "/tmp/pip-build-env-lhbofsl2/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
-          exec(code, locals())
-        File "<string>", line 11, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      [end of output]
-  
-  note: This error originates from a subprocess, and is likely not a problem with pip.
-ERROR: Failed to build 'chumpy' when getting requirements to build wheel
+# --- STEP 1: DEFINE DEPENDENCIES ---
+# Base requirements
+requirements = [
+    "torch==2.0.1", 
+    "torchvision==0.15.2", 
+    "torchaudio==2.0.2",
+    "numpy==1.23.5",
+    "diffusers==0.27.2",
+    "accelerate==0.28.0",
+    "transformers==4.39.2",
+    "huggingface_hub==0.25.2",
+    "omegaconf==2.3.0",
+    "tensorboardX==2.6.2.2",
+    "ffmpeg-python==0.2.0",
+    "lpips",
+    "facexlib",
+    "soundfile",
+    "six" # Explicit dependency for chumpy
+]
+mmlab_packages = ["mmcv==2.0.1", "mmdet==3.1.0", "mmpose==1.1.0"]
+mmlab_url = "https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html"
+
+# --- STEP 2: CREATE VENV ---
+venv_dir = "/local_disk0/tmp/musetalk_clean_env"
+python_exe = f"{venv_dir}/bin/python"
+pip_exe = f"{venv_dir}/bin/pip"
+
+print(f"🔨 Re-Building environment at {venv_dir}...")
+subprocess.run(f"rm -rf {venv_dir}", shell=True)
+
+# 1. Create venv (No pip)
+subprocess.run([sys.executable, "-m", "venv", venv_dir, "--without-pip"], check=True)
+
+# 2. Bootstrap pip
+get_pip_path = "/local_disk0/tmp/get-pip.py"
+if not os.path.exists(get_pip_path):
+    urllib.request.urlretrieve("https://bootstrap.pypa.io/get-pip.py", get_pip_path)
+subprocess.run([python_exe, get_pip_path], check=True)
+
+# 3. Upgrade Build Tools (Critical for chumpy)
+print("🔧 Upgrading build tools...")
+subprocess.run([pip_exe, "install", "--upgrade", "pip", "setuptools", "wheel"], check=True)
+
+# 4. Install Deps (Base)
+print("📦 Installing base dependencies...")
+subprocess.run([pip_exe, "install"] + requirements, check=True)
+
+# 5. Install Chumpy explicitly (often fails if installed as dependency)
+# We assume numpy/six are installed from step 4
+print("📦 Installing chumpy workaround...")
+try:
+    subprocess.run([pip_exe, "install", "chumpy"], check=True)
+except subprocess.CalledProcessError:
+    print("⚠️ Chumpy install failed standard way. Trying no-build-isolation...")
+    subprocess.run([pip_exe, "install", "chumpy", "--no-build-isolation"], check=True)
+
+# 6. Install MMLab
+print("📦 Installing OpenMMLab...")
+subprocess.run([pip_exe, "install"] + mmlab_packages + ["-f", mmlab_url], check=True)
+
+# --- STEP 3: UPDATE CONFIG ---
+config = {
+    "task_0": {
+        "video_path": my_video,
+        "audio_path": my_audio,
+        "bbox_shift": 0
+    }
+}
+config_path = f"{musetalk_root}/configs/inference/my_inference.yaml"
+with open(config_path, "w") as f:
+    yaml.dump(config, f)
+
+# --- STEP 4: RUN INFERENCE ---
+print("🚀 Starting Inference in ISOLATED environment...")
+os.chdir(musetalk_root)
+
+# Wrapper to patch PyTorch and run
+cmd = [
+    python_exe, "-c",
+    f"""
+import sys; sys.path.append('{musetalk_root}');
+import os; sys.modules['flash_attn'] = None; 
+import torch; 
+
+# Patch PyTorch 2.0.1
+if not hasattr(torch.library, 'impl_abstract'):
+    def impl_abstract(qualname, func=None, *, lib=None, _stacklevel=1):
+        def decorator(f): return f
+        if func is not None: return decorator(func)
+        return decorator
+    torch.library.impl_abstract = impl_abstract;
+
+# Run Inference
+import scripts.inference
+# Manually simulate args
+sys.argv = ['scripts.inference', 
+            '--inference_config', '{config_path}', 
+            '--result_dir', '{output_dir}', 
+            '--unet_model_path', './models/musetalk/pytorch_model.bin', 
+            '--unet_config', './models/musetalk/musetalk.json', 
+            '--use_float16'];
+if __name__ == '__main__':
+    from scripts.inference import main
+    try:
+        main()
+    except Exception as e:
+        print(f"❌ Inference Error: {{e}}")
+        import traceback
+        traceback.print_exc()
+"""
+]
+
+process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+for line in process.stdout:
+    print(line, end="")
+
+process.wait()
+
+if process.returncode == 0:
+    print(f"\n✅ SUCCESS! Output at: {output_dir}")
+else:
+    print(f"\n❌ FAILED with code {process.returncode}")
