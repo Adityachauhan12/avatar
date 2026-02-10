@@ -1,75 +1,54 @@
 /dbfs/FileStore/MuseTalk
-Requirement already satisfied: huggingface_hub[cli] in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (0.30.2)
-Collecting huggingface_hub[cli]
-  Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 11.4 MB/s eta 0:00:00a 0:00:01
-WARNING: huggingface-hub 1.4.1 does not provide the extra 'cli'
-Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (2023.6.0)
-Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (23.2)
-Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (6.0)
-Collecting typer-slim
-  Downloading typer_slim-0.21.1-py3-none-any.whl (47 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.4/47.4 kB 6.7 MB/s eta 0:00:00
-Requirement already satisfied: typing-extensions>=4.1.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.15.0)
-Requirement already satisfied: shellingham in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (1.5.4)
-Collecting hf-xet<2.0.0,>=1.2.0
-  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 79.5 MB/s eta 0:00:00:00:01
-Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.64.1)
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (3.9.0)
-Requirement already satisfied: httpx<1,>=0.23.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (0.28.1)
-Requirement already satisfied: idna in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (3.4)
-Requirement already satisfied: anyio in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (4.12.1)
-Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (2022.12.7)
-Requirement already satisfied: httpcore==1.* in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (1.0.9)
-Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub[cli]) (0.16.0)
-Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer-slim->huggingface_hub[cli]) (8.0.4)
-Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from anyio->httpx<1,>=0.23.0->huggingface_hub[cli]) (1.3.1)
-Installing collected packages: typer-slim, hf-xet, huggingface_hub
-  Attempting uninstall: huggingface_hub
-    Found existing installation: huggingface-hub 0.30.2
-    Uninstalling huggingface-hub-0.30.2:
-      Successfully uninstalled huggingface-hub-0.30.2
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-transformers 4.39.2 requires huggingface-hub<1.0,>=0.19.3, but you have huggingface-hub 1.4.1 which is incompatible.
-tokenizers 0.15.0 requires huggingface_hub<1.0,>=0.16.4, but you have huggingface-hub 1.4.1 which is incompatible.
-Successfully installed hf-xet-1.2.0 huggingface_hub-1.4.1 typer-slim-0.21.1
+✅ Enhanced wrapper script created
+/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+Traceback (most recent call last):
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
+    from .autoencoder_asym_kl import AsymmetricAutoencoderKL
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
+    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 24, in <module>
+    from ..attention_processor import SpatialNorm
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 35, in <module>
+    import xformers.ops
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/__init__.py", line 9, in <module>
+    from .fmha import (
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/fmha/__init__.py", line 10, in <module>
+    from . import (
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/fmha/flash.py", line 61, in <module>
+    if hasattr(flash_attn.flash_attn_interface, "flash_attn_cuda"):
+AttributeError: partially initialized module 'flash_attn' has no attribute 'flash_attn_interface' (most likely due to a circular import)
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-Requirement already satisfied: gdown in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (5.2.1)
-Requirement already satisfied: requests[socks] in /databricks/python3/lib/python3.10/site-packages (from gdown) (2.28.1)
-Requirement already satisfied: beautifulsoup4 in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.11.1)
-Requirement already satisfied: tqdm in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.64.1)
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from gdown) (3.9.0)
-Requirement already satisfied: soupsieve>1.2 in /databricks/python3/lib/python3.10/site-packages (from beautifulsoup4->gdown) (2.3.2.post1)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2.0.4)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (1.26.14)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2022.12.7)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (3.4)
-Requirement already satisfied: PySocks!=1.5.7,>=1.5.6 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from requests[socks]->gdown) (1.7.1)
+The above exception was the direct cause of the following exception:
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  5.86it/s]
-/dbfs/FileStore/MuseTalk/models
-Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  6.15it/s]
-/dbfs/FileStore/MuseTalk/models
-Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  5.38it/s]
-/dbfs/FileStore/MuseTalk/models/sd-vae
-Fetching 3 files: 100%|███████████████████████████| 3/3 [00:00<00:00,  8.27it/s]
-/dbfs/FileStore/MuseTalk/models/whisper
-Fetching 1 files: 100%|███████████████████████████| 1/1 [00:00<00:00,  3.47it/s]
-/dbfs/FileStore/MuseTalk/models/dwpose
-Fetching 1 files: 100%|███████████████████████████| 1/1 [00:00<00:00,  3.88it/s]
-/dbfs/FileStore/MuseTalk/models/syncnet
-/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/gdown/__main__.py:139: FutureWarning: Option `--id` was deprecated in version 4.3.1 and will be removed in 5.0. You don't need to pass it anymore to use a file ID.
-  warnings.warn(
-Downloading...
-From: https://drive.google.com/uc?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812
-To: /dbfs/FileStore/MuseTalk/models/face-parse-bisent/79999_iter.pth
-100%|███████████████████████████████████████| 53.3M/53.3M [00:00<00:00, 140MB/s]
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100 44.6M  100 44.6M    0     0  49.2M      0 --:--:-- --:--:-- --:--:-- 49.2M
-✅ All weights have been downloaded successfully!
+Traceback (most recent call last):
+  File "/dbfs/FileStore/MuseTalk/run_inference_patched.py", line 27, in <module>
+    exec(open('scripts/inference.py').read())
+  File "<string>", line 20, in <module>
+  File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
+    from musetalk.models.vae import VAE
+  File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
+    from diffusers import AutoencoderKL
+  File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 821, in __getattr__
+    value = getattr(module, name)
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
+    raise RuntimeError(
+RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
+partially initialized module 'flash_attn' has no attribute 'flash_attn_interface' (most likely due to a circular import)
