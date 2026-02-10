@@ -1,8 +1,17 @@
 /dbfs/FileStore/MuseTalk
-✅ Enhanced wrapper script created
-/databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-  warn(
+✅ Created flash_attn patch✅ Created patched inference script
 Traceback (most recent call last):
+  File "/dbfs/FileStore/MuseTalk/scripts/inference_patched.py", line 34, in <module>
+    from transformers import WhisperConfig, WhisperModel
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/transformers/__init__.py", line 30, in <module>
+    from . import dependency_versions_check
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/transformers/dependency_versions_check.py", line 16, in <module>
+    from .utils.versions import require_version, require_version_core
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/transformers/utils/__init__.py", line 76, in <module>
+    from .hub import (
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/transformers/utils/hub.py", line 29, in <module>
+    from huggingface_hub import (
+ImportError: cannot import name 'is_offline_mode' from 'huggingface_hub' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/huggingface_hub/__init__.py)Traceback (most recent call last):
   File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
     return importlib.import_module("." + module_name, self.__name__)
   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
@@ -19,26 +28,63 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
   File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
     from .autoencoder_asym_kl import AsymmetricAutoencoderKL
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
-    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 24, in <module>
-    from ..attention_processor import SpatialNorm
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 35, in <module>
-    import xformers.ops
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/__init__.py", line 9, in <module>
-    from .fmha import (
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/fmha/__init__.py", line 10, in <module>
-    from . import (
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/ops/fmha/flash.py", line 61, in <module>
-    if hasattr(flash_attn.flash_attn_interface, "flash_attn_cuda"):
-AttributeError: partially initialized module 'flash_attn' has no attribute 'flash_attn_interface' (most likely due to a circular import)
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 20, in <module>
+    from ...utils.accelerate_utils import apply_forward_hook
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 24, in <module>
+    import accelerate
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/accelerator.py", line 35, in <module>
+    from .checkpointing import load_accelerator_state, load_custom_state, save_accelerator_state, save_custom_state
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/checkpointing.py", line 24, in <module>
+    from .utils import (
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/utils/__init__.py", line 171, in <module>
+    from .bnb import has_4bit_bnb_layers, load_and_quantize_model
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/utils/bnb.py", line 29, in <module>
+    from ..big_modeling import dispatch_model, init_empty_weights
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/big_modeling.py", line 24, in <module>
+    from .hooks import (
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/hooks.py", line 30, in <module>
+    from .utils.other import recursive_getattr
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/utils/other.py", line 29, in <module>
+    from ..commands.config.default import write_basic_config  # noqa: F401
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/commands/config/__init__.py", line 19, in <module>
+    from .config import config_command_parser
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/commands/config/config.py", line 25, in <module>
+    from .sagemaker import get_sagemaker_input
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/accelerate/commands/config/sagemaker.py", line 35, in <module>
+    import boto3  # noqa: F401
+  File "/databricks/python/lib/python3.10/site-packages/boto3/__init__.py", line 17, in <module>
+    from boto3.session import Session
+  File "/databricks/python/lib/python3.10/site-packages/boto3/session.py", line 17, in <module>
+    import botocore.session
+  File "/databricks/python/lib/python3.10/site-packages/botocore/session.py", line 26, in <module>
+    import botocore.client
+  File "/databricks/python/lib/python3.10/site-packages/botocore/client.py", line 17, in <module>
+    from botocore import waiter, xform_name
+  File "/databricks/python/lib/python3.10/site-packages/botocore/waiter.py", line 18, in <module>
+    from botocore.docs.docstring import WaiterDocstring
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/__init__.py", line 15, in <module>
+    from botocore.docs.service import ServiceDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/service.py", line 14, in <module>
+    from botocore.docs.client import ClientDocumenter, ClientExceptionsDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/client.py", line 14, in <module>
+    from botocore.docs.example import ResponseExampleDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/example.py", line 13, in <module>
+    from botocore.docs.shape import ShapeDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/shape.py", line 19, in <module>
+    from botocore.utils import is_json_value_header
+  File "/databricks/python/lib/python3.10/site-packages/botocore/utils.py", line 34, in <module>
+    import botocore.httpsession
+  File "/databricks/python/lib/python3.10/site-packages/botocore/httpsession.py", line 22, in <module>
+    from urllib3.util.ssl_ import (
+ImportError: cannot import name 'DEFAULT_CIPHERS' from 'urllib3.util.ssl_' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/urllib3/util/ssl_.py)
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/dbfs/FileStore/MuseTalk/run_inference_patched.py", line 27, in <module>
-    exec(open('scripts/inference.py').read())
-  File "<string>", line 20, in <module>
+  File "/dbfs/FileStore/MuseTalk/test_imports.py", line 30, in <module>
+    from musetalk.utils.utils import get_file_type, get_video_fps
   File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
     from musetalk.models.vae import VAE
   File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
@@ -51,4 +97,6 @@ Traceback (most recent call last):
   File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
     raise RuntimeError(
 RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
-partially initialized module 'flash_attn' has no attribute 'flash_attn_interface' (most likely due to a circular import)
+cannot import name 'DEFAULT_CIPHERS' from 'urllib3.util.ssl_' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/urllib3/util/ssl_.py)✅ Created custom inference script
+Run this command in a new cell:
+!python custom_inference.py
