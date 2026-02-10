@@ -7,10 +7,8 @@ Expected time: ~30 seconds for 17-second video
 
 
 
-STDERR: /databricks/python/lib/python3.10/site-packages/torchvision/io/image.py:13: UserWarning: Failed to load image Python extension: 'Could not load this library: /databricks/python3/lib/python3.10/site-packages/torchvision/image.so'If you don't plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
-  warn(
-Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1016, in _get_module
+STDERR: Traceback (most recent call last):
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
     return importlib.import_module("." + module_name, self.__name__)
   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
@@ -20,12 +18,12 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/loaders/peft.py", line 25, in <module>
-    from ..hooks.group_offloading import _maybe_remove_and_reapply_group_offloading
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/hooks/__init__.py", line 25, in <module>
-    from .layerwise_casting import apply_layerwise_casting, apply_layerwise_casting_hook
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/hooks/layerwise_casting.py", line 36, in <module>
-    from peft.helpers import disable_input_dtype_casting
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/unet.py", line 46, in <module>
+    from .lora_pipeline import LORA_WEIGHT_NAME, LORA_WEIGHT_NAME_SAFE, TEXT_ENCODER_NAME, UNET_NAME
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/lora_pipeline.py", line 33, in <module>
+    from .lora_base import LoraBaseMixin
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/lora_base.py", line 47, in <module>
+    from peft.tuners.tuners_utils import BaseTunerLayer
   File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/__init__.py", line 17, in <module>
     from .auto import (
   File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/auto.py", line 31, in <module>
@@ -36,12 +34,12 @@ Traceback (most recent call last):
     from .loftq_utils import replace_lora_weights_loftq
   File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/utils/loftq_utils.py", line 25, in <module>
     from accelerate.utils.memory import clear_device_cache
-ImportError: cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+ImportError: cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1016, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
     return importlib.import_module("." + module_name, self.__name__)
   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
@@ -55,29 +53,29 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
     from .autoencoder_asym_kl import AsymmetricAutoencoderKL
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
-    from .vae import AutoencoderMixin, DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 25, in <module>
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
+    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 25, in <module>
     from ..unets.unet_2d_blocks import (
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/unets/__init__.py", line 6, in <module>
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/__init__.py", line 6, in <module>
     from .unet_2d import UNet2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/unets/unet_2d.py", line 24, in <module>
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/unet_2d.py", line 24, in <module>
     from .unet_2d_blocks import UNetMidBlock2D, get_down_block, get_up_block
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 36, in <module>
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 36, in <module>
     from ..transformers.dual_transformer_2d import DualTransformer2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/transformers/__init__.py", line 5, in <module>
-    from .auraflow_transformer_2d import AuraFlowTransformer2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/models/transformers/auraflow_transformer_2d.py", line 23, in <module>
-    from ...loaders import FromOriginalModelMixin, PeftAdapterMixin
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/transformers/__init__.py", line 13, in <module>
+    from .prior_transformer import PriorTransformer
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/transformers/prior_transformer.py", line 9, in <module>
+    from ...loaders import PeftAdapterMixin, UNet2DConditionLoadersMixin
   File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1006, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
     module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1018, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
     raise RuntimeError(
-RuntimeError: Failed to import diffusers.loaders.peft because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+RuntimeError: Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
+cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
 
 The above exception was the direct cause of the following exception:
 
@@ -93,15 +91,15 @@ Traceback (most recent call last):
   File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
     from diffusers import AutoencoderKL
   File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1007, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 821, in __getattr__
     value = getattr(module, name)
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1006, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
     module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 1018, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
     raise RuntimeError(
 RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
-Failed to import diffusers.loaders.peft because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
+cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
 
 
 ✅ flash_attn restored
