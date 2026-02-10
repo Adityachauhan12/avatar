@@ -1,404 +1,75 @@
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Collecting diffusers==0.30.2
-  Downloading diffusers-0.30.2-py3-none-any.whl (2.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 36.3 MB/s eta 0:00:00
-Collecting accelerate==0.28.0
-  Downloading accelerate-0.28.0-py3-none-any.whl (290 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 290.1/290.1 kB 24.3 MB/s eta 0:00:00
-Requirement already satisfied: numpy==1.23.5 in /databricks/python3/lib/python3.10/site-packages (from -r /dbfs/FileStore/MuseTalk/requirements.txt (line 3)) (1.23.5)
-Collecting tensorflow==2.12.0
-  Downloading tensorflow-2.12.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (585.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 585.9/585.9 MB 434.4 kB/s eta 0:00:00
-Collecting tensorboard==2.12.0
-  Downloading tensorboard-2.12.0-py3-none-any.whl (5.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.6/5.6 MB 1.8 MB/s eta 0:00:00
-Collecting opencv-python==4.9.0.80
-  Downloading opencv_python-4.9.0.80-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (62.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 62.2/62.2 MB 3.1 MB/s eta 0:00:00
-Requirement already satisfied: soundfile==0.12.1 in /databricks/python3/lib/python3.10/site-packages (from -r /dbfs/FileStore/MuseTalk/requirements.txt (line 7)) (0.12.1)
-Collecting transformers==4.39.2
-  Downloading transformers-4.39.2-py3-none-any.whl (8.8 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 2.2 MB/s eta 0:00:00
-Collecting huggingface_hub==0.30.2
-  Downloading huggingface_hub-0.30.2-py3-none-any.whl (481 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 481.4/481.4 kB 213.3 kB/s eta 0:00:00
-Collecting librosa==0.11.0
-  Downloading librosa-0.11.0-py3-none-any.whl (260 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 260.7/260.7 kB 2.1 MB/s eta 0:00:00
-Collecting einops==0.8.1
-  Downloading einops-0.8.1-py3-none-any.whl (64 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 64.4/64.4 kB 168.4 kB/s eta 0:00:00
-Collecting gradio==5.24.0
-  Downloading gradio-5.24.0-py3-none-any.whl (46.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.9/46.9 MB 2.5 MB/s eta 0:00:00
-Collecting gdown
-  Downloading gdown-5.2.1-py3-none-any.whl (18 kB)
-Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from -r /dbfs/FileStore/MuseTalk/requirements.txt (line 15)) (2.28.1)
-Collecting imageio[ffmpeg]
-  Downloading imageio-2.37.2-py3-none-any.whl (317 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 317.6/317.6 kB 1.3 MB/s eta 0:00:00
-Collecting omegaconf
-  Downloading omegaconf-2.3.0-py3-none-any.whl (79 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.5/79.5 kB 7.8 MB/s eta 0:00:00
-Collecting ffmpeg-python
-  Downloading ffmpeg_python-0.2.0-py3-none-any.whl (25 kB)
-Collecting moviepy
-  Downloading moviepy-2.2.1-py3-none-any.whl (129 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 129.9/129.9 kB 10.0 MB/s eta 0:00:00
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (3.9.0)
-Requirement already satisfied: Pillow in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (9.4.0)
-Requirement already satisfied: importlib-metadata in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (4.11.3)
-Requirement already satisfied: safetensors>=0.3.1 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (0.4.1)
-Requirement already satisfied: regex!=2019.12.17 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (2022.7.9)
-Requirement already satisfied: torch>=1.10.0 in /databricks/python3/lib/python3.10/site-packages (from accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (2.0.1+cu118)
-Requirement already satisfied: psutil in /databricks/python3/lib/python3.10/site-packages (from accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (5.9.0)
-Requirement already satisfied: packaging>=20.0 in /databricks/python3/lib/python3.10/site-packages (from accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (23.2)
-Requirement already satisfied: pyyaml in /databricks/python3/lib/python3.10/site-packages (from accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (6.0)
-Requirement already satisfied: termcolor>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (2.4.0)
-Collecting jax>=0.3.15
-  Downloading jax-0.6.2-py3-none-any.whl (2.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.7/2.7 MB 61.0 MB/s eta 0:00:00
-Requirement already satisfied: absl-py>=1.0.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (1.0.0)
-Requirement already satisfied: flatbuffers>=2.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (23.5.26)
-Collecting tensorflow-estimator<2.13,>=2.12.0
-  Downloading tensorflow_estimator-2.12.0-py2.py3-none-any.whl (440 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 440.7/440.7 kB 25.9 MB/s eta 0:00:00
-Requirement already satisfied: typing-extensions>=3.6.6 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (4.4.0)
-Requirement already satisfied: h5py>=2.9.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (3.7.0)
-Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (4.24.0)
-Requirement already satisfied: google-pasta>=0.1.1 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (0.2.0)
-Collecting keras<2.13,>=2.12.0
-  Downloading keras-2.12.0-py2.py3-none-any.whl (1.7 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 61.7 MB/s eta 0:00:00
-Requirement already satisfied: opt-einsum>=2.3.2 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (3.3.0)
-Requirement already satisfied: astunparse>=1.6.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (1.6.3)
-Requirement already satisfied: libclang>=13.0.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (15.0.6.1)
-Requirement already satisfied: gast<=0.4.0,>=0.2.1 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (0.4.0)
-Requirement already satisfied: setuptools in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (65.6.3)
-Requirement already satisfied: tensorflow-io-gcs-filesystem>=0.23.1 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (0.35.0)
-Requirement already satisfied: six>=1.12.0 in /usr/lib/python3/dist-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (1.16.0)
-Requirement already satisfied: grpcio<2.0,>=1.24.3 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (1.48.2)
-Requirement already satisfied: wrapt<1.15,>=1.11.0 in /databricks/python3/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (1.14.1)
-Collecting google-auth-oauthlib<0.5,>=0.4.1
-  Downloading google_auth_oauthlib-0.4.6-py2.py3-none-any.whl (18 kB)
-Collecting tensorboard-plugin-wit>=1.6.0
-  Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl (781 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 781.3/781.3 kB 45.6 MB/s eta 0:00:00
-Requirement already satisfied: werkzeug>=1.0.1 in /databricks/python3/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (2.2.2)
-Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /databricks/python3/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (0.7.2)
-Requirement already satisfied: wheel>=0.26 in /databricks/python3/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (0.38.4)
-Requirement already satisfied: markdown>=2.6.8 in /databricks/python3/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (3.4.1)
-Requirement already satisfied: google-auth<3,>=1.6.3 in /databricks/python3/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (2.21.0)
-Requirement already satisfied: cffi>=1.0 in /databricks/python3/lib/python3.10/site-packages (from soundfile==0.12.1->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 7)) (1.15.1)
-Requirement already satisfied: tokenizers<0.19,>=0.14 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.39.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 8)) (0.15.0)
-Requirement already satisfied: tqdm>=4.27 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.39.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 8)) (4.64.1)
-Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 9)) (2023.6.0)
-Requirement already satisfied: scipy>=1.6.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.10.0)
-Requirement already satisfied: joblib>=1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.2.0)
-Requirement already satisfied: scikit-learn>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.1.1)
-Requirement already satisfied: pooch>=1.1 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.4.0)
-Requirement already satisfied: msgpack>=1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.0.7)
-Requirement already satisfied: decorator>=4.3.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (5.1.1)
-Requirement already satisfied: numba>=0.51.0 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (0.56.4)
-Requirement already satisfied: audioread>=2.1.9 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (3.0.1)
-Requirement already satisfied: soxr>=0.3.2 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (0.3.7)
-Requirement already satisfied: lazy_loader>=0.1 in /databricks/python3/lib/python3.10/site-packages (from librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (0.3)
-Requirement already satisfied: jinja2<4.0 in /databricks/python3/lib/python3.10/site-packages (from gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (3.1.2)
-Collecting pydantic<2.12,>=2.0
-  Downloading pydantic-2.11.10-py3-none-any.whl (444 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 444.8/444.8 kB 108.8 kB/s eta 0:00:00
-Collecting httpx>=0.24.1
-  Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 6.4 MB/s eta 0:00:00
-Collecting semantic-version~=2.0
-  Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
-Collecting uvicorn>=0.14.0
-  Downloading uvicorn-0.40.0-py3-none-any.whl (68 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.5/68.5 kB 7.3 MB/s eta 0:00:00
-Collecting typer<1.0,>=0.12
-  Downloading typer-0.21.1-py3-none-any.whl (47 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.4/47.4 kB 4.9 MB/s eta 0:00:00
-Collecting groovy~=0.1
-  Downloading groovy-0.1.2-py3-none-any.whl (14 kB)
-Collecting aiofiles<25.0,>=22.0
-  Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
-Collecting gradio-client==1.8.0
-  Downloading gradio_client-1.8.0-py3-none-any.whl (322 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 322.2/322.2 kB 24.9 MB/s eta 0:00:00
-Collecting tomlkit<0.14.0,>=0.12.0
-  Downloading tomlkit-0.13.3-py3-none-any.whl (38 kB)
-Collecting safehttpx<0.2.0,>=0.1.6
-  Downloading safehttpx-0.1.7-py3-none-any.whl (9.0 kB)
-Collecting ffmpy
-  Downloading ffmpy-1.0.0-py3-none-any.whl (5.6 kB)
-Collecting python-multipart>=0.0.18
-  Downloading python_multipart-0.0.22-py3-none-any.whl (24 kB)
-Requirement already satisfied: pandas<3.0,>=1.0 in /databricks/python3/lib/python3.10/site-packages (from gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (1.5.3)
-Collecting pydub
-  Downloading pydub-0.25.1-py2.py3-none-any.whl (32 kB)
-Collecting fastapi<1.0,>=0.115.2
-  Downloading fastapi-0.128.6-py3-none-any.whl (103 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 103.7/103.7 kB 9.8 MB/s eta 0:00:00
-Requirement already satisfied: anyio<5.0,>=3.0 in /databricks/python3/lib/python3.10/site-packages (from gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (3.5.0)
-Requirement already satisfied: markupsafe<4.0,>=2.0 in /databricks/python3/lib/python3.10/site-packages (from gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (2.1.1)
-Collecting starlette<1.0,>=0.40.0
-  Downloading starlette-0.52.1-py3-none-any.whl (74 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.3/74.3 kB 7.4 MB/s eta 0:00:00
-Collecting ruff>=0.9.3
-  Downloading ruff-0.15.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (11.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.1/11.1 MB 41.8 MB/s eta 0:00:00
-Collecting orjson~=3.0
-  Downloading orjson-3.11.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (133 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.7/133.7 kB 13.5 MB/s eta 0:00:00
-Collecting websockets<16.0,>=10.0
-  Downloading websockets-15.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (181 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.6/181.6 kB 41.0 kB/s eta 0:00:00
-Requirement already satisfied: beautifulsoup4 in /databricks/python3/lib/python3.10/site-packages (from gdown->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 14)) (4.11.1)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 15)) (2.0.4)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 15)) (3.4)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 15)) (1.26.14)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 15)) (2022.12.7)
-Collecting imageio-ffmpeg
-  Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.5/29.5 MB 19.7 MB/s eta 0:00:00
-Collecting antlr4-python3-runtime==4.9.*
-  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.0/117.0 kB 9.8 MB/s eta 0:00:00
-  Preparing metadata (setup.py): started
-  Preparing metadata (setup.py): finished with status 'done'
-Requirement already satisfied: future in /databricks/python3/lib/python3.10/site-packages (from ffmpeg-python->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 19)) (0.18.3)
-Collecting moviepy
-  Downloading moviepy-2.2.0-py3-none-any.whl (129 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 129.8/129.8 kB 12.5 MB/s eta 0:00:00
-  Downloading moviepy-2.1.2-py3-none-any.whl (126 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.7/126.7 kB 12.2 MB/s eta 0:00:00
-  Downloading moviepy-2.1.1-py3-none-any.whl (123 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.5/123.5 kB 11.8 MB/s eta 0:00:00
-  Downloading moviepy-2.1.0-py3-none-any.whl (123 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.4/123.4 kB 12.5 MB/s eta 0:00:00
-  Downloading moviepy-2.0.0-py3-none-any.whl (122 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.0/123.0 kB 12.7 MB/s eta 0:00:00
-  Downloading moviepy-1.0.3.tar.gz (388 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 388.3/388.3 kB 30.3 MB/s eta 0:00:00
-  Preparing metadata (setup.py): started
-  Preparing metadata (setup.py): finished with status 'done'
-Collecting decorator>=4.3.0
-  Downloading decorator-4.4.2-py2.py3-none-any.whl (9.2 kB)
-Collecting proglog<=1.0.0
-  Downloading proglog-0.1.12-py3-none-any.whl (6.3 kB)
-Requirement already satisfied: sniffio>=1.1 in /databricks/python3/lib/python3.10/site-packages (from anyio<5.0,>=3.0->gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (1.2.0)
-Requirement already satisfied: pycparser in /databricks/python3/lib/python3.10/site-packages (from cffi>=1.0->soundfile==0.12.1->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 7)) (2.21)
-Collecting typing-inspection>=0.4.2
-  Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
-Collecting typing-extensions>=3.6.6
-  Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 kB 4.7 MB/s eta 0:00:00
-Collecting annotated-doc>=0.0.2
-  Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
-Requirement already satisfied: cachetools<6.0,>=2.0.0 in /databricks/python3/lib/python3.10/site-packages (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (5.3.2)
-Requirement already satisfied: pyasn1-modules>=0.2.1 in /databricks/python3/lib/python3.10/site-packages (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (0.2.8)
-Requirement already satisfied: rsa<5,>=3.1.4 in /databricks/python3/lib/python3.10/site-packages (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (4.9)
-Requirement already satisfied: requests-oauthlib>=0.7.0 in /databricks/python3/lib/python3.10/site-packages (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (1.3.1)
-Collecting httpcore==1.*
-  Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 6.6 MB/s eta 0:00:00
-Collecting h11>=0.16
-  Downloading h11-0.16.0-py3-none-any.whl (37 kB)
-Collecting jaxlib<=0.6.2,>=0.6.2
-  Downloading jaxlib-0.6.2-cp310-cp310-manylinux2014_x86_64.whl (89.9 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 89.9/89.9 MB 2.6 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.6.1-py3-none-any.whl (2.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 1.0 MB/s eta 0:00:00
-  Downloading jax-0.6.0-py3-none-any.whl (2.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 15.6 MB/s eta 0:00:00
-  Downloading jax-0.5.3-py3-none-any.whl (2.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 3.2 MB/s eta 0:00:00
-Collecting jaxlib<=0.5.3,>=0.5.3
-  Downloading jaxlib-0.5.3-cp310-cp310-manylinux2014_x86_64.whl (105.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 105.1/105.1 MB 1.1 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.5.2-py3-none-any.whl (2.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 65.7 MB/s eta 0:00:00
-  Downloading jax-0.5.1-py3-none-any.whl (2.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 66.4 MB/s eta 0:00:00
-Collecting jaxlib<=0.5.1,>=0.5.1
-  Downloading jaxlib-0.5.1-cp310-cp310-manylinux2014_x86_64.whl (105.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 105.1/105.1 MB 5.5 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.5.0-py3-none-any.whl (2.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 70.6 MB/s eta 0:00:00
-Collecting jaxlib<=0.5.0,>=0.5.0
-  Downloading jaxlib-0.5.0-cp310-cp310-manylinux2014_x86_64.whl (102.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 102.0/102.0 MB 2.8 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.38-py3-none-any.whl (2.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 654.0 kB/s eta 0:00:00
-Collecting ml_dtypes>=0.4.0
-  Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 21.2 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.37-py3-none-any.whl (2.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 4.5 MB/s eta 0:00:00
-  Downloading jax-0.4.36-py3-none-any.whl (2.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 9.0 MB/s eta 0:00:00
-Collecting jaxlib<=0.4.36,>=0.4.36
-  Downloading jaxlib-0.4.36-cp310-cp310-manylinux2014_x86_64.whl (100.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100.3/100.3 MB 2.2 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.35-py3-none-any.whl (2.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 MB 408.9 kB/s eta 0:00:00
-Collecting jaxlib<=0.4.35,>=0.4.34
-  Downloading jaxlib-0.4.35-cp310-cp310-manylinux2014_x86_64.whl (87.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.3/87.3 MB 6.7 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.34-py3-none-any.whl (2.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 66.8 MB/s eta 0:00:00
-Collecting jaxlib<=0.4.34,>=0.4.34
-  Downloading jaxlib-0.4.34-cp310-cp310-manylinux2014_x86_64.whl (86.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 86.1/86.1 MB 3.3 MB/s eta 0:00:00
-Requirement already satisfied: ml-dtypes>=0.2.0 in /databricks/python3/lib/python3.10/site-packages (from jax>=0.3.15->tensorflow==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 4)) (0.2.0)
-Collecting jax>=0.3.15
-  Downloading jax-0.4.33-py3-none-any.whl (2.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 1.1 MB/s eta 0:00:00
-Collecting jaxlib<=0.4.33,>=0.4.33
-  Downloading jaxlib-0.4.33-cp310-cp310-manylinux2014_x86_64.whl (85.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 85.0/85.0 MB 6.3 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.31-py3-none-any.whl (2.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 6.1 MB/s eta 0:00:00
-Collecting jaxlib<=0.4.31,>=0.4.30
-  Downloading jaxlib-0.4.31-cp310-cp310-manylinux2014_x86_64.whl (88.1 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.1/88.1 MB 6.0 MB/s eta 0:00:00
-Collecting jax>=0.3.15
-  Downloading jax-0.4.30-py3-none-any.whl (2.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 21.6 MB/s eta 0:00:00
-Collecting jaxlib<=0.4.30,>=0.4.27
-  Downloading jaxlib-0.4.30-cp310-cp310-manylinux2014_x86_64.whl (79.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.6/79.6 MB 2.3 MB/s eta 0:00:00
-Requirement already satisfied: llvmlite<0.40,>=0.39.0dev0 in /databricks/python3/lib/python3.10/site-packages (from numba>=0.51.0->librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (0.39.1)
-Requirement already satisfied: pytz>=2020.1 in /databricks/python3/lib/python3.10/site-packages (from pandas<3.0,>=1.0->gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (2022.7)
-Requirement already satisfied: python-dateutil>=2.8.1 in /databricks/python3/lib/python3.10/site-packages (from pandas<3.0,>=1.0->gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (2.8.2)
-Requirement already satisfied: appdirs in /databricks/python3/lib/python3.10/site-packages (from pooch>=1.1->librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (1.4.4)
-Collecting annotated-types>=0.6.0
-  Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
-Collecting pydantic-core==2.33.2
-  Downloading pydantic_core-2.33.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 980.7 kB/s eta 0:00:00
-Requirement already satisfied: threadpoolctl>=2.0.0 in /databricks/python3/lib/python3.10/site-packages (from scikit-learn>=1.1.0->librosa==0.11.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 10)) (2.2.0)
-Collecting anyio<5.0,>=3.0
-  Downloading anyio-4.12.1-py3-none-any.whl (113 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 113.6/113.6 kB 8.7 MB/s eta 0:00:00
-Collecting exceptiongroup>=1.0.2
-  Downloading exceptiongroup-1.3.1-py3-none-any.whl (16 kB)
-Requirement already satisfied: sympy in /databricks/python3/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (1.11.1)
-Requirement already satisfied: networkx in /databricks/python3/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (2.8.4)
-Requirement already satisfied: triton==2.0.0 in /databricks/python3/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (2.0.0)
-Requirement already satisfied: cmake in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (3.28.1)
-Requirement already satisfied: lit in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (17.0.6)
-Collecting rich>=10.11.0
-  Downloading rich-14.3.2-py3-none-any.whl (309 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 310.0/310.0 kB 25.5 MB/s eta 0:00:00
-Collecting shellingham>=1.3.0
-  Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
-Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer<1.0,>=0.12->gradio==5.24.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 12)) (8.0.4)
-Requirement already satisfied: soupsieve>1.2 in /databricks/python3/lib/python3.10/site-packages (from beautifulsoup4->gdown->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 14)) (2.3.2.post1)
-Requirement already satisfied: zipp>=0.5 in /databricks/python3/lib/python3.10/site-packages (from importlib-metadata->diffusers==0.30.2->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 1)) (3.11.0)
-Collecting PySocks!=1.5.7,>=1.5.6
-  Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
-Requirement already satisfied: pyasn1<0.5.0,>=0.4.6 in /databricks/python3/lib/python3.10/site-packages (from pyasn1-modules>=0.2.1->google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (0.4.8)
-Requirement already satisfied: oauthlib>=3.0.0 in /usr/lib/python3/dist-packages (from requests-oauthlib>=0.7.0->google-auth-oauthlib<0.5,>=0.4.1->tensorboard==2.12.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 5)) (3.2.0)
-Collecting markdown-it-py>=2.2.0
-  Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.3/87.3 kB 8.9 MB/s eta 0:00:00
-Collecting pygments<3.0.0,>=2.13.0
-  Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 42.8 MB/s eta 0:00:00
-Requirement already satisfied: mpmath>=0.19 in /databricks/python3/lib/python3.10/site-packages (from sympy->torch>=1.10.0->accelerate==0.28.0->-r /dbfs/FileStore/MuseTalk/requirements.txt (line 2)) (1.2.1)
-Collecting mdurl~=0.1
-  Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-Building wheels for collected packages: antlr4-python3-runtime, moviepy
-  Building wheel for antlr4-python3-runtime (setup.py): started
-  Building wheel for antlr4-python3-runtime (setup.py): finished with status 'done'
-  Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144554 sha256=f6007becbfa2f6fc8cc0206f7633fadf7ac9e485e2ee0a40cd70f7fdc595ed87
-  Stored in directory: /root/.cache/pip/wheels/48/6a/c2/acb58c7afdf57e4cddf5e1513f5a2d62aa8e98f82a00c76d7c
-  Building wheel for moviepy (setup.py): started
-  Building wheel for moviepy (setup.py): finished with status 'done'
-  Created wheel for moviepy: filename=moviepy-1.0.3-py3-none-any.whl size=110727 sha256=95c5c6fdadf8c1889a76401ce3539d03a05892a4165b763530003208803a601e
-  Stored in directory: /root/.cache/pip/wheels/05/c3/60/ff37aa492e097b78c495e049d4ec5dbd5be98bd9b36eb1f0b1
-Successfully built antlr4-python3-runtime moviepy
-Installing collected packages: tensorboard-plugin-wit, pydub, antlr4-python3-runtime, websockets, typing-extensions, tomlkit, tensorflow-estimator, shellingham, semantic-version, ruff, python-multipart, PySocks, pygments, proglog, orjson, opencv-python, omegaconf, mdurl, keras, imageio-ffmpeg, imageio, h11, groovy, ffmpy, ffmpeg-python, einops, decorator, annotated-types, annotated-doc, aiofiles, uvicorn, typing-inspection, pydantic-core, moviepy, markdown-it-py, jaxlib, huggingface_hub, httpcore, exceptiongroup, rich, pydantic, librosa, jax, google-auth-oauthlib, gdown, diffusers, anyio, typer, transformers, tensorboard, starlette, httpx, tensorflow, safehttpx, gradio-client, fastapi, gradio, accelerate
-  Attempting uninstall: typing-extensions
-    Found existing installation: typing_extensions 4.4.0
-    Not uninstalling typing-extensions at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'typing_extensions'. No files were found to uninstall.
-  Attempting uninstall: tensorflow-estimator
-    Found existing installation: tensorflow-estimator 2.14.0
-    Not uninstalling tensorflow-estimator at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'tensorflow-estimator'. No files were found to uninstall.
-  Attempting uninstall: pygments
-    Found existing installation: Pygments 2.11.2
-    Not uninstalling pygments at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'Pygments'. No files were found to uninstall.
-  Attempting uninstall: keras
-    Found existing installation: keras 2.14.0
-    Not uninstalling keras at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'keras'. No files were found to uninstall.
-  Attempting uninstall: einops
-    Found existing installation: einops 0.7.0
-    Not uninstalling einops at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'einops'. No files were found to uninstall.
-  Attempting uninstall: decorator
-    Found existing installation: decorator 5.1.1
-    Not uninstalling decorator at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'decorator'. No files were found to uninstall.
+/dbfs/FileStore/MuseTalk
+Requirement already satisfied: huggingface_hub[cli] in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (0.30.2)
+Collecting huggingface_hub[cli]
+  Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 11.4 MB/s eta 0:00:00a 0:00:01
+WARNING: huggingface-hub 1.4.1 does not provide the extra 'cli'
+Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (2023.6.0)
+Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (23.2)
+Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (6.0)
+Collecting typer-slim
+  Downloading typer_slim-0.21.1-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.4/47.4 kB 6.7 MB/s eta 0:00:00
+Requirement already satisfied: typing-extensions>=4.1.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.15.0)
+Requirement already satisfied: shellingham in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (1.5.4)
+Collecting hf-xet<2.0.0,>=1.2.0
+  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 79.5 MB/s eta 0:00:00:00:01
+Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.64.1)
+Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (3.9.0)
+Requirement already satisfied: httpx<1,>=0.23.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from huggingface_hub[cli]) (0.28.1)
+Requirement already satisfied: idna in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (3.4)
+Requirement already satisfied: anyio in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (4.12.1)
+Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (2022.12.7)
+Requirement already satisfied: httpcore==1.* in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (1.0.9)
+Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub[cli]) (0.16.0)
+Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer-slim->huggingface_hub[cli]) (8.0.4)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from anyio->httpx<1,>=0.23.0->huggingface_hub[cli]) (1.3.1)
+Installing collected packages: typer-slim, hf-xet, huggingface_hub
   Attempting uninstall: huggingface_hub
-    Found existing installation: huggingface-hub 0.27.1
-    Not uninstalling huggingface-hub at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'huggingface-hub'. No files were found to uninstall.
-  Attempting uninstall: pydantic
-    Found existing installation: pydantic 1.10.6
-    Not uninstalling pydantic at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'pydantic'. No files were found to uninstall.
-  Attempting uninstall: librosa
-    Found existing installation: librosa 0.10.1
-    Not uninstalling librosa at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'librosa'. No files were found to uninstall.
-  Attempting uninstall: google-auth-oauthlib
-    Found existing installation: google-auth-oauthlib 1.0.0
-    Not uninstalling google-auth-oauthlib at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'google-auth-oauthlib'. No files were found to uninstall.
-  Attempting uninstall: anyio
-    Found existing installation: anyio 3.5.0
-    Not uninstalling anyio at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'anyio'. No files were found to uninstall.
-  Attempting uninstall: typer
-    Found existing installation: typer 0.9.0
-    Not uninstalling typer at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'typer'. No files were found to uninstall.
-  Attempting uninstall: transformers
-    Found existing installation: transformers 4.36.1
-    Not uninstalling transformers at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'transformers'. No files were found to uninstall.
-  Attempting uninstall: tensorboard
-    Found existing installation: tensorboard 2.14.1
-    Not uninstalling tensorboard at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'tensorboard'. No files were found to uninstall.
-  Attempting uninstall: tensorflow
-    Found existing installation: tensorflow 2.14.1
-    Not uninstalling tensorflow at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'tensorflow'. No files were found to uninstall.
-  Attempting uninstall: accelerate
-    Found existing installation: accelerate 0.25.0
-    Not uninstalling accelerate at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60
-    Can't uninstall 'accelerate'. No files were found to uninstall.
+    Found existing installation: huggingface-hub 0.30.2
+    Uninstalling huggingface-hub-0.30.2:
+      Successfully uninstalled huggingface-hub-0.30.2
 ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-nbclassic 0.5.2 requires prometheus-client, which is not installed.
-jupyter-server 1.23.4 requires prometheus-client, which is not installed.
-databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
-ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.11.10 which is incompatible.
-weasel 0.3.4 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.1 which is incompatible.
-spacy 3.7.2 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.1 which is incompatible.
-jupyter-server 1.23.4 requires anyio<4,>=3.1.0, but you have anyio 4.12.1 which is incompatible.
-Successfully installed PySocks-1.7.1 accelerate-0.28.0 aiofiles-24.1.0 annotated-doc-0.0.4 annotated-types-0.7.0 antlr4-python3-runtime-4.9.3 anyio-4.12.1 decorator-4.4.2 diffusers-0.30.2 einops-0.8.1 exceptiongroup-1.3.1 fastapi-0.128.6 ffmpeg-python-0.2.0 ffmpy-1.0.0 gdown-5.2.1 google-auth-oauthlib-0.4.6 gradio-5.24.0 gradio-client-1.8.0 groovy-0.1.2 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-0.30.2 imageio-2.37.2 imageio-ffmpeg-0.6.0 jax-0.4.30 jaxlib-0.4.30 keras-2.12.0 librosa-0.11.0 markdown-it-py-4.0.0 mdurl-0.1.2 moviepy-1.0.3 omegaconf-2.3.0 opencv-python-4.9.0.80 orjson-3.11.7 proglog-0.1.12 pydantic-2.11.10 pydantic-core-2.33.2 pydub-0.25.1 pygments-2.19.2 python-multipart-0.0.22 rich-14.3.2 ruff-0.15.0 safehttpx-0.1.7 semantic-version-2.10.0 shellingham-1.5.4 starlette-0.52.1 tensorboard-2.12.0 tensorboard-plugin-wit-1.8.1 tensorflow-2.12.0 tensorflow-estimator-2.12.0 tomlkit-0.13.3 transformers-4.39.2 typer-0.21.1 typing-extensions-4.15.0 typing-inspection-0.4.2 uvicorn-0.40.0 websockets-15.0.1
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+transformers 4.39.2 requires huggingface-hub<1.0,>=0.19.3, but you have huggingface-hub 1.4.1 which is incompatible.
+tokenizers 0.15.0 requires huggingface_hub<1.0,>=0.16.4, but you have huggingface-hub 1.4.1 which is incompatible.
+Successfully installed hf-xet-1.2.0 huggingface_hub-1.4.1 typer-slim-0.21.1
+
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+Requirement already satisfied: gdown in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (5.2.1)
+Requirement already satisfied: requests[socks] in /databricks/python3/lib/python3.10/site-packages (from gdown) (2.28.1)
+Requirement already satisfied: beautifulsoup4 in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.11.1)
+Requirement already satisfied: tqdm in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.64.1)
+Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from gdown) (3.9.0)
+Requirement already satisfied: soupsieve>1.2 in /databricks/python3/lib/python3.10/site-packages (from beautifulsoup4->gdown) (2.3.2.post1)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2.0.4)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (1.26.14)
+Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2022.12.7)
+Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (3.4)
+Requirement already satisfied: PySocks!=1.5.7,>=1.5.6 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages (from requests[socks]->gdown) (1.7.1)
+
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  5.86it/s]
+/dbfs/FileStore/MuseTalk/models
+Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  6.15it/s]
+/dbfs/FileStore/MuseTalk/models
+Fetching 2 files: 100%|███████████████████████████| 2/2 [00:00<00:00,  5.38it/s]
+/dbfs/FileStore/MuseTalk/models/sd-vae
+Fetching 3 files: 100%|███████████████████████████| 3/3 [00:00<00:00,  8.27it/s]
+/dbfs/FileStore/MuseTalk/models/whisper
+Fetching 1 files: 100%|███████████████████████████| 1/1 [00:00<00:00,  3.47it/s]
+/dbfs/FileStore/MuseTalk/models/dwpose
+Fetching 1 files: 100%|███████████████████████████| 1/1 [00:00<00:00,  3.88it/s]
+/dbfs/FileStore/MuseTalk/models/syncnet
+/local_disk0/.ephemeral_nfs/envs/pythonEnv-cf36255b-0bdd-412f-8544-4c80a2444d60/lib/python3.10/site-packages/gdown/__main__.py:139: FutureWarning: Option `--id` was deprecated in version 4.3.1 and will be removed in 5.0. You don't need to pass it anymore to use a file ID.
+  warnings.warn(
+Downloading...
+From: https://drive.google.com/uc?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812
+To: /dbfs/FileStore/MuseTalk/models/face-parse-bisent/79999_iter.pth
+100%|███████████████████████████████████████| 53.3M/53.3M [00:00<00:00, 140MB/s]
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 44.6M  100 44.6M    0     0  49.2M      0 --:--:-- --:--:-- --:--:-- 49.2M
+✅ All weights have been downloaded successfully!
