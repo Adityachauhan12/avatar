@@ -1,104 +1,112 @@
-✓ Created self-healing script v2: /dbfs/FileStore/MuseTalk/scripts/inference_final_v2.py
-🚀 Starting MuseTalk (Self-Healing Mode V2)...
-   This will install diffusers==0.27.2 first, then run.
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
-    return importlib.import_module("." + module_name, self.__name__)
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/loaders/unet.py", line 46, in <module>
-    from .lora_pipeline import LORA_WEIGHT_NAME, LORA_WEIGHT_NAME_SAFE, TEXT_ENCODER_NAME, UNET_NAME
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/loaders/lora_pipeline.py", line 33, in <module>
-    from .lora_base import LoraBaseMixin
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/loaders/lora_base.py", line 47, in <module>
-    from peft.tuners.tuners_utils import BaseTunerLayer
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/__init__.py", line 17, in <module>
-    from .auto import (
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/auto.py", line 31, in <module>
-    from .config import PeftConfig
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/config.py", line 30, in <module>
-    from .utils import CONFIG_NAME, PeftType, TaskType
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/utils/__init__.py", line 16, in <module>
-    from .loftq_utils import replace_lora_weights_loftq
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/utils/loftq_utils.py", line 25, in <module>
-    from accelerate.utils.memory import clear_device_cache
-ImportError: cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+import os
+import sys
+import yaml
+import subprocess
 
-The above exception was the direct cause of the following exception:
+# --- 1. SETUP PATHS (YOUR FILES) ---
+musetalk_root = "/dbfs/FileStore/MuseTalk"
+output_dir = "/Volumes/lab37_catalog/ifstrolley/trolley/musetalk_output"
+os.makedirs(output_dir, exist_ok=True)
 
-Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
-    return importlib.import_module("." + module_name, self.__name__)
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
-    from .autoencoder_asym_kl import AsymmetricAutoencoderKL
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
-    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 25, in <module>
-    from ..unets.unet_2d_blocks import (
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/unets/__init__.py", line 6, in <module>
-    from .unet_2d import UNet2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/unets/unet_2d.py", line 24, in <module>
-    from .unet_2d_blocks import UNetMidBlock2D, get_down_block, get_up_block
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 36, in <module>
-    from ..transformers.dual_transformer_2d import DualTransformer2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/transformers/__init__.py", line 13, in <module>
-    from .prior_transformer import PriorTransformer
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/models/transformers/prior_transformer.py", line 9, in <module>
-    from ...loaders import PeftAdapterMixin, UNet2DConditionLoadersMixin
-  File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
-    module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
-    raise RuntimeError(
-RuntimeError: Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+# YOUR INPUT FILES
+my_video_path = "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
+my_audio_path = "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
 
-The above exception was the direct cause of the following exception:
+print(f"🎬 Video: {my_video_path}")
+print(f"🎙️ Audio: {my_audio_path}")
+print(f"📂 Output: {output_dir}")
 
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-  File "/dbfs/FileStore/MuseTalk/scripts/inference_final_v2.py", line 63, in <module>
-    from musetalk.utils.utils import get_file_type, get_video_fps, datagen, load_all_model
-  File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
-    from musetalk.models.vae import VAE
-  File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
-    from diffusers import AutoencoderKL
-  File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 821, in __getattr__
-    value = getattr(module, name)
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
-    module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
-    raise RuntimeError(
-RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
-Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+# --- 2. GENERATE CONFIG FILE ---
+# This ensures the inference script knows exactly which files to use
+config = {
+    "task_0": {
+        "video_path": my_video_path,
+        "audio_path": my_audio_path,
+        "bbox_shift": 0
+    }
+}
 
-❌ FAILED
+config_path = f"{musetalk_root}/configs/inference/my_inference.yaml"
+with open(config_path, "w") as f:
+    yaml.dump(config, f)
+print(f"✓ Configuration file updated at: {config_path}")
+
+# --- 3. GENERATE SELF-HEALING SCRIPT (V3) ---
+# Includes: Flash Attn Mask + Diffusers 0.27.2 Downgrade + PyTorch Patch
+with open(f"{musetalk_root}/scripts/inference.py", "r") as f:
+    original_code = f.read()
+
+header_code = """
+import sys
+import os
+import subprocess
+
+# 1. DISABLE BROKEN FLASH ATTENTION
+sys.modules["flash_attn"] = None
+
+# 2. AUTO-INSTALL/FIX DEPENDENCIES
+def install(package):
+    try: __import__(package)
+    except ImportError:
+        print(f"📦 Installing {package}...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# Critical Downgrade for T4 compatibility
+try:
+    import diffusers
+    # Check if version is too new (0.29+ breaks with old Accelerate)
+    if int(diffusers.__version__.split('.')[1]) > 28:
+        print("⚠️ Diffusers too new. Downgrading to 0.27.2...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "diffusers==0.27.2"])
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "diffusers==0.27.2"])
+
+install("transformers") # 4.39.2 ideally
+install("accelerate")   # 0.28.0 ideally
+install("omegaconf")
+install("tensorboardX")
+install("ffmpeg-python")
+install("lpips")
+install("facexlib")
+
+# 3. MONKEY PATCH PYTORCH 2.0.1
+import torch
+if not hasattr(torch.library, 'impl_abstract'):
+    def impl_abstract(qualname, func=None, *, lib=None, _stacklevel=1):
+        def decorator(f): return f
+        if func is not None: return decorator(func)
+        return decorator
+    torch.library.impl_abstract = impl_abstract
+
+sys.path.append(os.getcwd())
+"""
+
+script_v3_path = f"{musetalk_root}/scripts/inference_final_v3.py"
+with open(script_v3_path, "w") as f:
+    f.write(header_code + original_code)
+print(f"✓ Inference script updated: {script_v3_path}")
+
+# --- 4. EXECUTE INFERENCE ---
+cmd = [
+    sys.executable, "-m", "scripts.inference_final_v3",
+    "--inference_config", config_path,
+    "--result_dir", output_dir,
+    "--unet_model_path", "./models/musetalk/pytorch_model.bin",
+    "--unet_config", "./models/musetalk/musetalk.json",
+    "--use_float16"
+]
+
+os.chdir(musetalk_root)
+print(f"🚀 Starting MuseTalk processing...")
+process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+
+# Stream output
+for line in process.stdout:
+    print(line, end="")
+
+process.wait()
+
+if process.returncode == 0:
+    print(f"\n✅ SUCCESS! Video saved to: {output_dir}")
+else:
+    print(f"\n❌ FAILED with code {process.returncode}")
