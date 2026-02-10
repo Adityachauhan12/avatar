@@ -1,61 +1,98 @@
-🎬 Video: /Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4
-🎙️ Audio: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
-📂 Output: /Volumes/lab37_catalog/ifstrolley/trolley/musetalk_output
-✓ Configuration file updated at: /dbfs/FileStore/MuseTalk/configs/inference/my_inference.yaml
-✓ Inference script updated: /dbfs/FileStore/MuseTalk/scripts/inference_final_v3.py
-🚀 Starting MuseTalk processing...
-Collecting diffusers==0.27.2
-  Downloading diffusers-0.27.2-py3-none-any.whl (2.0 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 29.3 MB/s eta 0:00:00
-Requirement already satisfied: importlib-metadata in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from diffusers==0.27.2) (8.7.1)
-Requirement already satisfied: safetensors>=0.3.1 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.27.2) (0.4.1)
-Requirement already satisfied: numpy in /local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages (from diffusers==0.27.2) (2.2.6)
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.27.2) (3.9.0)
-Requirement already satisfied: huggingface-hub>=0.20.2 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.27.2) (0.27.1)
-Requirement already satisfied: Pillow in /local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages (from diffusers==0.27.2) (12.1.0)
-Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.27.2) (2.28.1)
-Requirement already satisfied: regex!=2019.12.17 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.27.2) (2022.7.9)
-Requirement already satisfied: typing-extensions>=3.7.4.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from huggingface-hub>=0.20.2->diffusers==0.27.2) (4.15.0)
-Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.20.2->diffusers==0.27.2) (6.0)
-Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.20.2->diffusers==0.27.2) (4.64.1)
-Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.20.2->diffusers==0.27.2) (23.2)
-Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.20.2->diffusers==0.27.2) (2023.6.0)
-Requirement already satisfied: zipp>=3.20 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from importlib-metadata->diffusers==0.27.2) (3.23.0)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.27.2) (2.0.4)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.27.2) (2022.12.7)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.27.2) (1.26.14)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.27.2) (3.4)
-Installing collected packages: diffusers
-  Attempting uninstall: diffusers
-    Found existing installation: diffusers 0.30.2
-    Uninstalling diffusers-0.30.2:
-      Successfully uninstalled diffusers-0.30.2
-Successfully installed diffusers-0.27.2
+import os
+import sys
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-Requirement already satisfied: ffmpeg-python in /local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages (0.2.0)
-Requirement already satisfied: future in /databricks/python3/lib/python3.10/site-packages (from ffmpeg-python) (0.18.3)
+musetalk_root = "/dbfs/FileStore/MuseTalk"
+script_path = f"{musetalk_root}/scripts/inference_final_v4.py"
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-  File "/dbfs/FileStore/MuseTalk/scripts/inference_final_v3.py", line 64, in <module>
-    from musetalk.utils.preprocessing import get_landmark_and_bbox, read_imgs, coord_placeholder
-  File "/dbfs/FileStore/MuseTalk/musetalk/utils/preprocessing.py", line 10, in <module>
-    from mmpose.apis import inference_topdown, init_model
-ModuleNotFoundError: No module named 'mmpose'
-⚠️ Diffusers too new. Downgrading to 0.27.2...
-📦 Installing ffmpeg-python...
+# Read original code
+with open(f"{musetalk_root}/scripts/inference.py", "r") as f:
+    original_code = f.read()
 
-❌ FAILED with code 1
+# Define the "All-in-One" Header with OPENMMLAB SUPPORT
+all_in_one_header = """
+import sys
+import os
+import subprocess
+
+# --- 1. DISABLE BROKEN FLASH ATTENTION ---
+sys.modules["flash_attn"] = None
+# -----------------------------------------
+
+# --- 2. SELF-INSTALL COMPATIBLE DEPENDENCIES ---
+def install_if_missing(package, pip_name=None, extra_args=None):
+    if pip_name is None: pip_name = package
+    try:
+        __import__(package)
+    except ImportError:
+        print(f"📦 Installing missing: {pip_name}...")
+        try:
+            cmd = [sys.executable, "-m", "pip", "install", pip_name]
+            if extra_args:
+                cmd.extend(extra_args)
+            subprocess.check_call(cmd)
+        except Exception as e:
+            print(f"⚠️ Failed to install {pip_name}: {e}")
+
+# CRITICAL VERSIONS FOR TESLA T4 + PYTORCH 2.0.1
+install_if_missing("diffusers", "diffusers==0.27.2")     
+install_if_missing("transformers", "transformers==4.39.2")
+install_if_missing("accelerate", "accelerate==0.28.0")
+install_if_missing("omegaconf", "omegaconf==2.3.0")
+install_if_missing("tensorboardX", "tensorboardX")
+install_if_missing("ffmpeg", "ffmpeg-python")
+install_if_missing("lpips", "lpips")
+install_if_missing("facexlib", "facexlib")
+
+# --- INSTALL OPENMMLAB (MMPose, MMDet, MMCV) ---
+# We use the specific URL for CUDA 11.8 + PyTorch 2.0
+mmlab_url = "https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html"
+
+# Order matters: MMCV first, then Det, then Pose
+install_if_missing("mmcv", "mmcv==2.0.1", ["-f", mmlab_url])
+install_if_missing("mmdet", "mmdet==3.1.0", ["-f", mmlab_url])
+install_if_missing("mmpose", "mmpose==1.1.0", ["-f", mmlab_url])
+
+# --- 3. MONKEY PATCH PYTORCH ---
+import torch
+if not hasattr(torch.library, 'impl_abstract'):
+    def impl_abstract(qualname, func=None, *, lib=None, _stacklevel=1):
+        def decorator(f): return f
+        if func is not None: return decorator(func)
+        return decorator
+    torch.library.impl_abstract = impl_abstract
+
+sys.path.append(os.getcwd())
+"""
+
+# Save the new script
+with open(script_path, "w") as f:
+    f.write(all_in_one_header + original_code)
+
+print(f"✓ Created self-healing script v4: {script_path}")
+
+# Run it
+import subprocess
+
+cmd = [
+    sys.executable, "-m", "scripts.inference_final_v4",
+    "--inference_config", f"{musetalk_root}/configs/inference/my_inference.yaml",
+    "--result_dir", "/Volumes/lab37_catalog/ifstrolley/trolley/musetalk_output",
+    "--unet_model_path", "./models/musetalk/pytorch_model.bin",
+    "--unet_config", "./models/musetalk/musetalk.json",
+    "--use_float16" 
+]
+
+os.chdir(musetalk_root)
+print(f"🚀 Starting MuseTalk (Self-Healing V4: OpenMMLab Fix)...")
+print("   This may take a minute to install mmpose/mmcv if missing.")
+
+process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+for line in process.stdout:
+    print(line, end="")
+
+process.wait()
+
+if process.returncode == 0:
+    print(f"\n✅ SUCCESS!")
+else:
+    print(f"\n❌ FAILED")
