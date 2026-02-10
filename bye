@@ -7,8 +7,10 @@ Expected time: ~30 seconds for 17-second video
 
 
 
-STDERR: Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
+STDERR: /local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/generic.py:311: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  torch.utils._pytree._register_pytree_node(
+Traceback (most recent call last):
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1184, in _get_module
     return importlib.import_module("." + module_name, self.__name__)
   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
@@ -18,64 +20,82 @@ STDERR: Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/unet.py", line 46, in <module>
-    from .lora_pipeline import LORA_WEIGHT_NAME, LORA_WEIGHT_NAME_SAFE, TEXT_ENCODER_NAME, UNET_NAME
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/lora_pipeline.py", line 33, in <module>
-    from .lora_base import LoraBaseMixin
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/loaders/lora_base.py", line 47, in <module>
-    from peft.tuners.tuners_utils import BaseTunerLayer
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/__init__.py", line 17, in <module>
-    from .auto import (
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/auto.py", line 31, in <module>
-    from .config import PeftConfig
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/config.py", line 30, in <module>
-    from .utils import CONFIG_NAME, PeftType, TaskType
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/utils/__init__.py", line 16, in <module>
-    from .loftq_utils import replace_lora_weights_loftq
-  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/peft/utils/loftq_utils.py", line 25, in <module>
-    from accelerate.utils.memory import clear_device_cache
-ImportError: cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/generation/utils.py", line 27, in <module>
+    from ..integrations.deepspeed import is_deepspeed_zero3_enabled
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/integrations/__init__.py", line 14, in <module>
+    from .bitsandbytes import (
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/integrations/bitsandbytes.py", line 18, in <module>
+    from accelerate import init_empty_weights
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/__init__.py", line 16, in <module>
+    from .accelerator import Accelerator
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/accelerator.py", line 35, in <module>
+    from accelerate.utils.dataclasses import FP8BackendType
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/__init__.py", line 226, in <module>
+    from .bnb import has_4bit_bnb_layers, load_and_quantize_model
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/bnb.py", line 29, in <module>
+    from ..big_modeling import dispatch_model, init_empty_weights
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/big_modeling.py", line 25, in <module>
+    from .hooks import (
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/hooks.py", line 37, in <module>
+    from .utils.other import recursive_getattr
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/other.py", line 30, in <module>
+    from ..commands.config.default import write_basic_config  # noqa: F401
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/commands/config/__init__.py", line 19, in <module>
+    from .config import config_command_parser
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/commands/config/config.py", line 25, in <module>
+    from .sagemaker import get_sagemaker_input
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/commands/config/sagemaker.py", line 35, in <module>
+    import boto3  # noqa: F401
+  File "/databricks/python/lib/python3.10/site-packages/boto3/__init__.py", line 17, in <module>
+    from boto3.session import Session
+  File "/databricks/python/lib/python3.10/site-packages/boto3/session.py", line 17, in <module>
+    import botocore.session
+  File "/databricks/python/lib/python3.10/site-packages/botocore/session.py", line 26, in <module>
+    import botocore.client
+  File "/databricks/python/lib/python3.10/site-packages/botocore/client.py", line 17, in <module>
+    from botocore import waiter, xform_name
+  File "/databricks/python/lib/python3.10/site-packages/botocore/waiter.py", line 18, in <module>
+    from botocore.docs.docstring import WaiterDocstring
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/__init__.py", line 15, in <module>
+    from botocore.docs.service import ServiceDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/service.py", line 14, in <module>
+    from botocore.docs.client import ClientDocumenter, ClientExceptionsDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/client.py", line 14, in <module>
+    from botocore.docs.example import ResponseExampleDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/example.py", line 13, in <module>
+    from botocore.docs.shape import ShapeDocumenter
+  File "/databricks/python/lib/python3.10/site-packages/botocore/docs/shape.py", line 19, in <module>
+    from botocore.utils import is_json_value_header
+  File "/databricks/python/lib/python3.10/site-packages/botocore/utils.py", line 34, in <module>
+    import botocore.httpsession
+  File "/databricks/python/lib/python3.10/site-packages/botocore/httpsession.py", line 22, in <module>
+    from urllib3.util.ssl_ import (
+ImportError: cannot import name 'DEFAULT_CIPHERS' from 'urllib3.util.ssl_' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/urllib3/util/ssl_.py)
 
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1184, in _get_module
     return importlib.import_module("." + module_name, self.__name__)
   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
   File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
   File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
   File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
   File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 883, in exec_module
   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
-    from .autoencoder_asym_kl import AsymmetricAutoencoderKL
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
-    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 25, in <module>
-    from ..unets.unet_2d_blocks import (
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/__init__.py", line 6, in <module>
-    from .unet_2d import UNet2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/unet_2d.py", line 24, in <module>
-    from .unet_2d_blocks import UNetMidBlock2D, get_down_block, get_up_block
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/unets/unet_2d_blocks.py", line 36, in <module>
-    from ..transformers.dual_transformer_2d import DualTransformer2DModel
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/transformers/__init__.py", line 13, in <module>
-    from .prior_transformer import PriorTransformer
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/models/transformers/prior_transformer.py", line 9, in <module>
-    from ...loaders import PeftAdapterMixin, UNet2DConditionLoadersMixin
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/models/whisper/modeling_whisper.py", line 35, in <module>
+    from ...modeling_utils import PreTrainedModel
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/modeling_utils.py", line 39, in <module>
+    from .generation import GenerationConfig, GenerationMixin
   File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1174, in __getattr__
     module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1186, in _get_module
     raise RuntimeError(
-RuntimeError: Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
+RuntimeError: Failed to import transformers.generation.utils because of the following error (look up to see its traceback):
+cannot import name 'DEFAULT_CIPHERS' from 'urllib3.util.ssl_' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/urllib3/util/ssl_.py)
 
 The above exception was the direct cause of the following exception:
 
@@ -84,22 +104,18 @@ Traceback (most recent call last):
     return _run_code(code, main_globals, None,
   File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
     exec(code, run_globals)
-  File "/dbfs/FileStore/MuseTalk/scripts/inference.py", line 20, in <module>
-    from musetalk.utils.utils import get_file_type, get_video_fps, datagen, load_all_model
-  File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
-    from musetalk.models.vae import VAE
-  File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
-    from diffusers import AutoencoderKL
+  File "/dbfs/FileStore/MuseTalk/scripts/inference.py", line 14, in <module>
+    from transformers import WhisperModel
   File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 821, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1175, in __getattr__
     value = getattr(module, name)
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1174, in __getattr__
     module = self._get_module(self._class_to_module[name])
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1186, in _get_module
     raise RuntimeError(
-RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
-Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
-cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/accelerate/utils/memory.py)
+RuntimeError: Failed to import transformers.models.whisper.modeling_whisper because of the following error (look up to see its traceback):
+Failed to import transformers.generation.utils because of the following error (look up to see its traceback):
+cannot import name 'DEFAULT_CIPHERS' from 'urllib3.util.ssl_' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-557d239f-e59f-401f-81ff-8373f5dbd1cf/lib/python3.10/site-packages/urllib3/util/ssl_.py)
 
 
 ✅ flash_attn restored
