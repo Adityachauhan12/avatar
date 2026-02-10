@@ -1,31 +1,6 @@
-✓ Created self-healing script: /dbfs/FileStore/MuseTalk/scripts/inference_final.py
-🚀 Starting MuseTalk (Self-Healing Mode)...
-Collecting diffusers==0.30.2
-  Downloading diffusers-0.30.2-py3-none-any.whl (2.6 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 35.0 MB/s eta 0:00:00
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2) (3.9.0)
-Requirement already satisfied: huggingface-hub>=0.23.2 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2) (0.27.1)
-Requirement already satisfied: Pillow in /local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages (from diffusers==0.30.2) (12.1.0)
-Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2) (2.28.1)
-Requirement already satisfied: numpy in /local_disk0/.ephemeral_nfs/envs/pythonEnv-641976fa-caf1-4709-9b1c-66af6877202b/lib/python3.10/site-packages (from diffusers==0.30.2) (2.2.6)
-Requirement already satisfied: safetensors>=0.3.1 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2) (0.4.1)
-Requirement already satisfied: importlib-metadata in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from diffusers==0.30.2) (8.7.1)
-Requirement already satisfied: regex!=2019.12.17 in /databricks/python3/lib/python3.10/site-packages (from diffusers==0.30.2) (2022.7.9)
-Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.23.2->diffusers==0.30.2) (4.64.1)
-Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.23.2->diffusers==0.30.2) (2023.6.0)
-Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.23.2->diffusers==0.30.2) (6.0)
-Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface-hub>=0.23.2->diffusers==0.30.2) (23.2)
-Requirement already satisfied: typing-extensions>=3.7.4.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from huggingface-hub>=0.23.2->diffusers==0.30.2) (4.15.0)
-Requirement already satisfied: zipp>=3.20 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from importlib-metadata->diffusers==0.30.2) (3.23.0)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.30.2) (1.26.14)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.30.2) (3.4)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.30.2) (2.0.4)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->diffusers==0.30.2) (2022.12.7)
-Installing collected packages: diffusers
-Successfully installed diffusers-0.30.2
-
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
+✓ Created self-healing script v2: /dbfs/FileStore/MuseTalk/scripts/inference_final_v2.py
+🚀 Starting MuseTalk (Self-Healing Mode V2)...
+   This will install diffusers==0.27.2 first, then run.
 /databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
   _torch_pytree._register_pytree_node(
 /databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
@@ -109,7 +84,7 @@ Traceback (most recent call last):
     return _run_code(code, main_globals, None,
   File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
     exec(code, run_globals)
-  File "/dbfs/FileStore/MuseTalk/scripts/inference_final.py", line 60, in <module>
+  File "/dbfs/FileStore/MuseTalk/scripts/inference_final_v2.py", line 63, in <module>
     from musetalk.utils.utils import get_file_type, get_video_fps, datagen, load_all_model
   File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
     from musetalk.models.vae import VAE
@@ -125,6 +100,5 @@ Traceback (most recent call last):
 RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
 Failed to import diffusers.loaders.unet because of the following error (look up to see its traceback):
 cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
-📦 Installing missing: diffusers==0.30.2...
 
 ❌ FAILED
