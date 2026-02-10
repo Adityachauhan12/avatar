@@ -1,57 +1,243 @@
-✅ Config file created
-============================================================
-Starting MuseTalk inference...
-Expected time: ~30 seconds for 17-second video
-============================================================
-
-
-
-STDERR: /databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
-  _torch_pytree._register_pytree_node(
-Traceback (most recent call last):
-  File "/databricks/python/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1382, in _get_module
-    return importlib.import_module("." + module_name, self.__name__)
-  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
-  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
-  File "/databricks/python/lib/python3.10/site-packages/transformers/models/whisper/modeling_whisper.py", line 54, in <module>
-    from flash_attn import flash_attn_func, flash_attn_varlen_func
-  File "/databricks/python/lib/python3.10/site-packages/flash_attn/__init__.py", line 3, in <module>
-    from flash_attn.flash_attn_interface import (
-  File "/databricks/python/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py", line 10, in <module>
-    import flash_attn_2_cuda as flash_attn_cuda
-ImportError: /databricks/python/lib/python3.10/site-packages/flash_attn_2_cuda.cpython-310-x86_64-linux-gnu.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-  File "/dbfs/FileStore/MuseTalk/scripts/inference.py", line 14, in <module>
-    from transformers import WhisperModel
-  File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
-  File "/databricks/python/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1373, in __getattr__
-    value = getattr(module, name)
-  File "/databricks/python/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1372, in __getattr__
-    module = self._get_module(self._class_to_module[name])
-  File "/databricks/python/lib/python3.10/site-packages/transformers/utils/import_utils.py", line 1384, in _get_module
-    raise RuntimeError(
-RuntimeError: Failed to import transformers.models.whisper.modeling_whisper because of the following error (look up to see its traceback):
-/databricks/python/lib/python3.10/site-packages/flash_attn_2_cuda.cpython-310-x86_64-linux-gnu.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib
-
-
-============================================================
-✅ Processing complete!
-Check output at: /Volumes/lab37_catalog/ifstrolley/trolley/results/
-============================================================
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Collecting opencv-python
+  Downloading opencv_python-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl (72.9 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 72.9/72.9 MB 7.8 MB/s eta 0:00:00
+Collecting opencv-python-headless
+  Downloading opencv_python_headless-4.13.0.92-cp37-abi3-manylinux_2_28_x86_64.whl (60.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.4/60.4 MB 9.5 MB/s eta 0:00:00
+Collecting omegaconf
+  Downloading omegaconf-2.3.0-py3-none-any.whl (79 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.5/79.5 kB 10.9 MB/s eta 0:00:00
+Collecting diffusers
+  Downloading diffusers-0.36.0-py3-none-any.whl (4.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 68.0 MB/s eta 0:00:00
+Requirement already satisfied: accelerate in /databricks/python3/lib/python3.10/site-packages (0.25.0)
+Requirement already satisfied: einops in /databricks/python3/lib/python3.10/site-packages (0.7.0)
+Collecting imageio
+  Downloading imageio-2.37.2-py3-none-any.whl (317 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 317.6/317.6 kB 34.3 MB/s eta 0:00:00
+Collecting imageio-ffmpeg
+  Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.5/29.5 MB 16.0 MB/s eta 0:00:00
+Collecting gradio
+  Downloading gradio-6.5.1-py3-none-any.whl (24.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 24.2/24.2 MB 22.8 MB/s eta 0:00:00
+Collecting pydub
+  Downloading pydub-0.25.1-py2.py3-none-any.whl (32 kB)
+Collecting ffmpeg-python
+  Downloading ffmpeg_python-0.2.0-py3-none-any.whl (25 kB)
+Collecting transformers==4.30.0
+  Downloading transformers-4.30.0-py3-none-any.whl (7.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.2/7.2 MB 47.1 MB/s eta 0:00:00
+Requirement already satisfied: librosa in /databricks/python3/lib/python3.10/site-packages (0.10.1)
+Requirement already satisfied: scipy in /databricks/python3/lib/python3.10/site-packages (1.10.0)
+Requirement already satisfied: soundfile in /databricks/python3/lib/python3.10/site-packages (0.12.1)
+Collecting tokenizers!=0.11.3,<0.14,>=0.11.1
+  Downloading tokenizers-0.13.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (7.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.8/7.8 MB 63.3 MB/s eta 0:00:00
+Requirement already satisfied: numpy>=1.17 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from transformers==4.30.0) (1.26.4)
+Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (6.0)
+Requirement already satisfied: tqdm>=4.27 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (4.64.1)
+Requirement already satisfied: packaging>=20.0 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (23.2)
+Requirement already satisfied: huggingface-hub<1.0,>=0.14.1 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (0.27.1)
+Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (2.28.1)
+Requirement already satisfied: safetensors>=0.3.1 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (0.4.1)
+Requirement already satisfied: regex!=2019.12.17 in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (2022.7.9)
+Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from transformers==4.30.0) (3.9.0)
+Collecting numpy>=1.17
+  Downloading numpy-2.2.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (16.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.8/16.8 MB 33.7 MB/s eta 0:00:00
+Collecting antlr4-python3-runtime==4.9.*
+  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.0/117.0 kB 16.5 MB/s eta 0:00:00
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting huggingface-hub<1.0,>=0.14.1
+  Downloading huggingface_hub-0.36.2-py3-none-any.whl (566 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 566.4/566.4 kB 48.1 MB/s eta 0:00:00
+Requirement already satisfied: importlib_metadata in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from diffusers) (8.7.1)
+Collecting httpx<1.0.0
+  Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 10.0 MB/s eta 0:00:00
+Requirement already satisfied: Pillow in /databricks/python3/lib/python3.10/site-packages (from diffusers) (9.4.0)
+Requirement already satisfied: psutil in /databricks/python3/lib/python3.10/site-packages (from accelerate) (5.9.0)
+Requirement already satisfied: torch>=1.10.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from accelerate) (2.10.0)
+Requirement already satisfied: jinja2<4.0 in /databricks/python3/lib/python3.10/site-packages (from gradio) (3.1.2)
+Collecting brotli>=1.1.0
+  Downloading brotli-1.2.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 72.1 MB/s eta 0:00:00
+Requirement already satisfied: fastapi<1.0,>=0.115.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (0.128.6)
+Collecting aiofiles<25.0,>=22.0
+  Downloading aiofiles-24.1.0-py3-none-any.whl (15 kB)
+Collecting python-multipart>=0.0.18
+  Downloading python_multipart-0.0.22-py3-none-any.whl (24 kB)
+Collecting safehttpx<0.2.0,>=0.1.7
+  Downloading safehttpx-0.1.7-py3-none-any.whl (9.0 kB)
+Requirement already satisfied: pydantic<=3.0,>=2.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (2.12.5)
+Collecting semantic-version~=2.0
+  Downloading semantic_version-2.10.0-py2.py3-none-any.whl (15 kB)
+Collecting gradio-client==2.0.3
+  Downloading gradio_client-2.0.3-py3-none-any.whl (55 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.7/55.7 kB 7.5 MB/s eta 0:00:00
+Collecting groovy~=0.1
+  Downloading groovy-0.1.2-py3-none-any.whl (14 kB)
+Requirement already satisfied: typing-extensions~=4.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (4.15.0)
+Requirement already satisfied: markupsafe<4.0,>=2.0 in /databricks/python3/lib/python3.10/site-packages (from gradio) (2.1.1)
+Collecting ffmpy
+  Downloading ffmpy-1.0.0-py3-none-any.whl (5.6 kB)
+Requirement already satisfied: uvicorn>=0.14.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (0.40.0)
+Collecting tomlkit<0.14.0,>=0.12.0
+  Downloading tomlkit-0.13.3-py3-none-any.whl (38 kB)
+Requirement already satisfied: anyio<5.0,>=3.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (4.12.1)
+Requirement already satisfied: pandas<4.0,>=1.0 in /databricks/python3/lib/python3.10/site-packages (from gradio) (1.5.3)
+Requirement already satisfied: starlette<1.0,>=0.40.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from gradio) (0.52.1)
+Requirement already satisfied: pytz>=2017.2 in /databricks/python3/lib/python3.10/site-packages (from gradio) (2022.7)
+Collecting typer<1.0,>=0.12
+  Downloading typer-0.21.1-py3-none-any.whl (47 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 47.4/47.4 kB 6.2 MB/s eta 0:00:00
+Collecting orjson~=3.0
+  Downloading orjson-3.11.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (133 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.7/133.7 kB 15.9 MB/s eta 0:00:00
+Requirement already satisfied: fsspec in /databricks/python3/lib/python3.10/site-packages (from gradio-client==2.0.3->gradio) (2023.6.0)
+Requirement already satisfied: future in /databricks/python3/lib/python3.10/site-packages (from ffmpeg-python) (0.18.3)
+Requirement already satisfied: lazy-loader>=0.1 in /databricks/python3/lib/python3.10/site-packages (from librosa) (0.3)
+Requirement already satisfied: scikit-learn>=0.20.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from librosa) (1.7.2)
+Requirement already satisfied: numba>=0.51.0 in /databricks/python3/lib/python3.10/site-packages (from librosa) (0.56.4)
+Requirement already satisfied: audioread>=2.1.9 in /databricks/python3/lib/python3.10/site-packages (from librosa) (3.0.1)
+Requirement already satisfied: pooch>=1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa) (1.4.0)
+Requirement already satisfied: msgpack>=1.0 in /databricks/python3/lib/python3.10/site-packages (from librosa) (1.0.7)
+Requirement already satisfied: soxr>=0.3.2 in /databricks/python3/lib/python3.10/site-packages (from librosa) (0.3.7)
+Requirement already satisfied: decorator>=4.3.0 in /databricks/python3/lib/python3.10/site-packages (from librosa) (5.1.1)
+Requirement already satisfied: joblib>=0.14 in /databricks/python3/lib/python3.10/site-packages (from librosa) (1.2.0)
+Collecting scipy
+  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.7/37.7 MB 13.8 MB/s eta 0:00:00
+Requirement already satisfied: cffi>=1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from soundfile) (2.0.0)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from anyio<5.0,>=3.0->gradio) (1.3.1)
+Requirement already satisfied: idna>=2.8 in /databricks/python3/lib/python3.10/site-packages (from anyio<5.0,>=3.0->gradio) (3.4)
+Requirement already satisfied: pycparser in /databricks/python3/lib/python3.10/site-packages (from cffi>=1.0->soundfile) (2.21)
+Requirement already satisfied: annotated-doc>=0.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from fastapi<1.0,>=0.115.2->gradio) (0.0.4)
+Requirement already satisfied: typing-inspection>=0.4.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from fastapi<1.0,>=0.115.2->gradio) (0.4.2)
+Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1.0.0->diffusers) (2022.12.7)
+Collecting httpcore==1.*
+  Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 10.4 MB/s eta 0:00:00
+Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpcore==1.*->httpx<1.0.0->diffusers) (0.16.0)
+Collecting hf-xet<2.0.0,>=1.1.3
+  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 88.6 MB/s eta 0:00:00
+Requirement already satisfied: setuptools in /databricks/python3/lib/python3.10/site-packages (from numba>=0.51.0->librosa) (65.6.3)
+Requirement already satisfied: llvmlite<0.40,>=0.39.0dev0 in /databricks/python3/lib/python3.10/site-packages (from numba>=0.51.0->librosa) (0.39.1)
+Collecting numba>=0.51.0
+  Downloading numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.7/3.7 MB 37.7 MB/s eta 0:00:00
+Collecting llvmlite<0.47,>=0.46.0dev0
+  Downloading llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 MB 9.3 MB/s eta 0:00:00
+Requirement already satisfied: python-dateutil>=2.8.1 in /databricks/python3/lib/python3.10/site-packages (from pandas<4.0,>=1.0->gradio) (2.8.2)
+Requirement already satisfied: appdirs in /databricks/python3/lib/python3.10/site-packages (from pooch>=1.0->librosa) (1.4.4)
+Requirement already satisfied: pydantic-core==2.41.5 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from pydantic<=3.0,>=2.0->gradio) (2.41.5)
+Requirement already satisfied: annotated-types>=0.6.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from pydantic<=3.0,>=2.0->gradio) (0.7.0)
+Requirement already satisfied: threadpoolctl>=3.1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from scikit-learn>=0.20.0->librosa) (3.6.0)
+Requirement already satisfied: networkx>=2.5.1 in /databricks/python3/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (2.8.4)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.93)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.90)
+Requirement already satisfied: nvidia-nccl-cu12==2.27.5 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (2.27.5)
+Requirement already satisfied: nvidia-cufile-cu12==1.13.1.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (1.13.1.3)
+Requirement already satisfied: nvidia-cusolver-cu12==11.7.3.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (11.7.3.90)
+Requirement already satisfied: nvidia-nvshmem-cu12==3.4.5 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (3.4.5)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.90)
+Requirement already satisfied: triton==3.6.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (3.6.0)
+Requirement already satisfied: cuda-bindings==12.9.4 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.9.4)
+Requirement already satisfied: nvidia-cudnn-cu12==9.10.2.21 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (9.10.2.21)
+Requirement already satisfied: nvidia-cublas-cu12==12.8.4.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.4.1)
+Requirement already satisfied: nvidia-nvtx-cu12==12.8.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.90)
+Requirement already satisfied: sympy>=1.13.3 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (1.14.0)
+Requirement already satisfied: nvidia-curand-cu12==10.3.9.90 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (10.3.9.90)
+Requirement already satisfied: nvidia-cusparselt-cu12==0.7.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (0.7.1)
+Requirement already satisfied: nvidia-cusparse-cu12==12.5.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.5.8.93)
+Requirement already satisfied: nvidia-cufft-cu12==11.3.3.83 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (11.3.3.83)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.8.93 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch>=1.10.0->accelerate) (12.8.93)
+Requirement already satisfied: cuda-pathfinder~=1.1 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from cuda-bindings==12.9.4->torch>=1.10.0->accelerate) (1.3.3)
+Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer<1.0,>=0.12->gradio) (8.0.4)
+Collecting rich>=10.11.0
+  Downloading rich-14.3.2-py3-none-any.whl (309 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 310.0/310.0 kB 31.7 MB/s eta 0:00:00
+Collecting shellingham>=1.3.0
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Requirement already satisfied: zipp>=3.20 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from importlib_metadata->diffusers) (3.23.0)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->transformers==4.30.0) (1.26.14)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->transformers==4.30.0) (2.0.4)
+Requirement already satisfied: six>=1.5 in /usr/lib/python3/dist-packages (from python-dateutil>=2.8.1->pandas<4.0,>=1.0->gradio) (1.16.0)
+Collecting pygments<3.0.0,>=2.13.0
+  Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 67.1 MB/s eta 0:00:00
+Collecting markdown-it-py>=2.2.0
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.3/87.3 kB 13.0 MB/s eta 0:00:00
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from sympy>=1.13.3->torch>=1.10.0->accelerate) (1.2.1)
+Collecting mdurl~=0.1
+  Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Building wheels for collected packages: antlr4-python3-runtime
+  Building wheel for antlr4-python3-runtime (setup.py): started
+  Building wheel for antlr4-python3-runtime (setup.py): finished with status 'done'
+  Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144554 sha256=fb6ec66ee2c40155fa73a69dbfc34dc89e7f7eb60145c56f3c3a81e41110c3cf
+  Stored in directory: /root/.cache/pip/wheels/48/6a/c2/acb58c7afdf57e4cddf5e1513f5a2d62aa8e98f82a00c76d7c
+Successfully built antlr4-python3-runtime
+Installing collected packages: tokenizers, pydub, brotli, antlr4-python3-runtime, tomlkit, shellingham, semantic-version, python-multipart, pygments, orjson, omegaconf, numpy, mdurl, llvmlite, imageio-ffmpeg, httpcore, hf-xet, groovy, ffmpy, ffmpeg-python, aiofiles, scipy, opencv-python-headless, opencv-python, numba, markdown-it-py, imageio, huggingface-hub, transformers, rich, httpx, typer, safehttpx, gradio-client, diffusers, gradio
+  Attempting uninstall: tokenizers
+    Found existing installation: tokenizers 0.15.0
+    Not uninstalling tokenizers at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'tokenizers'. No files were found to uninstall.
+  Attempting uninstall: pygments
+    Found existing installation: Pygments 2.11.2
+    Not uninstalling pygments at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'Pygments'. No files were found to uninstall.
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.26.4
+    Not uninstalling numpy at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'numpy'. No files were found to uninstall.
+  Attempting uninstall: llvmlite
+    Found existing installation: llvmlite 0.39.1
+    Not uninstalling llvmlite at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'llvmlite'. No files were found to uninstall.
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.10.0
+    Not uninstalling scipy at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'scipy'. No files were found to uninstall.
+  Attempting uninstall: numba
+    Found existing installation: numba 0.56.4
+    Not uninstalling numba at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'numba'. No files were found to uninstall.
+  Attempting uninstall: huggingface-hub
+    Found existing installation: huggingface-hub 0.27.1
+    Not uninstalling huggingface-hub at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'huggingface-hub'. No files were found to uninstall.
+  Attempting uninstall: transformers
+    Found existing installation: transformers 4.36.1
+    Not uninstalling transformers at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'transformers'. No files were found to uninstall.
+  Attempting uninstall: typer
+    Found existing installation: typer 0.9.0
+    Not uninstalling typer at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-50252f55-878d-4509-8ab7-9eba971dea81
+    Can't uninstall 'typer'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
+nbclassic 0.5.2 requires prometheus-client, which is not installed.
+jupyter-server 1.23.4 requires prometheus-client, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 2.2.6 which is incompatible.
+ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
+ydata-profiling 4.2.0 requires scipy<1.11,>=1.4.1, but you have scipy 1.15.3 which is incompatible.
+weasel 0.3.4 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.1 which is incompatible.
+torchvision 0.15.2+cu118 requires torch==2.0.1, but you have torch 2.10.0 which is incompatible.
+tensorflow 2.14.1 requires numpy<2.0.0,>=1.23.5, but you have numpy 2.2.6 which is incompatible.
+tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
+spacy 3.7.2 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.1 which is incompatible.
+langchain 0.0.348 requires numpy<2,>=1, but you have numpy 2.2.6 which is incompatible.
+jupyter-server 1.23.4 requires anyio<4,>=3.1.0, but you have anyio 4.12.1 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
+databricks-feature-engineering 0.2.1 requires numpy<2,>=1.19.2, but you have numpy 2.2.6 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
+Successfully installed aiofiles-24.1.0 antlr4-python3-runtime-4.9.3 brotli-1.2.0 diffusers-0.36.0 ffmpeg-python-0.2.0 ffmpy-1.0.0 gradio-6.5.1 gradio-client-2.0.3 groovy-0.1.2 hf-xet-1.2.0 httpcore-1.0.9 httpx-0.28.1 huggingface-hub-0.36.2 imageio-2.37.2 imageio-ffmpeg-0.6.0 llvmlite-0.46.0 markdown-it-py-4.0.0 mdurl-0.1.2 numba-0.63.1 numpy-2.2.6 omegaconf-2.3.0 opencv-python-4.13.0.92 opencv-python-headless-4.13.0.92 orjson-3.11.7 pydub-0.25.1 pygments-2.19.2 python-multipart-0.0.22 rich-14.3.2 safehttpx-0.1.7 scipy-1.15.3 semantic-version-2.10.0 shellingham-1.5.4 tokenizers-0.13.3 tomlkit-0.13.3 transformers-4.30.0 typer-0.21.1
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
