@@ -32,8 +32,8 @@ Traceback (most recent call last):
     from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
   File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 24, in <module>
     from ..attention_processor import SpatialNorm
-  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 34, in <module>
-    import xformers
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 35, in <module>
+    import xformers.ops
   File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/__init__.py", line 12, in <module>
     from .checkpoint import (  # noqa: E402, F401
   File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/checkpoint.py", line 57, in <module>
