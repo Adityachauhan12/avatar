@@ -1,43 +1,17 @@
-📦 MMlab via PyPI source (100% reliable)...
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-mmengine 0.10.3 requires rich, which is not installed.
-xformers 0.0.34 requires torch==2.10.0, but you have torch 2.0.1 which is incompatible.
-torchaudio 2.10.0 requires torch==2.10.0, but you have torch 2.0.1 which is incompatible.
-bitsandbytes 0.49.1 requires torch<3,>=2.3, but you have torch 2.0.1 which is incompatible.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-nbclassic 0.5.2 requires prometheus-client, which is not installed.
-jupyter-server 1.23.4 requires prometheus-client, which is not installed.
-databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
-jupyter-server 1.23.4 requires anyio<4,>=3.1.0, but you have anyio 4.12.1 which is incompatible.
-databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
-databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-petastorm 0.12.1 requires pyspark>=2.1.0, which is not installed.
-databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
-xformers 0.0.34 requires torch==2.10.0, but you have torch 2.0.1 which is incompatible.
-bitsandbytes 0.49.1 requires torch<3,>=2.3, but you have torch 2.0.1 which is incompatible.
-ydata-profiling 4.2.0 requires numpy<1.24,>=1.16.0, but you have numpy 2.2.6 which is incompatible.
-ydata-profiling 4.2.0 requires pydantic<2,>=1.8.1, but you have pydantic 2.12.5 which is incompatible.
-ydata-profiling 4.2.0 requires scipy<1.11,>=1.4.1, but you have scipy 1.15.3 which is incompatible.
-weasel 0.3.4 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.2 which is incompatible.
-transformers 4.36.1 requires huggingface-hub<1.0,>=0.19.3, but you have huggingface-hub 1.4.1 which is incompatible.
-tokenizers 0.15.0 requires huggingface_hub<1.0,>=0.16.4, but you have huggingface-hub 1.4.1 which is incompatible.
-tensorflow 2.14.1 requires numpy<2.0.0,>=1.23.5, but you have numpy 2.2.6 which is incompatible.
-tensorflow 2.14.1 requires protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3, but you have protobuf 6.33.5 which is incompatible.
-spacy 3.7.2 requires typer<0.10.0,>=0.3.0, but you have typer 0.21.2 which is incompatible.
-langchain 0.0.348 requires numpy<2,>=1, but you have numpy 2.2.6 which is incompatible.
-databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
-databricks-feature-engineering 0.2.1 requires numpy<2,>=1.19.2, but you have numpy 2.2.6 which is incompatible.
-databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-✅ MMlab PyPI complete (source installs)
-→ RESTART → Cell 5
+🎯 VERIFICATION - ALL MUST PASS
+==================================================
+PyTorch: 2.10.0+cu128 | CUDA: True
+NumPy: 1.26.4
+/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:441: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+/databricks/python/lib/python3.10/site-packages/transformers/utils/generic.py:309: FutureWarning: `torch.utils._pytree._register_pytree_node` is deprecated. Please use `torch.utils._pytree.register_pytree_node` instead.
+  _torch_pytree._register_pytree_node(
+2026-02-11 06:44:03.254853: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2026-02-11 06:44:03.254911: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2026-02-11 06:44:03.254954: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2026-02-11 06:44:03.289494: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Unexpected internal error when monkey patching `Trainer.train`: Failed to import transformers.trainer because of the following error (look up to see its traceback):
+cannot import name 'clear_device_cache' from 'accelerate.utils.memory' (/databricks/python/lib/python3.10/site-packages/accelerate/utils/memory.py)
+Transformers: 4.36.1 RuntimeError: Failed to import transformers.models.whisper.modeling_whisper because of the following error (look up to see its traceback):
+/databricks/python/lib/python3.10/site-packages/flash_attn_2_cuda.cpython-310-x86_64-linux-gnu.so: undefined symbol: _ZN3c104cuda29c10_cuda_check_implementationEiPKcS2_ib
