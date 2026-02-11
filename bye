@@ -1,46 +1,60 @@
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
-Looking in links: https://download.pytorch.org/whl/torch_stable.html
-Collecting torch==2.0.1+cu118
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 GB ? eta 0:00:00
-Requirement already satisfied: torchvision==0.15.2+cu118 in /databricks/python3/lib/python3.10/site-packages (0.15.2+cu118)
-Collecting torchaudio==2.0.2+cu118
-  Downloading https://download.pytorch.org/whl/cu118/torchaudio-2.0.2%2Bcu118-cp310-cp310-linux_x86_64.whl (4.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 48.4 MB/s eta 0:00:00
-Requirement already satisfied: filelock in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1+cu118) (3.9.0)
-Requirement already satisfied: sympy in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1+cu118) (1.14.0)
-Collecting triton==2.0.0
-  Downloading triton-2.0.0-1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (63.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 MB 9.2 MB/s eta 0:00:00
-Requirement already satisfied: jinja2 in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1+cu118) (3.1.2)
-Requirement already satisfied: networkx in /databricks/python3/lib/python3.10/site-packages (from torch==2.0.1+cu118) (2.8.4)
-Requirement already satisfied: typing-extensions in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from torch==2.0.1+cu118) (4.15.0)
-Requirement already satisfied: numpy in /local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (1.23.5)
-Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /databricks/python3/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (9.4.0)
-Requirement already satisfied: requests in /databricks/python3/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (2.28.1)
-Requirement already satisfied: cmake in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1+cu118) (3.28.1)
-Requirement already satisfied: lit in /databricks/python3/lib/python3.10/site-packages (from triton==2.0.0->torch==2.0.1+cu118) (17.0.6)
-Requirement already satisfied: MarkupSafe>=2.0 in /databricks/python3/lib/python3.10/site-packages (from jinja2->torch==2.0.1+cu118) (2.1.1)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (1.26.14)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (3.4)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (2022.12.7)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (2.0.4)
-Requirement already satisfied: mpmath<1.4,>=1.1.0 in /databricks/python3/lib/python3.10/site-packages (from sympy->torch==2.0.1+cu118) (1.2.1)
-Installing collected packages: triton, torch, torchaudio
-  Attempting uninstall: triton
-    Found existing installation: triton 3.6.0
-    Not uninstalling triton at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8
-    Can't uninstall 'triton'. No files were found to uninstall.
-  Attempting uninstall: torch
-    Found existing installation: torch 2.10.0
-    Not uninstalling torch at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8
-    Can't uninstall 'torch'. No files were found to uninstall.
-  Attempting uninstall: torchaudio
-    Found existing installation: torchaudio 2.10.0
-    Not uninstalling torchaudio at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8
-    Can't uninstall 'torchaudio'. No files were found to uninstall.
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-xformers 0.0.34 requires torch==2.10.0, but you have torch 2.0.1+cu118 which is incompatible.
-bitsandbytes 0.49.1 requires torch<3,>=2.3, but you have torch 2.0.1+cu118 which is incompatible.
-Successfully installed torch-2.0.1+cu118 torchaudio-2.0.2+cu118 triton-2.0.0
-Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+WARNING[XFORMERS]: xFormers can't load C++/CUDA extensions. xFormers was built for:
+    PyTorch 2.10.0+cu128 with CUDA 1208 (you have 2.0.1+cu118)
+    Python  3.10.19 (you have 3.10.12)
+  Please reinstall xformers (see https://github.com/facebookresearch/xformers#installing-xformers)
+  Memory-efficient attention, SwiGLU, sparse and more won't be available.
+  Set XFORMERS_MORE_DETAILS=1 for more details
+Traceback (most recent call last):
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/checkpoint.py", line 53, in <module>
+    from torch.utils.checkpoint import SAC_IGNORED_OPS as _ignored_ops  # type: ignore
+ImportError: cannot import name 'SAC_IGNORED_OPS' from 'torch.utils.checkpoint' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/torch/utils/checkpoint.py)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 830, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+  File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 992, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "<frozen importlib._bootstrap>", line 1050, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1027, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1006, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 688, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/autoencoders/__init__.py", line 1, in <module>
+    from .autoencoder_asym_kl import AsymmetricAutoencoderKL
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/autoencoders/autoencoder_asym_kl.py", line 23, in <module>
+    from .vae import DecoderOutput, DiagonalGaussianDistribution, Encoder, MaskConditionDecoder
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/autoencoders/vae.py", line 24, in <module>
+    from ..attention_processor import SpatialNorm
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/models/attention_processor.py", line 34, in <module>
+    import xformers
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/__init__.py", line 12, in <module>
+    from .checkpoint import (  # noqa: E402, F401
+  File "/local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages/xformers/checkpoint.py", line 57, in <module>
+    from torch.utils.checkpoint import _ignored_ops  # type: ignore
+ImportError: cannot import name '_ignored_ops' from 'torch.utils.checkpoint' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/torch/utils/checkpoint.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/dbfs/FileStore/MuseTalk/scripts/inference.py", line 20, in <module>
+    from musetalk.utils.utils import get_file_type, get_video_fps, datagen, load_all_model
+  File "/dbfs/FileStore/MuseTalk/musetalk/utils/utils.py", line 11, in <module>
+    from musetalk.models.vae import VAE
+  File "/dbfs/FileStore/MuseTalk/musetalk/models/vae.py", line 1, in <module>
+    from diffusers import AutoencoderKL
+  File "<frozen importlib._bootstrap>", line 1075, in _handle_fromlist
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 821, in __getattr__
+    value = getattr(module, name)
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 820, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File "/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/diffusers/utils/import_utils.py", line 832, in _get_module
+    raise RuntimeError(
+RuntimeError: Failed to import diffusers.models.autoencoders.autoencoder_kl because of the following error (look up to see its traceback):
+cannot import name '_ignored_ops' from 'torch.utils.checkpoint' (/local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8/lib/python3.10/site-packages/torch/utils/checkpoint.py)
