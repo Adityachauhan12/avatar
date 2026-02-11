@@ -1,3 +1,8 @@
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
+Found existing installation: xformers 0.0.34
+Not uninstalling xformers at /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-2dce6480-cb73-4fcf-8134-93158c33e5d8
+Can't uninstall 'xformers'. No files were found to uninstall.
+Note: you may need to restart the kernel using dbutils.library.restartPython() to use updated packages.
 WARNING[XFORMERS]: xFormers can't load C++/CUDA extensions. xFormers was built for:
     PyTorch 2.10.0+cu128 with CUDA 1208 (you have 2.0.1+cu118)
     Python  3.10.19 (you have 3.10.12)
