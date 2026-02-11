@@ -1,100 +1,271 @@
-Requirement already satisfied: pip in /local_disk0/musetalk_venv/lib/python3.10/site-packages (25.3)
-Collecting pip
-  Using cached pip-26.0.1-py3-none-any.whl.metadata (4.7 kB)
-Requirement already satisfied: setuptools in /local_disk0/musetalk_venv/lib/python3.10/site-packages (80.9.0)
-Collecting setuptools
-  Using cached setuptools-82.0.0-py3-none-any.whl.metadata (6.6 kB)
-Collecting wheel
-  Downloading wheel-0.46.3-py3-none-any.whl.metadata (2.4 kB)
-Collecting packaging>=24.0 (from wheel)
-  Downloading packaging-26.0-py3-none-any.whl.metadata (3.3 kB)
-Using cached pip-26.0.1-py3-none-any.whl (1.8 MB)
-Using cached setuptools-82.0.0-py3-none-any.whl (1.0 MB)
-Downloading wheel-0.46.3-py3-none-any.whl (30 kB)
-Downloading packaging-26.0-py3-none-any.whl (74 kB)
-Installing collected packages: setuptools, pip, packaging, wheel
-  Attempting uninstall: setuptools
-    Found existing installation: setuptools 80.9.0
-    Uninstalling setuptools-80.9.0:
-      Successfully uninstalled setuptools-80.9.0
-  Attempting uninstall: pip━━━━━━━━━━━━━━━━━━━━━ 0/4 [setuptools]
-    Found existing installation: pip 25.3━━━ 0/4 [setuptools]
-    Uninstalling pip-25.3:━━━━━━━━━━━━━━━━━━ 0/4 [setuptools]
-      Successfully uninstalled pip-25.3━━━━━ 0/4 [setuptools]
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [wheel]32m1/4 [pip]
-Successfully installed packaging-26.0 pip-26.0.1 setuptools-82.0.0 wheel-0.46.3
-Looking in indexes: https://download.pytorch.org/whl/cu118
-Collecting torch==2.0.1+cu118
-  Downloading https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸ 2.3/2.3 GB 46.4 MB/s eta 0:00:0100:02m
+Collecting mmengine==0.10.3
+  Downloading mmengine-0.10.3-py3-none-any.whl.metadata (20 kB)
+Collecting mmdet==3.1.0
+  Downloading mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
+Collecting mmpose==1.1.0
+  Downloading mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
+Collecting addict (from mmengine==0.10.3)
+  Downloading addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
+Collecting matplotlib (from mmengine==0.10.3)
+  Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (1.26.4)
+Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (6.0.3)
+Collecting rich (from mmengine==0.10.3)
+  Downloading rich-14.3.2-py3-none-any.whl.metadata (18 kB)
+Collecting termcolor (from mmengine==0.10.3)
+  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting yapf (from mmengine==0.10.3)
+  Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
+Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (4.9.0.80)
+Collecting pycocotools (from mmdet==3.1.0)
+  Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
+Collecting scipy (from mmdet==3.1.0)
+  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting shapely (from mmdet==3.1.0)
+  Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
+Collecting six (from mmdet==3.1.0)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting terminaltables (from mmdet==3.1.0)
+  Downloading terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting chumpy (from mmpose==1.1.0)
+  Downloading chumpy-0.70.tar.gz (50 kB)
+  Installing build dependencies ... done
+  Getting requirements to build wheel ... error
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [23 lines of output]
+      Traceback (most recent call last):
+        File "<string>", line 9, in <module>
+      ModuleNotFoundError: No module named 'pip'
+      
+      During handling of the above exception, another exception occurred:
+      
+      Traceback (most recent call last):
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())
+        File "<string>", line 11, in <module>
+      ModuleNotFoundError: No module named 'pip'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'chumpy' when getting requirements to build wheel
+Looking in links: https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
+Collecting mmcv==2.0.1
+  Downloading https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/mmcv-2.0.1-cp310-cp310-manylinux1_x86_64.whl (74.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 MB 28.3 MB/s  0:00:02m0:00:0100:01
+Collecting addict (from mmcv==2.0.1)
+  Using cached addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
+Collecting mmengine>=0.3.0 (from mmcv==2.0.1)
+  Downloading mmengine-0.10.7-py3-none-any.whl.metadata (20 kB)
+Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (1.26.4)
+Requirement already satisfied: packaging in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (26.0)
+Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (12.0.0)
+Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (6.0.3)
+Collecting yapf (from mmcv==2.0.1)
+  Using cached yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
+Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (4.9.0.80)
+Collecting matplotlib (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+Collecting rich (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached rich-14.3.2-py3-none-any.whl.metadata (18 kB)
+Collecting termcolor (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting contourpy>=1.0.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.22.0 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
+Collecting pyparsing>=3 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting python-dateutil>=2.7 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting markdown-it-py>=2.2.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting platformdirs>=3.5.1 (from yapf->mmcv==2.0.1)
+  Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+Collecting tomli>=2.0.1 (from yapf->mmcv==2.0.1)
+  Downloading tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
+Downloading mmengine-0.10.7-py3-none-any.whl (452 kB)
+Downloading addict-2.4.0-py3-none-any.whl (3.8 kB)
+Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 55.8 MB/s  0:00:00
+Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 69.6 MB/s  0:00:00
+Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 65.6 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading rich-14.3.2-py3-none-any.whl (309 kB)
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 51.7 MB/s  0:00:00
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+Downloading yapf-0.43.0-py3-none-any.whl (256 kB)
+Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
+Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
+Installing collected packages: addict, tomli, termcolor, six, pyparsing, pygments, platformdirs, mdurl, kiwisolver, fonttools, cycler, contourpy, yapf, python-dateutil, markdown-it-py, rich, matplotlib, mmengine, mmcv
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19/19 [mmcv]2m18/19 [mmcv]ine]b]
+Successfully installed addict-2.4.0 contourpy-1.3.2 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 markdown-it-py-4.0.0 matplotlib-3.10.8 mdurl-0.1.2 mmcv-2.0.1 mmengine-0.10.7 platformdirs-4.5.1 pygments-2.19.2 pyparsing-3.3.2 python-dateutil-2.9.0.post0 rich-14.3.2 six-1.17.0 termcolor-3.3.0 tomli-2.4.0 yapf-0.43.0
 
-*** WARNING: max output size exceeded, skipping output. ***
-
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 20/20 [torchaudio]0 [torchaudio]]
-Successfully installed MarkupSafe-2.1.5 certifi-2022.12.7 charset-normalizer-2.1.1 cmake-3.25.0 filelock-3.20.0 idna-3.4 jinja2-3.1.6 lit-15.0.7 mpmath-1.3.0 networkx-3.4.2 numpy-2.2.6 pillow-12.0.0 requests-2.28.1 sympy-1.14.0 torch-2.0.1+cu118 torchaudio-2.0.2+cu118 torchvision-0.15.2+cu118 triton-2.0.0 typing-extensions-4.15.0 urllib3-1.26.13
-Collecting transformers==4.39.2
-  Downloading transformers-4.39.2-py3-none-any.whl.metadata (134 kB)
-Collecting diffusers==0.30.2
-  Downloading diffusers-0.30.2-py3-none-any.whl.metadata (18 kB)
-Collecting accelerate==0.27.2
-  Downloading accelerate-0.27.2-py3-none-any.whl.metadata (18 kB)
-Collecting huggingface-hub==0.25.2
-  Downloading huggingface_hub-0.25.2-py3-none-any.whl.metadata (13 kB)
-Requirement already satisfied: filelock in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2) (3.20.0)
-Requirement already satisfied: numpy>=1.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2) (2.2.6)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2) (26.0)
-Collecting pyyaml>=5.1 (from transformers==4.39.2)
-  Downloading pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
-Collecting regex!=2019.12.17 (from transformers==4.39.2)
-  Downloading regex-2026.1.15-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
-Requirement already satisfied: requests in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2) (2.28.1)
-Collecting tokenizers<0.19,>=0.14 (from transformers==4.39.2)
-  Downloading tokenizers-0.15.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.7 kB)
-Collecting safetensors>=0.4.1 (from transformers==4.39.2)
-  Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
-Collecting tqdm>=4.27 (from transformers==4.39.2)
-  Downloading tqdm-4.67.3-py3-none-any.whl.metadata (57 kB)
-Collecting fsspec>=2023.5.0 (from huggingface-hub==0.25.2)
-  Downloading fsspec-2026.2.0-py3-none-any.whl.metadata (10 kB)
-Requirement already satisfied: typing-extensions>=3.7.4.3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from huggingface-hub==0.25.2) (4.15.0)
-Collecting importlib-metadata (from diffusers==0.30.2)
-  Downloading importlib_metadata-8.7.1-py3-none-any.whl.metadata (4.7 kB)
-Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2) (12.0.0)
-Collecting psutil (from accelerate==0.27.2)
-  Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl.metadata (22 kB)
-Requirement already satisfied: torch>=1.10.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.27.2) (2.0.1+cu118)
-Requirement already satisfied: sympy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.27.2) (1.14.0)
-Requirement already satisfied: networkx in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.27.2) (3.4.2)
-Requirement already satisfied: jinja2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.27.2) (3.1.6)
-Requirement already satisfied: triton==2.0.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch>=1.10.0->accelerate==0.27.2) (2.0.0)
-Requirement already satisfied: cmake in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from triton==2.0.0->torch>=1.10.0->accelerate==0.27.2) (3.25.0)
-Requirement already satisfied: lit in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from triton==2.0.0->torch>=1.10.0->accelerate==0.27.2) (15.0.7)
-Collecting zipp>=3.20 (from importlib-metadata->diffusers==0.30.2)
-  Downloading zipp-3.23.0-py3-none-any.whl.metadata (3.6 kB)
-Requirement already satisfied: MarkupSafe>=2.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from jinja2->torch>=1.10.0->accelerate==0.27.2) (2.1.5)
-Requirement already satisfied: charset-normalizer<3,>=2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->transformers==4.39.2) (2.1.1)
-Requirement already satisfied: idna<4,>=2.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->transformers==4.39.2) (3.4)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->transformers==4.39.2) (1.26.13)
-Requirement already satisfied: certifi>=2017.4.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->transformers==4.39.2) (2022.12.7)
-Requirement already satisfied: mpmath<1.4,>=1.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from sympy->torch>=1.10.0->accelerate==0.27.2) (1.3.0)
-Downloading transformers-4.39.2-py3-none-any.whl (8.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.8/8.8 MB 68.0 MB/s  0:00:00
-Downloading huggingface_hub-0.25.2-py3-none-any.whl (436 kB)
-Downloading diffusers-0.30.2-py3-none-any.whl (2.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.6/2.6 MB 55.5 MB/s  0:00:00
-Downloading accelerate-0.27.2-py3-none-any.whl (279 kB)
-Downloading tokenizers-0.15.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.6/3.6 MB 69.2 MB/s  0:00:00
-Downloading fsspec-2026.2.0-py3-none-any.whl (202 kB)
-Downloading pyyaml-6.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (770 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 770.3/770.3 kB 30.9 MB/s  0:00:00
-Downloading regex-2026.1.15-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (791 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 791.8/791.8 kB 33.1 MB/s  0:00:00
-Downloading safetensors-0.7.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (507 kB)
-Downloading tqdm-4.67.3-py3-none-any.whl (78 kB)
-Downloading importlib_metadata-8.7.1-py3-none-any.whl (27 kB)
-Downloading zipp-3.23.0-py3-none-any.whl (10 kB)
-Downloading psutil-7.2.2-cp36-abi3-manylinux2010_x86_64.manylinux_2_12_x86_64.manylinux_2_28_x86_64.whl (155 kB)
-Installing collected packages: zipp, tqdm, safetensors, regex, pyyaml, psutil, fsspec, importlib-metadata, huggingface-hub, tokenizers, diffusers, transformers, accelerate
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13/13 [accelerate]3 [accelerate]s]ub]
-Successfully installed accelerate-0.27.2 diffusers-0.30.2 fsspec-2026.2.0 huggingface-hub-0.25.2 importlib-metadata-8.7.1 psutil-7.2.2 pyyaml-6.0.3 regex-2026.1.15 safetensors-0.7.0 tokenizers-0.15.2 tqdm-4.67.3 transformers-4.39.2 zipp-3.23.0
+next cell output Collecting mmengine==0.10.3
+  Downloading mmengine-0.10.3-py3-none-any.whl.metadata (20 kB)
+Collecting mmdet==3.1.0
+  Downloading mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
+Collecting mmpose==1.1.0
+  Downloading mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
+Collecting addict (from mmengine==0.10.3)
+  Downloading addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
+Collecting matplotlib (from mmengine==0.10.3)
+  Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (1.26.4)
+Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (6.0.3)
+Collecting rich (from mmengine==0.10.3)
+  Downloading rich-14.3.2-py3-none-any.whl.metadata (18 kB)
+Collecting termcolor (from mmengine==0.10.3)
+  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting yapf (from mmengine==0.10.3)
+  Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
+Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (4.9.0.80)
+Collecting pycocotools (from mmdet==3.1.0)
+  Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
+Collecting scipy (from mmdet==3.1.0)
+  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Collecting shapely (from mmdet==3.1.0)
+  Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
+Collecting six (from mmdet==3.1.0)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting terminaltables (from mmdet==3.1.0)
+  Downloading terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting chumpy (from mmpose==1.1.0)
+  Downloading chumpy-0.70.tar.gz (50 kB)
+  Installing build dependencies ... done
+  Getting requirements to build wheel ... error
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [23 lines of output]
+      Traceback (most recent call last):
+        File "<string>", line 9, in <module>
+      ModuleNotFoundError: No module named 'pip'
+      
+      During handling of the above exception, another exception occurred:
+      
+      Traceback (most recent call last):
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())
+        File "<string>", line 11, in <module>
+      ModuleNotFoundError: No module named 'pip'
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'chumpy' when getting requirements to build wheel
+Looking in links: https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
+Collecting mmcv==2.0.1
+  Downloading https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/mmcv-2.0.1-cp310-cp310-manylinux1_x86_64.whl (74.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 MB 28.3 MB/s  0:00:02m0:00:0100:01
+Collecting addict (from mmcv==2.0.1)
+  Using cached addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
+Collecting mmengine>=0.3.0 (from mmcv==2.0.1)
+  Downloading mmengine-0.10.7-py3-none-any.whl.metadata (20 kB)
+Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (1.26.4)
+Requirement already satisfied: packaging in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (26.0)
+Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (12.0.0)
+Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (6.0.3)
+Collecting yapf (from mmcv==2.0.1)
+  Using cached yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
+Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (4.9.0.80)
+Collecting matplotlib (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+Collecting rich (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached rich-14.3.2-py3-none-any.whl.metadata (18 kB)
+Collecting termcolor (from mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting contourpy>=1.0.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.22.0 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
+Collecting pyparsing>=3 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting python-dateutil>=2.7 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting markdown-it-py>=2.2.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->mmengine>=0.3.0->mmcv==2.0.1)
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Collecting platformdirs>=3.5.1 (from yapf->mmcv==2.0.1)
+  Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+Collecting tomli>=2.0.1 (from yapf->mmcv==2.0.1)
+  Downloading tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
+Downloading mmengine-0.10.7-py3-none-any.whl (452 kB)
+Downloading addict-2.4.0-py3-none-any.whl (3.8 kB)
+Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 55.8 MB/s  0:00:00
+Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 69.6 MB/s  0:00:00
+Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 65.6 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading rich-14.3.2-py3-none-any.whl (309 kB)
+Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 51.7 MB/s  0:00:00
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
+Downloading yapf-0.43.0-py3-none-any.whl (256 kB)
+Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
+Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
+Installing collected packages: addict, tomli, termcolor, six, pyparsing, pygments, platformdirs, mdurl, kiwisolver, fonttools, cycler, contourpy, yapf, python-dateutil, markdown-it-py, rich, matplotlib, mmengine, mmcv
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19/19 [mmcv]2m18/19 [mmcv]ine]b]
+Successfully installed addict-2.4.0 contourpy-1.3.2 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 markdown-it-py-4.0.0 matplotlib-3.10.8 mdurl-0.1.2 mmcv-2.0.1 mmengine-0.10.7 platformdirs-4.5.1 pygments-2.19.2 pyparsing-3.3.2 python-dateutil-2.9.0.post0 rich-14.3.2 six-1.17.0 termcolor-3.3.0 tomli-2.4.0 yapf-0.43.0
