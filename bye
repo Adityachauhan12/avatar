@@ -1,58 +1,132 @@
+Collecting pip==24.0
+  Downloading pip-24.0-py3-none-any.whl.metadata (3.6 kB)
+Downloading pip-24.0-py3-none-any.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 61.8 MB/s  0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 26.0.1
+    Uninstalling pip-26.0.1:
+      Successfully uninstalled pip-26.0.1
+Successfully installed pip-24.0
+Using pip 24.0 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
+Collecting chumpy==0.70
+  Using cached chumpy-0.70.tar.gz (50 kB)
+  Running command python setup.py egg_info
+  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+  !!
 
-[optparse.groups]Usage:[/]   
-  pip install \[options] <requirement specifier> \[package-index-options] ...
-  pip install \[options] -r <requirements file> \[package-index-options] ...
-  pip install \[options] [-e] <vcs project url> ...
-  pip install \[options] [-e] <local project path> ...
-  pip install \[options] <archive url/path> ...
+          ********************************************************************************
+          Please consider removing the following classifiers in favor of a SPDX license expression:
 
-no such option: --no-use-pep517
-Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
-Collecting mmpose==1.1.0
-  Obtaining dependency information for mmpose==1.1.0 from https://files.pythonhosted.org/packages/77/db/5feda16e56464888b4525c0d840c3fae25f88d10f8bd4f1fbe71c4abbe8e/mmpose-1.1.0-py2.py3-none-any.whl.metadata
-  Using cached mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
-Downloading mmpose-1.1.0-py2.py3-none-any.whl (1.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 47.6 MB/s  0:00:00
-Installing collected packages: mmpose
-Successfully installed mmpose-1.1.0
-Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
-Collecting munkres
-  Obtaining dependency information for munkres from https://files.pythonhosted.org/packages/90/ab/0301c945a704218bc9435f0e3c88884f6b19ef234d8899fb47ce1ccfd0c9/munkres-1.1.4-py2.py3-none-any.whl.metadata
-  Downloading munkres-1.1.4-py2.py3-none-any.whl.metadata (980 bytes)
-Collecting json-tricks
-  Obtaining dependency information for json-tricks from https://files.pythonhosted.org/packages/ae/fd/e3edcf827e7f9c17c5ea1a192841dcfb1dd575a7518c25c5cadd921625b1/json_tricks-3.17.3-py2.py3-none-any.whl.metadata
-  Downloading json_tricks-3.17.3-py2.py3-none-any.whl.metadata (16 kB)
-Collecting xtcocotools>=1.12
-  Obtaining dependency information for xtcocotools>=1.12 from https://files.pythonhosted.org/packages/71/0b/c67774d4101fd2c79bb2d0ef9246518222cfd78fde1ff16e38cd1f600026/xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl.metadata
-  Downloading xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl.metadata (364 bytes)
-Requirement already satisfied: setuptools>=18.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (82.0.0)
-Collecting cython>=0.27.3 (from xtcocotools>=1.12)
-  Obtaining dependency information for cython>=0.27.3 from https://files.pythonhosted.org/packages/56/9e/539fb0d09e4f5251b5b14f8daf77e71fee021527f1013791038234618b6b/cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata
-  Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
-Requirement already satisfied: matplotlib>=2.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (3.10.8)
-Requirement already satisfied: numpy>=1.20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (1.26.4)
-Requirement already satisfied: contourpy>=1.0.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (1.3.2)
-Requirement already satisfied: cycler>=0.10 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (0.12.1)
-Requirement already satisfied: fonttools>=4.22.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (4.61.1)
-Requirement already satisfied: kiwisolver>=1.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (1.4.9)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (26.0)
-Requirement already satisfied: pillow>=8 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (12.0.0)
-Requirement already satisfied: pyparsing>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (3.3.2)
-Requirement already satisfied: python-dateutil>=2.7 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (2.9.0.post0)
-Requirement already satisfied: six>=1.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from python-dateutil>=2.7->matplotlib>=2.1.0->xtcocotools>=1.12) (1.17.0)
-Downloading munkres-1.1.4-py2.py3-none-any.whl (7.0 kB)
-Downloading json_tricks-3.17.3-py2.py3-none-any.whl (27 kB)
-Downloading xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl (436 kB)
-Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 42.1 MB/s  0:00:00
-Installing collected packages: munkres, json-tricks, cython, xtcocotools
-  changing mode of /local_disk0/musetalk_venv/bin/cygdb to 755━━━━ 2/4 [cython]
-  changing mode of /local_disk0/musetalk_venv/bin/cython to 755[0m 2/4 [cython]
-  changing mode of /local_disk0/musetalk_venv/bin/cythonize to 755 2/4 [cython]
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [xtcocotools] [cython]
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-mmpose 1.1.0 requires chumpy, which is not installed.
-mmpose 1.1.0 requires scipy, which is not installed.
-Successfully installed cython-3.2.4 json-tricks-3.17.3 munkres-1.1.4 xtcocotools-1.14.3
-✅ mmpose import OK
-mmpose version: 1.1.0
+          License :: OSI Approved :: MIT License
+
+          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+          ********************************************************************************
+
+  !!
+    self._finalize_license_expression()
+  Preparing metadata (setup.py) ... done
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/99/f1/c00d6be56e1a718a3068079e3ec8ce044d7179345280f6a3f5066068af0d/scipy-1.6.2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/fe/fd/8704c7b7b34cdac850485e638346025ca57c5a859934b9aa1be5399b33b7/scipy-1.6.3.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/bb/bb/944f559d554df6c9adf037aa9fc982a9706ee0e96c0d5beac701cb158900/scipy-1.7.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/47/33/a24aec22b7be7fdb10ec117a95e1e4099890d8bbc6646902f443fc7719d1/scipy-1.7.1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/7a/9e/2c8b1e1052151067e73b4192c0c04f355b3d31b485bd74f48bd4e9e87916/scipy-1.16.0rc1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/9c/ff/c01073c71d82baeacf71b2ae7fc6d47bb4ff898b3f98ce7897098ca36c26/scipy-1.16.0rc2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/81/18/b06a83f0c5ee8cddbde5e3f3d0bb9b702abfa5136ef6d4620ff67df7eee5/scipy-1.16.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/f5/4a/b927028464795439faec8eaf0b03b011005c487bb2d07409f28bf30879c4/scipy-1.16.1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/4c/3b/546a6f0bfe791bbb7f8d591613454d15097e53f906308ec6f7c1ce588e8e/scipy-1.16.2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/0a/ca/d8ace4f98322d01abcd52d381134344bf7b431eba7ed8b42bdea5a3c2ac9/scipy-1.16.3.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/5f/e3/255a0c2dc90065e20a4365d27692b3529366031fec82dd934daa992b0c7c/scipy-1.17.0rc1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/ca/01/7a5c4d1851418fb384445425b4c4b17044475b669232768df336f69b708e/scipy-1.17.0rc2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/56/3e/9cca699f3486ce6bc12ff46dc2031f1ec8eb9ccc9a320fdaf925f1417426/scipy-1.17.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+Collecting scipy>=0.13.0 (from chumpy==0.70)
+  Obtaining dependency information for scipy>=0.13.0 from https://files.pythonhosted.org/packages/8e/6d/41991e503e51fc1134502694c5fa7a1671501a17ffa12716a4a9151af3df/scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata
+  Using cached scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
+Requirement already satisfied: six>=1.11.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from chumpy==0.70) (1.17.0)
+Requirement already satisfied: numpy<2.5,>=1.23.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from scipy>=0.13.0->chumpy==0.70) (1.26.4)
+Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (37.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 37.7/37.7 MB 14.9 MB/s eta 0:00:00:00:0100:01
+Building wheels for collected packages: chumpy
+  Running command python setup.py bdist_wheel
+  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+  !!
+
+          ********************************************************************************
+          Please consider removing the following classifiers in favor of a SPDX license expression:
+
+          License :: OSI Approved :: MIT License
+
+          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+          ********************************************************************************
+
+  !!
+    self._finalize_license_expression()
+  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/_distutils/cmd.py:90: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+  !!
+
+          ********************************************************************************
+          Please avoid running ``setup.py`` directly.
+          Instead, use pypa/build, pypa/installer or other
+          standards-based tools.
+
+          This deprecation is overdue, please update your project and remove deprecated
+          calls to avoid build errors in the future.
+
+          See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+          ********************************************************************************
+
+  !!
+    self.initialize_options()
+  Building wheel for chumpy (setup.py) ... done
+  Created wheel for chumpy: filename=chumpy-0.70-py3-none-any.whl size=58303 sha256=241e9dbe3fc8ec6c0f59a222d36cc79ff0d277353d7f6f7fbc3aa31f042323bb
+  Stored in directory: /root/.cache/pip/wheels/e0/c1/ef/29ba7be03653a29ef6f2c3e1956d6c4d8877f2b243af411db1
+Successfully built chumpy
+Installing collected packages: scipy, chumpy
+Successfully installed chumpy-0.70 scipy-1.15.3
+
+[notice] A new release of pip is available: 24.0 -> 26.0.1
+[notice] To update, run: python -m pip install --upgrade pip
+Using pip 24.0 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/99/f1/c00d6be56e1a718a3068079e3ec8ce044d7179345280f6a3f5066068af0d/scipy-1.6.2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/fe/fd/8704c7b7b34cdac850485e638346025ca57c5a859934b9aa1be5399b33b7/scipy-1.6.3.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/bb/bb/944f559d554df6c9adf037aa9fc982a9706ee0e96c0d5beac701cb158900/scipy-1.7.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.7,<3.10'): https://files.pythonhosted.org/packages/47/33/a24aec22b7be7fdb10ec117a95e1e4099890d8bbc6646902f443fc7719d1/scipy-1.7.1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.7,<3.10)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/7a/9e/2c8b1e1052151067e73b4192c0c04f355b3d31b485bd74f48bd4e9e87916/scipy-1.16.0rc1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/9c/ff/c01073c71d82baeacf71b2ae7fc6d47bb4ff898b3f98ce7897098ca36c26/scipy-1.16.0rc2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/81/18/b06a83f0c5ee8cddbde5e3f3d0bb9b702abfa5136ef6d4620ff67df7eee5/scipy-1.16.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/f5/4a/b927028464795439faec8eaf0b03b011005c487bb2d07409f28bf30879c4/scipy-1.16.1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/4c/3b/546a6f0bfe791bbb7f8d591613454d15097e53f906308ec6f7c1ce588e8e/scipy-1.16.2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/0a/ca/d8ace4f98322d01abcd52d381134344bf7b431eba7ed8b42bdea5a3c2ac9/scipy-1.16.3.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/5f/e3/255a0c2dc90065e20a4365d27692b3529366031fec82dd934daa992b0c7c/scipy-1.17.0rc1.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/ca/01/7a5c4d1851418fb384445425b4c4b17044475b669232768df336f69b708e/scipy-1.17.0rc2.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+  Link requires a different Python (3.10.12 not in: '>=3.11'): https://files.pythonhosted.org/packages/56/3e/9cca699f3486ce6bc12ff46dc2031f1ec8eb9ccc9a320fdaf925f1417426/scipy-1.17.0.tar.gz (from https://pypi.org/simple/scipy/) (requires-python:>=3.11)
+Collecting scipy==1.10.1
+  Obtaining dependency information for scipy==1.10.1 from https://files.pythonhosted.org/packages/1f/4b/3bacad9a166350cb2e518cea80ab891016933cc1653f15c90279512c5fa9/scipy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata
+  Downloading scipy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 58.9/58.9 kB 2.1 MB/s eta 0:00:00
+Requirement already satisfied: numpy<1.27.0,>=1.19.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from scipy==1.10.1) (1.26.4)
+Downloading scipy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.4/34.4 MB 15.1 MB/s eta 0:00:00:00:0100:01
+Installing collected packages: scipy
+  Attempting uninstall: scipy
+    Found existing installation: scipy 1.15.3
+    Uninstalling scipy-1.15.3:
+      Removing file or directory /local_disk0/musetalk_venv/lib/python3.10/site-packages/scipy-1.15.3.dist-info/
+      Removing file or directory /local_disk0/musetalk_venv/lib/python3.10/site-packages/scipy.libs/
+      Removing file or directory /local_disk0/musetalk_venv/lib/python3.10/site-packages/scipy/
+      Successfully uninstalled scipy-1.15.3
+Successfully installed scipy-1.10.1
+
+[notice] A new release of pip is available: 24.0 -> 26.0.1
+[notice] To update, run: python -m pip install --upgrade pip
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy/__init__.py:11: FutureWarning: In the future `np.bool` will be defined as the corresponding NumPy scalar.
+  from numpy import bool, int, float, complex, object, unicode, str, nan, inf
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy/__init__.py:11: FutureWarning: In the future `np.object` will be defined as the corresponding NumPy scalar.
+  from numpy import bool, int, float, complex, object, unicode, str, nan, inf
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy/__init__.py:11: FutureWarning: In the future `np.str` will be defined as the corresponding NumPy scalar.
+  from numpy import bool, int, float, complex, object, unicode, str, nan, inf
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy/__init__.py", line 11, in <module>
+    from numpy import bool, int, float, complex, object, unicode, str, nan, inf
+ImportError: cannot import name 'bool' from 'numpy' (/local_disk0/musetalk_venv/lib/python3.10/site-packages/numpy/__init__.py)
