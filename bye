@@ -1,20 +1,41 @@
-drwxr-xr-x 9 root root 4096 Feb 11 08:32 /local_disk0/MuseTalk
-drwxr-xr-x 2 root root 4096 Feb 11 08:32 /local_disk0/MuseTalk/models
-HF_HOME = /local_disk0/musetalk_hf
-/local_disk0/musetalk_venv/lib/python3.10/site-packages/huggingface_hub/file_download.py:933: UserWarning: `local_dir_use_symlinks` parameter is deprecated and will be ignored. The process to download files to a local folder has been updated and do not rely on symlinks anymore. You only need to pass a destination folder as`local_dir`.
-For more details, check out https://huggingface.co/docs/huggingface_hub/main/en/guides/download#download-files-to-local-folder.
-  warnings.warn(
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-Fetching 2 files: 100%|██████████| 2/2 [00:10<00:00,  5.11s/it]
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-Fetching 2 files: 100%|██████████| 2/2 [00:13<00:00,  6.54s/it]
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-Fetching 2 files: 100%|██████████| 2/2 [00:01<00:00,  1.01it/s]
-Fetching 3 files:  67%|██████▋   | 2/3 [00:00<00:00, 14.40it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-Fetching 3 files: 100%|██████████| 3/3 [00:01<00:00,  1.64it/s]
-Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-Fetching 1 files: 100%|██████████| 1/1 [00:01<00:00,  1.37s/it]
-Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
-✅ HF downloads done
-Fetching 1 files: 100%|██████████| 1/1 [00:06<00:00,  6.04s/it]
+Wrote /local_disk0/MuseTalk/configs/inference/custom.yaml
+task_0:
+  video_path: data/video/yongen.mp4
+  audio_path: data/audio/yongen.wav
+task_1:
+  video_path: data/video/yongen.mp4
+  audio_path: data/audio/eng.wav
+  bbox_shift: -7
+video_path: /Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4
+audio_path: /Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav
+
 0
+next cell output 
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+2026-02-11 08:38:02.159093: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/local_disk0/MuseTalk/scripts/inference.py", line 21, in <module>
+    from musetalk.utils.preprocessing import get_landmark_and_bbox, read_imgs, coord_placeholder
+  File "/local_disk0/MuseTalk/musetalk/utils/preprocessing.py", line 10, in <module>
+    from mmpose.apis import inference_topdown, init_model
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/__init__.py", line 7, in <module>
+    from .inferencers import MMPoseInferencer, Pose2DInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/__init__.py", line 2, in <module>
+    from .mmpose_inferencer import MMPoseInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/mmpose_inferencer.py", line 12, in <module>
+    from .pose2d_inferencer import Pose2DInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/pose2d_inferencer.py", line 19, in <module>
+    from .utils import default_det_models
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/utils/__init__.py", line 2, in <module>
+    from .default_det_models import default_det_models
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/utils/default_det_models.py", line 7, in <module>
+    mmpose_path = get_installed_path(MODULE2PACKAGE['mmpose'])
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmengine/utils/package_utils.py", line 48, in get_installed_path
+    from pkg_resources import DistributionNotFound, get_distribution
+ModuleNotFoundError: No module named 'pkg_resources'
