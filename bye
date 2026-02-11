@@ -1,33 +1,38 @@
+total 3.5M
+-rwxr-xr-x 1 root root 1.1M Feb 11 09:08 audio.wav
+-rwxr-xr-x 1 root root 2.4M Feb 11 09:08 video.mp4
 task_0:
-  video_path: "/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4"
-  audio_path: "/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav"
+  video_path: "/local_disk0/musetalk_run/inputs/video.mp4"
+  audio_path: "/local_disk0/musetalk_run/inputs/audio.wav"
   bbox_shift: 0
-then the inference cell /local_disk0/musetalk_venv/lib/python3.10/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/transformers/utils/hub.py:124: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
   warnings.warn(
-2026-02-11 08:50:30.652815: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-02-11 09:09:20.119925: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
 /local_disk0/musetalk_venv/lib/python3.10/site-packages/mmengine/utils/package_utils.py:48: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
   from pkg_resources import DistributionNotFound, get_distribution
 Loads checkpoint by local backend from path: ./models/dwpose/dw-ll_ucoco_384.pth
 cuda start
-Downloading: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth" to /root/.cache/torch/hub/checkpoints/s3fd-619a316812.pth
-100%|██████████████████████████████████████| 85.7M/85.7M [00:03<00:00, 25.8MB/s]
+Downloading: "https://www.adrianbulat.com/downloads/python-fan/s3fd-619a316812.pth" to /local_disk0/torch_cache/hub/checkpoints/s3fd-619a316812.pth
+100%|██████████████████████████████████████| 85.7M/85.7M [00:03<00:00, 26.5MB/s]
 An error occurred while trying to fetch models/sd-vae: Error no file named diffusion_pytorch_model.safetensors found in directory models/sd-vae.
 Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
 /local_disk0/musetalk_venv/lib/python3.10/site-packages/torch/_utils.py:776: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
   return self.fget.__get__(instance, owner)()
 load unet model from ./models/musetalkV15/unet.pth
-Loaded inference config: {'task_0': {'video_path': '/Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4', 'audio_path': '/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav', 'bbox_shift': 0}}
+Loaded inference config: {'task_0': {'video_path': '/local_disk0/musetalk_run/inputs/video.mp4', 'audio_path': '/local_disk0/musetalk_run/inputs/audio.wav', 'bbox_shift': 0}}
 /local_disk0/musetalk_venv/lib/python3.10/site-packages/torch/nn/modules/conv.py:309: UserWarning: Applied workaround for CuDNN issue, install nvrtc.so (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:80.)
   return F.conv1d(input, weight, bias, self.stride,
 Extracting landmarks... time-consuming operation
 reading images...
- 57%|███████████████████████▍                 | 251/440 [00:51<00:31,  6.05it/s]
+100%|█████████████████████████████████████████| 440/440 [00:06<00:00, 67.50it/s]
+get key_landmark and face bounding boxes with the default value
+ 42%|█████████████████▏                       | 185/440 [00:39<00:52,  4.90it/s]
 
 *** WARNING: max output size exceeded, skipping output. ***
 
-100%|█████████████████████████████████████████| 440/440 [01:30<00:00,  4.85it/s]
-********************************************bbox_shift parameter adjustment**********************************************************
-Total frame:「440」 Manually adjust range : [ -38~37 ] , the current value: 0
-*************************************************************************************************************************************
-Error occurred during processing: [Errno 22] Invalid argument: '/Volumes/lab37_catalog/ifstrolley/trolley/../indigo_airhostress_response_v2.pkl'
+100%|█████████████████████████████████████████| 586/586 [03:19<00:00,  2.94it/s]
+Video generation command: ffmpeg -y -v warning -r 25.0 -f image2 -i /local_disk0/musetalk_run/outputs/v15/video_audio/%08d.png -vcodec libx264 -vf format=yuv420p -crf 18 /local_disk0/musetalk_run/outputs/v15/temp_video_audio.mp4
+Audio combination command: ffmpeg -y -v warning -i /local_disk0/musetalk_run/inputs/audio.wav -i /local_disk0/musetalk_run/outputs/v15/temp_video_audio.mp4 /local_disk0/musetalk_run/outputs/v15/video_audio.mp4
+Guessed Channel Layout for Input Stream #0.0 : mono
+Results saved to /local_disk0/musetalk_run/outputs/v15/video_audio.mp4
