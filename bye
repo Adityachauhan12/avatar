@@ -1,271 +1,58 @@
-Collecting mmengine==0.10.3
-  Downloading mmengine-0.10.3-py3-none-any.whl.metadata (20 kB)
-Collecting mmdet==3.1.0
-  Downloading mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
-Collecting mmpose==1.1.0
-  Downloading mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
-Collecting addict (from mmengine==0.10.3)
-  Downloading addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
-Collecting matplotlib (from mmengine==0.10.3)
-  Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
-Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (1.26.4)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (6.0.3)
-Collecting rich (from mmengine==0.10.3)
-  Downloading rich-14.3.2-py3-none-any.whl.metadata (18 kB)
-Collecting termcolor (from mmengine==0.10.3)
-  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
-Collecting yapf (from mmengine==0.10.3)
-  Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
-Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (4.9.0.80)
-Collecting pycocotools (from mmdet==3.1.0)
-  Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
-Collecting scipy (from mmdet==3.1.0)
-  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
-Collecting shapely (from mmdet==3.1.0)
-  Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
-Collecting six (from mmdet==3.1.0)
-  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
-Collecting terminaltables (from mmdet==3.1.0)
-  Downloading terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
-Collecting chumpy (from mmpose==1.1.0)
-  Downloading chumpy-0.70.tar.gz (50 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... error
-  error: subprocess-exited-with-error
-  
-  × Getting requirements to build wheel did not run successfully.
-  │ exit code: 1
-  ╰─> [23 lines of output]
-      Traceback (most recent call last):
-        File "<string>", line 9, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      
-      During handling of the above exception, another exception occurred:
-      
-      Traceback (most recent call last):
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
-          main()
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
-          json_out["return_val"] = hook(**hook_input["kwargs"])
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
-          return hook(config_settings)
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
-          return self._get_build_requires(config_settings, requirements=[])
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
-          self.run_setup()
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
-          super().run_setup(setup_script=setup_script)
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
-          exec(code, locals())
-        File "<string>", line 11, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      [end of output]
-  
-  note: This error originates from a subprocess, and is likely not a problem with pip.
-ERROR: Failed to build 'chumpy' when getting requirements to build wheel
-Looking in links: https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
-Collecting mmcv==2.0.1
-  Downloading https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/mmcv-2.0.1-cp310-cp310-manylinux1_x86_64.whl (74.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 MB 28.3 MB/s  0:00:02m0:00:0100:01
-Collecting addict (from mmcv==2.0.1)
-  Using cached addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
-Collecting mmengine>=0.3.0 (from mmcv==2.0.1)
-  Downloading mmengine-0.10.7-py3-none-any.whl.metadata (20 kB)
-Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (1.26.4)
-Requirement already satisfied: packaging in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (26.0)
-Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (12.0.0)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (6.0.3)
-Collecting yapf (from mmcv==2.0.1)
-  Using cached yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
-Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (4.9.0.80)
-Collecting matplotlib (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
-Collecting rich (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached rich-14.3.2-py3-none-any.whl.metadata (18 kB)
-Collecting termcolor (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
-Collecting contourpy>=1.0.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
-Collecting cycler>=0.10 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
-Collecting fonttools>=4.22.0 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
-Collecting kiwisolver>=1.3.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
-Collecting pyparsing>=3 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
-Collecting python-dateutil>=2.7 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
-Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
-Collecting markdown-it-py>=2.2.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
-Collecting pygments<3.0.0,>=2.13.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
-Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
-Collecting platformdirs>=3.5.1 (from yapf->mmcv==2.0.1)
-  Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
-Collecting tomli>=2.0.1 (from yapf->mmcv==2.0.1)
-  Downloading tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
-Downloading mmengine-0.10.7-py3-none-any.whl (452 kB)
-Downloading addict-2.4.0-py3-none-any.whl (3.8 kB)
-Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 55.8 MB/s  0:00:00
-Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
-Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
-Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 69.6 MB/s  0:00:00
-Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 65.6 MB/s  0:00:00
-Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
-Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
-Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
-Downloading rich-14.3.2-py3-none-any.whl (309 kB)
-Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 51.7 MB/s  0:00:00
-Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
-Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
-Downloading yapf-0.43.0-py3-none-any.whl (256 kB)
-Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
-Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
-Installing collected packages: addict, tomli, termcolor, six, pyparsing, pygments, platformdirs, mdurl, kiwisolver, fonttools, cycler, contourpy, yapf, python-dateutil, markdown-it-py, rich, matplotlib, mmengine, mmcv
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19/19 [mmcv]2m18/19 [mmcv]ine]b]
-Successfully installed addict-2.4.0 contourpy-1.3.2 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 markdown-it-py-4.0.0 matplotlib-3.10.8 mdurl-0.1.2 mmcv-2.0.1 mmengine-0.10.7 platformdirs-4.5.1 pygments-2.19.2 pyparsing-3.3.2 python-dateutil-2.9.0.post0 rich-14.3.2 six-1.17.0 termcolor-3.3.0 tomli-2.4.0 yapf-0.43.0
 
-next cell output Collecting mmengine==0.10.3
-  Downloading mmengine-0.10.3-py3-none-any.whl.metadata (20 kB)
-Collecting mmdet==3.1.0
-  Downloading mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
+[optparse.groups]Usage:[/]   
+  pip install \[options] <requirement specifier> \[package-index-options] ...
+  pip install \[options] -r <requirements file> \[package-index-options] ...
+  pip install \[options] [-e] <vcs project url> ...
+  pip install \[options] [-e] <local project path> ...
+  pip install \[options] <archive url/path> ...
+
+no such option: --no-use-pep517
+Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
 Collecting mmpose==1.1.0
-  Downloading mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
-Collecting addict (from mmengine==0.10.3)
-  Downloading addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
-Collecting matplotlib (from mmengine==0.10.3)
-  Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
-Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (1.26.4)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (6.0.3)
-Collecting rich (from mmengine==0.10.3)
-  Downloading rich-14.3.2-py3-none-any.whl.metadata (18 kB)
-Collecting termcolor (from mmengine==0.10.3)
-  Downloading termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
-Collecting yapf (from mmengine==0.10.3)
-  Downloading yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
-Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmengine==0.10.3) (4.9.0.80)
-Collecting pycocotools (from mmdet==3.1.0)
-  Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
-Collecting scipy (from mmdet==3.1.0)
-  Downloading scipy-1.15.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
-Collecting shapely (from mmdet==3.1.0)
-  Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
-Collecting six (from mmdet==3.1.0)
-  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
-Collecting terminaltables (from mmdet==3.1.0)
-  Downloading terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
-Collecting chumpy (from mmpose==1.1.0)
-  Downloading chumpy-0.70.tar.gz (50 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... error
-  error: subprocess-exited-with-error
-  
-  × Getting requirements to build wheel did not run successfully.
-  │ exit code: 1
-  ╰─> [23 lines of output]
-      Traceback (most recent call last):
-        File "<string>", line 9, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      
-      During handling of the above exception, another exception occurred:
-      
-      Traceback (most recent call last):
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
-          main()
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
-          json_out["return_val"] = hook(**hook_input["kwargs"])
-        File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
-          return hook(config_settings)
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
-          return self._get_build_requires(config_settings, requirements=[])
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
-          self.run_setup()
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 520, in run_setup
-          super().run_setup(setup_script=setup_script)
-        File "/tmp/pip-build-env-_9nbfg0n/overlay/lib/python3.10/site-packages/setuptools/build_meta.py", line 317, in run_setup
-          exec(code, locals())
-        File "<string>", line 11, in <module>
-      ModuleNotFoundError: No module named 'pip'
-      [end of output]
-  
-  note: This error originates from a subprocess, and is likely not a problem with pip.
-ERROR: Failed to build 'chumpy' when getting requirements to build wheel
-Looking in links: https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
-Collecting mmcv==2.0.1
-  Downloading https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/mmcv-2.0.1-cp310-cp310-manylinux1_x86_64.whl (74.4 MB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 74.4/74.4 MB 28.3 MB/s  0:00:02m0:00:0100:01
-Collecting addict (from mmcv==2.0.1)
-  Using cached addict-2.4.0-py3-none-any.whl.metadata (1.0 kB)
-Collecting mmengine>=0.3.0 (from mmcv==2.0.1)
-  Downloading mmengine-0.10.7-py3-none-any.whl.metadata (20 kB)
-Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (1.26.4)
-Requirement already satisfied: packaging in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (26.0)
-Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (12.0.0)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (6.0.3)
-Collecting yapf (from mmcv==2.0.1)
-  Using cached yapf-0.43.0-py3-none-any.whl.metadata (46 kB)
-Requirement already satisfied: opencv-python>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmcv==2.0.1) (4.9.0.80)
-Collecting matplotlib (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
-Collecting rich (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached rich-14.3.2-py3-none-any.whl.metadata (18 kB)
-Collecting termcolor (from mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached termcolor-3.3.0-py3-none-any.whl.metadata (6.5 kB)
-Collecting contourpy>=1.0.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.5 kB)
-Collecting cycler>=0.10 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
-Collecting fonttools>=4.22.0 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (114 kB)
-Collecting kiwisolver>=1.3.1 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl.metadata (6.3 kB)
-Collecting pyparsing>=3 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
-Collecting python-dateutil>=2.7 (from matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
-Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib->mmengine>=0.3.0->mmcv==2.0.1)
-  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
-Collecting markdown-it-py>=2.2.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
-Collecting pygments<3.0.0,>=2.13.0 (from rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
-Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich->mmengine>=0.3.0->mmcv==2.0.1)
-  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
-Collecting platformdirs>=3.5.1 (from yapf->mmcv==2.0.1)
-  Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
-Collecting tomli>=2.0.1 (from yapf->mmcv==2.0.1)
-  Downloading tomli-2.4.0-py3-none-any.whl.metadata (10 kB)
-Downloading mmengine-0.10.7-py3-none-any.whl (452 kB)
-Downloading addict-2.4.0-py3-none-any.whl (3.8 kB)
-Downloading matplotlib-3.10.8-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 55.8 MB/s  0:00:00
-Downloading contourpy-1.3.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (325 kB)
-Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
-Downloading fonttools-4.61.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.9 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 69.6 MB/s  0:00:00
-Downloading kiwisolver-1.4.9-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl (1.6 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 65.6 MB/s  0:00:00
-Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
-Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
-Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
-Downloading rich-14.3.2-py3-none-any.whl (309 kB)
-Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 51.7 MB/s  0:00:00
-Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
-Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-Downloading termcolor-3.3.0-py3-none-any.whl (7.7 kB)
-Downloading yapf-0.43.0-py3-none-any.whl (256 kB)
-Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
-Downloading tomli-2.4.0-py3-none-any.whl (14 kB)
-Installing collected packages: addict, tomli, termcolor, six, pyparsing, pygments, platformdirs, mdurl, kiwisolver, fonttools, cycler, contourpy, yapf, python-dateutil, markdown-it-py, rich, matplotlib, mmengine, mmcv
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 19/19 [mmcv]2m18/19 [mmcv]ine]b]
-Successfully installed addict-2.4.0 contourpy-1.3.2 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 markdown-it-py-4.0.0 matplotlib-3.10.8 mdurl-0.1.2 mmcv-2.0.1 mmengine-0.10.7 platformdirs-4.5.1 pygments-2.19.2 pyparsing-3.3.2 python-dateutil-2.9.0.post0 rich-14.3.2 six-1.17.0 termcolor-3.3.0 tomli-2.4.0 yapf-0.43.0
+  Obtaining dependency information for mmpose==1.1.0 from https://files.pythonhosted.org/packages/77/db/5feda16e56464888b4525c0d840c3fae25f88d10f8bd4f1fbe71c4abbe8e/mmpose-1.1.0-py2.py3-none-any.whl.metadata
+  Using cached mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
+Downloading mmpose-1.1.0-py2.py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 47.6 MB/s  0:00:00
+Installing collected packages: mmpose
+Successfully installed mmpose-1.1.0
+Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
+Collecting munkres
+  Obtaining dependency information for munkres from https://files.pythonhosted.org/packages/90/ab/0301c945a704218bc9435f0e3c88884f6b19ef234d8899fb47ce1ccfd0c9/munkres-1.1.4-py2.py3-none-any.whl.metadata
+  Downloading munkres-1.1.4-py2.py3-none-any.whl.metadata (980 bytes)
+Collecting json-tricks
+  Obtaining dependency information for json-tricks from https://files.pythonhosted.org/packages/ae/fd/e3edcf827e7f9c17c5ea1a192841dcfb1dd575a7518c25c5cadd921625b1/json_tricks-3.17.3-py2.py3-none-any.whl.metadata
+  Downloading json_tricks-3.17.3-py2.py3-none-any.whl.metadata (16 kB)
+Collecting xtcocotools>=1.12
+  Obtaining dependency information for xtcocotools>=1.12 from https://files.pythonhosted.org/packages/71/0b/c67774d4101fd2c79bb2d0ef9246518222cfd78fde1ff16e38cd1f600026/xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl.metadata
+  Downloading xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl.metadata (364 bytes)
+Requirement already satisfied: setuptools>=18.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (82.0.0)
+Collecting cython>=0.27.3 (from xtcocotools>=1.12)
+  Obtaining dependency information for cython>=0.27.3 from https://files.pythonhosted.org/packages/56/9e/539fb0d09e4f5251b5b14f8daf77e71fee021527f1013791038234618b6b/cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata
+  Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
+Requirement already satisfied: matplotlib>=2.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (3.10.8)
+Requirement already satisfied: numpy>=1.20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools>=1.12) (1.26.4)
+Requirement already satisfied: contourpy>=1.0.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (1.3.2)
+Requirement already satisfied: cycler>=0.10 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (0.12.1)
+Requirement already satisfied: fonttools>=4.22.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (4.61.1)
+Requirement already satisfied: kiwisolver>=1.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (1.4.9)
+Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (26.0)
+Requirement already satisfied: pillow>=8 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (12.0.0)
+Requirement already satisfied: pyparsing>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (3.3.2)
+Requirement already satisfied: python-dateutil>=2.7 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools>=1.12) (2.9.0.post0)
+Requirement already satisfied: six>=1.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from python-dateutil>=2.7->matplotlib>=2.1.0->xtcocotools>=1.12) (1.17.0)
+Downloading munkres-1.1.4-py2.py3-none-any.whl (7.0 kB)
+Downloading json_tricks-3.17.3-py2.py3-none-any.whl (27 kB)
+Downloading xtcocotools-1.14.3-cp310-cp310-manylinux1_x86_64.whl (436 kB)
+Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 42.1 MB/s  0:00:00
+Installing collected packages: munkres, json-tricks, cython, xtcocotools
+  changing mode of /local_disk0/musetalk_venv/bin/cygdb to 755━━━━ 2/4 [cython]
+  changing mode of /local_disk0/musetalk_venv/bin/cython to 755[0m 2/4 [cython]
+  changing mode of /local_disk0/musetalk_venv/bin/cythonize to 755 2/4 [cython]
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [xtcocotools] [cython]
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+mmpose 1.1.0 requires chumpy, which is not installed.
+mmpose 1.1.0 requires scipy, which is not installed.
+Successfully installed cython-3.2.4 json-tricks-3.17.3 munkres-1.1.4 xtcocotools-1.14.3
+✅ mmpose import OK
+mmpose version: 1.1.0
