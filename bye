@@ -1,301 +1,503 @@
-Cloning into '/local_disk0/MuseTalk'...
-remote: Enumerating objects: 534, done.
-remote: Counting objects: 100% (131/131), done.
-remote: Compressing objects: 100% (68/68), done.
-remote: Total 534 (delta 83), reused 63 (delta 63), pack-reused 403 (from 1)
-Receiving objects: 100% (534/534), 25.75 MiB | 61.60 MiB/s, done.
-Resolving deltas: 100% (219/219), done.
-Requirement already satisfied: diffusers==0.30.2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r /local_disk0/MuseTalk/requirements.txt (line 1)) (0.30.2)
-Collecting accelerate==0.28.0 (from -r /local_disk0/MuseTalk/requirements.txt (line 2))
-  Downloading accelerate-0.28.0-py3-none-any.whl.metadata (18 kB)
-Collecting numpy==1.23.5 (from -r /local_disk0/MuseTalk/requirements.txt (line 3))
-  Downloading numpy-1.23.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.3 kB)
-Collecting tensorflow==2.12.0 (from -r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading tensorflow-2.12.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.4 kB)
-Collecting tensorboard==2.12.0 (from -r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading tensorboard-2.12.0-py3-none-any.whl.metadata (1.8 kB)
-Requirement already satisfied: opencv-python==4.9.0.80 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r /local_disk0/MuseTalk/requirements.txt (line 6)) (4.9.0.80)
-Collecting soundfile==0.12.1 (from -r /local_disk0/MuseTalk/requirements.txt (line 7))
-  Downloading soundfile-0.12.1-py2.py3-none-manylinux_2_31_x86_64.whl.metadata (14 kB)
-Requirement already satisfied: transformers==4.39.2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r /local_disk0/MuseTalk/requirements.txt (line 8)) (4.39.2)
-Collecting huggingface_hub==0.30.2 (from -r /local_disk0/MuseTalk/requirements.txt (line 9))
-  Downloading huggingface_hub-0.30.2-py3-none-any.whl.metadata (13 kB)
-Collecting librosa==0.11.0 (from -r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading librosa-0.11.0-py3-none-any.whl.metadata (8.7 kB)
-Collecting einops==0.8.1 (from -r /local_disk0/MuseTalk/requirements.txt (line 11))
-  Downloading einops-0.8.1-py3-none-any.whl.metadata (13 kB)
-Collecting gradio==5.24.0 (from -r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading gradio-5.24.0-py3-none-any.whl.metadata (16 kB)
-Collecting gdown (from -r /local_disk0/MuseTalk/requirements.txt (line 14))
-  Downloading gdown-5.2.1-py3-none-any.whl.metadata (5.8 kB)
-Requirement already satisfied: requests in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r /local_disk0/MuseTalk/requirements.txt (line 15)) (2.28.1)
-Collecting omegaconf (from -r /local_disk0/MuseTalk/requirements.txt (line 18))
-  Downloading omegaconf-2.3.0-py3-none-any.whl.metadata (3.9 kB)
-Collecting ffmpeg-python (from -r /local_disk0/MuseTalk/requirements.txt (line 19))
-  Downloading ffmpeg_python-0.2.0-py3-none-any.whl.metadata (1.7 kB)
-Collecting moviepy (from -r /local_disk0/MuseTalk/requirements.txt (line 20))
-  Downloading moviepy-2.2.1-py3-none-any.whl.metadata (6.9 kB)
-Collecting imageio[ffmpeg] (from -r /local_disk0/MuseTalk/requirements.txt (line 16))
-  Downloading imageio-2.37.2-py3-none-any.whl.metadata (9.7 kB)
-Requirement already satisfied: importlib-metadata in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1)) (8.7.1)
-Requirement already satisfied: filelock in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1)) (3.20.0)
-Requirement already satisfied: regex!=2019.12.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1)) (2026.1.15)
-Requirement already satisfied: safetensors>=0.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1)) (0.7.0)
-Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1)) (12.0.0)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r /local_disk0/MuseTalk/requirements.txt (line 2)) (26.0)
-Requirement already satisfied: psutil in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r /local_disk0/MuseTalk/requirements.txt (line 2)) (7.2.2)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r /local_disk0/MuseTalk/requirements.txt (line 2)) (6.0.3)
-Requirement already satisfied: torch>=1.10.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r /local_disk0/MuseTalk/requirements.txt (line 2)) (2.0.1+cu118)
-Collecting absl-py>=1.0.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading absl_py-2.4.0-py3-none-any.whl.metadata (3.3 kB)
-Collecting astunparse>=1.6.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
-Collecting flatbuffers>=2.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
-Collecting gast<=0.4.0,>=0.2.1 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading gast-0.4.0-py3-none-any.whl.metadata (1.1 kB)
-Collecting google-pasta>=0.1.1 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading google_pasta-0.2.0-py3-none-any.whl.metadata (814 bytes)
-Collecting grpcio<2.0,>=1.24.3 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading grpcio-1.78.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
-Collecting h5py>=2.9.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading h5py-3.15.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.0 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.6.2-py3-none-any.whl.metadata (13 kB)
-Collecting keras<2.13,>=2.12.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading keras-2.12.0-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting libclang>=13.0.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading libclang-18.1.1-py2.py3-none-manylinux2010_x86_64.whl.metadata (5.2 kB)
-Collecting opt-einsum>=2.3.2 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
-Collecting protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading protobuf-4.25.8-cp37-abi3-manylinux2014_x86_64.whl.metadata (541 bytes)
-Requirement already satisfied: setuptools in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4)) (82.0.0)
-Requirement already satisfied: six>=1.12.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4)) (1.17.0)
-Collecting tensorflow-estimator<2.13,>=2.12.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading tensorflow_estimator-2.12.0-py2.py3-none-any.whl.metadata (1.3 kB)
-Requirement already satisfied: termcolor>=1.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4)) (3.3.0)
-Requirement already satisfied: typing-extensions>=3.6.6 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4)) (4.15.0)
-Collecting wrapt<1.15,>=1.11.0 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading wrapt-1.14.2-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.5 kB)
-Collecting tensorflow-io-gcs-filesystem>=0.23.1 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading tensorflow_io_gcs_filesystem-0.37.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (14 kB)
-Collecting google-auth<3,>=1.6.3 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading google_auth-2.48.0-py3-none-any.whl.metadata (6.2 kB)
-Collecting google-auth-oauthlib<0.5,>=0.4.1 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading google_auth_oauthlib-0.4.6-py2.py3-none-any.whl.metadata (2.7 kB)
-Collecting markdown>=2.6.8 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading markdown-3.10.2-py3-none-any.whl.metadata (5.1 kB)
-Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
-Collecting tensorboard-plugin-wit>=1.6.0 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl.metadata (873 bytes)
-Collecting werkzeug>=1.0.1 (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading werkzeug-3.1.5-py3-none-any.whl.metadata (4.0 kB)
-Requirement already satisfied: wheel>=0.26 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5)) (0.46.3)
-Collecting cffi>=1.0 (from soundfile==0.12.1->-r /local_disk0/MuseTalk/requirements.txt (line 7))
-  Downloading cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
-Requirement already satisfied: tokenizers<0.19,>=0.14 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2->-r /local_disk0/MuseTalk/requirements.txt (line 8)) (0.15.2)
-Requirement already satisfied: tqdm>=4.27 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2->-r /local_disk0/MuseTalk/requirements.txt (line 8)) (4.67.3)
-Requirement already satisfied: fsspec>=2023.5.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from huggingface_hub==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 9)) (2026.2.0)
-Collecting audioread>=2.1.9 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading audioread-3.1.0-py3-none-any.whl.metadata (9.0 kB)
-Collecting numba>=0.51.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
-Requirement already satisfied: scipy>=1.6.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10)) (1.10.1)
-Collecting scikit-learn>=1.1.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (11 kB)
-Collecting joblib>=1.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
-Collecting decorator>=4.3.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
-Collecting pooch>=1.1 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
-Collecting soxr>=0.3.2 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading soxr-1.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.6 kB)
-Collecting lazy_loader>=0.1 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
-Collecting msgpack>=1.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
-Collecting aiofiles<25.0,>=22.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
-Collecting anyio<5.0,>=3.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading anyio-4.12.1-py3-none-any.whl.metadata (4.3 kB)
-Collecting fastapi<1.0,>=0.115.2 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading fastapi-0.128.7-py3-none-any.whl.metadata (30 kB)
-Collecting ffmpy (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading ffmpy-1.0.0-py3-none-any.whl.metadata (3.0 kB)
-Collecting gradio-client==1.8.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading gradio_client-1.8.0-py3-none-any.whl.metadata (7.1 kB)
-Collecting groovy~=0.1 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading groovy-0.1.2-py3-none-any.whl.metadata (6.1 kB)
-Collecting httpx>=0.24.1 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
-Requirement already satisfied: jinja2<4.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12)) (3.1.6)
-Requirement already satisfied: markupsafe<4.0,>=2.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12)) (2.1.5)
-Collecting orjson~=3.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading orjson-3.11.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 42.0/42.0 kB 3.1 MB/s eta 0:00:00
-Collecting pandas<3.0,>=1.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 91.2/91.2 kB 8.0 MB/s eta 0:00:00
-Collecting Pillow (from diffusers==0.30.2->-r /local_disk0/MuseTalk/requirements.txt (line 1))
-  Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
-Collecting pydantic<2.12,>=2.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading pydantic-2.11.10-py3-none-any.whl.metadata (68 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.6/68.6 kB 6.0 MB/s eta 0:00:00
-Collecting pydub (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading pydub-0.25.1-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting python-multipart>=0.0.18 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading python_multipart-0.0.22-py3-none-any.whl.metadata (1.8 kB)
-Collecting ruff>=0.9.3 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading ruff-0.15.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
-Collecting safehttpx<0.2.0,>=0.1.6 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading safehttpx-0.1.7-py3-none-any.whl.metadata (4.2 kB)
-Collecting semantic-version~=2.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading semantic_version-2.10.0-py2.py3-none-any.whl.metadata (9.7 kB)
-Collecting starlette<1.0,>=0.40.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading starlette-0.52.1-py3-none-any.whl.metadata (6.3 kB)
-Collecting tomlkit<0.14.0,>=0.12.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading tomlkit-0.13.3-py3-none-any.whl.metadata (2.8 kB)
-Collecting typer<1.0,>=0.12 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading typer-0.21.2-py3-none-any.whl.metadata (16 kB)
-Collecting uvicorn>=0.14.0 (from gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
-Collecting websockets<16.0,>=10.0 (from gradio-client==1.8.0->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading websockets-15.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
-Collecting beautifulsoup4 (from gdown->-r /local_disk0/MuseTalk/requirements.txt (line 14))
-  Downloading beautifulsoup4-4.14.3-py3-none-any.whl.metadata (3.8 kB)
-Requirement already satisfied: charset-normalizer<3,>=2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r /local_disk0/MuseTalk/requirements.txt (line 15)) (2.1.1)
-Requirement already satisfied: idna<4,>=2.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r /local_disk0/MuseTalk/requirements.txt (line 15)) (3.4)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r /local_disk0/MuseTalk/requirements.txt (line 15)) (1.26.13)
-Requirement already satisfied: certifi>=2017.4.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r /local_disk0/MuseTalk/requirements.txt (line 15)) (2022.12.7)
-Collecting imageio-ffmpeg (from imageio[ffmpeg]->-r /local_disk0/MuseTalk/requirements.txt (line 16))
-  Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
-Collecting antlr4-python3-runtime==4.9.* (from omegaconf->-r /local_disk0/MuseTalk/requirements.txt (line 18))
-  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 117.0/117.0 kB 9.7 MB/s eta 0:00:00
-  Preparing metadata (setup.py) ... done
-Collecting future (from ffmpeg-python->-r /local_disk0/MuseTalk/requirements.txt (line 19))
-  Downloading future-1.0.0-py3-none-any.whl.metadata (4.0 kB)
-INFO: pip is looking at multiple versions of moviepy to determine which version is compatible with other requirements. This could take a while.
-Collecting moviepy (from -r /local_disk0/MuseTalk/requirements.txt (line 20))
-  Downloading moviepy-2.2.0-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.2-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.1-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.0-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.0.0-py3-none-any.whl.metadata (6.4 kB)
-  Downloading moviepy-1.0.3.tar.gz (388 kB)
-     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 388.3/388.3 kB 26.7 MB/s eta 0:00:00
-  Preparing metadata (setup.py) ... done
-Collecting decorator>=4.3.0 (from librosa==0.11.0->-r /local_disk0/MuseTalk/requirements.txt (line 10))
-  Downloading decorator-4.4.2-py2.py3-none-any.whl.metadata (4.2 kB)
-Collecting proglog<=1.0.0 (from moviepy->-r /local_disk0/MuseTalk/requirements.txt (line 20))
-  Downloading proglog-0.1.12-py3-none-any.whl.metadata (794 bytes)
-Collecting exceptiongroup>=1.0.2 (from anyio<5.0,>=3.0->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
-Collecting pycparser (from cffi>=1.0->soundfile==0.12.1->-r /local_disk0/MuseTalk/requirements.txt (line 7))
-  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
-Collecting typing-inspection>=0.4.2 (from fastapi<1.0,>=0.115.2->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
-Collecting annotated-doc>=0.0.2 (from fastapi<1.0,>=0.115.2->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
-Collecting pyasn1-modules>=0.2.1 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
-Collecting cryptography>=38.0.3 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading cryptography-46.0.5-cp38-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
-Collecting rsa<5,>=3.1.4 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
-Collecting requests-oauthlib>=0.7.0 (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 5))
-  Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
-Collecting httpcore==1.* (from httpx>=0.24.1->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
-Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.24.1->gradio==5.24.0->-r /local_disk0/MuseTalk/requirements.txt (line 12))
-  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
-Collecting jaxlib<=0.6.2,>=0.6.2 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.6.2-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.3 kB)
-Collecting ml_dtypes>=0.5.0 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.9 kB)
-INFO: pip is looking at multiple versions of jax to determine which version is compatible with other requirements. This could take a while.
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.6.1-py3-none-any.whl.metadata (13 kB)
-Collecting jaxlib<=0.6.1,>=0.6.1 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.6.1-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.6.0-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.6.0,>=0.6.0 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.6.0-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.5.3-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.3,>=0.5.3 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.5.3-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.5.2-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.2,>=0.5.1 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.5.1-cp310-cp310-manylinux2014_x86_64.whl.metadata (978 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.5.1-py3-none-any.whl.metadata (22 kB)
-  Downloading jax-0.5.0-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.0,>=0.5.0 (from jax>=0.3.15->tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jaxlib-0.5.0-cp310-cp310-manylinux2014_x86_64.whl.metadata (978 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r /local_disk0/MuseTalk/requirements.txt (line 4))
-  Downloading jax-0.4.38-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0
-
-*** WARNING: max output size exceeded, skipping output. ***
-
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.6/79.6 MB 1.6 MB/s eta 0:00:000:00:01
-Downloading llvmlite-0.46.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (56.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.3/56.3 MB 10.7 MB/s eta 0:00:00:00:0100:01
-Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (5.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 67.8 MB/s eta 0:00:00:00:01
-Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.3/181.3 kB 16.7 MB/s eta 0:00:00
-Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
-Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 509.2/509.2 kB 31.4 MB/s eta 0:00:00
-Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
-Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
-Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
-Downloading soupsieve-2.8.3-py3-none-any.whl (37 kB)
-Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
-Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
-Downloading tzdata-2025.3-py2.py3-none-any.whl (348 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.5/348.5 kB 23.8 MB/s eta 0:00:00
-Downloading websockets-15.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (181 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 181.6/181.6 kB 13.8 MB/s eta 0:00:00
-Downloading pycparser-3.0-py3-none-any.whl (48 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.2/48.2 kB 4.7 MB/s eta 0:00:00
-Downloading oauthlib-3.3.1-py3-none-any.whl (160 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 160.1/160.1 kB 11.1 MB/s eta 0:00:00
-Downloading pyasn1-0.6.2-py3-none-any.whl (83 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 83.4/83.4 kB 7.6 MB/s eta 0:00:00
-Building wheels for collected packages: antlr4-python3-runtime, moviepy
-  Building wheel for antlr4-python3-runtime (setup.py) ... done
-  Created wheel for antlr4-python3-runtime: filename=antlr4_python3_runtime-4.9.3-py3-none-any.whl size=144591 sha256=3de5bbd6df400089cca9e6b5a9aae8f861f12dd888de753511cfc624b90d1559
-  Stored in directory: /root/.cache/pip/wheels/12/93/dd/1f6a127edc45659556564c5730f6d4e300888f4bca2d4c5a88
-  Building wheel for moviepy (setup.py) ... done
-  Created wheel for moviepy: filename=moviepy-1.0.3-py3-none-any.whl size=110796 sha256=340a1a313a48a32f8075ad2064e6398ced67e7ab6450ac0112a59f3257d30c44
-  Stored in directory: /root/.cache/pip/wheels/96/32/2d/e10123bd88fbfc02fed53cc18c80a171d3c87479ed845fa7c1
-Successfully built antlr4-python3-runtime moviepy
-Installing collected packages: tensorboard-plugin-wit, pytz, pydub, libclang, flatbuffers, antlr4-python3-runtime, wrapt, werkzeug, websockets, tzdata, typing-inspection, tomlkit, threadpoolctl, tensorflow-io-gcs-filesystem, tensorflow-estimator, tensorboard-data-server, soupsieve, shellingham, semantic-version, ruff, python-multipart, PySocks, pydantic-core, pycparser, pyasn1, protobuf, proglog, Pillow, orjson, opt-einsum, omegaconf, oauthlib, numpy, msgpack, markdown, llvmlite, lazy_loader, keras, joblib, imageio-ffmpeg, h11, grpcio, groovy, google-pasta, gast, future, ffmpy, exceptiongroup, einops, decorator, click, audioread, annotated-types, annotated-doc, aiofiles, absl-py, uvicorn, soxr, rsa, requests-oauthlib, pydantic, pyasn1-modules, pooch, pandas, numba, ml_dtypes, imageio, huggingface_hub, httpcore, h5py, ffmpeg-python, cffi, beautifulsoup4, astunparse, anyio, typer, starlette, soundfile, scikit-learn, moviepy, jaxlib, httpx, gdown, cryptography, safehttpx, librosa, jax, gradio-client, google-auth, fastapi, gradio, google-auth-oauthlib, tensorboard, tensorflow, accelerate
-  Attempting uninstall: Pillow
-    Found existing installation: pillow 12.0.0
-    Uninstalling pillow-12.0.0:
-      Successfully uninstalled pillow-12.0.0
-  Attempting uninstall: numpy
-    Found existing installation: numpy 1.26.4
-    Uninstalling numpy-1.26.4:
-      Successfully uninstalled numpy-1.26.4
+ffmpeg version n4.4.4-0ubuntu1~22.04.db1 Copyright (c) 2000-2023 the FFmpeg developers
+built with gcc 11 (Ubuntu 11.4.0-1ubuntu1~22.04)
+-rwxrwxrwx 1 nobody nogroup 1.1M Nov 23 07:28 '/Volumes/lab37_catalog/ifstrolley/trolley/Thank you for bookin (1).wav'
+-rwxrwxrwx 1 nobody nogroup 2.4M Feb  4 09:30  /Volumes/lab37_catalog/ifstrolley/trolley/indigo_airhostress_response_v2.mp4
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+mkdir: cannot create directory ‘models’: Permission denied
+Requirement already satisfied: huggingface_hub[cli] in /databricks/python3/lib/python3.10/site-packages (0.27.1)
+Collecting huggingface_hub[cli]
+  Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 11.0 MB/s eta 0:00:00a 0:00:01
+WARNING: huggingface-hub 1.4.1 does not provide the extra 'cli'
+Collecting hf-xet<2.0.0,>=1.2.0
+  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 63.4 MB/s eta 0:00:00:00:01
+Requirement already satisfied: typing-extensions>=4.1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.15.0)
+Collecting shellingham
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (6.0)
+Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (23.2)
+Collecting httpx<1,>=0.23.0
+  Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 11.0 MB/s eta 0:00:00
+Collecting typer-slim
+  Downloading typer_slim-0.21.2-py3-none-any.whl (56 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.8/56.8 kB 9.4 MB/s eta 0:00:00
+Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.64.1)
+Requirement already satisfied: filelock in /local_disk0/.ephemeral_nfs/envs/pythonEnv-7b58846e-ff57-4868-b9cf-c2d1728d8335/lib/python3.10/site-packages (from huggingface_hub[cli]) (3.20.3)
+Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (2023.6.0)
+Collecting httpcore==1.*
+  Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 10.5 MB/s eta 0:00:00
+Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (2022.12.7)
+Requirement already satisfied: idna in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (3.4)
+Requirement already satisfied: anyio in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (4.12.1)
+Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub[cli]) (0.16.0)
+Requirement already satisfied: annotated-doc>=0.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from typer-slim->huggingface_hub[cli]) (0.0.4)
+Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer-slim->huggingface_hub[cli]) (8.0.4)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from anyio->httpx<1,>=0.23.0->huggingface_hub[cli]) (1.3.1)
+Installing collected packages: typer-slim, shellingham, httpcore, hf-xet, httpx, huggingface_hub
   Attempting uninstall: huggingface_hub
-    Found existing installation: huggingface-hub 0.25.2
-    Uninstalling huggingface-hub-0.25.2:
-      Successfully uninstalled huggingface-hub-0.25.2
-  Attempting uninstall: accelerate
-    Found existing installation: accelerate 0.27.2
-    Uninstalling accelerate-0.27.2:
-      Successfully uninstalled accelerate-0.27.2
-Successfully installed Pillow-11.3.0 PySocks-1.7.1 absl-py-2.4.0 accelerate-0.28.0 aiofiles-24.1.0 annotated-doc-0.0.4 annotated-types-0.7.0 antlr4-python3-runtime-4.9.3 anyio-4.12.1 astunparse-1.6.3 audioread-3.1.0 beautifulsoup4-4.14.3 cffi-2.0.0 click-8.3.1 cryptography-46.0.5 decorator-4.4.2 einops-0.8.1 exceptiongroup-1.3.1 fastapi-0.128.7 ffmpeg-python-0.2.0 ffmpy-1.0.0 flatbuffers-25.12.19 future-1.0.0 gast-0.4.0 gdown-5.2.1 google-auth-2.48.0 google-auth-oauthlib-0.4.6 google-pasta-0.2.0 gradio-5.24.0 gradio-client-1.8.0 groovy-0.1.2 grpcio-1.78.0 h11-0.16.0 h5py-3.15.1 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-0.30.2 imageio-2.37.2 imageio-ffmpeg-0.6.0 jax-0.4.30 jaxlib-0.4.30 joblib-1.5.3 keras-2.12.0 lazy_loader-0.4 libclang-18.1.1 librosa-0.11.0 llvmlite-0.46.0 markdown-3.10.2 ml_dtypes-0.5.4 moviepy-1.0.3 msgpack-1.1.2 numba-0.63.1 numpy-1.23.5 oauthlib-3.3.1 omegaconf-2.3.0 opt-einsum-3.4.0 orjson-3.11.7 pandas-2.3.3 pooch-1.9.0 proglog-0.1.12 protobuf-4.25.8 pyasn1-0.6.2 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.11.10 pydantic-core-2.33.2 pydub-0.25.1 python-multipart-0.0.22 pytz-2025.2 requests-oauthlib-2.0.0 rsa-4.9.1 ruff-0.15.0 safehttpx-0.1.7 scikit-learn-1.7.2 semantic-version-2.10.0 shellingham-1.5.4 soundfile-0.12.1 soupsieve-2.8.3 soxr-1.0.0 starlette-0.52.1 tensorboard-2.12.0 tensorboard-data-server-0.7.2 tensorboard-plugin-wit-1.8.1 tensorflow-2.12.0 tensorflow-estimator-2.12.0 tensorflow-io-gcs-filesystem-0.37.1 threadpoolctl-3.6.0 tomlkit-0.13.3 typer-0.21.2 typing-inspection-0.4.2 tzdata-2025.3 uvicorn-0.40.0 websockets-15.0.1 werkzeug-3.1.5 wrapt-1.14.2
+    Found existing installation: huggingface-hub 0.27.1
+    Not uninstalling huggingface-hub at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-7b58846e-ff57-4868-b9cf-c2d1728d8335
+    Can't uninstall 'huggingface-hub'. No files were found to uninstall.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+transformers 4.36.1 requires huggingface-hub<1.0,>=0.19.3, but you have huggingface-hub 1.4.1 which is incompatible.
+tokenizers 0.15.0 requires huggingface_hub<1.0,>=0.16.4, but you have huggingface-hub 1.4.1 which is incompatible.
+Successfully installed hf-xet-1.2.0 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-1.4.1 shellingham-1.5.4 typer-slim-0.21.2
 
-[notice] A new release of pip is available: 24.0 -> 26.0.1
-[notice] To update, run: python -m pip install --upgrade pip
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+Collecting gdown
+  Downloading gdown-5.2.1-py3-none-any.whl (18 kB)
+Requirement already satisfied: filelock in /local_disk0/.ephemeral_nfs/envs/pythonEnv-7b58846e-ff57-4868-b9cf-c2d1728d8335/lib/python3.10/site-packages (from gdown) (3.20.3)
+Requirement already satisfied: requests[socks] in /databricks/python3/lib/python3.10/site-packages (from gdown) (2.28.1)
+Requirement already satisfied: tqdm in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.64.1)
+Requirement already satisfied: beautifulsoup4 in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.11.1)
+Requirement already satisfied: soupsieve>1.2 in /databricks/python3/lib/python3.10/site-packages (from beautifulsoup4->gdown) (2.3.2.post1)
+Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2.0.4)
+Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (1.26.14)
+Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2022.12.7)
+Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (3.4)
+Collecting PySocks!=1.5.7,>=1.5.6
+  Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
+Installing collected packages: PySocks, gdown
+Successfully installed PySocks-1.7.1 gdown-5.2.1
+
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+Fetching 2 files:   0%|                                   | 0/2 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+Fetching 2 files:   0%|                                   | 0/2 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+Fetching 2 files:   0%|                                   | 0/2 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/sd-vae/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/sd-vae/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/sd-vae'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+Fetching 3 files:   0%|                                   | 0/3 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/whisper/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/whisper/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/whisper'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+Fetching 1 files:   0%|                                   | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/dwpose/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/dwpose/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/dwpose'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+Fetching 1 files:   0%|                                   | 0/1 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/syncnet/.cache/huggingface'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/syncnet/.cache'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: 'models/syncnet'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/databricks/python3/bin/huggingface-cli", line 8, in <module>
+    sys.exit(main())
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/huggingface_cli.py", line 57, in main
+    service.run()
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 153, in run
+    print(self._download())  # Print path to downloaded files
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/commands/download.py", line 187, in _download
+    return snapshot_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 296, in snapshot_download
+    thread_map(
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 94, in thread_map
+    return _executor_map(ThreadPoolExecutor, fn, *iterables, **tqdm_kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/contrib/concurrent.py", line 76, in _executor_map
+    return list(tqdm_class(ex.map(fn, *iterables, **map_args), **kwargs))
+  File "/databricks/python3/lib/python3.10/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_snapshot_download.py", line 270, in _inner_hf_hub_download
+    return hf_hub_download(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 840, in hf_hub_download
+    return _hf_hub_download_to_local_dir(
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1054, in _hf_hub_download_to_local_dir
+    paths = get_local_download_paths(local_dir=local_dir, filename=filename)
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 205, in get_local_download_paths
+    metadata_path = _huggingface_dir(local_dir) / "download" / f"{sanitized_filename}.metadata"
+  File "/databricks/python3/lib/python3.10/site-packages/huggingface_hub/_local_folder.py", line 408, in _huggingface_dir
+    path.mkdir(exist_ok=True, parents=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1179, in mkdir
+    self.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.10/pathlib.py", line 1175, in mkdir
+    self._accessor.mkdir(self, mode)
+PermissionError: [Errno 13] Permission denied: 'models'
+/local_disk0/.ephemeral_nfs/envs/pythonEnv-7b58846e-ff57-4868-b9cf-c2d1728d8335/lib/python3.10/site-packages/gdown/__main__.py:139: FutureWarning: Option `--id` was deprecated in version 4.3.1 and will be removed in 5.0. You don't need to pass it anymore to use a file ID.
+  warnings.warn(
+Error:
+
+	[Errno 2] No such file or directory: 'models/face-parse-bisent'
+
+To report issues, please visit https://github.com/wkentaro/gdown/issues.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0Warning: Failed to create the file 
+Warning: models/face-parse-bisent/resnet18-5c106cde.pth: No such file or 
+Warning: directory
+  0 44.6M    0 16027    0     0   114k      0  0:06:39 --:--:--  0:06:39  115k
+curl: (23) Failure writing output to destination
+✅ All weights have been downloaded successfully!
+ls: cannot access '/local_disk0/MuseTalk/models': No such file or directory
