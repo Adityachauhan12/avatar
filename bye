@@ -1,303 +1,57 @@
-Requirement already satisfied: diffusers==0.30.2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r requirements.txt (line 1)) (0.30.2)
-Collecting accelerate==0.28.0 (from -r requirements.txt (line 2))
-  Downloading accelerate-0.28.0-py3-none-any.whl.metadata (18 kB)
-Collecting numpy==1.23.5 (from -r requirements.txt (line 3))
-  Downloading numpy-1.23.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (2.3 kB)
-Collecting tensorflow==2.12.0 (from -r requirements.txt (line 4))
-  Downloading tensorflow-2.12.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.4 kB)
-Collecting tensorboard==2.12.0 (from -r requirements.txt (line 5))
-  Downloading tensorboard-2.12.0-py3-none-any.whl.metadata (1.8 kB)
-Requirement already satisfied: opencv-python==4.9.0.80 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r requirements.txt (line 6)) (4.9.0.80)
-Collecting soundfile==0.12.1 (from -r requirements.txt (line 7))
-  Downloading soundfile-0.12.1-py2.py3-none-manylinux_2_31_x86_64.whl.metadata (14 kB)
-Requirement already satisfied: transformers==4.39.2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r requirements.txt (line 8)) (4.39.2)
-Collecting huggingface_hub==0.30.2 (from -r requirements.txt (line 9))
-  Downloading huggingface_hub-0.30.2-py3-none-any.whl.metadata (13 kB)
-Collecting librosa==0.11.0 (from -r requirements.txt (line 10))
-  Downloading librosa-0.11.0-py3-none-any.whl.metadata (8.7 kB)
-Collecting einops==0.8.1 (from -r requirements.txt (line 11))
-  Downloading einops-0.8.1-py3-none-any.whl.metadata (13 kB)
-Collecting gradio==5.24.0 (from -r requirements.txt (line 12))
-  Downloading gradio-5.24.0-py3-none-any.whl.metadata (16 kB)
-Collecting gdown (from -r requirements.txt (line 14))
-  Downloading gdown-5.2.1-py3-none-any.whl.metadata (5.8 kB)
-Requirement already satisfied: requests in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from -r requirements.txt (line 15)) (2.32.5)
-Collecting omegaconf (from -r requirements.txt (line 18))
-  Downloading omegaconf-2.3.0-py3-none-any.whl.metadata (3.9 kB)
-Collecting ffmpeg-python (from -r requirements.txt (line 19))
-  Downloading ffmpeg_python-0.2.0-py3-none-any.whl.metadata (1.7 kB)
-Collecting moviepy (from -r requirements.txt (line 20))
-  Downloading moviepy-2.2.1-py3-none-any.whl.metadata (6.9 kB)
-Collecting imageio[ffmpeg] (from -r requirements.txt (line 16))
-  Downloading imageio-2.37.2-py3-none-any.whl.metadata (9.7 kB)
-Requirement already satisfied: importlib-metadata in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r requirements.txt (line 1)) (8.7.1)
-Requirement already satisfied: filelock in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r requirements.txt (line 1)) (3.20.3)
-Requirement already satisfied: regex!=2019.12.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r requirements.txt (line 1)) (2026.1.15)
-Requirement already satisfied: safetensors>=0.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r requirements.txt (line 1)) (0.7.0)
-Requirement already satisfied: Pillow in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from diffusers==0.30.2->-r requirements.txt (line 1)) (12.1.1)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r requirements.txt (line 2)) (26.0)
-Requirement already satisfied: psutil in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r requirements.txt (line 2)) (7.2.2)
-Requirement already satisfied: pyyaml in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r requirements.txt (line 2)) (6.0.3)
-Requirement already satisfied: torch>=1.10.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from accelerate==0.28.0->-r requirements.txt (line 2)) (2.10.0)
-Collecting absl-py>=1.0.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading absl_py-2.4.0-py3-none-any.whl.metadata (3.3 kB)
-Collecting astunparse>=1.6.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading astunparse-1.6.3-py2.py3-none-any.whl.metadata (4.4 kB)
-Collecting flatbuffers>=2.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading flatbuffers-25.12.19-py2.py3-none-any.whl.metadata (1.0 kB)
-Collecting gast<=0.4.0,>=0.2.1 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading gast-0.4.0-py3-none-any.whl.metadata (1.1 kB)
-Collecting google-pasta>=0.1.1 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading google_pasta-0.2.0-py3-none-any.whl.metadata (814 bytes)
-Collecting grpcio<2.0,>=1.24.3 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading grpcio-1.78.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
-Collecting h5py>=2.9.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading h5py-3.15.1-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.0 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.6.2-py3-none-any.whl.metadata (13 kB)
-Collecting keras<2.13,>=2.12.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading keras-2.12.0-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting libclang>=13.0.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading libclang-18.1.1-py2.py3-none-manylinux2010_x86_64.whl.metadata (5.2 kB)
-Collecting opt-einsum>=2.3.2 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading opt_einsum-3.4.0-py3-none-any.whl.metadata (6.3 kB)
-Collecting protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<5.0.0dev,>=3.20.3 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading protobuf-4.25.8-cp37-abi3-manylinux2014_x86_64.whl.metadata (541 bytes)
-Requirement already satisfied: setuptools in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r requirements.txt (line 4)) (80.9.0)
-Requirement already satisfied: six>=1.12.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r requirements.txt (line 4)) (1.17.0)
-Collecting tensorflow-estimator<2.13,>=2.12.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading tensorflow_estimator-2.12.0-py2.py3-none-any.whl.metadata (1.3 kB)
-Requirement already satisfied: termcolor>=1.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r requirements.txt (line 4)) (3.3.0)
-Requirement already satisfied: typing-extensions>=3.6.6 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from tensorflow==2.12.0->-r requirements.txt (line 4)) (4.15.0)
-Collecting wrapt<1.15,>=1.11.0 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading wrapt-1.14.2-cp310-cp310-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.5 kB)
-Collecting tensorflow-io-gcs-filesystem>=0.23.1 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading tensorflow_io_gcs_filesystem-0.37.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (14 kB)
-Collecting google-auth<3,>=1.6.3 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading google_auth-2.48.0-py3-none-any.whl.metadata (6.2 kB)
-Collecting google-auth-oauthlib<0.5,>=0.4.1 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading google_auth_oauthlib-0.4.6-py2.py3-none-any.whl.metadata (2.7 kB)
-Collecting markdown>=2.6.8 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading markdown-3.10.2-py3-none-any.whl.metadata (5.1 kB)
-Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
-Collecting tensorboard-plugin-wit>=1.6.0 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading tensorboard_plugin_wit-1.8.1-py3-none-any.whl.metadata (873 bytes)
-Collecting werkzeug>=1.0.1 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading werkzeug-3.1.5-py3-none-any.whl.metadata (4.0 kB)
-Collecting wheel>=0.26 (from tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading wheel-0.46.3-py3-none-any.whl.metadata (2.4 kB)
-Collecting cffi>=1.0 (from soundfile==0.12.1->-r requirements.txt (line 7))
-  Downloading cffi-2.0.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
-Requirement already satisfied: tokenizers<0.19,>=0.14 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2->-r requirements.txt (line 8)) (0.15.2)
-Requirement already satisfied: tqdm>=4.27 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from transformers==4.39.2->-r requirements.txt (line 8)) (4.67.3)
-Requirement already satisfied: fsspec>=2023.5.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from huggingface_hub==0.30.2->-r requirements.txt (line 9)) (2026.2.0)
-Collecting audioread>=2.1.9 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading audioread-3.1.0-py3-none-any.whl.metadata (9.0 kB)
-Collecting numba>=0.51.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading numba-0.63.1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.9 kB)
-Requirement already satisfied: scipy>=1.6.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from librosa==0.11.0->-r requirements.txt (line 10)) (1.15.3)
-Collecting scikit-learn>=1.1.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading scikit_learn-1.7.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (11 kB)
-Collecting joblib>=1.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
-Collecting decorator>=4.3.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
-Collecting pooch>=1.1 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading pooch-1.9.0-py3-none-any.whl.metadata (10 kB)
-Collecting soxr>=0.3.2 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading soxr-1.0.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.6 kB)
-Collecting lazy_loader>=0.1 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading lazy_loader-0.4-py3-none-any.whl.metadata (7.6 kB)
-Collecting msgpack>=1.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading msgpack-1.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
-Collecting aiofiles<25.0,>=22.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading aiofiles-24.1.0-py3-none-any.whl.metadata (10 kB)
-Collecting anyio<5.0,>=3.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading anyio-4.12.1-py3-none-any.whl.metadata (4.3 kB)
-Collecting fastapi<1.0,>=0.115.2 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading fastapi-0.128.8-py3-none-any.whl.metadata (30 kB)
-Collecting ffmpy (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading ffmpy-1.0.0-py3-none-any.whl.metadata (3.0 kB)
-Collecting gradio-client==1.8.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading gradio_client-1.8.0-py3-none-any.whl.metadata (7.1 kB)
-Collecting groovy~=0.1 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading groovy-0.1.2-py3-none-any.whl.metadata (6.1 kB)
-Collecting httpx>=0.24.1 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
-Requirement already satisfied: jinja2<4.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from gradio==5.24.0->-r requirements.txt (line 12)) (3.1.6)
-Requirement already satisfied: markupsafe<4.0,>=2.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from gradio==5.24.0->-r requirements.txt (line 12)) (3.0.3)
-Collecting orjson~=3.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading orjson-3.11.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
-Collecting pandas<3.0,>=1.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading pandas-2.3.3-cp310-cp310-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
-Collecting Pillow (from diffusers==0.30.2->-r requirements.txt (line 1))
-  Downloading pillow-11.3.0-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.0 kB)
-Collecting pydantic<2.12,>=2.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading pydantic-2.11.10-py3-none-any.whl.metadata (68 kB)
-Collecting pydub (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading pydub-0.25.1-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting python-multipart>=0.0.18 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading python_multipart-0.0.22-py3-none-any.whl.metadata (1.8 kB)
-Collecting ruff>=0.9.3 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading ruff-0.15.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (26 kB)
-Collecting safehttpx<0.2.0,>=0.1.6 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading safehttpx-0.1.7-py3-none-any.whl.metadata (4.2 kB)
-Collecting semantic-version~=2.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading semantic_version-2.10.0-py2.py3-none-any.whl.metadata (9.7 kB)
-Collecting starlette<1.0,>=0.40.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading starlette-0.52.1-py3-none-any.whl.metadata (6.3 kB)
-Collecting tomlkit<0.14.0,>=0.12.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading tomlkit-0.13.3-py3-none-any.whl.metadata (2.8 kB)
-Collecting typer<1.0,>=0.12 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading typer-0.23.0-py3-none-any.whl.metadata (16 kB)
-Collecting uvicorn>=0.14.0 (from gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading uvicorn-0.40.0-py3-none-any.whl.metadata (6.7 kB)
-Collecting websockets<16.0,>=10.0 (from gradio-client==1.8.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading websockets-15.0.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
-Requirement already satisfied: charset_normalizer<4,>=2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r requirements.txt (line 15)) (3.4.4)
-Requirement already satisfied: idna<4,>=2.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r requirements.txt (line 15)) (3.11)
-Requirement already satisfied: urllib3<3,>=1.21.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r requirements.txt (line 15)) (2.6.3)
-Requirement already satisfied: certifi>=2017.4.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->-r requirements.txt (line 15)) (2026.1.4)
-Collecting exceptiongroup>=1.0.2 (from anyio<5.0,>=3.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading exceptiongroup-1.3.1-py3-none-any.whl.metadata (6.7 kB)
-Collecting typing-inspection>=0.4.2 (from fastapi<1.0,>=0.115.2->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
-Collecting annotated-doc>=0.0.2 (from fastapi<1.0,>=0.115.2->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
-Collecting pyasn1-modules>=0.2.1 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
-Collecting cryptography>=38.0.3 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading cryptography-46.0.5-cp38-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
-Collecting rsa<5,>=3.1.4 (from google-auth<3,>=1.6.3->tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
-Collecting requests-oauthlib>=0.7.0 (from google-auth-oauthlib<0.5,>=0.4.1->tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
-Requirement already satisfied: python-dateutil>=2.8.2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from pandas<3.0,>=1.0->gradio==5.24.0->-r requirements.txt (line 12)) (2.9.0.post0)
-Collecting pytz>=2020.1 (from pandas<3.0,>=1.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
-Collecting tzdata>=2022.7 (from pandas<3.0,>=1.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading tzdata-2025.3-py2.py3-none-any.whl.metadata (1.4 kB)
-Collecting annotated-types>=0.6.0 (from pydantic<2.12,>=2.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
-Collecting pydantic-core==2.33.2 (from pydantic<2.12,>=2.0->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading pydantic_core-2.33.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
-Collecting pyasn1>=0.1.3 (from rsa<5,>=3.1.4->google-auth<3,>=1.6.3->tensorboard==2.12.0->-r requirements.txt (line 5))
-  Downloading pyasn1-0.6.2-py3-none-any.whl.metadata (8.4 kB)
-Collecting click>=8.0.0 (from typer<1.0,>=0.12->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading click-8.3.1-py3-none-any.whl.metadata (2.6 kB)
-Collecting shellingham>=1.3.0 (from typer<1.0,>=0.12->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
-Requirement already satisfied: rich>=10.11.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from typer<1.0,>=0.12->gradio==5.24.0->-r requirements.txt (line 12)) (14.3.2)
-Collecting beautifulsoup4 (from gdown->-r requirements.txt (line 14))
-  Downloading beautifulsoup4-4.14.3-py3-none-any.whl.metadata (3.8 kB)
-Collecting imageio-ffmpeg (from imageio[ffmpeg]->-r requirements.txt (line 16))
-  Downloading imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
-Collecting antlr4-python3-runtime==4.9.* (from omegaconf->-r requirements.txt (line 18))
-  Downloading antlr4-python3-runtime-4.9.3.tar.gz (117 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Preparing metadata (pyproject.toml) ... done
-Collecting future (from ffmpeg-python->-r requirements.txt (line 19))
-  Downloading future-1.0.0-py3-none-any.whl.metadata (4.0 kB)
-INFO: pip is looking at multiple versions of moviepy to determine which version is compatible with other requirements. This could take a while.
-Collecting moviepy (from -r requirements.txt (line 20))
-  Downloading moviepy-2.2.0-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.2-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.1-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.1.0-py3-none-any.whl.metadata (6.9 kB)
-  Downloading moviepy-2.0.0-py3-none-any.whl.metadata (6.4 kB)
-  Downloading moviepy-1.0.3.tar.gz (388 kB)
-  Installing build dependencies ... done
-  Getting requirements to build wheel ... done
-  Preparing metadata (pyproject.toml) ... done
-Collecting decorator>=4.3.0 (from librosa==0.11.0->-r requirements.txt (line 10))
-  Downloading decorator-4.4.2-py2.py3-none-any.whl.metadata (4.2 kB)
-Collecting proglog<=1.0.0 (from moviepy->-r requirements.txt (line 20))
-  Downloading proglog-0.1.12-py3-none-any.whl.metadata (794 bytes)
-Collecting pycparser (from cffi>=1.0->soundfile==0.12.1->-r requirements.txt (line 7))
-  Downloading pycparser-3.0-py3-none-any.whl.metadata (8.2 kB)
-Collecting httpcore==1.* (from httpx>=0.24.1->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
-Collecting h11>=0.16 (from httpcore==1.*->httpx>=0.24.1->gradio==5.24.0->-r requirements.txt (line 12))
-  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
-Collecting jaxlib<=0.6.2,>=0.6.2 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.6.2-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.3 kB)
-Collecting ml_dtypes>=0.5.0 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading ml_dtypes-0.5.4-cp310-cp310-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.9 kB)
-INFO: pip is looking at multiple versions of jax to determine which version is compatible with other requirements. This could take a while.
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.6.1-py3-none-any.whl.metadata (13 kB)
-Collecting jaxlib<=0.6.1,>=0.6.1 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.6.1-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.6.0-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.6.0,>=0.6.0 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.6.0-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.5.3-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.3,>=0.5.3 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.5.3-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.2 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.5.2-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.2,>=0.5.1 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.5.1-cp310-cp310-manylinux2014_x86_64.whl.metadata (978 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.5.1-py3-none-any.whl.metadata (22 kB)
-  Downloading jax-0.5.0-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.5.0,>=0.5.0 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.5.0-cp310-cp310-manylinux2014_x86_64.whl.metadata (978 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.38-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.4.38,>=0.4.38 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.4.38-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.0 kB)
-INFO: pip is still looking at multiple versions of jax to determine which version is compatible with other requirements. This could take a while.
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.37-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.4.37,>=0.4.36 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.4.36-cp310-cp310-manylinux2014_x86_64.whl.metadata (1.0 kB)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.36-py3-none-any.whl.metadata (22 kB)
-  Downloading jax-0.4.35-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.4.35,>=0.4.34 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.4.35-cp310-cp310-manylinux2014_x86_64.whl.metadata (983 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.34-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.4.34,>=0.4.34 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.4.34-cp310-cp310-manylinux2014_x86_64.whl.metadata (983 bytes)
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.33-py3-none-any.whl.metadata (22 kB)
-Collecting jaxlib<=0.4.33,>=0.4.33 (from jax>=0.3.15->tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jaxlib-0.4.33-cp310-cp310-manylinux2014_x86_64.whl.metadata (983 bytes)
-INFO: This is taking longer than usual. You might need to provide the dependency resolver with stricter constraints to reduce runtime. See https://pip.pypa.io/warnings/backtracking for guidance. If you want to abort this run, press Ctrl + C.
-Collecting jax>=0.3.15 (from tensorflow==2.12.0->-r requirements.txt (line 4))
-  Downloading jax-0.4.31-py3-none-any.whl.metadata (22 k
+/local_disk0/musetalk_venv/bin/pip install --index-url https://download.pytorch.org/whl/cu118 torch==2.0.1+cu118 torchvision==0.15.2+cu118 torchaudio==2.0.2+cu118
 
-*** WARNING: max output size exceeded, skipping output. ***
-
-  Attempting uninstall: Pillow0m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 26/96 [protobuf]ltipart]tor]
-    Found existing installation: pillow 12.1.1━━━━━━━━━━━━━━━━ 26/96 [protobuf]
-    Uninstalling pillow-12.1.1:0m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 26/96 [protobuf]
-      Successfully uninstalled pillow-12.1.1━━━━━━━━━━━━━━━━━━ 26/96 [protobuf]
-  Attempting uninstall: numpym╺━━━━━━━━━━━━━━━━━━━━━━━━━━ 32/96 [oauthlib]
-    Found existing installation: numpy 1.26.4━━━━━━━━━━━━━━━━━ 32/96 [oauthlib]
-    Uninstalling numpy-1.26.4:m━━━━━━━━━━━━━━━━━━━━━━━━━━ 32/96 [oauthlib]
-      Successfully uninstalled numpy-1.26.4━━━━━━━━━━━━━━━━━━━ 32/96 [oauthlib]
-  Attempting uninstall: huggingface_hub╸━━━━━━━━━━━━ 66/96 [ml_dtypes]types]
-    Found existing installation: huggingface-hub 0.25.2━━━━━━━ 66/96 [ml_dtypes]
-    Uninstalling huggingface-hub-0.25.2:╺━━━━━━━━━━━ 68/96 [huggingface_hub]
-      Successfully uninstalled huggingface-hub-0.25.2━━━━━━━━━ 68/96 [huggingface_hub]
-  Attempting uninstall: accelerate━━━━━━━━━━━╸━━ 90/96 [fastapi]lient]b]
-    Found existing installation: accelerate 0.27.2╸━━ 90/96 [fastapi]
-    Uninstalling accelerate-0.27.2:━━━━━━╸━━ 90/96 [fastapi]
-      Successfully uninstalled accelerate-0.27.21m╸━━ 90/96 [fastapi]
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 96/96 [tensorflow]nsorflow]]dio]ate]
+Looking in indexes: https://download.pytorch.org/whl/cu118
+Collecting torch==2.0.1+cu118
+  Using cached https://download.pytorch.org/whl/cu118/torch-2.0.1%2Bcu118-cp310-cp310-linux_x86_64.whl (2267.3 MB)
+Collecting torchvision==0.15.2+cu118
+  Using cached https://download.pytorch.org/whl/cu118/torchvision-0.15.2%2Bcu118-cp310-cp310-linux_x86_64.whl (6.1 MB)
+Collecting torchaudio==2.0.2+cu118
+  Using cached https://download.pytorch.org/whl/cu118/torchaudio-2.0.2%2Bcu118-cp310-cp310-linux_x86_64.whl (4.4 MB)
+Requirement already satisfied: filelock in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch==2.0.1+cu118) (3.20.3)
+Requirement already satisfied: typing-extensions in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch==2.0.1+cu118) (4.15.0)
+Requirement already satisfied: sympy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch==2.0.1+cu118) (1.14.0)
+Requirement already satisfied: networkx in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch==2.0.1+cu118) (3.4.2)
+Requirement already satisfied: jinja2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torch==2.0.1+cu118) (3.1.6)
+Collecting triton==2.0.0 (from torch==2.0.1+cu118)
+  Downloading https://download.pytorch.org/whl/triton-2.0.0-1-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (63.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 63.3/63.3 MB 8.2 MB/s  0:00:076m0:00:0100:01
+Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (1.23.5)
+Requirement already satisfied: requests in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (2.32.5)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from torchvision==0.15.2+cu118) (11.3.0)
+Collecting cmake (from triton==2.0.0->torch==2.0.1+cu118)
+  Downloading https://download.pytorch.org/whl/cmake-3.25.0-py2.py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (23.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 23.7/23.7 MB 5.0 MB/s  0:00:046m0:00:01
+Collecting lit (from triton==2.0.0->torch==2.0.1+cu118)
+  Downloading https://download.pytorch.org/whl/lit-15.0.7.tar.gz (132 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Requirement already satisfied: MarkupSafe>=2.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from jinja2->torch==2.0.1+cu118) (3.0.3)
+Requirement already satisfied: charset_normalizer<4,>=2 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (3.4.4)
+Requirement already satisfied: idna<4,>=2.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (3.11)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (2.6.3)
+Requirement already satisfied: certifi>=2017.4.17 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from requests->torchvision==0.15.2+cu118) (2026.1.4)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from sympy->torch==2.0.1+cu118) (1.3.0)
+Building wheels for collected packages: lit
+  Building wheel for lit (pyproject.toml): started
+  Building wheel for lit (pyproject.toml): finished with status 'done'
+  Created wheel for lit: filename=lit-15.0.7-py3-none-any.whl size=89991 sha256=2caf3f8b5f0f41ccd21d37e15078900ee887c59e7239143646ef70c2f861f939
+  Stored in directory: /root/.cache/pip/wheels/27/2c/b6/3ed2983b1b44fe0dea1bb35234b09f2c22fb8ebb308679c922
+Successfully built lit
+Installing collected packages: lit, cmake, triton, torch, torchvision, torchaudio
+  Attempting uninstall: triton90m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1/6 [cmake]
+    Found existing installation: triton 3.6.0━━━━━━━━━━━━━━━━━ 1/6 [cmake]
+    Uninstalling triton-3.6.0:━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1/6 [cmake]
+      Successfully uninstalled triton-3.6.0━━━━━━━━━━━━━━━━━━━ 1/6 [cmake]
+  Attempting uninstall: torchm╺━━━━━━━━━━━━━━━━━━━━━━━━━━ 2/6 [triton]
+    Found existing installation: torch 2.10.0━━━━━━━━━━━━━━━━━ 2/6 [triton]
+    Uninstalling torch-2.10.0:0m╺━━━━━━━━━━━━━━━━━━━ 3/6 [torch]
+      Successfully uninstalled torch-2.10.0━━━━━━━━━━━━━━━━━━━ 3/6 [torch]
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6/6 [torchaudio]6 [torchaudio]]
+Successfully installed cmake-3.25.0 lit-15.0.7 torch-2.0.1+cu118 torchaudio-2.0.2+cu118 torchvision-0.15.2+cu118 triton-2.0.0
 ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
 mmpose 1.1.0 requires chumpy, which is not installed.
-mmpose 1.1.0 requires torchvision, which is not installed.
-Successfully installed Pillow-11.3.0 PySocks-1.7.1 absl-py-2.4.0 accelerate-0.28.0 aiofiles-24.1.0 annotated-doc-0.0.4 annotated-types-0.7.0 antlr4-python3-runtime-4.9.3 anyio-4.12.1 astunparse-1.6.3 audioread-3.1.0 beautifulsoup4-4.14.3 cffi-2.0.0 click-8.3.1 cryptography-46.0.5 decorator-4.4.2 einops-0.8.1 exceptiongroup-1.3.1 fastapi-0.128.8 ffmpeg-python-0.2.0 ffmpy-1.0.0 flatbuffers-25.12.19 future-1.0.0 gast-0.4.0 gdown-5.2.1 google-auth-2.48.0 google-auth-oauthlib-0.4.6 google-pasta-0.2.0 gradio-5.24.0 gradio-client-1.8.0 groovy-0.1.2 grpcio-1.78.0 h11-0.16.0 h5py-3.15.1 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-0.30.2 imageio-2.37.2 imageio-ffmpeg-0.6.0 jax-0.4.30 jaxlib-0.4.30 joblib-1.5.3 keras-2.12.0 lazy_loader-0.4 libclang-18.1.1 librosa-0.11.0 llvmlite-0.46.0 markdown-3.10.2 ml_dtypes-0.5.4 moviepy-1.0.3 msgpack-1.1.2 numba-0.63.1 numpy-1.23.5 oauthlib-3.3.1 omegaconf-2.3.0 opt-einsum-3.4.0 orjson-3.11.7 pandas-2.3.3 pooch-1.9.0 proglog-0.1.12 protobuf-4.25.8 pyasn1-0.6.2 pyasn1-modules-0.4.2 pycparser-3.0 pydantic-2.11.10 pydantic-core-2.33.2 pydub-0.25.1 python-multipart-0.0.22 pytz-2025.2 requests-oauthlib-2.0.0 rsa-4.9.1 ruff-0.15.0 safehttpx-0.1.7 scikit-learn-1.7.2 semantic-version-2.10.0 shellingham-1.5.4 soundfile-0.12.1 soupsieve-2.8.3 soxr-1.0.0 starlette-0.52.1 tensorboard-2.12.0 tensorboard-data-server-0.7.2 tensorboard-plugin-wit-1.8.1 tensorflow-2.12.0 tensorflow-estimator-2.12.0 tensorflow-io-gcs-filesystem-0.37.1 threadpoolctl-3.6.0 tomlkit-0.13.3 typer-0.23.0 typing-inspection-0.4.2 tzdata-2025.3 uvicorn-0.40.0 websockets-15.0.1 werkzeug-3.1.5 wheel-0.46.3 wrapt-1.14.2
-inference cell output 
-Traceback (most recent call last):
-  File "/local_disk0/MuseTalk/scripts/inference.py", line 17, in <module>
-    from musetalk.utils.blending import get_image
-ModuleNotFoundError: No module named 'musetalk'
+0
