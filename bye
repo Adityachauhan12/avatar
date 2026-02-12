@@ -1,138 +1,26 @@
-Requirement already satisfied: setuptools in /local_disk0/musetalk_venv/lib/python3.10/site-packages (82.0.0)
-Requirement already satisfied: wheel in /local_disk0/musetalk_venv/lib/python3.10/site-packages (0.46.3)
-Requirement already satisfied: packaging>=24.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from wheel) (26.0)
-Collecting numpy==1.26.4
-  Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (61 kB)
-Collecting scipy==1.10.1
-  Downloading scipy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
-Requirement already satisfied: six in /local_disk0/musetalk_venv/lib/python3.10/site-packages (1.17.0)
-Using cached numpy-1.26.4-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
-Downloading scipy-1.10.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.4 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.4/34.4 MB 45.0 MB/s  0:00:006m0:00:01
-Installing collected packages: numpy, scipy
-  Attempting uninstall: numpy
-    Found existing installation: numpy 1.23.5
-    Uninstalling numpy-1.23.5:
-      Successfully uninstalled numpy-1.23.5
-  Attempting uninstall: scipy━━━━━━━━━━━━━━━━━━━ 0/2 [numpy]
-    Found existing installation: scipy 1.15.3[0m 0/2 [numpy]
-    Uninstalling scipy-1.15.3:0m╺━━━━━━━━━━━━━━━━━━━ 1/2 [scipy]
-      Successfully uninstalled scipy-1.15.3━━━━━━━━━━━━━━━━━━━ 1/2 [scipy]
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2/2 [scipy]32m1/2 [scipy]
-ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-mmpose 1.1.0 requires chumpy, which is not installed.
-tensorflow 2.12.0 requires numpy<1.24,>=1.22, but you have numpy 1.26.4 which is incompatible.
-Successfully installed numpy-1.26.4 scipy-1.10.1
-Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
-Collecting chumpy==0.70
-  Using cached chumpy-0.70.tar.gz (50 kB)
-  Preparing metadata (pyproject.toml): started
-  Running command Preparing metadata (pyproject.toml)
-  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
-  !!
-
-          ********************************************************************************
-          Please consider removing the following classifiers in favor of a SPDX license expression:
-
-          License :: OSI Approved :: MIT License
-
-          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
-          ********************************************************************************
-
-  !!
-    self._finalize_license_expression()
-  Preparing metadata (pyproject.toml): finished with status 'done'
-Requirement already satisfied: scipy>=0.13.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from chumpy==0.70) (1.10.1)
-Requirement already satisfied: six>=1.11.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from chumpy==0.70) (1.17.0)
-Requirement already satisfied: numpy<1.27.0,>=1.19.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from scipy>=0.13.0->chumpy==0.70) (1.26.4)
-Building wheels for collected packages: chumpy
-  Building wheel for chumpy (pyproject.toml): started
-  Running command Building wheel for chumpy (pyproject.toml)
-  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
-  !!
-
-          ********************************************************************************
-          Please consider removing the following classifiers in favor of a SPDX license expression:
-
-          License :: OSI Approved :: MIT License
-
-          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
-          ********************************************************************************
-
-  !!
-    self._finalize_license_expression()
-  Building wheel for chumpy (pyproject.toml): finished with status 'done'
-  Created wheel for chumpy: filename=chumpy-0.70-py3-none-any.whl size=58303 sha256=0a6ca91085e1bcff35209f053e93b367067087c75b4ce498142eca736a8e4c29
-  Stored in directory: /root/.cache/pip/wheels/e0/c1/ef/29ba7be03653a29ef6f2c3e1956d6c4d8877f2b243af411db1
-Successfully built chumpy
-Installing collected packages: chumpy
-Successfully installed chumpy-0.70
-Using pip 26.0.1 from /local_disk0/musetalk_venv/lib/python3.10/site-packages/pip (python 3.10)
-Collecting git+https://github.com/mattloper/chumpy
-  Cloning https://github.com/mattloper/chumpy to /tmp/pip-req-build-74m79t82
-  Running command git version
-  git version 2.41.0
-  Running command git clone --filter=blob:none https://github.com/mattloper/chumpy /tmp/pip-req-build-74m79t82
-  Cloning into '/tmp/pip-req-build-74m79t82'...
-  Running command git rev-parse HEAD
-  580566eafc9ac68b2614b64d6f7aaa84eebb70da
-  Resolved https://github.com/mattloper/chumpy to commit 580566eafc9ac68b2614b64d6f7aaa84eebb70da
-  Running command git rev-parse HEAD
-  580566eafc9ac68b2614b64d6f7aaa84eebb70da
-  Running command Preparing metadata (pyproject.toml)
-  Preparing metadata (pyproject.toml): started
-  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
-  !!
-
-          ********************************************************************************
-          Please consider removing the following classifiers in favor of a SPDX license expression:
-
-          License :: OSI Approved :: MIT License
-
-          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
-          ********************************************************************************
-
-  !!
-    self._finalize_license_expression()
-  warning: no files found matching '.' anywhere in distribution
-  warning: no files found matching '*.c' anywhere in distribution
-  warning: no files found matching '*.h' anywhere in distribution
-  warning: no files found matching '*.pyx' anywhere in distribution
-  no previously-included directories found matching 'dist'
-  Preparing metadata (pyproject.toml): finished with status 'done'
-Requirement already satisfied: scipy>=0.13.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from chumpy==0.71) (1.10.1)
-Requirement already satisfied: six>=1.11.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from chumpy==0.71) (1.17.0)
-Requirement already satisfied: numpy<1.27.0,>=1.19.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from scipy>=0.13.0->chumpy==0.71) (1.26.4)
-Building wheels for collected packages: chumpy
-  Building wheel for chumpy (pyproject.toml): started
-  Running command Building wheel for chumpy (pyproject.toml)
-  /local_disk0/musetalk_venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
-  !!
-
-          ********************************************************************************
-          Please consider removing the following classifiers in favor of a SPDX license expression:
-
-          License :: OSI Approved :: MIT License
-
-          See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
-          ********************************************************************************
-
-  !!
-    self._finalize_license_expression()
-  warning: no files found matching '.' anywhere in distribution
-  warning: no files found matching '*.c' anywhere in distribution
-  warning: no files found matching '*.h' anywhere in distribution
-  warning: no files found matching '*.pyx' anywhere in distribution
-  no previously-included directories found matching 'dist'
-  Building wheel for chumpy (pyproject.toml): finished with status 'done'
-  Created wheel for chumpy: filename=chumpy-0.71-py3-none-any.whl size=60930 sha256=7053c96335158e97bcf7643f389147ebe6b5a228cf7f48445b8d103409101f4c
-  Stored in directory: /tmp/pip-ephem-wheel-cache-vemsr8g_/wheels/3d/6e/b3/63d5237bbf06b75024f88ff227ac2d77a7a6b77663f01dade2
-Successfully built chumpy
-Installing collected packages: chumpy
-  Attempting uninstall: chumpy
-    Found existing installation: chumpy 0.70
-    Uninstalling chumpy-0.70:
-      Removing file or directory /local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy-0.70.dist-info/
-      Removing file or directory /local_disk0/musetalk_venv/lib/python3.10/site-packages/chumpy/
-      Successfully uninstalled chumpy-0.70
-Successfully installed chumpy-0.71
+2026-02-12 05:38:22.299432: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/local_disk0/MuseTalk/scripts/inference.py", line 21, in <module>
+    from musetalk.utils.preprocessing import get_landmark_and_bbox, read_imgs, coord_placeholder
+  File "/local_disk0/MuseTalk/musetalk/utils/preprocessing.py", line 10, in <module>
+    from mmpose.apis import inference_topdown, init_model
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/__init__.py", line 7, in <module>
+    from .inferencers import MMPoseInferencer, Pose2DInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/__init__.py", line 2, in <module>
+    from .mmpose_inferencer import MMPoseInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/mmpose_inferencer.py", line 12, in <module>
+    from .pose2d_inferencer import Pose2DInferencer
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/pose2d_inferencer.py", line 19, in <module>
+    from .utils import default_det_models
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/utils/__init__.py", line 2, in <module>
+    from .default_det_models import default_det_models
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmpose/apis/inferencers/utils/default_det_models.py", line 7, in <module>
+    mmpose_path = get_installed_path(MODULE2PACKAGE['mmpose'])
+  File "/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmengine/utils/package_utils.py", line 48, in get_installed_path
+    from pkg_resources import DistributionNotFound, get_distribution
+ModuleNotFoundError: No module named 'pkg_resources'
