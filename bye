@@ -1,75 +1,88 @@
-
-[optparse.groups]Usage:[/]   
-  pip install \[options] <requirement specifier> \[package-index-options] ...
-  pip install \[options] -r <requirements file> \[package-index-options] ...
-  pip install \[options] [-e] <vcs project url> ...
-  pip install \[options] [-e] <local project path> ...
-  pip install \[options] <archive url/path> ...
-
-no such option: --no-use-pep517
-Collecting mmpose==1.1.0
-  Using cached mmpose-1.1.0-py2.py3-none-any.whl.metadata (29 kB)
-Downloading mmpose-1.1.0-py2.py3-none-any.whl (1.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 38.2 MB/s  0:00:00
-Installing collected packages: mmpose
-Successfully installed mmpose-1.1.0
-Collecting munkres
-  Downloading munkres-1.1.4-py2.py3-none-any.whl.metadata (980 bytes)
-Collecting json-tricks
-  Downloading json_tricks-3.17.3-py2.py3-none-any.whl.metadata (16 kB)
-Collecting xtcocotools==1.12
-  Downloading xtcocotools-1.12-cp310-cp310-manylinux1_x86_64.whl.metadata (416 bytes)
-Requirement already satisfied: setuptools>=18.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools==1.12) (80.9.0)
-Collecting cython>=0.27.3 (from xtcocotools==1.12)
-  Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (7.5 kB)
-Requirement already satisfied: matplotlib>=2.1.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools==1.12) (3.10.8)
-Requirement already satisfied: numpy>=1.20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from xtcocotools==1.12) (1.26.4)
-Requirement already satisfied: contourpy>=1.0.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (1.3.2)
-Requirement already satisfied: cycler>=0.10 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (0.12.1)
-Requirement already satisfied: fonttools>=4.22.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (4.61.1)
-Requirement already satisfied: kiwisolver>=1.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (1.4.9)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (26.0)
-Requirement already satisfied: pillow>=8 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (12.1.1)
-Requirement already satisfied: pyparsing>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (3.3.2)
-Requirement already satisfied: python-dateutil>=2.7 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib>=2.1.0->xtcocotools==1.12) (2.9.0.post0)
-Requirement already satisfied: six>=1.5 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from python-dateutil>=2.7->matplotlib>=2.1.0->xtcocotools==1.12) (1.17.0)
-Downloading xtcocotools-1.12-cp310-cp310-manylinux1_x86_64.whl (293 kB)
-Downloading munkres-1.1.4-py2.py3-none-any.whl (7.0 kB)
-Downloading json_tricks-3.17.3-py2.py3-none-any.whl (27 kB)
-Downloading cython-3.2.4-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.5/3.5 MB 38.6 MB/s  0:00:00
-Installing collected packages: munkres, json-tricks, cython, xtcocotools
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [xtcocotools] [cython]
+Requirement already satisfied: huggingface_hub[cli] in /databricks/python3/lib/python3.10/site-packages (0.27.1)
+Collecting huggingface_hub[cli]
+  Downloading huggingface_hub-1.4.1-py3-none-any.whl (553 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 553.3/553.3 kB 10.3 MB/s eta 0:00:00a 0:00:01
+WARNING: huggingface-hub 1.4.1 does not provide the extra 'cli'
+Collecting shellingham
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Requirement already satisfied: filelock in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (3.20.3)
+Collecting typer-slim
+  Downloading typer_slim-0.23.0-py3-none-any.whl (3.4 kB)
+Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.64.1)
+Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (6.0)
+Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (23.2)
+Collecting hf-xet<2.0.0,>=1.2.0
+  Downloading hf_xet-1.2.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.3/3.3 MB 63.6 MB/s eta 0:00:00:00:01
+Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (2023.6.0)
+Collecting httpx<1,>=0.23.0
+  Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 9.3 MB/s eta 0:00:00
+Requirement already satisfied: typing-extensions>=4.1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.15.0)
+Collecting httpcore==1.*
+  Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 6.1 MB/s eta 0:00:00
+Requirement already satisfied: anyio in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (4.12.1)
+Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (2022.12.7)
+Requirement already satisfied: idna in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (3.4)
+Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub[cli]) (0.16.0)
+Collecting typer>=0.23.0
+  Downloading typer-0.23.0-py3-none-any.whl (56 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 56.7/56.7 kB 7.6 MB/s eta 0:00:00
+Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer>=0.23.0->typer-slim->huggingface_hub[cli]) (8.0.4)
+Collecting rich>=10.11.0
+  Downloading rich-14.3.2-py3-none-any.whl (309 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 310.0/310.0 kB 30.7 MB/s eta 0:00:00
+Requirement already satisfied: annotated-doc>=0.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from typer>=0.23.0->typer-slim->huggingface_hub[cli]) (0.0.4)
+Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from anyio->httpx<1,>=0.23.0->huggingface_hub[cli]) (1.3.1)
+Collecting markdown-it-py>=2.2.0
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.3/87.3 kB 9.7 MB/s eta 0:00:00
+Collecting pygments<3.0.0,>=2.13.0
+  Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 54.8 MB/s eta 0:00:00
+Collecting mdurl~=0.1
+  Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: shellingham, pygments, mdurl, httpcore, hf-xet, markdown-it-py, rich, httpx, typer, typer-slim, huggingface_hub
+  Attempting uninstall: pygments
+    Found existing installation: Pygments 2.11.2
+    Not uninstalling pygments at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36
+    Can't uninstall 'Pygments'. No files were found to uninstall.
+  Attempting uninstall: typer
+    Found existing installation: typer 0.9.0
+    Not uninstalling typer at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36
+    Can't uninstall 'typer'. No files were found to uninstall.
+  Attempting uninstall: huggingface_hub
+    Found existing installation: huggingface-hub 0.27.1
+    Not uninstalling huggingface-hub at /databricks/python3/lib/python3.10/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36
+    Can't uninstall 'huggingface-hub'. No files were found to uninstall.
 ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
-mmpose 1.1.0 requires chumpy, which is not installed.
-mmpose 1.1.0 requires torchvision, which is not installed.
-Successfully installed cython-3.2.4 json-tricks-3.17.3 munkres-1.1.4 xtcocotools-1.12
-Collecting mmdet==3.1.0
-  Using cached mmdet-3.1.0-py3-none-any.whl.metadata (28 kB)
-Requirement already satisfied: matplotlib in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmdet==3.1.0) (3.10.8)
-Requirement already satisfied: numpy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmdet==3.1.0) (1.26.4)
-Collecting pycocotools (from mmdet==3.1.0)
-  Using cached pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (1.3 kB)
-Requirement already satisfied: scipy in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmdet==3.1.0) (1.15.3)
-Collecting shapely (from mmdet==3.1.0)
-  Using cached shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.8 kB)
-Requirement already satisfied: six in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from mmdet==3.1.0) (1.17.0)
-Collecting terminaltables (from mmdet==3.1.0)
-  Using cached terminaltables-3.1.10-py2.py3-none-any.whl.metadata (3.5 kB)
-Requirement already satisfied: contourpy>=1.0.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (1.3.2)
-Requirement already satisfied: cycler>=0.10 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (0.12.1)
-Requirement already satisfied: fonttools>=4.22.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (4.61.1)
-Requirement already satisfied: kiwisolver>=1.3.1 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (1.4.9)
-Requirement already satisfied: packaging>=20.0 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (26.0)
-Requirement already satisfied: pillow>=8 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (12.1.1)
-Requirement already satisfied: pyparsing>=3 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (3.3.2)
-Requirement already satisfied: python-dateutil>=2.7 in /local_disk0/musetalk_venv/lib/python3.10/site-packages (from matplotlib->mmdet==3.1.0) (2.9.0.post0)
-Downloading mmdet-3.1.0-py3-none-any.whl (2.0 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 53.1 MB/s  0:00:00
-Downloading pycocotools-2.0.11-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (472 kB)
-Downloading shapely-2.1.2-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (3.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.1/3.1 MB 78.9 MB/s  0:00:00
-Downloading terminaltables-3.1.10-py2.py3-none-any.whl (15 kB)
-Installing collected packages: terminaltables, shapely, pycocotools, mmdet
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4/4 [mmdet]32m3/4 [mmdet]y]
-Successfully installed mmdet-3.1.0 pycocotools-2.0.11 shapely-2.1.2 terminaltables-3.1.10
+nbclassic 0.5.2 requires prometheus-client, which is not installed.
+jupyter-server 1.23.4 requires prometheus-client, which is not installed.
+databricks-feature-engineering 0.2.1 requires pyspark<4,>=3.1.2, which is not installed.
+weasel 0.3.4 requires typer<0.10.0,>=0.3.0, but you have typer 0.23.0 which is incompatible.
+transformers 4.36.1 requires huggingface-hub<1.0,>=0.19.3, but you have huggingface-hub 1.4.1 which is incompatible.
+tokenizers 0.15.0 requires huggingface_hub<1.0,>=0.16.4, but you have huggingface-hub 1.4.1 which is incompatible.
+spacy 3.7.2 requires typer<0.10.0,>=0.3.0, but you have typer 0.23.0 which is incompatible.
+jupyter-server 1.23.4 requires anyio<4,>=3.1.0, but you have anyio 4.12.1 which is incompatible.
+databricks-feature-engineering 0.2.1 requires mlflow-skinny[databricks]<3,>=2.4.0, but you have mlflow-skinny 3.9.0 which is incompatible.
+databricks-feature-engineering 0.2.1 requires protobuf<5,>=3.12.0, but you have protobuf 6.33.5 which is incompatible.
+Successfully installed hf-xet-1.2.0 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-1.4.1 markdown-it-py-4.0.0 mdurl-0.1.2 pygments-2.19.2 rich-14.3.2 shellingham-1.5.4 typer-0.23.0 typer-slim-0.23.0
+
+[notice] A new release of pip available: 22.3.1 -> 26.0.1
+[notice] To update, run: pip install --upgrade pip
+models/musetalkV15/unet.pth
+Downloading 'musetalkV15/musetalk.json' to 'models/.cache/huggingface/download/musetalkV15/musetalk.json.b822db87e503a283fbbee73617f89dcd294cb91c.incomplete'
+musetalk.json: 100%|███████████████████████████| 748/748 [00:00<00:00, 11.9MB/s]
+Download complete. Moving file to models/musetalkV15/musetalk.json
+models/musetalkV15/musetalk.json
+Downloading 'diffusion_pytorch_model.bin' to 'models/sd-vae/.cache/huggingface/download/diffusion_pytorch_model.bin.1b4889b6b1d4ce7ae320a02dedaeff1780ad77d415ea0d744b476155c6377ddc.incomplete'
+diffusion_pytorch_model.bin: 100%|████████████| 335M/335M [00:00<00:00, 353MB/s]
+Download complete. Moving file to models/sd-vae/diffusion_pytorch_model.bin
+models/sd-vae/diffusion_pytorch_model.bin
+Downloading 'config.json' to 'models/sd-vae/.cache/huggingface/download/config.json.0db26717579be63eb0ddbf15b43faa43700dfe5a.incomplete'
+config.json: 100%|█████████████████████████████| 547/547 [00:00<00:00, 8.08MB/s]
+Download complete. Moving file to models/sd-vae/config.json
+models/sd-vae/config.json
+/local_disk0/download_weights.sh: line 17: syntax error near unexpected token `'✅ Models ready!''
+/local_disk0/download_weights.sh: line 17: `print('✅ Models ready!')'
