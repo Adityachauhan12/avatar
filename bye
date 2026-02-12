@@ -1,84 +1,1122 @@
-Requirement already satisfied: huggingface_hub[cli] in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (1.4.1)
-WARNING: huggingface-hub 1.4.1 does not provide the extra 'cli'
-Requirement already satisfied: filelock in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (3.20.3)
-Requirement already satisfied: hf-xet<2.0.0,>=1.2.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (1.2.0)
-Requirement already satisfied: pyyaml>=5.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (6.0)
-Requirement already satisfied: fsspec>=2023.5.0 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (2023.6.0)
-Requirement already satisfied: shellingham in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (1.5.4)
-Requirement already satisfied: packaging>=20.9 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (23.2)
-Requirement already satisfied: httpx<1,>=0.23.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (0.28.1)
-Requirement already satisfied: typer-slim in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from huggingface_hub[cli]) (0.23.0)
-Requirement already satisfied: typing-extensions>=4.1.0 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.15.0)
-Requirement already satisfied: tqdm>=4.42.1 in /databricks/python3/lib/python3.10/site-packages (from huggingface_hub[cli]) (4.64.1)
-Requirement already satisfied: certifi in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (2022.12.7)
-Requirement already satisfied: httpcore==1.* in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (1.0.9)
-Requirement already satisfied: anyio in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (4.12.1)
-Requirement already satisfied: idna in /databricks/python3/lib/python3.10/site-packages (from httpx<1,>=0.23.0->huggingface_hub[cli]) (3.4)
-Requirement already satisfied: h11>=0.16 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub[cli]) (0.16.0)
-Requirement already satisfied: typer>=0.23.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from typer-slim->huggingface_hub[cli]) (0.23.0)
-Requirement already satisfied: rich>=10.11.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from typer>=0.23.0->typer-slim->huggingface_hub[cli]) (14.3.2)
-Requirement already satisfied: click>=8.0.0 in /databricks/python3/lib/python3.10/site-packages (from typer>=0.23.0->typer-slim->huggingface_hub[cli]) (8.0.4)
-Requirement already satisfied: annotated-doc>=0.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from typer>=0.23.0->typer-slim->huggingface_hub[cli]) (0.0.4)
-Requirement already satisfied: exceptiongroup>=1.0.2 in /local_disk0/.ephemeral_nfs/cluster_libraries/python/lib/python3.10/site-packages (from anyio->httpx<1,>=0.23.0->huggingface_hub[cli]) (1.3.1)
-Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from rich>=10.11.0->typer>=0.23.0->typer-slim->huggingface_hub[cli]) (2.19.2)
-Requirement already satisfied: markdown-it-py>=2.2.0 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from rich>=10.11.0->typer>=0.23.0->typer-slim->huggingface_hub[cli]) (4.0.0)
-Requirement already satisfied: mdurl~=0.1 in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from markdown-it-py>=2.2.0->rich>=10.11.0->typer>=0.23.0->typer-slim->huggingface_hub[cli]) (0.1.2)
+2026-02-12 05:53:01.162698: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/mmengine/utils/package_utils.py:48: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import DistributionNotFound, get_distribution
+An error occurred while trying to fetch models/sd-vae: Error no file named diffusion_pytorch_model.safetensors found in directory models/sd-vae.
+Defaulting to unsafe serialization. Pass `allow_pickle=False` to raise an error instead.
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/torch/_utils.py:776: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=3.880  pts=3.880
+  size=1010
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000089.png' for writing
+[file @ 0x55c2a823fc40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82eda80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=3.920  pts=3.960
+  size=1531
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000090.png' for writing
+[file @ 0x55c2a82edb80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a823fb40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=3.960  pts=4.120
+  size=18505
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000091.png' for writing
+[file @ 0x55c2a82ee740] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f3c40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.000  pts=4.040
+  size=1905
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000092.png' for writing
+[file @ 0x55c2a84af000] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82edac0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.040  pts=4.080
+  size=766
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000093.png' for writing
+[file @ 0x55c2a82ec280] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82eee80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.080  pts=4.200
+  size=12739
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000094.png' for writing
+[file @ 0x55c2a8240540] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834a480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.120  pts=4.160
+  size=1675
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000095.png' for writing
+[file @ 0x55c2a82ec280] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834acc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.160  pts=4.360
+  size=17518
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000096.png' for writing
+[file @ 0x55c2a82ecc80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.200  pts=4.280
+  size=2307
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000097.png' for writing
+[file @ 0x55c2a82eee80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ecbc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.240  pts=4.240
+  size=960
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000098.png' for writing
+[file @ 0x55c2a82eee80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2040] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.280  pts=4.320
+  size=2184
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000099.png' for writing
+[file @ 0x55c2a8296400] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f22c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.320  pts=4.400
+  size=6148
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000100.png' for writing
+[file @ 0x55c2a8349dc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1580] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.360  pts=4.560
+  size=23278
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000101.png' for writing
+[file @ 0x55c2a82ee540] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f22c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.400  pts=4.480
+  size=3054
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000102.png' for writing
+[file @ 0x55c2a82ee640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834ac00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.440  pts=4.440
+  size=1815
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000103.png' for writing
+[file @ 0x55c2a82f2380] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ee700] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.480  pts=4.520
+  size=670
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000104.png' for writing
+[file @ 0x55c2a82f2300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a823fc40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.520  pts=4.720
+  size=12799
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000105.png' for writing
+[file @ 0x55c2a82403c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834ac00] Statistics: 0 seeks, 4 writeouts
+stream #0:0 fps= 54 q=-0.0 size=N/A time=00:00:04.24 bitrate=N/A speed=2.07x    
+  keyframe=0
+  duration=0.040
+  dts=4.560  pts=4.640
+  size=1986
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000106.png' for writing
+[file @ 0x55c2a834ad00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.600  pts=4.600
+  size=667
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000107.png' for writing
+[file @ 0x55c2a82ee780] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1cc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.640  pts=4.680
+  size=1565
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000108.png' for writing
+[file @ 0x55c2a82f2200] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1f00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.680  pts=4.880
+  size=21355
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000109.png' for writing
+[file @ 0x55c2a84aeac0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1f00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.720  pts=4.800
+  size=3072
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000110.png' for writing
+[file @ 0x55c2a82ee500] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1f00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.760  pts=4.760
+  size=1296
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000111.png' for writing
+[file @ 0x55c2a82ee640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1d80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.800  pts=4.840
+  size=1906
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000112.png' for writing
+[file @ 0x55c2a834ca40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1d80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.840  pts=5.040
+  size=30100
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000113.png' for writing
+[file @ 0x55c2a8349f80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1d80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.880  pts=4.960
+  size=3130
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000114.png' for writing
+[file @ 0x55c2a82efd40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82efe00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.920  pts=4.920
+  size=715
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000115.png' for writing
+[file @ 0x55c2a82ed640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ee800] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=4.960  pts=5.000
+  size=2465
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000116.png' for writing
+[file @ 0x55c2a8240500] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82eda00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.000  pts=5.200
+  size=18027
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000117.png' for writing
+[file @ 0x55c2a82ec100] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2100] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.040  pts=5.120
+  size=2390
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000118.png' for writing
+[file @ 0x55c2a82f0cc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed700] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.080  pts=5.080
+  size=1144
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000119.png' for writing
+[file @ 0x55c2a811f340] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834d900] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.120  pts=5.160
+  size=1596
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000120.png' for writing
+[file @ 0x55c2a82ec580] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1400] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.160  pts=5.360
+  size=16711
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000121.png' for writing
+[file @ 0x55c2a834a480] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834c940] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.200  pts=5.280
+  size=2934
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000122.png' for writing
+[file @ 0x55c2a8240500] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82eda00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.240  pts=5.240
+  size=889
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000123.png' for writing
+[file @ 0x55c2a82ed9c0] Setting default whitelist 'file,crypto,data'
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[AVIOContext @ 0x55c2a82f27c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.280  pts=5.320
+  size=1703
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000124.png' for writing
+[file @ 0x55c2a82efd80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ee4c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.320  pts=5.520
+  size=31893
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000125.png' for writing
+[file @ 0x55c2a811e980] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ee4c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.360  pts=5.440
+  size=4132
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000126.png' for writing
+[file @ 0x55c2a82f27c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed680] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.400  pts=5.400
+  size=989
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000127.png' for writing
+[file @ 0x55c2a82f1d00] Setting default whitelist 'file,crypto,data'
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[AVIOContext @ 0x55c2a82f0840] Statistics: 0 seeks, 4 writeouts
+stream #0:2 fps= 51 q=-0.0 size=N/A time=00:00:05.12 bitrate=N/A speed=1.97x    
+  keyframe=0
+  duration=0.040
+  dts=5.440  pts=5.480
+  size=521
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000128.png' for writing
+[file @ 0x55c2a82ecc80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1e40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.480  pts=5.680
+  size=12967
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000129.png' for writing
+[file @ 0x55c2a8296400] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f0e40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.520  pts=5.600
+  size=2580
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000130.png' for writing
+[file @ 0x55c2a82eda00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed800] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.560  pts=5.560
+  size=935
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000131.png' for writing
+[file @ 0x55c2a82f1c00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296340] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.600  pts=5.640
+  size=1251
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000132.png' for writing
+[file @ 0x55c2a82ee540] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a811e900] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.640  pts=5.840
+  size=21592
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000133.png' for writing
+[file @ 0x55c2a82ecd80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ee440] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.680  pts=5.760
+  size=3763
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000134.png' for writing
+[file @ 0x55c2a82f11c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296380] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.720  pts=5.720
+  size=1649
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000135.png' for writing
+[file @ 0x55c2a82404c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ecdc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.760  pts=5.800
+  size=1771
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000136.png' for writing
+[file @ 0x55c2a83e6840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240440] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.800  pts=6.000
+  size=21416
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000137.png' for writing
+[file @ 0x55c2a82ecd80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ecc00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.840  pts=5.920
+  size=3065
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000138.png' for writing
+[file @ 0x55c2a82ecd00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82963c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.880  pts=5.880
+  size=1237
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000139.png' for writing
+[file @ 0x55c2a8296300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834c840] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.920  pts=5.960
+  size=1829
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000140.png' for writing
+[file @ 0x55c2a834bb40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834d900] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=5.960  pts=6.120
+  size=14047
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000141.png' for writing
+[file @ 0x55c2a82efe40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1c80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.000  pts=6.040
+  size=1696
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000142.png' for writing
+[file @ 0x55c2a83e6840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1c40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.040  pts=6.080
+  size=728
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000143.png' for writing
+[file @ 0x55c2a8296300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82efd80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.080  pts=6.200
+  size=12529
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000144.png' for writing
+[file @ 0x55c2a82f0f80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82efa80] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.120  pts=6.160
+  size=1352
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000145.png' for writing
+[file @ 0x55c2a84aef80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834acc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.160  pts=6.240
+  size=3955
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000146.png' for writing
+[file @ 0x55c2a82edcc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834acc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.200  pts=6.360
+  size=11142
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000147.png' for writing
+[file @ 0x55c2a82f1180] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8349f40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.240  pts=6.280
+  size=937
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000148.png' for writing
+[file @ 0x55c2a82f1240] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8349f40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=6.280  pts=6.320
+  size=1380
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000149.png' for writing
+[file @ 0x55c2a82efd40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f12c0] Statistics: 0 seeks, 4 wri
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-Collecting gdown
-  Downloading gdown-5.2.1-py3-none-any.whl (18 kB)
-Requirement already satisfied: requests[socks] in /databricks/python3/lib/python3.10/site-packages (from gdown) (2.28.1)
-Requirement already satisfied: tqdm in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.64.1)
-Requirement already satisfied: filelock in /local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages (from gdown) (3.20.3)
-Requirement already satisfied: beautifulsoup4 in /databricks/python3/lib/python3.10/site-packages (from gdown) (4.11.1)
-Requirement already satisfied: soupsieve>1.2 in /databricks/python3/lib/python3.10/site-packages (from beautifulsoup4->gdown) (2.3.2.post1)
-Requirement already satisfied: certifi>=2017.4.17 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2022.12.7)
-Requirement already satisfied: charset-normalizer<3,>=2 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (2.0.4)
-Requirement already satisfied: idna<4,>=2.5 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (3.4)
-Requirement already satisfied: urllib3<1.27,>=1.21.1 in /databricks/python3/lib/python3.10/site-packages (from requests[socks]->gdown) (1.26.14)
-Collecting PySocks!=1.5.7,>=1.5.6
-  Downloading PySocks-1.7.1-py3-none-any.whl (16 kB)
-Installing collected packages: PySocks, gdown
-Successfully installed PySocks-1.7.1 gdown-5.2.1
+*** WARNING: max output size exceeded, skipping output. ***
 
-[notice] A new release of pip available: 22.3.1 -> 26.0.1
-[notice] To update, run: pip install --upgrade pip
-Fetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]Downloading 'musetalk/pytorch_model.bin' to 'models/.cache/huggingface/download/musetalk/pytorch_model.bin.0ee7d5ea03ea75d8dca50ea7a76df791e90633687a135c4a69393abfc0475ffe.incomplete'
-Downloading 'musetalk/musetalk.json' to 'models/.cache/huggingface/download/musetalk/musetalk.json.b822db87e503a283fbbee73617f89dcd294cb91c.incomplete'
-Download complete. Moving file to models/musetalk/musetalk.json
-Fetching 2 files:  50%|█████     | 1/2 [00:01<00:01,  1.33s/it]Download complete. Moving file to models/musetalk/pytorch_model.bin
-Fetching 2 files: 100%|██████████| 2/2 [00:10<00:00,  5.05s/it]
-/local_disk0/MuseTalk/models
-Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  3.17it/s]
-/local_disk0/MuseTalk/models
-Fetching 2 files: 100%|██████████| 2/2 [00:00<00:00,  2.89it/s]
-/local_disk0/MuseTalk/models/sd-vae
-Fetching 3 files:   0%|          | 0/3 [00:00<?, ?it/s]Downloading 'pytorch_model.bin' to 'models/whisper/.cache/huggingface/download/pytorch_model.bin.9607f98a2b22d9e229ae43c52ecea79dcede9e0c5cfae67e8da6eda86d8aac1d.incomplete'
-Downloading 'preprocessor_config.json' to 'models/whisper/.cache/huggingface/download/preprocessor_config.json.c2048dfa9fd94a052e62e908d2c4dfb18534b4d2.incomplete'
-Downloading 'config.json' to 'models/whisper/.cache/huggingface/download/config.json.417aa9de49a132dd3eb6a56d3be2718b15f08917.incomplete'
-Download complete. Moving file to models/whisper/preprocessor_config.json
-Download complete. Moving file to models/whisper/config.json
-Fetching 3 files:  33%|███▎      | 1/3 [00:01<00:02,  1.34s/it]Download complete. Moving file to models/whisper/pytorch_model.bin
-Fetching 3 files: 100%|██████████| 3/3 [00:01<00:00,  2.18it/s]
-/local_disk0/MuseTalk/models/whisper
-Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Downloading 'dw-ll_ucoco_384.pth' to 'models/dwpose/.cache/huggingface/download/dw-ll_ucoco_384.pth.0d9408b13cd863c4e95a149dd31232f88f2a12aa6cf8964ed74d7d97748c7a07.incomplete'
-Download complete. Moving file to models/dwpose/dw-ll_ucoco_384.pth
-Fetching 1 files: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]
-/local_disk0/MuseTalk/models/dwpose
-Fetching 1 files:   0%|          | 0/1 [00:00<?, ?it/s]Downloading 'latentsync_syncnet.pt' to 'models/syncnet/.cache/huggingface/download/latentsync_syncnet.pt.38fa63bad3ed2332f647c40a5dc616cb0e233db8579f698f62af4c41965c4da5.incomplete'
-Download complete. Moving file to models/syncnet/latentsync_syncnet.pt
-Fetching 1 files: 100%|██████████| 1/1 [00:04<00:00,  4.63s/it]
-/local_disk0/MuseTalk/models/syncnet
-/local_disk0/.ephemeral_nfs/envs/pythonEnv-37d5d5b0-73dc-4a24-84ca-abfa54d0ea36/lib/python3.10/site-packages/gdown/__main__.py:139: FutureWarning: Option `--id` was deprecated in version 4.3.1 and will be removed in 5.0. You don't need to pass it anymore to use a file ID.
-  warnings.warn(
-Downloading...
-From: https://drive.google.com/uc?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812
-To: /local_disk0/MuseTalk/models/face-parse-bisent/79999_iter.pth
-100%|██████████| 53.3M/53.3M [00:00<00:00, 180MB/s]
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100 44.6M  100 44.6M    0     0   110M      0 --:--:-- --:--:-- --:--:--  111M
-✅ All weights have been downloaded successfully!
+stream #0::00:08.08 bitrate=N/A speed=1.95x    
+  keyframe=0
+  duration=0.040
+  dts=8.400  pts=8.600
+  size=28213
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000202.png' for writing
+[file @ 0x55c2a82402c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1340] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.440  pts=8.520
+  size=3597
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a no
 
--rw-r--r-- 1 root root 389M Feb 12 05:48 ./models/dwpose/dw-ll_ucoco_384.pth
+... [*** WARNING: max output size exceeded, skipping output. ***] ...
+
+ 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.560  pts=8.640
+  size=5591
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000206.png' for writing
+[file @ 0x55c2a82402c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ef1c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.600  pts=8.720
+  size=10061
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000207.png' for writing
+[file @ 0x55c2a82f42c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.640  pts=8.680
+  size=1315
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000208.png' for writing
+[file @ 0x55c2a82f2300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2180] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.680  pts=8.880
+  size=19641
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000209.png' for writing
+[file @ 0x55c2a83e6840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834a540] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.720  pts=8.800
+  size=2229
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000210.png' for writing
+[file @ 0x55c2a82efb00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.760  pts=8.760
+  size=911
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000211.png' for writing
+[file @ 0x55c2a82f2200] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.800  pts=8.840
+  size=2199
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000212.png' for writing
+[file @ 0x55c2a82efb00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.840  pts=8.920
+  size=6210
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000213.png' for writing
+[file @ 0x55c2a82efb00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f11c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.880  pts=8.960
+  size=6599
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000214.png' for writing
+[file @ 0x55c2a82f21c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2280] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.920  pts=9.040
+  size=22311
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000215.png' for writing
+[file @ 0x55c2a82ef800] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ecc00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=8.960  pts=9.000
+  size=2439
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000216.png' for writing
+[file @ 0x55c2a82ef900] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.000  pts=9.200
+  size=12765
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000217.png' for writing
+[file @ 0x55c2a82ed640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2100] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.040  pts=9.120
+  size=1902
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000218.png' for writing
+[file @ 0x55c2a82ef900] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.080  pts=9.080
+  size=615
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000219.png' for writing
+[file @ 0x55c2a82ecc00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834c840] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.120  pts=9.160
+  size=1430
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000220.png' for writing
+[file @ 0x55c2a811f340] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ece00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.160  pts=9.240
+  size=5917
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000221.png' for writing
+[file @ 0x55c2a82ef0c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ece00] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.200  pts=9.280
+  size=6087
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000222.png' for writing
+[file @ 0x55c2a83e6840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ef0c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.240  pts=9.360
+  size=9881
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000223.png' for writing
+[file @ 0x55c2a82ed640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240300] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.280  pts=9.320
+  size=1542
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000224.png' for writing
+[file @ 0x55c2a82ed640] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84aea00] Statistics: 0 seeks, 4 writeouts
+stream #0:9 fps= 49 q=-0.0 size=N/A time=00:00:09.00 bitrate=N/A speed=1.93x    
+  keyframe=0
+  duration=0.040
+  dts=9.320  pts=9.480
+  size=25854
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000225.png' for writing
+[file @ 0x55c2a82402c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.360  pts=9.400
+  size=2075
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000226.png' for writing
+[file @ 0x55c2a84b16c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f10c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.400  pts=9.440
+  size=2023
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000227.png' for writing
+[file @ 0x55c2a82f10c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ecd40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.440  pts=9.640
+  size=8777
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000228.png' for writing
+[file @ 0x55c2a82f1c00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.480  pts=9.560
+  size=1298
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000229.png' for writing
+[file @ 0x55c2a834c840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82efe40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.520  pts=9.520
+  size=593
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000230.png' for writing
+[file @ 0x55c2a811e980] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f23c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.560  pts=9.600
+  size=554
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000231.png' for writing
+[file @ 0x55c2a82ef0c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834ac40] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.600  pts=9.720
+  size=7905
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000232.png' for writing
+[file @ 0x55c2a84b06c0] Setting default whitelist 'file,crypto,data'
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[AVIOContext @ 0x55c2a84b2180] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.640  pts=9.680
+  size=1426
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000233.png' for writing
+[file @ 0x55c2a82ece80] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f1200] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.680  pts=9.880
+  size=11753
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000234.png' for writing
+[file @ 0x55c2a82ecbc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834a480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.720  pts=9.800
+  size=2168
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000235.png' for writing
+[file @ 0x55c2a82f2600] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834acc0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.760  pts=9.760
+  size=970
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000236.png' for writing
+[file @ 0x55c2a834c940] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.800  pts=9.840
+  size=1686
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000237.png' for writing
+[file @ 0x55c2a82ef140] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed680] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.840  pts=9.960
+  size=4442
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000238.png' for writing
+[file @ 0x55c2a84b1e40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed680] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.880  pts=9.920
+  size=1039
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000239.png' for writing
+[file @ 0x55c2a82efd00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=1
+  duration=0.040
+  dts=9.920  pts=10.000
+  size=90779
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 5(IDR), nal_ref_idc: 3
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000240.png' for writing
+[file @ 0x55c2a82f28c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296380] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=9.960  pts=10.120
+  size=17056
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000241.png' for writing
+[file @ 0x55c2a8349fc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296380] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.000  pts=10.040
+  size=3226
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000242.png' for writing
+[file @ 0x55c2a834ad40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.040  pts=10.080
+  size=1406
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000243.png' for writing
+[file @ 0x55c2a84b0780] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.080  pts=10.280
+  size=16478
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000244.png' for writing
+[file @ 0x55c2a84b0780] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834a480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.120  pts=10.200
+  size=3786
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000245.png' for writing
+[file @ 0x55c2a811fcc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834a480] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.160  pts=10.160
+  size=1991
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000246.png' for writing
+[file @ 0x55c2a8296300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84b06c0] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.200  pts=10.240
+  size=1020
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000247.png' for writing
+[file @ 0x55c2a82ef100] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84b06c0] Statistics: 0 seeks, 4 writeouts
+stream #0:2 fps= 49 q=-0.0 size=N/A time=00:00:09.92 bitrate=N/A speed=1.91x    
+  keyframe=0
+  duration=0.040
+  dts=10.240  pts=10.360
+  size=6951
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000248.png' for writing
+[file @ 0x55c2a84b06c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ef240] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.280  pts=10.320
+  size=1825
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000249.png' for writing
+[file @ 0x55c2a834ad40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296340] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.320  pts=10.480
+  size=27683
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000250.png' for writing
+[file @ 0x55c2a834ad40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8296340] Statistics: 0 seeks, 3 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.360  pts=10.400
+  size=5530
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000251.png' for writing
+[file @ 0x55c2a82ecdc0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2880] Statistics: 0 seeks, 3 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.400  pts=10.440
+  size=1836
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000252.png' for writing
+[file @ 0x55c2a82f2280] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8240480] Statistics: 0 seeks, 3 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.440  pts=10.640
+  size=6771
+[h264 @ 0x55c2a81a8b40] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000253.png' for writing
+[file @ 0x55c2a82ef7c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f0900] Statistics: 0 seeks, 3 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.480  pts=10.560
+  size=2616
+[h264 @ 0x55c2a81c58c0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000254.png' for writing
+[file @ 0x55c2a82ef8c0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f0900] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.520  pts=10.520
+  size=1011
+[h264 @ 0x55c2a812dbc0] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000255.png' for writing
+[file @ 0x55c2a82efb00] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2140] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.560  pts=10.600
+  size=1731
+[h264 @ 0x55c2a8158e00] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 0
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000256.png' for writing
+[file @ 0x55c2a82f0940] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834c940] Statistics: 0 seeks, 4 writeouts
+stream #0:
+  keyframe=0
+  duration=0.040
+  dts=10.600  pts=10.680
+  size=2427
+[h264 @ 0x55c2a8182e80] nal_unit_type: 1(Coded slice of a non-IDR picture), nal_ref_idc: 2
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000257.png' for writing
+[file @ 0x55c2a82f0940] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82ed640] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000258.png' for writing
+[file @ 0x55c2a83e6840] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a834c940] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000259.png' for writing
+[file @ 0x55c2a82f2740] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a82f2140] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000260.png' for writing
+[file @ 0x55c2a84b1900] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84af940] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000261.png' for writing
+[file @ 0x55c2a84afec0] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84b0080] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000262.png' for writing
+[file @ 0x55c2a84b1780] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84b1600] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000263.png' for writing
+[file @ 0x55c2a82ee400] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a8349e40] Statistics: 0 seeks, 4 writeouts
+[out_0_0 @ 0x55c2a81e5100] EOF on sink link out_0_0:default.
+No more output streams to write to, finishing.
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000264.png' for writing
+[file @ 0x55c2a84ae300] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84aea40] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000265.png' for writing
+[file @ 0x55c2a84b2e40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84aea40] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000266.png' for writing
+[file @ 0x55c2a834ad40] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84aea40] Statistics: 0 seeks, 4 writeouts
+[image2 @ 0x55c2a811a5c0] Opening 'results/test/v15/yongen/00000267.png' for writing
+[file @ 0x55c2a8240380] Setting default whitelist 'file,crypto,data'
+[AVIOContext @ 0x55c2a84aea40] Statistics: 0 seeks, 4 writeouts
+frame=  268 fps= 48 q=-0.0 Lsize=N/A time=00:00:10.72 bitrate=N/A speed=1.92x    
+video:216675kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+Input file #0 (data/video/yongen.mp4):
+  Input stream #0:0 (video): 268 packets read (1866987 bytes); 268 frames decoded; 
+  Total: 268 packets (1866987 bytes) demuxed
+Output file #0 (results/test/v15/yongen/%08d.png):
+  Output stream #0:0 (video): 268 frames encoded; 268 packets muxed (221875371 bytes); 
+  Total: 268 packets (221875371 bytes) muxed
+268 frames successfully decoded, 0 decoding errors
+[AVIOContext @ 0x55c2a80f8280] Statistics: 1907531 bytes read, 2 seeks
+/local_disk0/musetalk_venv/lib/python3.10/site-packages/torch/nn/modules/conv.py:309: UserWarning: Applied workaround for CuDNN issue, install nvrtc.so (Triggered internally at ../aten/src/ATen/native/cudnn/Conv_v8.cpp:80.)
+  return F.conv1d(input, weight, bias, self.stride,
+Loads checkpoint by local backend from path: ./models/dwpose/dw-ll_ucoco_384.pth
+cuda start
+load unet model from models/musetalkV15/unet.pth
+Loaded inference config: {'task_0': {'video_path': 'data/video/yongen.mp4', 'audio_path': 'data/audio/yongen.wav'}, 'task_1': {'video_path': 'data/video/yongen.mp4', 'audio_path': 'data/audio/eng.wav', 'bbox_shift': -7}}
+Extracting landmarks... time-consuming operation
+reading images...
+100%|██████████| 268/268 [00:02<00:00, 90.87it/s]
+get key_landmark and face bounding boxes with the default value
+100%|██████████| 268/268 [00:48<00:00,  5.53it/s]
+********************************************bbox_shift parameter adjustment**********************************************************
+Total frame:「268」 Manually adjust range : [ -21~23 ] , the current value: 0
+*************************************************************************************************************************************
+Number of frames: 268
+Starting inference
+100%|██████████| 25/25 [00:52<00:00,  2.12s/it]
+Padding generated images to original video size
+100%|██████████| 200/200 [00:30<00:00,  6.50it/s]
+Guessed Channel Layout for Input Stream #0.0 : stereo
+Video generation command: ffmpeg -y -v warning -r 25.0 -f image2 -i results/test/v15/yongen_yongen/%08d.png -vcodec libx264 -vf format=yuv420p -crf 18 results/test/v15/temp_yongen_yongen.mp4
+Audio combination command: ffmpeg -y -v warning -i data/audio/yongen.wav -i results/test/v15/temp_yongen_yongen.mp4 results/test/v15/yongen_yongen.mp4
+Results saved to results/test/v15/yongen_yongen.mp4
+Extracting landmarks... time-consuming operation
+reading images...
+100%|██████████| 268/268 [00:03<00:00, 87.04it/s]
+get key_landmark and face bounding boxes with the default value
+100%|██████████| 268/268 [00:46<00:00,  5.74it/s]
+********************************************bbox_shift parameter adjustment**********************************************************
+Total frame:「268」 Manually adjust range : [ -21~23 ] , the current value: 0
+*************************************************************************************************************************************
+Number of frames: 268
+Starting inference
